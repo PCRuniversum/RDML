@@ -197,7 +197,7 @@ generateSampleName <- function (name.pattern,
 }
 
 # Main function
-pcrimport.RDML <- function(rdmlfile,
+RDML <- function(rdmlfile,
                            name.pattern = "%NAME%__%TUBE%",
                            flat.table = FALSE,
                            omit.ntp = TRUE)

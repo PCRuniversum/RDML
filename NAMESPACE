@@ -1,6 +1,6 @@
 ## functions
 export(
-pcrimport.RDML
+RDML
 )
 
 importFrom(XML, xmlParse)
