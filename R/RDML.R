@@ -156,9 +156,9 @@ getDilutionsRoche <- function(filename)
     dilutions[[dye]] <-cbind(dilutions[[dye]],c(position, quant))
   }
   dilutions<-lapply(dilutions, function(dilution){
-    quant <- as.numeric(dilution[2,])
+    quant <- as.numeric(dilution[2, ])
     quant <- t(as.data.frame(quant))
-    colnames(quant) <- dilution[1,]
+    colnames(quant) <- dilution[1, ]
     return(quant) })
   return(dilutions)
 }
@@ -247,7 +247,7 @@ RDML <- function(rdmlfile,
       for(fdata in node["data", all = TRUE])
       {
         targetID <- xmlGetAttr(fdata[["tar"]], name = "id")
-        if(targetID=="") targetID <- "NA"
+        if(targetID == "") targetID <- "NA"
         sampleName <- generateSampleName(name.pattern,
                                          plateDims,
                                          reactID,
