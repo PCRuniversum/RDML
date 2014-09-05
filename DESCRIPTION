@@ -8,4 +8,4 @@ Maintainer: Konstantin A. Blagodatskikh <k.blag@yandex.ru>
 Description: Imports qPCR data from RDML format files and transforms to the appropriate format of the 'qpcR' package.
 License: GPL (>= 2)
 Depends: XML (>= 3.98-1.1)
-Suggests: qpcR
+Suggests: qpcR, chipPCR

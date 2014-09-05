@@ -150,6 +150,10 @@ calib(refcurve = CAL, predcurve = PRED, thresh = "cpD2",
 filename <- paste(PATH, "/extdata/", "BioRad_qPCR_melt.rdml", sep ="")
 cfx96 <- RDML(filename, flat.table=TRUE,
                         name.pattern = "\%TUBE\%_\%NAME\%_\%TYPE\%_\%TARGET\%")
+## Use plotCurves function from the chiPCR package to 
+## get an overview of the amplification curves
+require(chipPCR)                        
+plotCurves(cfx96$qPCR[, 1], cfx96$qPCR[, -1], type = "l")
 ## Show some generated names for samples.
 names(cfx96$Melt[2:5])
 ## Select index numbers of the columns that contain
