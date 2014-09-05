@@ -5,7 +5,7 @@ Version: 0.4
 Date: 2014-09-05
 Author: Konstantin A. Blagodatskikh <k.blag@yandex.ru>
 Maintainer: Konstantin A. Blagodatskikh <k.blag@yandex.ru>
-Description: Imports qPCR data from RDML format files and transforms to the appropriate format of the 'qPCR' package.
+Description: Imports qPCR data from RDML format files and transforms to the appropriate format of the 'qpcR' package.
 License: GPL (>= 2)
 Depends: XML
 Suggests: qpcR
