@@ -1,0 +1,10 @@
+## functions
+export(
+pcrimport.RDML
+)
+
+importFrom(XML, xmlParse)
+importFrom(XML, xmlValue)
+importFrom(XML, getNodeSet)
+importFrom(XML, xpathSApply)
+importFrom(XML, xmlGetAttr)
