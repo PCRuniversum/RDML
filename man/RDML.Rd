@@ -10,7 +10,7 @@ et al. 2008, Spiess et al. 2008). RDML is the recommended file format element in
 the Minimum Information for Publication of Quantitative Real-Time PCR 
 Experiments (MIQE) guidelines (Bustin et al. 2009). Data can be imported to the 
 one table format (flat) or list of tables spited by PCR targets and samples 
-types (see 'Details). Tables consist of 'Cycles' in the first column and 
+types (see 'Details'). Tables consist of 'Cycles' in the first column and 
 fluorescence data of the samples in the remaining columns for qPCR data. For 
 melting data tables consist of 'Temperature' in the first column and 
 fluorescence data of the samples in the remaining columns. Names of the samples 
