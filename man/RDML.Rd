@@ -24,7 +24,7 @@ RDML file with qPCR data.
   }
 }
 \details{
-\bold{ATTENTION}: Although the format RDML claimed as data exchange format, the specific implementation of the format at devices from different manufacturers differ significantly. Currently this function is checked against data from devices: \emph{Bio Rad CFX96} and \emph{Roche LightCycler 96}.\cr
+\bold{ATTENTION}: Although the format RDML claimed as data exchange format, the specific implementation of the format at devices from different manufacturers differ significantly. Currently this function is checked against RDML data from devices: \emph{Bio Rad CFX96}, \emph{Roche LightCycler 96} and \emph{Applied Biosystems StepOne}.\cr
 
 This function has been designed to import qPCR data from instruments that support RDML v1.1 format export . Output from this function can be easily used with 'qpcR' package.\cr
 There are two general variants of output for this function:
