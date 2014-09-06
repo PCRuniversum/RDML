@@ -135,7 +135,7 @@ COPIES <- unique(lc96$Dilutions$FAM["quant",])
 ## No replicates.
 library(qpcR)
 CAL <- modlist(lc96$qPCR[["FAM@bACT"]]$std,
-               fluo = c(2, 4, 6, 8, 10), baseline = 1L:15)
+               fluo = c(2, 4, 6, 8, 10))
 ## Define samples to predict (type of the samples - 'unkn').
 PRED <- modlist(lc96$qPCR[["FAM@bACT"]]$unkn,
                 fluo = grep("^S", names(lc96$qPCR[["FAM@bACT"]]$unkn)))
