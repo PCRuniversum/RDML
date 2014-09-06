@@ -21,7 +21,7 @@ getPublisher <- function(RDMLdoc)
     RDMLdoc, 
     "/rdml:rdml/rdml:id/rdml:publisher",
     xmlValue,
-    namespaces=c(rdml = "http://www.rdml.org"))  
+    namespaces = c(rdml = "http://www.rdml.org"))  
   if (length(publisher) != 0){ return(publisher) }
   else { return("StepOne") }
 }
@@ -33,8 +33,8 @@ getTargets <- function(RDMLdoc)
     RDMLdoc, 
     "/rdml:rdml/rdml:target[@id]",
     xmlGetAttr, 
-    name="id",
-    namespaces=c(rdml = "http://www.rdml.org"))
+    name = "id",
+    namespaces = c(rdml = "http://www.rdml.org"))
 }
 
 # Gets PCR samples descriptions vector from XML
@@ -44,13 +44,13 @@ getDescriptions <- function(RDMLdoc)
     RDMLdoc, 
     "/rdml:rdml/rdml:sample",
     xmlGetAttr,
-    name="id",
-    namespaces=c(rdml = "http://www.rdml.org"))
+    name = "id",
+    namespaces = c(rdml = "http://www.rdml.org"))
   descriptions <- xpathSApply(
     RDMLdoc, 
     "/rdml:rdml/rdml:sample/rdml:description",
     xmlValue,
-    namespaces=c(rdml = "http://www.rdml.org"))  
+    namespaces = c(rdml = "http://www.rdml.org"))  
   names(descriptions) <- samplesids
   return(descriptions)
 }
@@ -62,8 +62,8 @@ getRuns <- function(RDMLdoc)
     RDMLdoc, 
     "/rdml:rdml/rdml:experiment/rdml:run",
     xmlGetAttr, 
-    name="id",
-    namespaces=c(rdml = "http://www.rdml.org"))
+    name = "id",
+    namespaces = c(rdml = "http://www.rdml.org"))
 }
 
 # Gets plate dimensions from XML
@@ -74,13 +74,13 @@ getPlateDimensions <- function(RDMLdoc)
     RDMLdoc, 
     "/rdml:rdml/rdml:experiment/rdml:run/rdml:pcrFormat/rdml:rows",
     xmlValue,
-    namespaces=c(rdml = "http://www.rdml.org"))[1])},
+    namespaces = c(rdml = "http://www.rdml.org"))[1])},
     error = function(e) 8)
   columns <- tryCatch({as.integer(xpathSApply(
     RDMLdoc, 
     "/rdml:rdml/rdml:experiment/rdml:run/rdml:pcrFormat/rdml:columns",
     xmlValue,
-    namespaces=c(rdml = "http://www.rdml.org"))[1])},
+    namespaces = c(rdml = "http://www.rdml.org"))[1])},
     error = function(e) 12)
   return(c(rows = rows, columns = columns))
 }
@@ -93,13 +93,13 @@ getTypes <- function(RDMLdoc)
     RDMLdoc, 
     "/rdml:rdml/rdml:sample",
     xmlGetAttr,
-    name="id",
-    namespaces=c(rdml = "http://www.rdml.org"))
+    name = "id",
+    namespaces = c(rdml = "http://www.rdml.org"))
   types <- xpathSApply(
     RDMLdoc, 
     "/rdml:rdml/rdml:sample/rdml:type",
     xmlValue,
-    namespaces=c(rdml = "http://www.rdml.org"))  
+    namespaces = c(rdml = "http://www.rdml.org"))  
   names(types) <- samplesids
   return(types)
 }
@@ -112,14 +112,14 @@ getDilutions <- function(RDMLdoc)
   nodes <- getNodeSet(
     RDMLdoc, 
     "/rdml:rdml/rdml:sample/rdml:quantity/rdml:value/../..",    
-    namespaces=c(rdml = "http://www.rdml.org"))
+    namespaces = c(rdml = "http://www.rdml.org"))
   values <- sapply(nodes, function(node) {
     as.numeric(xmlValue(node[["quantity"]][["value"]]))})
   # names of the samples that contain "quantity" information
-  samplesids <- sapply(nodes, xmlGetAttr, name="id")
+  samplesids <- sapply(nodes, xmlGetAttr, name = "id")
   names(values) <- samplesids
   # sorting quantities by sample name
-  values<-values[order(names(values))]
+  values <- values[order(names(values))]
   return(values)  
 }  
 
@@ -134,28 +134,24 @@ getDilutionsRoche <- function(filename)
   nodes<- getNodeSet(
     rdmldoc, 
     "//ns:absQuantDataSource/ns:standard/..",    
-    namespaces=c(ns = "http://www.roche.ch/LC96AbsQuantCalculatedDataModel"))
+    namespaces = c(ns = "http://www.roche.ch/LC96AbsQuantCalculatedDataModel"))
   
   dilutions <- list()
   for(node in nodes){
     quant <- xmlValue(node[["standard"]])
     position <- xpathSApply(
       rdmldoc, 
-      paste("//ns:standardPoints/ns:standardPoint/ns:graphIds/ns:guid[text() ='",
-            xmlValue(node[["graphId"]]), "']/../../ns:position",
-            sep = ""),
-      xmlValue,
-      namespaces=c(ns = "http://www.roche.ch/LC96AbsQuantCalculatedDataModel"))
-    dye<- xpathSApply(
+      paste0("//ns:standardPoints/ns:standardPoint/ns:graphIds/ns:guid[text() ='",
+            xmlValue(node[["graphId"]]), "']/../../ns:position"), xmlValue,
+      namespaces = c(ns = "http://www.roche.ch/LC96AbsQuantCalculatedDataModel"))
+    dye <- xpathSApply(
       rdmldoc, 
-      paste("//ns:standardPoints/ns:standardPoint/ns:graphIds/ns:guid[text() ='",
-            xmlValue(node[["graphId"]]), "']/../../ns:dyeName",
-            sep = ""),
-      xmlValue,
-      namespaces=c(ns = "http://www.roche.ch/LC96AbsQuantCalculatedDataModel"))
-    dilutions[[dye]] <-cbind(dilutions[[dye]],c(position, quant))
+      paste0("//ns:standardPoints/ns:standardPoint/ns:graphIds/ns:guid[text() ='",
+            xmlValue(node[["graphId"]]), "']/../../ns:dyeName"), xmlValue,
+      namespaces = c(ns = "http://www.roche.ch/LC96AbsQuantCalculatedDataModel"))
+    dilutions[[dye]] <- cbind(dilutions[[dye]],c(position, quant))
   }
-  dilutions<-lapply(dilutions, function(dilution){
+  dilutions <- lapply(dilutions, function(dilution){
     quant <- as.numeric(dilution[2, ])
     quant <- t(as.data.frame(quant))
     colnames(quant) <- dilution[1, ]
@@ -176,8 +172,8 @@ generateSampleName <- function (name.pattern,
                  publisher == "StepOne"),
                  reactID,
                  { reactID <- as.integer(reactID)
-                 paste(LETTERS[reactID %/% plateDims["columns"] + 1],
-              reactID %% plateDims["columns"], sep="")})  
+                 paste0(LETTERS[reactID %/% plateDims["columns"] + 1],
+			reactID %% plateDims["columns"])})  
   name.pattern <- gsub("%NAME%",
                        tubeName,
                        name.pattern)
@@ -207,7 +203,7 @@ RDML <- function(rdmlfile = NA,
 #   dilutions <- ifelse(publisher == "Roche Diagnostics",
 #                       getDilutionsRoche(rdmlfile),
 #                       getDilutions(rdmldoc))
-  if(publisher == "Roche Diagnostics") {
+  if (publisher == "Roche Diagnostics") {
     dilutions <- getDilutionsRoche(rdmlfile)
   }
   else {
@@ -222,14 +218,14 @@ RDML <- function(rdmlfile = NA,
   nodes <- getNodeSet(
     rdmldoc,
     "//rdml:react",
-    namespaces=c(rdml = "http://www.rdml.org"))
+    namespaces = c(rdml = "http://www.rdml.org"))
   #   Adps<-ifelse(flat.table == TRUE,
   #                yes = array(),
   #                no = list())
   
-  if(flat.table) Adps <- array()
+  if (flat.table) Adps <- array()
   else Adps <- list()
-  if(flat.table) Mdps <- array()
+  if (flat.table) Mdps <- array()
   else Mdps <- list()
   
   for(node in nodes) {
@@ -247,7 +243,7 @@ RDML <- function(rdmlfile = NA,
       for(fdata in node["data", all = TRUE])
       {
         targetID <- xmlGetAttr(fdata[["tar"]], name = "id")
-        if(targetID == "") targetID <- "NA"
+        if (targetID == "") targetID <- "NA"
         sampleName <- generateSampleName(name.pattern,
                                          plateDims,
                                          reactID,
@@ -261,16 +257,15 @@ RDML <- function(rdmlfile = NA,
         mdps <- sapply(fdata["mdp", all = TRUE],
                        function(x) as.numeric(xmlValue(x[["fluor"]])))
         # flat.table == TRUE
-        if(flat.table) {
+        if (flat.table) {
           # add qPCR data
-          if(length(adps) != 0) {
+          if (length(adps) != 0) {
             Adps <- cbind(
               Adps, adps)          
             colnames(Adps) <- 
-              c(colnames(Adps)[-length(colnames(Adps))],
-                sampleName)
+              c(colnames(Adps)[-length(colnames(Adps))],sampleName)
             # works only after first column added
-            if(typeof(Adps) == "double")
+            if (typeof(Adps) == "double")
             {
               Cycles <- sapply(fdata["adp", all = TRUE],
                                function(x) xmlValue(x[["cyc"]]))
@@ -282,14 +277,14 @@ RDML <- function(rdmlfile = NA,
             }
           }
           # add melting data
-          if(length(mdps) != 0) {
+          if (length(mdps) != 0) {
             Mdps <- cbind(
               Mdps , mdps)
             colnames(Mdps) <- 
               c(colnames(Mdps)[-length(colnames(Mdps))],
                 sampleName)
             # works only after first column added
-            if(typeof(Mdps) == "double")
+            if (typeof(Mdps) == "double")
             {              
               Tmps <- sapply(fdata["mdp", all = TRUE],
                              function(x) xmlValue(x[["tmp"]]))
@@ -305,14 +300,14 @@ RDML <- function(rdmlfile = NA,
         # flat.table == FALSE
         else {
           # add qPCR data
-          if(length(adps) != 0) {
+          if (length(adps) != 0) {
             Adps[[targetID]][[type]] <- cbind(
               Adps[[targetID]][[type]], adps)          
             colnames(Adps[[targetID]][[type]]) <- 
               c(colnames(Adps[[targetID]][[type]])[-length(colnames(Adps[[targetID]][[type]]))],
                 sampleName)
             # works only after first column added
-            if(typeof(Adps[[targetID]][[type]]) == "double")
+            if (typeof(Adps[[targetID]][[type]]) == "double")
             {
               Cycles <- sapply(fdata["adp", all = TRUE],
                                function(x) xmlValue(x[["cyc"]]))
@@ -324,14 +319,14 @@ RDML <- function(rdmlfile = NA,
             }
           }
           # add melting data
-          if(length(mdps) != 0) {
+          if (length(mdps) != 0) {
             Mdps[[targetID]][[type]] <- cbind(
               Mdps[[targetID]][[type]], mdps)
             colnames(Mdps[[targetID]][[type]]) <- 
               c(colnames(Mdps[[targetID]][[type]])[-length(colnames(Mdps[[targetID]][[type]]))],
                 sampleName)
             # works only after first column added
-            if(typeof(Mdps[[targetID]][[type]]) == "double")
+            if (typeof(Mdps[[targetID]][[type]]) == "double")
             {
               Tmps <- sapply(fdata["mdp", all = TRUE],
                              function(x) xmlValue(x[["tmp"]]))
