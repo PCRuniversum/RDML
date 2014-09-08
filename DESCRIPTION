@@ -4,10 +4,23 @@ Title: Importing real-time thermo cycler (qPCR) data from RDML format files
 Version: 0.4-1
 LazyData: true
 Date: 2014-09-05
+<<<<<<< HEAD
 Author: Konstantin A. Blagodatskikh <k.blag@yandex.ru>, Stefan Roediger <stefan.roediger@hs-lausitz.de>
 Maintainer: Konstantin A. Blagodatskikh <k.blag@yandex.ru>
 Description: Imports real-time thermo cycler (qPCR) data from RDML format files and transforms to the appropriate formats of the 'qpcR' and 'chipPCR' packages.
+=======
+Authors@R: c(
+    person("Konstantin A.", "Blagodatskikh", 
+      email = "k.blag@yandex.ru", role = c("cre", "aut")),
+    person("Stefan", "Roediger", 
+      email = "stefan.roedigier@hs-lausitz.de", 
+      role = "aut"),
+    person("Michal", "Burdukiewicz", 
+      email = "michalburdukiewicz@gmail.com", role = "aut"))
+Description: Imports qPCR data from RDML format files and transforms to the appropriate format of the 'qpcR' or 'chipPCR' package.
+>>>>>>> 99743234060ab719d976755508568b741da61cc1
 License: GPL (>= 2)
 URL: https://github.com/kablag/RDML
 Depends: XML (>= 3.98-1.1)
-Suggests: qpcR (>= 1.3-9), chipPCR (>= 0.0.8-1)
+Imports: chipPCR (>= 0.0.8-1)
+Suggests: qpcR (>= 1.3-9)
