@@ -1,4 +1,4 @@
-![RDML](https://github.com/kablag/RDML/blob/master/vignettes/logo.png)
+![RDML](https://github.com/kablag/RDML/blob/master/inst/RDML_logo.png)
 
 
 Imports qPCR data from RDML v1.1 format files (Lefever et al. 2009) and 
@@ -23,3 +23,4 @@ install.packages("devtools")
 
 library(devtools)
 install_github("RDML", "kablag")
+```
