@@ -6,12 +6,12 @@
 Summary RDML_objects
 }
 \description{
-Print and silently returns summary statistics of \code{RDML_object}s.
+Prints and silently returns summary statistics of \code{RDML_object}s.
 }
 \usage{
 \method{summary}{RDML_object}(object, print = TRUE, ...)
 }
-%- maybe also 'usage' for other objects documented here.
+
 \arguments{
   \item{object}{
 an object of class \code{RDML_object}.
@@ -24,10 +24,15 @@ currently ignored.
 }
 }
 
+
 \value{
-A list of length 2:
+A list of length at most 3 (less if \code{object} does not contain information about 
+dilutions, qPCR or melting data):
 \item{dil_table}{A list of dilutions used in experiments.}
-\item{exp_tab}{Summary statistics describing experiments.}
+\item{melt_table}{Melting data.}
+\item{exp_tab}{Summary statistics describing experiments: mean, median, standard deviation,
+median absolute deviation, interquartile range, medcouple, skewness, SNR, VRM, number of NAs,
+intercept, slope, R squared, Breusch-Pagan test p-value.}
 }
 
 \author{
@@ -40,6 +45,8 @@ Summary statistics are calculated using \code{\link[chipPCR]{MFIaggr}}.
 \examples{
 lc96 <- RDML(system.file("extdata/lc96_bACTXY.rdml", package = "RDML"))
 summary(lc96)
+#store raw results of summary without printing
+res <- summary(lc96, print = FALSE)
 }
 
 \keyword{ manip }
