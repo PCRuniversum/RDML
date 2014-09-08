@@ -4,12 +4,13 @@ Changes from Version 0.4 to 0.4-1 [September 09 2014]
 * Minor code improvements
 * Submission to CRAN
 
-Changes from Version 0 to 0.4 [September 5 2014] 
-* Initial public release by Konstantin A. Blagodatskikh at github
-  - contributions by Stefan Roediger
-* renamed from import.RDML to RDML
-  - * Latest source code hosted at https://github.com/kablag/RDML now
+Initial release version 0.4 [September 5 2014] 
+* Initial public release of RDML package by Konstantin A. Blagodatskikh at github
+  - Contributions by Stefan Roediger
+  - Renamed from import.RDML to RDML
+  - Latest source code hosted at https://github.com/kablag/RDML now
 * New examples
-* code cleanup
+* Code cleanup
 * Initial version of logo
-* suggests qpcR and chipPCR package
+* Suggests qpcR and chipPCR package
+* Improved documentation

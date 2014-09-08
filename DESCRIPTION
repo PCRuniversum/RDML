@@ -1,12 +1,12 @@
 Package: RDML
 Type: Package
-Title: Importing qPCR data from RDML format files
-Version: 0.4
+Title: Importing real-time thermo cycler (qPCR) data from RDML format files
+Version: 0.4-1
 LazyData: true
 Date: 2014-09-05
 Author: Konstantin A. Blagodatskikh <k.blag@yandex.ru>, Stefan Roediger <stefan.roediger@hs-lausitz.de>
 Maintainer: Konstantin A. Blagodatskikh <k.blag@yandex.ru>
-Description: Imports qPCR data from RDML format files and transforms to the appropriate format of the 'qpcR' or 'chipPCR' package.
+Description: Imports real-time thermo cycler (qPCR) data from RDML format files and transforms to the appropriate formats of the 'qpcR' and 'chipPCR' packages.
 License: GPL (>= 2)
 URL: https://github.com/kablag/RDML
 Depends: XML (>= 3.98-1.1)
