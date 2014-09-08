@@ -348,5 +348,7 @@ RDML <- function(rdmlfile = NA,
     Melt = Mdps)
   # remove empty elements (Dilutions, Adps or Mdps)
   output[sapply(output, function(x) length(x) == 0)] <- NULL
-  return(output)  
+  class(output) <- "RDML_object"
+  output
 }
+

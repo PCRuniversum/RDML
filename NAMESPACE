@@ -1,10 +1,16 @@
 ## functions
+S3method(summary,RDML_object)
+
 export(
 RDML
 )
 
+importFrom(chipPCR, MFIaggr)
+importMethodsFrom(chipPCR, summary)
+importFrom(XML, getNodeSet)
+importFrom(XML, xmlGetAttr)
 importFrom(XML, xmlParse)
 importFrom(XML, xmlValue)
-importFrom(XML, getNodeSet)
 importFrom(XML, xpathSApply)
-importFrom(XML, xmlGetAttr)
+
+
