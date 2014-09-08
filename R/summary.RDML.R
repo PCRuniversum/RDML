@@ -1,69 +1,73 @@
 summary.RDML_object <- function(object, print = TRUE, ...) {
   if("Dilutions" %in% names(object)) {
-    dil_table <- do.call(rbind, object[["Dilutions"]])
-    rownames(dil_table) <- names(object[["Dilutions"]])
+    dilTable <- do.call(rbind, object[["Dilutions"]])
+    rownames(dilTable) <- names(object[["Dilutions"]])
     
     if(print) {
       cat("Dilutions:\n")
-      print(dil_table)
+      print(dilTable)
     }
   }
   
   if("Melt" %in% names(object)) {
     #FIX ME!
-    melt_table <- c()
+    meltTable <- c()
   }
   
   if("qPCR" %in% names(object)) {
-    exp_table <- data.frame(do.call(rbind, lapply(object[["qPCR"]], function(i) {
+    expTable <- data.frame(do.call(rbind, lapply(object[["qPCR"]], function(i) {
       tab <- do.call(rbind, lapply(i, function(j)
         summary(MFIaggr(j), print = FALSE)))
       data.frame(type = rownames(tab), tab, row.names = NULL)
     })), row.names = NULL)
-    exp_table <- cbind(experiment = as.vector(sapply(names(object[["qPCR"]]), function(i) 
-      rep(i, 2))), exp_table) 
+    expTable <- cbind(experiment = as.vector(sapply(names(object[["qPCR"]]), function(i) 
+      rep(i, 2))), expTable) 
     
     if(print) {
       #first three moments
-      first_three <- exp_table[, c("experiment", "type", "mean", "sd", "skewness")]
-      colnames(first_three) <- c("Experiment", "Type", "Mean", "Standard deviation", "Skewness")
+      firstThree <- expTable[, c("experiment", "type", "mean", "sd", "skewness")]
+      colnames(firstThree) <- c("Experiment", "Type", "Mean", 
+				"Standard deviation", "Skewness")
       cat("\nSummarized experiments - first three moments:\n")
-      print(first_three)
+      print(firstThree)
       
       #resistant statistics
-      resist_stats <- exp_table[, c("experiment", "type", "median", "mad", "IQR", "medcouple")]
-      colnames(resist_stats) <- c("Experiment", "Type", "Median", "Median Absolute Deviation", 
-                                  "Interquartile Range", "Medcouple")
+      resistStats <- expTable[, c("experiment", "type", "median", "mad", 
+				  "IQR", "medcouple")]
+      colnames(resistStats) <- c("Experiment", "Type", "Median", 
+				 "Median Absolute Deviation", 
+                                 "Interquartile Range", "Medcouple")
       cat("\nSummarized experiments - resistant statistics:\n")
-      print(resist_stats)
+      print(resistStats)
       
       #linear
-      lin_stats <- exp_table[, c("experiment", "type", "intercept", "slope", "r.squared", 
-                                 "heter.p")]
-      colnames(lin_stats) <- c("Experiment", "Type", "Intercept", "Slope", 
+      linStats <- expTable[, c("experiment", "type", "intercept", "slope", 
+			       "r.squared", "heter.p")]
+      colnames(linStats) <- c("Experiment", "Type", "Intercept", "Slope", 
                                "R squared", "Breusch-Pagan Test p-value")
       cat("\nSummarized experiments - linear model statistics:\n")
-      print(lin_stats)
+      print(linStats)
       
       #rest
-      rest_stats <- exp_table[, c("experiment", "type", "SNR", "VRM", "NAs")]
-      colnames(rest_stats) <- c("Experiment", "Type", "SNR", "VRM", "Number of NAs")
+      restStats <- expTable[, c("experiment", "type", "SNR", "VRM", "NAs")]
+      colnames(restStats) <- c("Experiment", "Type", "SNR", "VRM", 
+			       "Number of NAs")
       cat("\nSummarized experiments - other statistics:\n")
-      print(rest_stats)
+      print(restStats)
       
       cat("\n")
     }
   }
   res <- list()
   
-  if(exists("dil_table"))
-    res <- c(res, dil_table = list(dil_table))
+  if(exists("dilTable"))
+    res <- c(res, dilTable = list(dilTable))
   
-  if(exists("melt_table"))
-    res <- c(res, melt_table = list(melt_table))
+  if(exists("meltTable"))
+    res <- c(res, meltTable = list(meltTable))
   
-  if(exists("exp_table"))
-    res <- c(res, exp_table = list(exp_table))
+  if(exists("expTable"))
+    res <- c(res, expTable = list(expTable))
   
   invisible(res)
 }
