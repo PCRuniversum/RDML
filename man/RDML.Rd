@@ -136,9 +136,9 @@ COPIES <- unique(lc96$Dilutions$FAM["quant",])
 library(qpcR)
 CAL <- modlist(lc96$qPCR[["FAM@bACT"]]$std,
                fluo = c(2, 4, 6, 8, 10))
-## Define samples to predict (type of the samples - 'unkn').
-PRED <- modlist(lc96$qPCR[["FAM@bACT"]]$unkn,
-                fluo = grep("^S", names(lc96$qPCR[["FAM@bACT"]]$unkn)))
+## Define samples to predict (first two samples with the type - 'unkn').
+PRED <- modlist(lc96$qPCR[["FAM@bACT"]]$unkn[1:5],
+                fluo = grep("^S", names(lc96$qPCR[["FAM@bACT"]]$unkn)[1:2]))
 ## Conduct quantification.
 calib(refcurve = CAL, predcurve = PRED, thresh = "cpD2",
       dil = COPIES)
@@ -195,8 +195,8 @@ names(cfx96$Melt[2L:5])
 cols <- grep("pos_EvaGreen$", names(cfx96$Melt))
 ## Conduct melting curve analysis.
 library(qpcR)
-meltcurve(cfx96$Melt, fluos = cols,
-          temps = rep(1, length(cols)))
+invisible(meltcurve(cfx96$Melt, fluos = cols,
+          temps = rep(1, length(cols))))
 
 }
 \keyword{Bio--Rad}
