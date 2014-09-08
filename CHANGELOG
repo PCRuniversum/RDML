@@ -3,6 +3,7 @@ Changes from Version 0.4 to 0.4-1 [September 09 2014]
 * Improved some examples
 * Minor code improvements
 * Submission to CRAN
+* New summary object summary-RDML_object
 
 Initial release version 0.4 [September 5 2014] 
 * Initial public release of RDML package by Konstantin A. Blagodatskikh at github

@@ -35,7 +35,7 @@ Michal Burdukiewicz, Konstantin A. Blagodatskikh, Stefan Roediger
 }
 
 \seealso{
-Summary statistics are calculated using \code{\link[chipPCR]{MFIaggr}}
+Summary statistics are calculated using \code{\link[chipPCR]{MFIaggr}}.
 }
 \examples{
 lc96 <- RDML(system.file("extdata/lc96_bACTXY.rdml", package = "RDML"))
@@ -43,4 +43,5 @@ summary(lc96)
 }
 
 \keyword{ manip }
+\keyword{ summary }
 
