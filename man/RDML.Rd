@@ -5,7 +5,7 @@ qPCR data import function
 }
 \description{
 Imports qPCR data from RDML v1.1 format files (Lefever et al. 2009) and 
-transforms it to the appropriate format of the \code{qpcR} package (Ritz et al. 
+transforms it to the appropriate format of the \code{qpcR} (Ritz et al. 
 2008, Spiess et al. 2008) and \code{chiPCR} packages. RDML is the recommended file 
 format element in the Minimum Information for Publication of Quantitative 
 Real-Time PCR Experiments (MIQE) guidelines (Bustin et al. 2009). Data can be 
