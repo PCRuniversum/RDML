@@ -15,7 +15,6 @@ Authors@R: c(
       role = "aut"),
     person("Michal", "Burdukiewicz", 
       email = "michalburdukiewicz@gmail.com", role = "aut"))
-Description: Imports qPCR data from RDML format files and transforms to the appropriate format of the 'qpcR' or 'chipPCR' package.
 License: GPL (>= 2)
 URL: https://github.com/kablag/RDML
 Depends: XML (>= 3.98-1.1)
