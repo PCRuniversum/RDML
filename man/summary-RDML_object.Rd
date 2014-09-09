@@ -28,9 +28,9 @@ currently ignored.
 \value{
 A list of length at most 3 (less if \code{object} does not contain information 
 about dilutions, qPCR or melting data):
-\item{dil_table}{A list of dilutions used in experiments.}
-\item{melt_table}{Melting data.}
-\item{exp_tab}{Summary statistics describing experiments: mean, median, standard 
+\item{dilTable}{A list of dilutions used in experiments.}
+\item{meltTable}{Melting data - currently not implemented.}
+\item{expTable}{Summary statistics describing experiments: mean, median, standard 
 deviation, median absolute deviation, interquartile range, medcouple, skewness, 
 SNR, VRM, number of NAs (missing values), intercept, slope, R squared, 
 Breusch-Pagan test p-value.}
