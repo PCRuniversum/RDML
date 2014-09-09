@@ -19,13 +19,16 @@ summary.RDML_object <- function(object, print = TRUE, ...) {
     if (class(object[["qPCR"]]) == "data.frame") {
       expTable <- summary(MFIaggr(object[["qPCR"]]), print = print)
     } else {
+      #iterate MFI aggr over all experiments and all types of experiments
       expTable <- data.frame(do.call(rbind, lapply(object[["qPCR"]], function(i) {
         tab <- do.call(rbind, lapply(i, function(j)
           summary(MFIaggr(j), print = FALSE)))
         data.frame(type = rownames(tab), tab, row.names = NULL)
       })), row.names = NULL)
+      
+      #generate names of experiments and replicate them by number of types
       expTable <- cbind(experiment = as.vector(sapply(names(object[["qPCR"]]), function(i) 
-        rep(i, 2))), expTable) 
+        rep(i, length(object[["qPCR"]][[1]])))), expTable) 
       
       if(print) {
         #first three moments
