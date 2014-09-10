@@ -80,8 +80,7 @@ Possible keys in \code{name.pattern}
 \value{
 A list of \code{data.frame} (or one \code{data.frame}), suitable for analysis 
 with \code{qpcR} package. Also output list contains information about 
-dilutions (quantity or concentration) if available. 
-
+dilutions (quantity or concentration) if available.
 }
 \references{
 RDML format http://www.rdml.org/ \cr
@@ -111,7 +110,8 @@ language and reporting guidelines for real-time quantitative PCR data.
 }
 \author{
 Konstantin A. Blagodatskikh <k.blag@yandex.ru>, 
-Stefan Roediger <stefan.roediger@hs-lausitz.de>
+Stefan Roediger <stefan.roediger@hs-lausitz.de>,
+Michal Burdukiewicz <michalburdukiewicz@gmail.com>
 }
 \examples{
 ## EXAMPLE 1:
