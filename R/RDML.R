@@ -142,12 +142,12 @@ getDilutionsRoche <- function(filename)
     position <- xpathSApply(
       rdmldoc, 
       paste0("//ns:standardPoints/ns:standardPoint/ns:graphIds/ns:guid[text() ='",
-             xmlValue(node[["graphId"]]), "']/../../ns:position"), xmlValue,
+            xmlValue(node[["graphId"]]), "']/../../ns:position"), xmlValue,
       namespaces = c(ns = "http://www.roche.ch/LC96AbsQuantCalculatedDataModel"))
     dye <- xpathSApply(
       rdmldoc, 
       paste0("//ns:standardPoints/ns:standardPoint/ns:graphIds/ns:guid[text() ='",
-             xmlValue(node[["graphId"]]), "']/../../ns:dyeName"), xmlValue,
+            xmlValue(node[["graphId"]]), "']/../../ns:dyeName"), xmlValue,
       namespaces = c(ns = "http://www.roche.ch/LC96AbsQuantCalculatedDataModel"))
     dilutions[[dye]] <- cbind(dilutions[[dye]],c(position, quant))
   }
@@ -169,48 +169,48 @@ generateSampleName <- function (name.pattern,
                                 publisher)
 {   
   tube <- ifelse((
-    #     publisher == "Roche Diagnostics" || is it needed? check!!!
-    publisher == "StepOne"),
-    reactID,
-{ reactID <- as.integer(reactID)
-  paste0(LETTERS[reactID %/% plateDims["columns"] + 1],
-         reactID %% plateDims["columns"])})  
-name.pattern <- gsub("%NAME%",
-                     tubeName,
-                     name.pattern)
-name.pattern <- gsub("%ID%",
-                     reactID,
-                     name.pattern)
-name.pattern <- gsub("%TUBE%",
-                     tube,
-                     name.pattern)
-name.pattern <- gsub("%TARGET%",
-                     target,
-                     name.pattern)
-name.pattern <- gsub("%TYPE%",
-                     type,
-                     name.pattern)
-return(name.pattern)
+    #publisher == "Roche Diagnostics" || not needed?
+                 publisher == "StepOne"),
+                 reactID,
+                 { reactID <- as.integer(reactID)
+                 paste0(LETTERS[reactID %/% plateDims["columns"] + 1],
+			reactID %% plateDims["columns"])})  
+  name.pattern <- gsub("%NAME%",
+                       tubeName,
+                       name.pattern)
+  name.pattern <- gsub("%ID%",
+                       reactID,
+                       name.pattern)
+  name.pattern <- gsub("%TUBE%",
+                       tube,
+                       name.pattern)
+  name.pattern <- gsub("%TARGET%",
+                       target,
+                       name.pattern)
+  name.pattern <- gsub("%TYPE%",
+                       type,
+                       name.pattern)
+  return(name.pattern)
 }
 
 # Main function
 RDML <- function(rdmlfile = NA,
-                 name.pattern = "%NAME%__%TUBE%",
-                 flat.table = FALSE,
-                 omit.ntp = TRUE)
+                           name.pattern = "%NAME%__%TUBE%",
+                           flat.table = FALSE,
+                           omit.ntp = TRUE)
 { 
   rdmldoc <- getRDMLdoc(rdmlfile)
   publisher <- getPublisher(rdmldoc)
-  #   dilutions <- ifelse(publisher == "Roche Diagnostics",
-  #                       getDilutionsRoche(rdmlfile),
-  #                       getDilutions(rdmldoc))
+#   dilutions <- ifelse(publisher == "Roche Diagnostics",
+#                       getDilutionsRoche(rdmlfile),
+#                       getDilutions(rdmldoc))
   if (publisher == "Roche Diagnostics") {
     dilutions <- getDilutionsRoche(rdmlfile)
   }
   else {
     dilutions <- getDilutions(rdmldoc)
   }
-  
+    
   types <- getTypes(rdmldoc)
   targets <- getTargets(rdmldoc)
   plateDims <- getPlateDimensions(rdmldoc)  
@@ -240,108 +240,108 @@ RDML <- function(rdmlfile = NA,
     # omit empty Bio-Rad data
     try(
       # omit Roche cleared wells 'ntp' type
-      if (!(type == "ntp" && omit.ntp)) {
-        for(fdata in node["data", all = TRUE])
-        {
-          targetID <- xmlGetAttr(fdata[["tar"]], name = "id")
-          if (targetID == "") targetID <- "NA"
-          sampleName <- generateSampleName(name.pattern,
-                                           plateDims,
-                                           reactID,
-                                           tubeName,
-                                           targetID,
-                                           type,
-                                           publisher)
-          
-          adps <- sapply(fdata["adp", all = TRUE],
-                         function(x) as.numeric(xmlValue(x[["fluor"]])))
-          mdps <- sapply(fdata["mdp", all = TRUE],
-                         function(x) as.numeric(xmlValue(x[["fluor"]])))
-          # flat.table == TRUE
-          if (flat.table) {
-            # add qPCR data
-            if (length(adps) != 0) {
-              Adps <- cbind(
-                Adps, adps)          
-              colnames(Adps) <- 
-                c(colnames(Adps)[-length(colnames(Adps))],sampleName)
-              # works only after first column added
-              if (typeof(Adps) == "double")
-              {
-                Cycles <- sapply(fdata["adp", all = TRUE],
-                                 function(x) xmlValue(x[["cyc"]]))
-                Adps <- as.data.frame(Adps,
-                                      row.names = Cycles)
-                Cycles <- as.numeric(Cycles)
-                Adps <- cbind(Cycles, Adps)
-                Adps <- Adps[-2]
-              }
-            }
-            # add melting data
-            if (length(mdps) != 0) {
-              Mdps <- cbind(
-                Mdps , mdps)
-              colnames(Mdps) <- 
-                c(colnames(Mdps)[-length(colnames(Mdps))],
-                  sampleName)
-              # works only after first column added
-              if (typeof(Mdps) == "double")
-              {              
-                Tmps <- sapply(fdata["mdp", all = TRUE],
-                               function(x) xmlValue(x[["tmp"]]))
-                Mdps <- 
-                  as.data.frame(Mdps,
-                                row.names = Tmps)
-                Tmps <- as.numeric(Tmps)
-                Mdps <- cbind(Tmps, Mdps)
-                Mdps <- Mdps[-2]
-              }
+    if (!(type == "ntp" && omit.ntp)) {
+      for(fdata in node["data", all = TRUE])
+      {
+        targetID <- xmlGetAttr(fdata[["tar"]], name = "id")
+        if (targetID == "") targetID <- "NA"
+        sampleName <- generateSampleName(name.pattern,
+                                         plateDims,
+                                         reactID,
+                                         tubeName,
+                                         targetID,
+                                         type,
+                                         publisher)
+        
+        adps <- sapply(fdata["adp", all = TRUE],
+                       function(x) as.numeric(xmlValue(x[["fluor"]])))
+        mdps <- sapply(fdata["mdp", all = TRUE],
+                       function(x) as.numeric(xmlValue(x[["fluor"]])))
+        # flat.table == TRUE
+        if (flat.table) {
+          # add qPCR data
+          if (length(adps) != 0) {
+            Adps <- cbind(
+              Adps, adps)          
+            colnames(Adps) <- 
+              c(colnames(Adps)[-length(colnames(Adps))],sampleName)
+            # works only after first column added
+            if (typeof(Adps) == "double")
+            {
+              Cycles <- sapply(fdata["adp", all = TRUE],
+                               function(x) xmlValue(x[["cyc"]]))
+              Adps <- as.data.frame(Adps,
+                                    row.names = Cycles)
+              Cycles <- as.numeric(Cycles)
+              Adps <- cbind(Cycles, Adps)
+              Adps <- Adps[-2]
             }
           }
-          # flat.table == FALSE
-          else {
-            # add qPCR data
-            if (length(adps) != 0) {
-              Adps[[targetID]][[type]] <- cbind(
-                Adps[[targetID]][[type]], adps)          
-              colnames(Adps[[targetID]][[type]]) <- 
-                c(colnames(Adps[[targetID]][[type]])[-length(colnames(Adps[[targetID]][[type]]))],
-                  sampleName)
-              # works only after first column added
-              if (typeof(Adps[[targetID]][[type]]) == "double")
-              {
-                Cycles <- sapply(fdata["adp", all = TRUE],
-                                 function(x) xmlValue(x[["cyc"]]))
-                Adps[[targetID]][[type]] <- 
-                  as.data.frame(Adps[[targetID]][[type]],
-                                row.names = Cycles)
-                Cycles <- as.numeric(Cycles)
-                Adps[[targetID]][[type]] <- cbind(Cycles, Adps[[targetID]][[type]])
-              }
+          # add melting data
+          if (length(mdps) != 0) {
+            Mdps <- cbind(
+              Mdps , mdps)
+            colnames(Mdps) <- 
+              c(colnames(Mdps)[-length(colnames(Mdps))],
+                sampleName)
+            # works only after first column added
+            if (typeof(Mdps) == "double")
+            {              
+              Tmps <- sapply(fdata["mdp", all = TRUE],
+                             function(x) xmlValue(x[["tmp"]]))
+              Mdps <- 
+                as.data.frame(Mdps,
+                              row.names = Tmps)
+              Tmps <- as.numeric(Tmps)
+              Mdps <- cbind(Tmps, Mdps)
+              Mdps <- Mdps[-2]
             }
-            # add melting data
-            if (length(mdps) != 0) {
-              Mdps[[targetID]][[type]] <- cbind(
-                Mdps[[targetID]][[type]], mdps)
-              colnames(Mdps[[targetID]][[type]]) <- 
-                c(colnames(Mdps[[targetID]][[type]])[-length(colnames(Mdps[[targetID]][[type]]))],
-                  sampleName)
-              # works only after first column added
-              if (typeof(Mdps[[targetID]][[type]]) == "double")
-              {
-                Tmps <- sapply(fdata["mdp", all = TRUE],
-                               function(x) xmlValue(x[["tmp"]]))
-                Mdps[[targetID]][[type]] <- 
-                  as.data.frame(Mdps[[targetID]][[type]],
-                                row.names = Tmps)
-                Tmps <- as.numeric(Tmps)
-                Mdps[[targetID]][[type]] <- cbind(Tmps, Mdps[[targetID]][[type]])
-              }
+          }
+        }
+        # flat.table == FALSE
+        else {
+          # add qPCR data
+          if (length(adps) != 0) {
+            Adps[[targetID]][[type]] <- cbind(
+              Adps[[targetID]][[type]], adps)          
+            colnames(Adps[[targetID]][[type]]) <- 
+              c(colnames(Adps[[targetID]][[type]])[-length(colnames(Adps[[targetID]][[type]]))],
+                sampleName)
+            # works only after first column added
+            if (typeof(Adps[[targetID]][[type]]) == "double")
+            {
+              Cycles <- sapply(fdata["adp", all = TRUE],
+                               function(x) xmlValue(x[["cyc"]]))
+              Adps[[targetID]][[type]] <- 
+                as.data.frame(Adps[[targetID]][[type]],
+                              row.names = Cycles)
+              Cycles <- as.numeric(Cycles)
+              Adps[[targetID]][[type]] <- cbind(Cycles, Adps[[targetID]][[type]])
+            }
+          }
+          # add melting data
+          if (length(mdps) != 0) {
+            Mdps[[targetID]][[type]] <- cbind(
+              Mdps[[targetID]][[type]], mdps)
+            colnames(Mdps[[targetID]][[type]]) <- 
+              c(colnames(Mdps[[targetID]][[type]])[-length(colnames(Mdps[[targetID]][[type]]))],
+                sampleName)
+            # works only after first column added
+            if (typeof(Mdps[[targetID]][[type]]) == "double")
+            {
+              Tmps <- sapply(fdata["mdp", all = TRUE],
+                             function(x) xmlValue(x[["tmp"]]))
+              Mdps[[targetID]][[type]] <- 
+                as.data.frame(Mdps[[targetID]][[type]],
+                              row.names = Tmps)
+              Tmps <- as.numeric(Tmps)
+              Mdps[[targetID]][[type]] <- cbind(Tmps, Mdps[[targetID]][[type]])
             }
           }
         }
       }
-      , silent = TRUE)
+    }
+    , silent = TRUE)
   }
   output <- list(
     Dilutions = dilutions,
@@ -352,3 +352,4 @@ RDML <- function(rdmlfile = NA,
   class(output) <- "RDML_object"
   output
 }
+

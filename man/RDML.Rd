@@ -5,16 +5,17 @@ qPCR data import function
 }
 \description{
 Imports qPCR data from RDML v1.1 format files (Lefever et al. 2009) and 
-transforms it to the appropriate format of the \code{qpcR} (Ritz et al. 
-2008, Spiess et al. 2008) and \code{chiPCR} packages. RDML is the recommended file 
-format element in the Minimum Information for Publication of Quantitative 
-Real-Time PCR Experiments (MIQE) guidelines (Bustin et al. 2009). Data can be 
-imported to the one table format (flat) or list of tables spited by PCR targets 
-and samples types (see 'Details'). Tables consist of 'Cycles' in the first 
-column and fluorescence data of the samples in the remaining columns for qPCR 
-data. For melting data tables consist of 'Temperature' in the first column and 
-fluorescence data of the samples in the remaining columns. Names of the samples 
-can be formed by patterns (see 'Details'). 
+transforms it to the appropriate format of the \code{qpcR} (Ritz et al. 2008, 
+Spiess et al. 2008) and \code{chiPCR} packages. Real-time PCR Data Markup 
+Language (RDML) is the recommended file format element in the Minimum 
+Information for Publication of Quantitative Real-Time PCR Experiments (MIQE) 
+guidelines (Bustin et al. 2009). Data can be imported to the one table format 
+(flat) or list of tables spited by PCR targets and samples types (see 
+'Details'). Tables consist of 'Cycles' in the first column and fluorescence data 
+of the samples in the remaining columns for qPCR data. For melting data tables 
+consist of 'Temperature' in the first column and fluorescence data of the 
+samples in the remaining columns. Names of the samples can be formed by patterns 
+(see 'Details'). 
 }
 \usage{
 RDML(rdmlfile = NA, name.pattern = "\%NAME\%__\%TUBE\%", flat.table = FALSE, 
