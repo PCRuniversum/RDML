@@ -8,11 +8,12 @@ summary.RDML_object <- function(object, print = TRUE, ...) {
       print(dilTable)
     }
   }
-  
   if("Melt" %in% names(object)) {
     #FIX ME!
     #HERE PLACE for diffQ2 from MBmca package
-    meltTable <- c()
+    meltList <- suppressMessages(apply(object[["Melt"]][, -1], 2, function(i)
+      diffQ2(cbind(object[["Melt"]][, 1], i))))
+    
   }
   
   if("qPCR" %in% names(object)) {
