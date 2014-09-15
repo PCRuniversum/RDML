@@ -2,7 +2,8 @@
 S3method(summary,RDML_object)
 
 export(
-RDML
+RDML,
+selectFData
 )
 
 importFrom(chipPCR, MFIaggr)
