@@ -1,8 +1,8 @@
 selectFData <- function(object,
-                        melt=FALSE,
-                        targets=NA, 
-                        types=NA, 
-                        snames=NA) 
+                        melt = FALSE,
+                        targets = NA, 
+                        types = NA, 
+                        snames = NA) 
   {
   if (class(object) != "RDML_object") stop("object must be of class 'RDML_object'!")
   runtype <- ifelse(melt,
@@ -20,9 +20,9 @@ selectFData <- function(object,
   }
 
   #### executes when flat.table=FALSE
-  # if targets=NA, then all available targets in run
+  # if targets = NA, then all available targets in run
   if (anyNA(targets)) targets <- names(object[[runtype]])
-  # if types=NA, then all available types for specified targets
+  # if types = NA, then all available types for specified targets
   if (anyNA(types)) {
     types <- as.vector(sapply(targets, function(fluorTarget) {
       names(object[[runtype]][[fluorTarget]])      
