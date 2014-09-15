@@ -4,13 +4,13 @@
 qPCR data import function
 }
 \description{
-Imports qPCR data from RDML v1.1 format files (Lefever et al. 2009) and 
+Imports fluorescence data from RDML v1.1 format files (Lefever et al. 2009) and 
 transforms it to the appropriate format of the \code{qpcR} (Ritz et al. 2008, 
 Spiess et al. 2008) and \code{chiPCR} packages. Real-time PCR Data Markup 
 Language (RDML) is the recommended file format element in the Minimum 
 Information for Publication of Quantitative Real-Time PCR Experiments (MIQE) 
 guidelines (Bustin et al. 2009). Data can be imported to the one table format 
-(flat) or list of tables spited by PCR targets and samples types (see 
+(flat) or list of tables spited by targets and samples types (see 
 'Details'). Tables consist of 'Cycles' in the first column and fluorescence data 
 of the samples in the remaining columns for qPCR data. For melting data tables 
 consist of 'Temperature' in the first column and fluorescence data of the 
@@ -23,7 +23,7 @@ RDML(rdmlfile = NA, name.pattern = "\%NAME\%__\%TUBE\%", flat.table = FALSE,
 }
 \arguments{
   \item{rdmlfile}{
-    RDML file with qPCR data.
+    RDML file with fluorescence data.
   }
   \item{name.pattern}{
     sample name pattern (see 'Details').
@@ -44,7 +44,7 @@ RDML(rdmlfile = NA, name.pattern = "\%NAME\%__\%TUBE\%", flat.table = FALSE,
   against RDML data from devices: \emph{Bio-Rad CFX96}, 
   \emph{Roche LightCycler 96} and \emph{Applied Biosystems StepOne}.\cr
 
-This function has been designed to import qPCR data from instruments that 
+This function has been designed to import fluorescence data from instruments that 
 support RDML v1.1 format export. Output from this function can be easily 
 used with \code{qpcR} package.\cr
 
