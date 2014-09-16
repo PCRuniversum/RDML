@@ -7,6 +7,7 @@ selectFData
 )
 
 importFrom(chipPCR, MFIaggr)
+importFrom(MBmca, diffQ2)
 importMethodsFrom(chipPCR, summary)
 importFrom(XML, getNodeSet)
 importFrom(XML, xmlGetAttr)
