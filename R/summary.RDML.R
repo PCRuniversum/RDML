@@ -9,11 +9,13 @@ summary.RDML_object <- function(object, print = TRUE, ...) {
     }
   }
   if("Melt" %in% names(object)) {
-    #FIX ME!
-    #HERE PLACE for diffQ2 from MBmca package
+    #currently implemented only for flat table
     meltList <- suppressMessages(apply(object[["Melt"]][, -1], 2, function(i)
       diffQ2(cbind(object[["Melt"]][, 1], i))))
-    
+    meltTable <- t(sapply(meltList, function(i) c(i[["Tm"]], i[["fluoTm"]],
+                                   i[["xTm1.2.D2"]], i[["yTm1.2.D2"]])))
+    colnames(meltTable) <- c("Tm1", "SignalTm1", "Tm2", "Tm3", "SignalTm2",
+                             "SignalTm3")
   }
   
   if("qPCR" %in% names(object)) {
@@ -72,8 +74,8 @@ summary.RDML_object <- function(object, print = TRUE, ...) {
   if(exists("dilTable"))
     res <- c(res, dilTable = list(dilTable))
   
-#   if(exists("meltTable"))
-#     res <- c(res, meltTable = list(meltTable))
+  if(exists("meltTable"))
+    res <- c(res, meltTable = list(meltTable))
   
   if(exists("expTable"))
     res <- c(res, expTable = list(expTable))
