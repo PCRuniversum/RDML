@@ -315,4 +315,3 @@ RDML <- function(rdmlfile = NA,
   
   return(output)
 }
-
