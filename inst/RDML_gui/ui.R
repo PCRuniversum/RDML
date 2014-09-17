@@ -17,8 +17,10 @@ shinyUI(fluidPage(
       checkboxInput("omit.ntp", "Omit 'ntp' Type Samples", TRUE)
     ),
     mainPanel(
-      helpText('RDML object summary:'),
-      verbatimTextOutput('rdml.summary.out')
+      tabsetPanel(
+        tabPanel("RDML object structure", verbatimTextOutput('rdml.structure.out')),
+        tabPanel("RDML object summary", verbatimTextOutput('rdml.summary.out'))
+      )
     )
   )
 ))

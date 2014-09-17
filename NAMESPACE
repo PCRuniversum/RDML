@@ -10,10 +10,7 @@ RDML_gui
 importFrom(chipPCR, MFIaggr)
 importFrom(MBmca, diffQ2)
 importMethodsFrom(chipPCR, summary)
-importFrom(XML, getNodeSet)
-importFrom(XML, xmlGetAttr)
-importFrom(XML, xmlParse)
-importFrom(XML, xmlValue)
-importFrom(XML, xpathSApply)
+importFrom(shiny, runApp)
+importFrom(XML, getNodeSet, xmlGetAttr, xmlParse, xmlValue, xpathSApply)
 
 

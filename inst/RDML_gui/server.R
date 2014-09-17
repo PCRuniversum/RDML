@@ -11,9 +11,15 @@ shinyServer(function(input, output) {
     }
   )
   
-  output$rdml.summary.out <- renderPrint({        
+  output$rdml.structure.out <- renderPrint({        
     if (is.null(rdml.obj()))
       return("Upload your data first!")    
     str(rdml.obj())
+  })
+  
+  output$rdml.summary.out <- renderPrint({        
+    if (is.null(rdml.obj()))
+      return("Upload your data first!")    
+    summary(rdml.obj())
   })
 })
