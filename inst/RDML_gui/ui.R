@@ -6,19 +6,30 @@ shinyUI(fluidPage(
     sidebarPanel(
       fileInput("rdml.file", "Choose RDML File",
                 accept=c("application/zip", ".rdml")),
-      textInput("pattern", "Name Pattern:", "%NAME%__%TUBE%"),
-      HTML('<p>Possible keys in Name Pattern:<ul>
-<li>%NAME% - name of the sample inputted in the qPCR software (ex.: "Sample 1")</li>
-<li>%ID% - tube ID (ex.: "23")</li>
-<li>%TUBE% - tube name (ex.: "B11")</li>
-<li>%TARGET% - PCR target (ex.: "GAPDH")</li>
-<li>%TYPE% - type of the sample (ex.: "unkn")</li></ul><p>'),
+      textInput("pattern", "Name Pattern:", "%NAME%__%TUBE%"),      
+      tags$ul("Possible keys in Name Pattern:",              
+              tags$li('%NAME% - name of the sample inputted in the qPCR software (ex.: "Sample 1")'),
+              tags$li('%ID% - tube ID (ex.: "23")'),
+              tags$li('%TUBE% - tube name (ex.: "B11")'),
+              tags$li('%TARGET% - PCR target (ex.: "GAPDH")'),
+              tags$li('%TYPE% - type of the sample (ex.: "unkn")')),
       checkboxInput("flat.table", "Flat Table", FALSE),
-      checkboxInput("omit.ntp", "Omit 'ntp' Type Samples", TRUE)
+      checkboxInput("omit.ntp", "Omit 'ntp' Type Samples", TRUE),
+      actionButton("update", "Update")
     ),
     mainPanel(
-      helpText('RDML object summary:'),
-      verbatimTextOutput('rdml.summary.out')
+      tabsetPanel(
+        tabPanel("RDML object structure", verbatimTextOutput('rdml.structure.out')),
+        tabPanel("RDML object summary", verbatimTextOutput('rdml.summary.out')),
+        tabPanel("Table/Plots",                 
+                 tags$h4("Filter by:"),
+                 uiOutput("ui.targets"),
+                 uiOutput("ui.types"),
+                 textInput("names.filter", "Names:", ""),
+                 tableOutput("overview.table"),
+                 plotOutput("overview.plot"))
+                
+      )
     )
   )
 ))
