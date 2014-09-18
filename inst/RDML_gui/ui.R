@@ -27,8 +27,7 @@ shinyUI(fluidPage(
                  uiOutput("ui.types"),
                  textInput("names.filter", "Names:", ""),
                  tableOutput("overview.table"),
-                 plotOutput("overview.plot"))
-                
+                 plotOutput("overview.plot"))                
       )
     )
   )

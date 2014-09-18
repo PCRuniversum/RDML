@@ -26,7 +26,6 @@ shinyServer(function(input, output) {
       return("Upload your data first!")    
     summary(rdml.obj())
   })
-  
   output$ui.targets <- renderUI({
     if(is.null(input$rdml.file))
       return()
