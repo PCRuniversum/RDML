@@ -1,3 +1,7 @@
+Changes from Version 0.5 to 0.6 [September 19 2014] 
+* Added shiny GUI
+* Added summary for melting data
+
 Changes from Version 0.4-2 to 0.5 [September 15 2014] 
 * Added function selectFData
 * RDML function code optimization
