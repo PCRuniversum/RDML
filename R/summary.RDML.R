@@ -9,17 +9,41 @@ summary.RDML_object <- function(object, print = TRUE, ...) {
     }
   }
   if("Melt" %in% names(object)) {
-    #currently implemented only for flat table
-    meltList <- suppressMessages(apply(object[["Melt"]][, -1], 2, function(i)
-      diffQ2(cbind(object[["Melt"]][, 1], i))))
-    meltTable <- t(sapply(meltList, function(i) c(i[["Tm"]], i[["fluoTm"]],
-                                   i[["xTm1.2.D2"]], i[["yTm1.2.D2"]])))
-    colnames(meltTable) <- c("Tm1", "SignalTm1", "Tm2", "Tm3", "SignalTm2",
-                             "SignalTm3")
+    if(attr(object, "flat.table")) {
+      meltList <- suppressMessages(apply(object[["Melt"]][, -1], 2, function(i)
+        diffQ2(cbind(object[["Melt"]][, 1], i))))
+      meltTable <- t(sapply(meltList, function(i) c(i[["Tm"]], i[["fluoTm"]],
+                                                    i[["xTm1.2.D2"]], i[["yTm1.2.D2"]])))
+      colnames(meltTable) <- c("Tm1", "SignalTm1", "Tm2", "Tm3", "SignalTm2",
+                               "SignalTm3")
+    } else {
+      meltList <- suppressMessages(lapply(object[["Melt"]], function(dye) 
+        lapply(dye, function(experiment)
+          apply(experiment[, -1], 2, function(i)
+            diffQ2(cbind(experiment[, 1], i))))))
+      
+      meltNames <- do.call(rbind, unlist(lapply(1L:length(meltList), function(dye) 
+        lapply(1L:length(meltList[[dye]]), function(type)
+          t(sapply(names(meltList[[dye]][[type]]), function(i)
+            c(names(meltList)[dye], i))))), FALSE))
+      
+      meltTable <- matrix(unlist(lapply(meltList, function(dye) 
+        lapply(dye, function(type)
+          lapply(type, function(experiment)
+            c(experiment[["Tm"]], experiment[["fluoTm"]],
+              experiment[["xTm1.2.D2"]], experiment[["yTm1.2.D2"]]))))), 
+        ncol = 6, byrow = TRUE)
+      meltTable <- cbind(data.frame(meltNames), data.frame(meltTable))
+      
+      colnames(meltTable) <- c("Dye", "Experiment", "Tm1", 
+                               "SignalTm1", "Tm2", "Tm3", "SignalTm2",
+                               "SignalTm3")
+      
+    }
   }
   
   if("qPCR" %in% names(object)) {
-    if (class(object[["qPCR"]]) == "data.frame") {
+    if (attr(object, "flat.table")) {
       expTable <- summary(MFIaggr(object[["qPCR"]]), print = print)
     } else {
       #iterate MFI aggr over all experiments and all types of experiments
