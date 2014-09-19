@@ -15,20 +15,47 @@ shinyUI(fluidPage(
               tags$li('%TYPE% - type of the sample (ex.: "unkn")')),
       checkboxInput("flat.table", "Flat Table", FALSE),
       checkboxInput("omit.ntp", "Omit 'ntp' Type Samples", TRUE),
-      actionButton("update", "Update")
+      conditionalPanel(
+        condition = "document.getElementById('rdml.file').value != ''",
+        actionButton("update", "Update"),
+        tags$ul(h4("Download As:"), 
+                tags$li(downloadLink("downloadRdmlObj", "RDML_object")),
+                tags$li(downloadLink("downloadCsv", "CSV")),
+                tags$li(downloadLink("downloadCsvFiltered", "CSV filtered")))
+      )
     ),
     mainPanel(
-      tabsetPanel(
-        tabPanel("RDML object structure", verbatimTextOutput('rdml.structure.out')),
-        tabPanel("RDML object summary", verbatimTextOutput('rdml.summary.out')),
-        tabPanel("Table/Plots",                 
-                 tags$h4("Filter by:"),
-                 uiOutput("ui.targets"),
-                 uiOutput("ui.types"),
-                 textInput("names.filter", "Names:", ""),
-                 tableOutput("overview.table"),
-                 plotOutput("overview.plot"))                
+      conditionalPanel(
+        condition = "document.getElementById('rdml.file').value == ''",
+        h2("Upload your data first!")
+      ),
+      conditionalPanel(
+        condition = "document.getElementById('rdml.file').value != ''",
+        tabsetPanel(
+          tabPanel("RDML object structure", verbatimTextOutput('rdml.structure.out')),
+          tabPanel("RDML object summary", verbatimTextOutput('rdml.summary.out')),
+          tabPanel("Table/Plots",                 
+                   h4("Filter by:"),
+                   fluidRow(
+                     column(2, uiOutput("ui.targets")),
+                     column(2, uiOutput("ui.types")),                   
+                     column(2, textInput("names.filter", "Names:", ""))
+                   ),
+                   radioButtons("tablePlotsSelector",
+                                "View as:",
+                                c("Table" = "table",
+                                  "Plots" = "plots")),
+                   conditionalPanel(
+                     condition = "input.tablePlotsSelector == 'table'",
+                     tableOutput("overview.table")
+                   ),
+                   conditionalPanel(
+                     condition = "input.tablePlotsSelector == 'plots'",
+                     plotOutput("overview.plot"))
+          )
+        )
       )
     )
   )
-))
+)
+)
