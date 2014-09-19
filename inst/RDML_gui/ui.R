@@ -37,14 +37,16 @@ shinyUI(fluidPage(
           tabPanel("Table/Plots",                 
                    h4("Filter by:"),
                    fluidRow(
-                     column(2, uiOutput("ui.targets")),
-                     column(2, uiOutput("ui.types")),                   
-                     column(2, textInput("names.filter", "Names:", ""))
+                     column(4, uiOutput("ui.targets")),
+                     column(4, uiOutput("ui.types")),                   
+                     column(4, textInput("names.filter", "Names:", ""))
                    ),
-                   radioButtons("tablePlotsSelector",
-                                "View as:",
-                                c("Table" = "table",
-                                  "Plots" = "plots")),
+                   fluidRow(
+                     column(3, uiOutput("ui.dtypeSelector")),
+                     column(3,radioButtons("tablePlotsSelector",
+                                           "View as:",
+                                           c("Table" = "table",
+                                             "Plots" = "plots")))),
                    conditionalPanel(
                      condition = "input.tablePlotsSelector == 'table'",
                      tableOutput("overview.table")
