@@ -28,7 +28,7 @@ shinyUI(fluidPage(
     mainPanel(
       conditionalPanel(
         condition = "document.getElementById('rdml.file').value == ''",
-        h2("Plaese upload your data first..."),
+        h2("Please upload your data first..."),
         HTML('<p><img src="https://github.com/kablag/RDML/raw/master/inst/RDML_logo.png"/></p>')
       ),
       conditionalPanel(

@@ -15,8 +15,8 @@ summary.RDML_object <- function(object, print = TRUE, ...) {
         diffQ2(cbind(object[["Melt"]][, 1], i))))
       meltTable <- t(sapply(meltList, function(i) c(i[["Tm"]], i[["fluoTm"]],
                                                     i[["xTm1.2.D2"]], i[["yTm1.2.D2"]])))
-      colnames(meltTable) <- c("Tm1", "SignalTm1", "Tm2", "Tm3", "SignalTm2",
-                               "SignalTm3")
+      colnames(meltTable) <- c("Tm1D1", "FluoTm1", "Tm1D2", "Tm2D2", "FluoTm1D2",
+                               "FluoTm2D2")
     } else {
       meltList <- suppressMessages(lapply(object[["Melt"]], function(dye) 
         lapply(dye, function(experiment)
@@ -36,9 +36,8 @@ summary.RDML_object <- function(object, print = TRUE, ...) {
         ncol = 6, byrow = TRUE)
       meltTable <- cbind(data.frame(meltNames), data.frame(meltTable))
       
-      colnames(meltTable) <- c("Dye", "Experiment", "Tm1", 
-                               "SignalTm1", "Tm2", "Tm3", "SignalTm2",
-                               "SignalTm3")
+      colnames(meltTable) <- c("Dye", "Experiment", "Tm1D1", "FluoTm1", "Tm1D2", 
+                               "Tm2D2", "FluoTm1D2", "FluoTm2D2")
     }
     
     if(print) {

@@ -79,10 +79,7 @@ shinyServer(function(input, output) {
     summary(rdml.obj())
   })
   
-  # TODO: split tables by X columns
-  output$overview.table <- renderTable({
-    if(is.null(rdml.obj()))
-      return()
+  overview.data <- reactive({
     targets <- ifelse(is.null(input$targets),
                       NA,
                       input$targets)
@@ -97,16 +94,25 @@ shinyServer(function(input, output) {
                           TRUE,
                           FALSE)
     }
-    vals$fdata <- selectFData(rdml.obj(),
-                              melt = vals$melt,
-                              targets = targets,
-                              types = types,
-                              snames = names.filter)
-    return(vals$fdata)
+    selectFData(rdml.obj(),
+                melt = vals$melt,
+                targets = targets,
+                types = types,
+                snames = names.filter)
+  })
+  
+  
+  
+  # TODO: split tables by X columns
+  output$overview.table <- renderTable({
+    if(is.null(rdml.obj()))
+      return()
+    overview.data()
   })  
   
   # Doesn't updates on qPCR/Melting option change!!!
   # Need to click Table/Plot option
+  # Michal - fixed.
   output$overview.plot <- renderPlot({
     if(is.null(rdml.obj()))
       return()
@@ -114,8 +120,8 @@ shinyServer(function(input, output) {
       lab <- ifelse(vals$melt,
                     "Temperature",
                     "Cycles")
-      matplot(vals$fdata[1], 
-              vals$fdata[-1],
+      matplot(overview.data()[1], 
+              overview.data()[-1],
               xlab = lab,
               ylab = "Fluorescence",
               type = "l")
