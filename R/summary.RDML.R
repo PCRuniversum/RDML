@@ -6,6 +6,7 @@ summary.RDML_object <- function(object, print = TRUE, ...) {
     if(print) {
       cat("Dilutions:\n")
       print(dilTable)
+      cat("\n")
     }
   }
   if("Melt" %in% names(object)) {
@@ -41,7 +42,7 @@ summary.RDML_object <- function(object, print = TRUE, ...) {
     }
     
     if(print) {
-      cat("\nTable of melting temperatures:")
+      cat("\nTable of melting temperatures:\n")
       print(meltTable) 
       cat("\n")
     }
