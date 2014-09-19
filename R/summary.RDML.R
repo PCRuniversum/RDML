@@ -38,7 +38,12 @@ summary.RDML_object <- function(object, print = TRUE, ...) {
       colnames(meltTable) <- c("Dye", "Experiment", "Tm1", 
                                "SignalTm1", "Tm2", "Tm3", "SignalTm2",
                                "SignalTm3")
-      
+    }
+    
+    if(print) {
+      cat("\nTable of melting temperatures:")
+      print(meltTable) 
+      cat("\n")
     }
   }
   
