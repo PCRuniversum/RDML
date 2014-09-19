@@ -50,13 +50,17 @@ shinyServer(function(input, output) {
                                     flat.table = input$flat.table,
                                     omit.ntp = input$omit.ntp)
               vals$dtypeSelectorVars <- c()
+              vals$melt <- TRUE
               if("qPCR" %in% names(vals$rdml.obj)) 
+              {
                 vals$dtypeSelectorVars <- c(vals$dtypeSelectorVars, 
                                             "qPCR" = "qPCR")
+                vals$melt <- FALSE
+              }
               if("Melt" %in% names(vals$rdml.obj)) 
                 vals$dtypeSelectorVars <- c(vals$dtypeSelectorVars, 
                                             "Melting" = "Melt")
-              vals$melt <- FALSE
+              
               return(vals$rdml.obj)
     })
   })  
@@ -74,11 +78,11 @@ shinyServer(function(input, output) {
   })
   
   
-  vals$melt <- reactive({
-    if(input$dataTypeSelector == 'Melt') TRUE
-    else FALSE
-  })
-  
+  #   vals$melt <- reactive({
+  #     if(input$dataTypeSelector == 'Melt') TRUE
+  #     else FALSE
+  #   })
+  #   
   output$overview.table <- renderTable({
     if(is.null(rdml.obj()))
       return()
@@ -91,6 +95,11 @@ shinyServer(function(input, output) {
     names.filter <- ifelse(input$names.filter == '',
                            NA,
                            input$names.filter)
+    if(!is.null(input$dataTypeSelector)) {
+      vals$melt <- ifelse((input$dataTypeSelector == 'Melt'),
+                          TRUE,
+                          FALSE)
+    }
     vals$fdata <- selectFData(rdml.obj(),
                               melt = vals$melt,
                               targets = targets,
