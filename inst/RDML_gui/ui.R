@@ -4,8 +4,9 @@ shinyUI(fluidPage(
   titlePanel("RDML import"),
   sidebarLayout(
     sidebarPanel(
-      fileInput("rdml.file", "Choose RDML File",
+      fileInput("rdml.file", h4("Upload RDML File:"),
                 accept=c("application/zip", ".rdml")),
+      h4("Input Options:"),
       textInput("pattern", "Name Pattern:", "%NAME%__%TUBE%"),      
       tags$ul("Possible keys in Name Pattern:",              
               tags$li('%NAME% - name of the sample inputted in the qPCR software (ex.: "Sample 1")'),
@@ -27,7 +28,8 @@ shinyUI(fluidPage(
     mainPanel(
       conditionalPanel(
         condition = "document.getElementById('rdml.file').value == ''",
-        h2("Upload your data first!")
+        h2("Plaese upload your data first..."),
+        HTML('<p><img src="https://github.com/kablag/RDML/raw/master/inst/RDML_logo.png"/></p>')
       ),
       conditionalPanel(
         condition = "document.getElementById('rdml.file').value != ''",
@@ -37,8 +39,11 @@ shinyUI(fluidPage(
           tabPanel("Table/Plots",                 
                    h4("Filter by:"),
                    fluidRow(
-                     column(4, uiOutput("ui.targets")),
-                     column(4, uiOutput("ui.types")),                   
+                     conditionalPanel(
+                      condition = "document.getElementById('flat.table').checked == false",
+                      column(4, uiOutput("ui.targets")),
+                      column(4, uiOutput("ui.types"))
+                     ),                   
                      column(4, textInput("names.filter", "Names:", ""))
                    ),
                    fluidRow(
@@ -46,7 +51,14 @@ shinyUI(fluidPage(
                      column(3,radioButtons("tablePlotsSelector",
                                            "View as:",
                                            c("Table" = "table",
-                                             "Plots" = "plots")))),
+                                             "Plots" = "plots"))),
+                     conditionalPanel(
+                       condition = "input.tablePlotsSelector == 'plots'",
+                       column(3,radioButtons("plotStyle",
+                                             "Plot Style:",
+                                             c("Single" = "single",
+                                               "Multi" = "multi"))))
+                   ),
                    conditionalPanel(
                      condition = "input.tablePlotsSelector == 'table'",
                      tableOutput("overview.table")

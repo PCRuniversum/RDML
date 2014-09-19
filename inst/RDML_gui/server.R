@@ -7,7 +7,8 @@ shinyServer(function(input, output) {
   ########## UI elements
   
   output$ui.targets <- renderUI({
-    if(is.null(input$rdml.file) || is.null(input$dataTypeSelector))
+    if(is.null(input$rdml.file) || input$flat.table ||
+         is.null(input$dataTypeSelector))
       return()
     vals$targets <- names(rdml.obj()[[input$dataTypeSelector]])
     selectInput("targets", "Targets:",
@@ -16,7 +17,8 @@ shinyServer(function(input, output) {
   })
   
   output$ui.types <- renderUI({
-    if(is.null(rdml.obj()) || is.null(input$dataTypeSelector))
+    if(is.null(rdml.obj()) || input$flat.table ||
+         is.null(input$dataTypeSelector))
       return()
     targets <- ifelse(is.null(input$targets),
                       vals$targets,
@@ -40,7 +42,7 @@ shinyServer(function(input, output) {
   ######################
   
   vals <- reactiveValues()
-  
+   
   rdml.obj <- reactive({
     if(is.null(input$rdml.file))      
       return(NULL)
@@ -77,12 +79,7 @@ shinyServer(function(input, output) {
     summary(rdml.obj())
   })
   
-  
-  #   vals$melt <- reactive({
-  #     if(input$dataTypeSelector == 'Melt') TRUE
-  #     else FALSE
-  #   })
-  #   
+  # TODO: split tables by X columns
   output$overview.table <- renderTable({
     if(is.null(rdml.obj()))
       return()
@@ -108,10 +105,22 @@ shinyServer(function(input, output) {
     return(vals$fdata)
   })  
   
+  # Doesn't updates on qPCR/Melting option change!!!
+  # Need to click Table/Plot option
   output$overview.plot <- renderPlot({
     if(is.null(rdml.obj()))
       return()
-    plotCurves(vals$fdata[,1], vals$fdata[-1], type = "l")
+    if(input$plotStyle == "single") {
+      lab <- ifelse(vals$melt,
+                    "Temperature",
+                    "Cycles")
+      matplot(vals$fdata[1], 
+              vals$fdata[-1],
+              xlab = lab,
+              ylab = "Fluorescence",
+              type = "l")
+    }
+    else plotCurves(vals$fdata[,1], vals$fdata[,-1], type = "l")   
   })
   
   ############# Downloads
