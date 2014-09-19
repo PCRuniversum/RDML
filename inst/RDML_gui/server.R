@@ -49,7 +49,8 @@ shinyServer(function(input, output) {
                 multiple = TRUE)
   })
   
-  # rewrite with reactive
+  vals <- reactiveValues()
+  
   output$overview.table <- renderTable({
     if(is.null(input$rdml.file))
       return()
@@ -59,28 +60,17 @@ shinyServer(function(input, output) {
     types <- ifelse(is.null(input$types),
                       NA,
                       input$types)
-    selectFData(rdml.obj(),
+    vals$fdata <- selectFData(rdml.obj(),
                 melt = FALSE,
                 targets = targets,
                 types = types,
                 snames = input$names.filter)
-  })
+    return(vals$fdata)
+  })  
   
-  # rewrite with reactive
   output$overview.plot <- renderPlot({
     if(is.null(input$rdml.file))
       return()
-    targets <- ifelse(is.null(input$targets),
-                      NA,
-                      input$targets)
-    types <- ifelse(is.null(input$types),
-                    NA,
-                    input$types)
-    fdata <- selectFData(rdml.obj(),
-                melt = FALSE,
-                targets = targets,
-                types = types,
-                snames = input$names.filter)    
-    plotCurves(fdata[,1], fdata[-1], type = "l")
+    plotCurves(vals$fdata[,1], vals$fdata[-1], type = "l")
     })
 })
