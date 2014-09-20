@@ -120,7 +120,10 @@ getDilutions <- function(RDMLdoc)
   names(values) <- samplesids
   # sorting quantities by sample name
   values <- values[order(names(values))]
-  return(values)  
+  dils<- list()
+  dils[[1]] <- values
+  names(dils) <- "All Targets"
+  return(dils)  
 }  
 
 
