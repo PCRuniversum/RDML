@@ -126,7 +126,7 @@ shinyServer(function(input, output) {
               ylab = "Fluorescence",
               type = "l")
     }
-    else plotCurves(vals$fdata[,1], vals$fdata[,-1], type = "l")   
+    else plotCurves(overview.data()[, 1], overview.data()[, -1], type = "l")   
   })
   
   ############# Downloads
