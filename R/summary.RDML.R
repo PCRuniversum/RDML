@@ -9,14 +9,6 @@ summary.RDML_object <- function(object, print = TRUE, ...) {
     }
   }
   if("Melt" %in% names(object)) {
-    if(attr(object, "flat.table")) {
-      meltList <- suppressMessages(apply(object[["Melt"]][, -1], 2, function(i)
-        diffQ2(cbind(object[["Melt"]][, 1], i))))
-      meltTable <- t(sapply(meltList, function(i) c(i[["Tm"]], i[["fluoTm"]],
-                                                    i[["xTm1.2.D2"]], i[["yTm1.2.D2"]])))
-      colnames(meltTable) <- c("Tm1D1", "FluoTm1", "Tm1D2", "Tm2D2", "FluoTm1D2",
-                               "FluoTm2D2")
-    } else {
       meltList <- suppressMessages(lapply(object[["Melt"]], function(dye) 
         lapply(dye, function(experiment)
           apply(experiment[, -1], 2, function(i)
@@ -37,7 +29,6 @@ summary.RDML_object <- function(object, print = TRUE, ...) {
       
       colnames(meltTable) <- c("Dye", "Experiment", "Tm1D1", "FluoTm1", "Tm1D2", 
                                "Tm2D2", "FluoTm1D2", "FluoTm2D2")
-    }
     
     if(print) {
       cat("\nTable of melting temperatures:\n")
@@ -47,9 +38,7 @@ summary.RDML_object <- function(object, print = TRUE, ...) {
   }
   
   if("qPCR" %in% names(object)) {
-    if (attr(object, "flat.table")) {
-      expTable <- summary(MFIaggr(object[["qPCR"]]), print = print)
-    } else {
+
       #iterate MFI aggr over all experiments and all types of experiments
       expTable <- data.frame(do.call(rbind, lapply(object[["qPCR"]], function(i) {
         tab <- do.call(rbind, lapply(i, function(j)
@@ -94,7 +83,7 @@ summary.RDML_object <- function(object, print = TRUE, ...) {
         print(restStats)
         
         cat("\n")
-      }
+
     }
   }
   res <- list()
