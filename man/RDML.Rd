@@ -32,12 +32,6 @@ RDML(rdmlfile = NA, name.pattern = "\%NAME\%__\%TUBE\%", omit.ntp = TRUE)
   }
 }
 \details{
-\bold{ATTENTION}: Although the format RDML claimed as data exchange format, 
-  the specific implementation of the format at devices from different 
-  manufacturers differ significantly. Currently this function is checked 
-  against RDML data from devices: \emph{Bio-Rad CFX96}, 
-  \emph{Roche LightCycler 96} and \emph{Applied Biosystems StepOne}.\cr
-
 This function has been designed to import fluorescence data from instruments that 
 support RDML v1.1 format export. Output from this function can be easily 
 used with \code{qpcR} package.\cr
@@ -63,11 +57,22 @@ Possible keys in \code{name.pattern}
 \item{\code{\%TYPE\%} - type of the sample (ex.: "unkn")}
 }
 }
+
+\section{Warning}{
+Although the format RDML claimed as data exchange format, 
+  the specific implementation of the format at devices from different 
+  manufacturers differ significantly. Currently this function is checked 
+  against RDML data from devices: \emph{Bio-Rad CFX96}, 
+  \emph{Roche LightCycler 96} and \emph{Applied Biosystems StepOne}.\cr
+}
+
 \value{
 A list of \code{data.frame}, suitable for analysis 
 with \code{qpcR} package. Also output list contains information about 
 dilutions (quantity or concentration) if available.
 }
+
+
 \references{
 RDML format http://www.rdml.org/ \cr
 \code{qpcR} package http://cran.r-project.org/web/packages/qpcR/index.html

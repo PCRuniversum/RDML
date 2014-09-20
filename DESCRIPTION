@@ -1,6 +1,6 @@
 Package: RDML
 Type: Package
-Title: Importing real-time thermo cycler (qPCR) data from RDML format files
+Title: Importing Real-Time Thermo Cycler (qPCR) Data From RDML Format Files
 Version: 0.6
 LazyData: true
 Date: 2014-09-19
