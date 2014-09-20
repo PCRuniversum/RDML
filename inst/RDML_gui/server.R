@@ -7,7 +7,7 @@ shinyServer(function(input, output) {
   ########## UI elements
   
   output$ui.targets <- renderUI({
-    if(is.null(input$rdml.file) || input$flat.table ||
+    if(is.null(input$rdml.file) ||
          is.null(input$dataTypeSelector))
       return()
     vals$targets <- names(rdml.obj()[[input$dataTypeSelector]])
@@ -17,7 +17,7 @@ shinyServer(function(input, output) {
   })
   
   output$ui.types <- renderUI({
-    if(is.null(rdml.obj()) || input$flat.table ||
+    if(is.null(rdml.obj()) ||
          is.null(input$dataTypeSelector))
       return()
     targets <- ifelse(is.null(input$targets),
@@ -49,7 +49,6 @@ shinyServer(function(input, output) {
     input$update
     isolate({ vals$rdml.obj <- RDML(input$rdml.file$datapath,
                                     name.pattern = input$pattern,
-                                    flat.table = input$flat.table,
                                     omit.ntp = input$omit.ntp)
               vals$dtypeSelectorVars <- c()
               vals$melt <- TRUE
