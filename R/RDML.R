@@ -1,16 +1,18 @@
 # Unzips RDML to get inner XML content
 getRDMLdoc <- function(file)
-{
+{  
   unzippedRDML <- unzip(file)
-  if (length(unzippedRDML) > 1)
-  {
-    rdmldoc <- xmlParse("rdml_data.xml")
-  }
-  else
-  {
-    rdmldoc <- xmlParse(unzippedRDML)
-  }
-  unlink(unzippedRDML)
+  tryCatch({
+    if (length(unzippedRDML) > 1)
+    {
+      rdmldoc <- xmlParse("rdml_data.xml")
+    }
+    else
+    {
+      rdmldoc <- xmlParse(unzippedRDML)
+    }},
+           error = function(e) { print(e) },
+           finally = unlink(unzippedRDML))
   return(rdmldoc)
 }
 
@@ -75,13 +77,13 @@ getPlateDimensions <- function(RDMLdoc)
     "/rdml:rdml/rdml:experiment/rdml:run/rdml:pcrFormat/rdml:rows",
     xmlValue,
     namespaces = c(rdml = "http://www.rdml.org"))[1])},
-    error = function(e) 8)
+                   error = function(e) 8)
   columns <- tryCatch({as.integer(xpathSApply(
     RDMLdoc, 
     "/rdml:rdml/rdml:experiment/rdml:run/rdml:pcrFormat/rdml:columns",
     xmlValue,
     namespaces = c(rdml = "http://www.rdml.org"))[1])},
-    error = function(e) 12)
+                      error = function(e) 12)
   return(c(rows = rows, columns = columns))
 }
 
@@ -131,34 +133,38 @@ getDilutions <- function(RDMLdoc)
 getDilutionsRoche <- function(filename)
 {
   unzippedRDML <- unzip(filename)
-  rdmldoc <- xmlParse("calculated_data.xml")
-  unlink(unzippedRDML) 
-  
-  nodes<- getNodeSet(
-    rdmldoc, 
-    "//ns:absQuantDataSource/ns:standard/..",    
-    namespaces = c(ns = "http://www.roche.ch/LC96AbsQuantCalculatedDataModel"))
-  
-  dilutions <- list()
-  for(node in nodes){
-    quant <- xmlValue(node[["standard"]])
-    position <- xpathSApply(
+  tryCatch({
+    rdmldoc <- xmlParse("calculated_data.xml")
+    unlink(unzippedRDML) 
+    
+    nodes<- getNodeSet(
       rdmldoc, 
-      paste0("//ns:standardPoints/ns:standardPoint/ns:graphIds/ns:guid[text() ='",
-             xmlValue(node[["graphId"]]), "']/../../ns:position"), xmlValue,
+      "//ns:absQuantDataSource/ns:standard/..",    
       namespaces = c(ns = "http://www.roche.ch/LC96AbsQuantCalculatedDataModel"))
-    dye <- xpathSApply(
-      rdmldoc, 
-      paste0("//ns:standardPoints/ns:standardPoint/ns:graphIds/ns:guid[text() ='",
-             xmlValue(node[["graphId"]]), "']/../../ns:dyeName"), xmlValue,
-      namespaces = c(ns = "http://www.roche.ch/LC96AbsQuantCalculatedDataModel"))
-    dilutions[[dye]] <- cbind(dilutions[[dye]],c(position, quant))
-  }
-  dilutions <- lapply(dilutions, function(dilution){
-    quant <- as.numeric(dilution[2, ])
-    quant <- t(as.data.frame(quant))
-    colnames(quant) <- dilution[1, ]
-    return(quant) })
+    
+    dilutions <- list()
+    for(node in nodes){
+      quant <- xmlValue(node[["standard"]])
+      position <- xpathSApply(
+        rdmldoc, 
+        paste0("//ns:standardPoints/ns:standardPoint/ns:graphIds/ns:guid[text() ='",
+               xmlValue(node[["graphId"]]), "']/../../ns:position"), xmlValue,
+        namespaces = c(ns = "http://www.roche.ch/LC96AbsQuantCalculatedDataModel"))
+      dye <- xpathSApply(
+        rdmldoc, 
+        paste0("//ns:standardPoints/ns:standardPoint/ns:graphIds/ns:guid[text() ='",
+               xmlValue(node[["graphId"]]), "']/../../ns:dyeName"), xmlValue,
+        namespaces = c(ns = "http://www.roche.ch/LC96AbsQuantCalculatedDataModel"))
+      dilutions[[dye]] <- cbind(dilutions[[dye]],c(position, quant))
+    }
+    dilutions <- lapply(dilutions, function(dilution){
+      quant <- as.numeric(dilution[2, ])
+      quant <- t(as.data.frame(quant))
+      colnames(quant) <- dilution[1, ]
+      return(quant) })
+    },
+           error = function(e) { print(e) },
+           finally = unlink(unzippedRDML))
   return(dilutions)
 }
 
@@ -174,26 +180,26 @@ generateSampleName <- function (name.pattern,
   tube <- ifelse((
     #publisher == "Roche Diagnostics" || not needed?
     publisher == "StepOne"),
-    reactID,
+                 reactID,
 { reactID <- as.integer(reactID)
   paste0(LETTERS[reactID %/% plateDims["columns"] + 1],
          reactID %% plateDims["columns"])})  
-name.pattern <- gsub("%NAME%",
-                     tubeName,
-                     name.pattern)
-name.pattern <- gsub("%ID%",
-                     reactID,
-                     name.pattern)
-name.pattern <- gsub("%TUBE%",
-                     tube,
-                     name.pattern)
-name.pattern <- gsub("%TARGET%",
-                     target,
-                     name.pattern)
-name.pattern <- gsub("%TYPE%",
-                     type,
-                     name.pattern)
-return(name.pattern)
+  name.pattern <- gsub("%NAME%",
+                       tubeName,
+                       name.pattern)
+  name.pattern <- gsub("%ID%",
+                       reactID,
+                       name.pattern)
+  name.pattern <- gsub("%TUBE%",
+                       tube,
+                       name.pattern)
+  name.pattern <- gsub("%TARGET%",
+                       target,
+                       name.pattern)
+  name.pattern <- gsub("%TYPE%",
+                       type,
+                       name.pattern)
+  return(name.pattern)
 }
 
 # Main function
