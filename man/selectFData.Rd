@@ -54,8 +54,8 @@ Michal Burdukiewicz <michalburdukiewicz@gmail.com>
 library(chipPCR)
 PATH <- path.package("RDML")
 filename <- paste(PATH, "/extdata/", "BioRad_qPCR_melt.rdml", sep ="")
-cfx96 <- RDML(filename, flat.table=TRUE,
-                        name.pattern = "\%TUBE\%_\%NAME\%_\%TYPE\%_\%TARGET\%")
+cfx96 <- RDML(filename, 
+              name.pattern = "\%TUBE\%_\%NAME\%_\%TYPE\%_\%TARGET\%")
 ## Select samples with names that contain word 'unkn'.
 fdata <- selectFData(cfx96, snames="unkn")
 ## Show names of selected samples

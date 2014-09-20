@@ -205,7 +205,6 @@ generateSampleName <- function (name.pattern,
 # Main function
 RDML <- function(rdmlfile = NA,
                  name.pattern = "%NAME%__%TUBE%",
-                 flat.table = FALSE,
                  omit.ntp = TRUE)
 { 
   rdmldoc <- getRDMLdoc(rdmlfile)
@@ -308,24 +307,5 @@ RDML <- function(rdmlfile = NA,
   # remove empty elements (Dilutions, Adps or Mdps)  
   output[sapply(output, function(x) length(x) == 0)] <- NULL  
   class(output) <- "RDML_object"
-  #flat.table is assigned this way to allow uwage of flat.table attribute in 
-  #selectFData function
-  attr(output, "flat.table") <- FALSE
-  
-  if(flat.table == TRUE)
-  {
-    if(length(Adps)!=0) Adps <- selectFData(output)
-    if(length(Mdps)!=0) Mdps <- selectFData(output, melt=TRUE)
-    output <- list(
-      Dilutions = dilutions,
-      qPCR = Adps,
-      Melt = Mdps)
-    # remove empty elements (Dilutions, Adps or Mdps)  
-    output[sapply(output, function(x) length(x) == 0)] <- NULL
-    class(output) <- "RDML_object"
-    attr(output, "flat.table") <- TRUE
-  }
-  
-  
   return(output)
 }

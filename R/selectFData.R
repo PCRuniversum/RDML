@@ -8,23 +8,7 @@ selectFData <- function(object,
   runtype <- ifelse(melt,
                     "Melt",
                     "qPCR")
-  # Check for flat.table = TRUE
-  if (typeof(object[[runtype]][[1]]) != "list")
-  {      
-      output <- object[[runtype]][1]
-      if(is.na(snames)) {
-          output <- cbind(output, object[[runtype]][-1])
-      }
-      else {
-          cols <- grep(snames, names(object[[runtype]]))
-          cols <- unique(cols)    
-          output <- cbind(output, object[[runtype]][cols])
-      }
-      if (length(output) == 1) return(data.frame())
-      return(output)
-  }
-
-  #### executes when flat.table=FALSE
+  
   # if targets=NA, then all available targets in run
   if (anyNA(targets)) targets <- names(object[[runtype]])
   # if types=NA, then all available types for specified targets
