@@ -1,8 +1,12 @@
 summary.RDML_object <- function(object, print = TRUE, ...) {
   if("Dilutions" %in% names(object)) {
-    dilTable <- do.call(rbind, object[["Dilutions"]])
-    rownames(dilTable) <- names(object[["Dilutions"]])
-    
+    if(typeof(object[["Dilutions"]]) == "list") {
+      dilTable <- do.call(rbind, object[["Dilutions"]])
+      rownames(dilTable) <- names(object[["Dilutions"]])
+    }
+    else {
+      dilTable <- object[["Dilutions"]]
+    }
     if(print) {
       cat("Dilutions:\n")
       print(dilTable)
