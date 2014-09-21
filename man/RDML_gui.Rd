@@ -5,8 +5,9 @@
 Graphical User Interface for .rdml data import
 }
 \description{
-\code{RDML_gui} is a graphical interface allowing user to read \code{.rdml} file, extract 
-data and save it in other format. Additional features includes summary statistics and plots.
+\code{RDML_gui} is a web-broser based graphical interface allowing user to read 
+\code{.rdml} file, extract data and save it in other format. Additional features 
+includes summary statistics and plotting functions.
 }
 \usage{
 RDML_gui()
