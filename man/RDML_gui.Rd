@@ -5,7 +5,8 @@
 Graphical User Interface for .rdml data import
 }
 \description{
-\code{RDML_gui} bla bla
+\code{RDML_gui} is a graphical interface allowing user to read \code{.rdml} file, extract 
+data and save it in other format. Additional features includes summary statistics and plots.
 }
 \usage{
 RDML_gui()
@@ -28,7 +29,9 @@ RDML_gui()
 }
 
 \seealso{
-\code{\link[chipPCR]{MFIaggr}}
+Read \code{.rdml} files: \code{\link{RDM}}.
+Select data from \code{.rdml} files: \code{\link{selectFData}}.
+Summary statistics: \code{\link{summary.RDML_object}}.
 }
 
 \keyword{ hplot }
