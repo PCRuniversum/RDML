@@ -1,3 +1,6 @@
+Changes from Version 0.6 to 0.6-1 [September 23 2014] 
+* flat.table option removed from RDML function
+
 Changes from Version 0.5 to 0.6 [September 19 2014] 
 * Added shiny GUI
 * Added summary for melting data
