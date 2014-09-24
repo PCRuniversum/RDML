@@ -1,4 +1,5 @@
 summary.RDML_object <- function(object, print = TRUE, ...) {
+  #### Info about dilutions
   if("Dilutions" %in% names(object)) {    
     dilTable <- do.call(rbind, object[["Dilutions"]])
     rownames(dilTable) <- names(object[["Dilutions"]])
@@ -8,6 +9,27 @@ summary.RDML_object <- function(object, print = TRUE, ...) {
       cat("\n")
     }
   }
+  
+  #### Pretty structure of run
+  i <- ifelse("Dilutions" %in% names(object),
+              2,
+              1)
+  runStr <- c()
+  for(target in names(object[[i]])) {  
+    for(stype in names(object[[i]][[target]])) {
+      runStr <- rbind(runStr, c(Targets = target, Types = stype, 
+                        No.Samples = length(names(cfx96[[i]][[target]][[stype]])[-1])))      
+    }
+  }
+  runStr <- as.data.frame(runStr)
+  if(print) {
+    cat("\nStructure of run:\n")
+    print(runStr) 
+    cat("\n")
+  }
+  
+  
+  #### Summary for melting data
   if("Melt" %in% names(object)) {
       meltList <- suppressMessages(lapply(object[["Melt"]], function(dye) 
         lapply(dye, function(experiment)
@@ -37,6 +59,7 @@ summary.RDML_object <- function(object, print = TRUE, ...) {
     }
   }
   
+  #### Summary for qPCR data
   if("qPCR" %in% names(object)) {
 
       #iterate MFI aggr over all experiments and all types of experiments
@@ -90,6 +113,8 @@ summary.RDML_object <- function(object, print = TRUE, ...) {
   
   if(exists("dilTable"))
     res <- c(res, dilTable = list(dilTable))
+  
+  res <- c(res, runStr = list(runStr))
   
   if(exists("meltTable"))
     res <- c(res, meltTable = list(meltTable))

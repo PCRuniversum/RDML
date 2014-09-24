@@ -114,7 +114,8 @@ getDilutions <- function(RDMLdoc)
   nodes <- getNodeSet(
     RDMLdoc, 
     "/rdml:rdml/rdml:sample/rdml:quantity/rdml:value/../..",    
-    namespaces = c(rdml = "http://www.rdml.org"))
+    namespaces = c(rdml = "http://www.rdml.org"))  
+  if(is.null(nodes)) return()
   values <- sapply(nodes, function(node) {
     as.numeric(xmlValue(node[["quantity"]][["value"]]))})
   # names of the samples that contain "quantity" information
