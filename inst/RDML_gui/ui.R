@@ -35,7 +35,6 @@ shinyUI(fluidPage(
       conditionalPanel(
         condition = "document.getElementById('rdml.file').value != ''",
         tabsetPanel(
-          tabPanel("RDML object structure", verbatimTextOutput('rdml.structure.out')),
           tabPanel("RDML object summary", verbatimTextOutput('rdml.summary.out')),
           tabPanel("Table/Plots",                 
                    h4("Filter by:"),

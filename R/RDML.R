@@ -174,17 +174,12 @@ generateSampleName <- function (name.pattern,
                                 plateDims,
                                 reactID,
                                 tubeName,
+                                tube,
                                 target,
                                 type,
                                 publisher)
 {   
-  tube <- ifelse((
-    #publisher == "Roche Diagnostics" || not needed?
-    publisher == "StepOne"),
-                 reactID,
-{ reactID <- as.integer(reactID)
-  paste0(LETTERS[reactID %/% plateDims["columns"] + 1],
-         reactID %% plateDims["columns"])})  
+   
   name.pattern <- gsub("%NAME%",
                        tubeName,
                        name.pattern)
@@ -231,6 +226,7 @@ RDML <- function(rdmlfile = NA,
     namespaces = c(rdml = "http://www.rdml.org"))
   Adps <- list()
   Mdps <- list()
+  plate.map <- list()
   for(node in nodes) {
     
     reactID <- xmlGetAttr(node, name = "id")
@@ -245,12 +241,22 @@ RDML <- function(rdmlfile = NA,
       if (!(type == "ntp" && omit.ntp)) {
         for(fdata in node["data", all = TRUE])
         {
+          tube <- ifelse((
+            #publisher == "Roche Diagnostics" || not needed?
+            publisher == "StepOne"),
+            reactID,
+            { reactID <- as.integer(reactID)
+            paste0(LETTERS[reactID %/% plateDims["columns"] + 1],
+              reactID %% plateDims["columns"])}
+            )
+          
           targetID <- xmlGetAttr(fdata[["tar"]], name = "id")
           if (targetID == "") targetID <- "NA"
           sampleName <- generateSampleName(name.pattern,
                                            plateDims,
                                            reactID,
                                            tubeName,
+                                           tube,
                                            targetID,
                                            type,
                                            publisher)
@@ -258,7 +264,20 @@ RDML <- function(rdmlfile = NA,
           adps <- sapply(fdata["adp", all = TRUE],
                          function(x) as.numeric(xmlValue(x[["fluor"]])))
           mdps <- sapply(fdata["mdp", all = TRUE],
-                         function(x) as.numeric(xmlValue(x[["fluor"]])))         
+                         function(x) as.numeric(xmlValue(x[["fluor"]])))
+          
+          # add sample to plate.map
+          if(is.element(tube, names(plate.map))) {
+            # add target for existing element of plate.map
+            plate.map[[tube]]$Targets <- c(plate.map[[tube]]$Targets,
+                                           targetID)            
+          }
+          else {
+            plate.map[[tube]] <- list(Name = sampleName,
+                                      Type = type,
+                                      Targets = targetID)
+          }          
+          
           # add qPCR data
           if (length(adps) != 0) {
             Adps[[targetID]][[type]] <- cbind(
@@ -276,7 +295,7 @@ RDML <- function(rdmlfile = NA,
                               row.names = Cycles)
               Cycles <- as.numeric(Cycles)
               Adps[[targetID]][[type]] <- cbind(Cycles, Adps[[targetID]][[type]])
-            }
+            }            
           }
           # add melting data
           if (length(mdps) != 0) {
@@ -304,7 +323,9 @@ RDML <- function(rdmlfile = NA,
   output <- list(
     Dilutions = dilutions,
     qPCR = Adps,
-    Melt = Mdps)
+    Melt = Mdps,
+    Plate.map = plate.map,
+    Plate.Dims = plateDims)
   # remove empty elements (Dilutions, Adps or Mdps)  
   output[sapply(output, function(x) length(x) == 0)] <- NULL  
   class(output) <- "RDML_object"

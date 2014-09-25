@@ -64,13 +64,7 @@ shinyServer(function(input, output) {
               
               return(vals$rdml.obj)
     })
-  })  
-  
-  output$rdml.structure.out <- renderPrint({        
-    if (is.null(rdml.obj()))
-      return()    
-    str(rdml.obj())
-  })  
+  })     
   
   output$rdml.summary.out <- renderPrint({        
     if (is.null(rdml.obj()))
