@@ -324,7 +324,7 @@ RDML <- function(rdmlfile = NA,
     Dilutions = dilutions,
     qPCR = Adps,
     Melt = Mdps,
-    Plate.map = plate.map,
+    Plate.Map = plate.map,
     Plate.Dims = plateDims)
   # remove empty elements (Dilutions, Adps or Mdps)  
   output[sapply(output, function(x) length(x) == 0)] <- NULL  

@@ -1,5 +1,6 @@
 ## functions
 S3method(summary,RDML_object)
+S3method(plot,RDML_object)
 
 export(
 RDML,
@@ -12,5 +13,3 @@ importFrom(MBmca, diffQ2)
 importMethodsFrom(chipPCR, summary)
 importFrom(shiny, runApp)
 importFrom(XML, getNodeSet, xmlGetAttr, xmlParse, xmlValue, xpathSApply)
-
-
