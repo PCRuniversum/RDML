@@ -23,12 +23,25 @@ plot.RDML_object <- function(object,
   tube.types <- list(colors = tube.types.template,
                      notes = tube.types.template)
   
+  legend <- matrix(ncol = 6, nrow = length(object$Plate.Map),
+                   dimnames = list(c(), c("Color ID",
+                                          "Color",
+                                          "Note ID",
+                                          "Tube Name",
+                                          "Type",
+                                          "Targets")))
+  
   for(index in 1:length(object$Plate.Map)) {
     col.index <- as.integer(str_extract(names(object$Plate.Map)[index],
                                         "[[:digit:]]+"))
     row.index <- which(LETTERS == 
                          str_extract(names(object$Plate.Map)[index], 
-                                     "[[:upper:]]"))    
+                                     "[[:upper:]]"))
+    legend[index,"Tube Name"] <- object$Plate.Map[[index]]$Name
+    legend[index,"Type"] <- object$Plate.Map[[index]]$Type
+    legend[index,"Targets"] <- paste(object$Plate.Map[[index]]$Targets,
+                                       collapse = "; ")
+    
     for(var in c("colors", "notes")) {
       
       sname<- ifelse("name" %in% sort.by[[var]],
@@ -59,13 +72,21 @@ plot.RDML_object <- function(object,
         tube.type.index <- length(tube.types[[var]]["Hash",])
       }
       plate.matrix[[var]][row.index, col.index] <- tube.type.index
+      if(var == "colors")
+        legend[index,"Color ID"] <- tube.type.index
+      else
+        legend[index,"Note ID"] <- tube.type.index
     }
   }
   
   if("random" %in% col) {
     cl <- colors()
     col = cl[runif(length(tube.types$colors["Hash",]), 1, length(cl))]    
-  }  
+  }
+  legend[,"Color"] <- sapply(legend[,"Color ID"],
+                             function(col.id) {
+                               col[as.integer(col.id)]})
+  print(legend)
   hmap <- heatmap.2(plate.matrix$colors,
                     Rowv = FALSE,
                     Colv = "Rowv",
@@ -77,6 +98,7 @@ plot.RDML_object <- function(object,
                     sepwidth = c(0.01, 0.01),
                     trace = "none",
                     cellnote = plate.matrix$notes,
+                    notecol = notecol,
                     key.title = NA,
                     ...)
   res <- list(hmap = list(hmap),

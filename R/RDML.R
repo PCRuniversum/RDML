@@ -273,7 +273,7 @@ RDML <- function(rdmlfile = NA,
                                            targetID)            
           }
           else {
-            plate.map[[tube]] <- list(Name = sampleName,
+            plate.map[[tube]] <- list(Name = tubeName,
                                       Type = type,
                                       Targets = targetID)
           }          
