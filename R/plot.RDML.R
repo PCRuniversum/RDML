@@ -1,12 +1,11 @@
 plot.RDML_object <- function(object,
-                             sort.by = list(colors = c("name", "type", "targets"),
+                             print.legend = TRUE,
+                             separate.by = list(colors = c("name", "type", "targets"),
                                             notes = c("name", "type", "targets")),
                              col = "random",
                              notecol = "black",
                              ...) {
-  library(digest)
-  library(stringr)
-  library(gplots)
+  ## create matrices for heatmap values and notes
   matrix.template <- matrix(ncol = object$Plate.Dims["columns"],
                             nrow = object$Plate.Dims["rows"])
   colnames(matrix.template) <- 1:object$Plate.Dims["columns"]
@@ -14,7 +13,8 @@ plot.RDML_object <- function(object,
   plate.matrix <- list(colors = matrix.template,
                        notes = matrix.template)
   
-  
+  ## create matrices for types of tubes (defined by separate.by
+  ## parametres) at plate 
   tube.types.template <- matrix(nrow = 4,
                                 dimnames = list(c("Hash",
                                                   "Name",
@@ -23,6 +23,7 @@ plot.RDML_object <- function(object,
   tube.types <- list(colors = tube.types.template,
                      notes = tube.types.template)
   
+  ## create matrix for plot legend
   legend <- matrix(ncol = 6, nrow = length(object$Plate.Map),
                    dimnames = list(c(), c("Color ID",
                                           "Color",
@@ -42,36 +43,41 @@ plot.RDML_object <- function(object,
     legend[index,"Targets"] <- paste(object$Plate.Map[[index]]$Targets,
                                        collapse = "; ")
     
-    for(var in c("colors", "notes")) {
-      
-      sname<- ifelse("name" %in% sort.by[[var]],
+    for(var in c("colors", "notes")) {      
+      sname<- ifelse("name" %in% separate.by[[var]],
                            object$Plate.Map[[index]]$Name,
                            NA)
-      
-      
       ttype <- object$Plate.Map[[index]]$Type
+      ## remove variable name
       names(ttype) <- ""
-      ttype <- ifelse("type" %in% sort.by[[var]],
+      ttype <- ifelse("type" %in% separate.by[[var]],
                            ttype,
                            NA)
-      
-      
-      targets <- ifelse("targets" %in% sort.by[[var]],
+      ## collapse all targets to one string
+      targets <- ifelse("targets" %in% separate.by[[var]],
                              paste(object$Plate.Map[[index]]$Targets,
                                    collapse = "; "),
-                             NA)
-      
+                             NA)    
       
       tube <- c(sname, ttype, targets)
-      
+      ## generate hash of tube
       tube.hash <- digest(tube, algo = "crc32")
+      
+      ## test if tube with given hash already exists and
+      ## If not exists - add tube to tube.types matrix
       tube.type.index <- which(tube.types[[var]]["Hash",] == tube.hash)
       if(length(tube.type.index) == 0) {      
         if(index == 1) tube.types[[var]][,1] <- c(tube.hash, tube)
         else tube.types[[var]] <- cbind(tube.types[[var]], c(tube.hash, tube))
         tube.type.index <- length(tube.types[[var]]["Hash",])
       }
+      
+      ## add type off tube (index of tube hash at tube.types) 
+      ## to plate.matrix
       plate.matrix[[var]][row.index, col.index] <- tube.type.index
+      
+      ## add type off tube (index of tube hash at tube.types) 
+      ## to legend
       if(var == "colors")
         legend[index,"Color ID"] <- tube.type.index
       else
@@ -79,14 +85,18 @@ plot.RDML_object <- function(object,
     }
   }
   
+  ## generate random colors for cells
   if("random" %in% col) {
     cl <- colors()
     col = cl[runif(length(tube.types$colors["Hash",]), 1, length(cl))]    
   }
+  
+  ## add used colors to legend
   legend[,"Color"] <- sapply(legend[,"Color ID"],
                              function(col.id) {
                                col[as.integer(col.id)]})
-  print(legend)
+  
+  ## draw plate
   hmap <- heatmap.2(plate.matrix$colors,
                     Rowv = FALSE,
                     Colv = "Rowv",
@@ -101,7 +111,16 @@ plot.RDML_object <- function(object,
                     notecol = notecol,
                     key.title = NA,
                     ...)
-  res <- list(hmap = list(hmap),
-              ff= list("f"))
+  
+  legend <- as.data.frame(legend)
+  
+  if(print.legend) {
+    cat("\nPlot legend:\n")
+    print(legend)
+    cat("\n")
+  }
+  
+  res <- list(hmap = hmap,
+              legend = legend)
   invisible(res)
 }
