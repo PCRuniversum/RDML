@@ -18,7 +18,7 @@ summary.RDML_object <- function(object, print = TRUE, ...) {
   for(target in names(object[[i]])) {  
     for(stype in names(object[[i]][[target]])) {
       runStr <- rbind(runStr, c(Targets = target, Types = stype, 
-                        No.Samples = length(names(cfx96[[i]][[target]][[stype]])[-1])))      
+                        No.Samples = length(names(object[[i]][[target]][[stype]])[-1])))      
     }
   }
   runStr <- as.data.frame(runStr)

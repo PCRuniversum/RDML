@@ -2,7 +2,7 @@ library(shiny)
 library(RDML)
 library(chipPCR)
 
-shinyServer(function(input, output) {
+shinyServer(function(input, output, session) {
   
   ########## UI elements
   
@@ -61,10 +61,54 @@ shinyServer(function(input, output) {
               if("Melt" %in% names(vals$rdml.obj)) 
                 vals$dtypeSelectorVars <- c(vals$dtypeSelectorVars, 
                                             "Melting" = "Melt")
-              
               return(vals$rdml.obj)
     })
-  })     
+  })
+    
+  output$overview.plot <- renderPlot({
+    if(is.null(rdml.obj()))
+      return()
+    print("updating plot")
+    sep.col <- c("")
+    if(input$sep.name.col) sep.col <- c(sep.col, "name")
+    if(input$sep.type.col) sep.col <- c(sep.col, "type")
+    if(input$sep.targets.col) sep.col <- c(sep.col, "targets")
+     
+    sep.note <- c("")
+    if(input$sep.name.note) sep.note <- c(sep.note, "name")
+    if(input$sep.type.note) sep.note <- c(sep.note, "type")
+    if(input$sep.targets.note) sep.note <- c(sep.note, "targets")
+     
+    col <- gsub("[[:blank:]]","", input$colors.overview)    
+    if(col != "") col <- unlist(strsplit(col, "[,]"))    
+     
+    vals$pl <- plot(rdml.obj(),
+                print.legend = FALSE,
+                separate.by = list(colors = sep.col,
+                                   notes = sep.note),
+                col = col
+               )
+    
+#     updateTextInput(session,
+#                     "colors.overview",
+#                     "Use Colors:",
+#                     paste(levels(pl$Legend$Color, collapse = ", "))
+#     return(pl)
+  })
+
+  output$overview.legend <- renderTable({
+    if (is.null(vals$pl))
+      return()
+    vals$pl$Legend
+  })
+
+#   observe({
+#     if(input$rand.col.overview > 0){
+#       isolate ({        
+#         updateTextInput(session, "colors.overview", "Use Colors:", " ")
+#       })
+#     }
+#   })
   
   output$rdml.summary.out <- renderPrint({        
     if (is.null(rdml.obj()))
@@ -72,7 +116,7 @@ shinyServer(function(input, output) {
     summary(rdml.obj())
   })
   
-  overview.data <- reactive({
+  fdata.data <- reactive({
     targets <- ifelse(is.null(input$targets),
                       NA,
                       input$targets)
@@ -97,26 +141,26 @@ shinyServer(function(input, output) {
   
   
   # TODO: split tables by X columns
-  output$overview.table <- renderTable({
+  output$fdata.table <- renderTable({
     if(is.null(rdml.obj()))
       return()
-    overview.data()
+    fdata.data()
   })  
   
-output$overview.plot <- renderPlot({
+  output$fdata.plot <- renderPlot({
     if(is.null(rdml.obj()))
       return()
     if(input$plotStyle == "single") {
       lab <- ifelse(vals$melt,
                     "Temperature",
                     "Cycles")
-      matplot(overview.data()[1], 
-              overview.data()[-1],
+      matplot(fdata.data()[1], 
+              fdata.data()[-1],
               xlab = lab,
               ylab = "Fluorescence",
               type = "l")
     }
-    else plotCurves(overview.data()[, 1], overview.data()[, -1], type = "l")   
+    else plotCurves(fdata.data()[, 1], fdata.data()[, -1], type = "l")   
   })
   
   ############# Downloads

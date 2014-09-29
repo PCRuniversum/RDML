@@ -2,8 +2,9 @@ plot.RDML_object <- function(object,
                              print.legend = TRUE,
                              separate.by = list(colors = c("name", "type", "targets"),
                                             notes = c("name", "type", "targets")),
-                             col = "random",
+                             col = NA,
                              notecol = "black",
+                             key = TRUE,
                              ...) {
   ## create matrices for heatmap values and notes
   matrix.template <- matrix(ncol = object$Plate.Dims["columns"],
@@ -86,15 +87,38 @@ plot.RDML_object <- function(object,
   }
   
   ## generate random colors for cells
-  if("random" %in% col) {
+  col.is.not.closure <- TRUE
+  tryCatch({
+    if(typeof(get(col)) == "closure") col.is.not.closure <- FALSE
+    },
+    error = function(e) {}
+    )
+  if(is.na(col) || col == "") col <- NA
+  if(is.na(col) || (length(col) < length(tube.types$colors["Hash",]) &&
+       col.is.not.closure)) {
     cl <- colors()
-    col = cl[runif(length(tube.types$colors["Hash",]), 1, length(cl))]    
-  }
+    if(!is.na(col)) {
+      col = c(col, cl[runif(length(tube.types$colors["Hash",]) - length(col),
+                            1, length(cl))])
+    }
+    else {
+      col = cl[runif(length(tube.types$colors["Hash",]),
+                     1, length(cl))]
+    }
+  }  
   
   ## add used colors to legend
   legend[,"Color"] <- sapply(legend[,"Color ID"],
                              function(col.id) {
-                               col[as.integer(col.id)]})
+                               col[as.integer(col.id)]})  
+  
+  # heatmap.2 doesn't work with one color!!
+  # adding one color works for plot,
+  # but breaks "key"
+  if(length(col) == 1 && col.is.not.closure) {
+    col <- c(col, "red")
+    key <- FALSE
+  }
   
   ## draw plate
   hmap <- heatmap.2(plate.matrix$colors,
@@ -109,6 +133,7 @@ plot.RDML_object <- function(object,
                     trace = "none",
                     cellnote = plate.matrix$notes,
                     notecol = notecol,
+                    key = key,
                     key.title = NA,
                     ...)
   
@@ -120,7 +145,7 @@ plot.RDML_object <- function(object,
     cat("\n")
   }
   
-  res <- list(hmap = hmap,
-              legend = legend)
+  res <- list(Hmap = hmap,
+              Legend = legend)
   invisible(res)
 }

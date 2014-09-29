@@ -35,7 +35,27 @@ shinyUI(fluidPage(
       conditionalPanel(
         condition = "document.getElementById('rdml.file').value != ''",
         tabsetPanel(
-          tabPanel("RDML object summary", verbatimTextOutput('rdml.summary.out')),
+          tabPanel("Plate Overview",
+                   h4("Separate colors by tubes:"),
+                   fluidRow(
+                     column(4, checkboxInput("sep.name.col", "Name", FALSE)),
+                     column(4, checkboxInput("sep.type.col", "Type", TRUE)),
+                     column(4, checkboxInput("sep.targets.col", "Targets", TRUE))
+                   ),
+                   h4("Separate notes by tubes:"),
+                   fluidRow(
+                     column(4, checkboxInput("sep.name.note", "Name", TRUE)),
+                     column(4, checkboxInput("sep.type.note", "Type", FALSE)),
+                     column(4, checkboxInput("sep.targets.note", "Targets", FALSE))
+                   ),
+                   fluidRow(
+                     column(6, textInput("colors.overview", "Use Colors:", "")),
+                     column(6, actionButton("rand.col.overview", "Randomize"))
+                   ),
+                   plotOutput("overview.plot"),
+                   tableOutput("overview.legend")
+          ),
+          tabPanel("RDML object summary", verbatimTextOutput("rdml.summary.out")),
           tabPanel("Table/Plots",                 
                    h4("Filter by:"),
                    fluidRow(
@@ -58,11 +78,11 @@ shinyUI(fluidPage(
                    ),
                    conditionalPanel(
                      condition = "input.tablePlotsSelector == 'table'",
-                     tableOutput("overview.table")
+                     tableOutput("fdata.table")
                    ),
                    conditionalPanel(
                      condition = "input.tablePlotsSelector == 'plots'",
-                     plotOutput("overview.plot"))
+                     plotOutput("fdata.plot"))
           )
         )
       )
