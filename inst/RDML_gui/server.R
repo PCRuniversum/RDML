@@ -42,29 +42,33 @@ shinyServer(function(input, output, session) {
   ######################
   
   vals <- reactiveValues()
-   
+  
   rdml.obj <- reactive({
     if(is.null(input$rdml.file))      
       return(NULL)
     input$update
-    isolate({ vals$rdml.obj <- RDML(input$rdml.file$datapath,
-                                    name.pattern = input$pattern,
-                                    omit.ntp = input$omit.ntp)
-              vals$dtypeSelectorVars <- c()
-              vals$melt <- TRUE
-              if("qPCR" %in% names(vals$rdml.obj)) 
-              {
-                vals$dtypeSelectorVars <- c(vals$dtypeSelectorVars, 
-                                            "qPCR" = "qPCR")
-                vals$melt <- FALSE
-              }
-              if("Melt" %in% names(vals$rdml.obj)) 
-                vals$dtypeSelectorVars <- c(vals$dtypeSelectorVars, 
-                                            "Melting" = "Melt")
-              return(vals$rdml.obj)
+    isolate({
+      withProgress(message = "Processing RDML data",
+                   value = 0, {
+                     vals$rdml.obj <- RDML(input$rdml.file$datapath,
+                                           name.pattern = input$pattern,
+                                           omit.ntp = input$omit.ntp)
+                     vals$dtypeSelectorVars <- c()
+                     vals$melt <- TRUE
+                     if("qPCR" %in% names(vals$rdml.obj)) 
+                     {
+                       vals$dtypeSelectorVars <- c(vals$dtypeSelectorVars, 
+                                                   "qPCR" = "qPCR")
+                       vals$melt <- FALSE
+                     }
+                     if("Melt" %in% names(vals$rdml.obj)) 
+                       vals$dtypeSelectorVars <- c(vals$dtypeSelectorVars, 
+                                                   "Melting" = "Melt")
+                   })
+      return(vals$rdml.obj)
     })
   })
-    
+  
   output$overview.plot <- renderPlot({
     if(is.null(rdml.obj()))
       return()
@@ -73,35 +77,37 @@ shinyServer(function(input, output, session) {
     if(input$sep.name.col) sep.col <- c(sep.col, "name")
     if(input$sep.type.col) sep.col <- c(sep.col, "type")
     if(input$sep.targets.col) sep.col <- c(sep.col, "targets")
-     
+    
     sep.note <- c("")
     if(input$sep.name.note) sep.note <- c(sep.note, "name")
     if(input$sep.type.note) sep.note <- c(sep.note, "type")
     if(input$sep.targets.note) sep.note <- c(sep.note, "targets")
-     
+    
     col <- gsub("[[:blank:]]","", input$colors.overview)    
     if(col != "") col <- unlist(strsplit(col, "[,]"))    
-     
-    vals$pl <- plot(rdml.obj(),
-                print.legend = FALSE,
-                separate.by = list(colors = sep.col,
-                                   notes = sep.note),
-                col = col
-               )
     
-#     updateTextInput(session,
-#                     "colors.overview",
-#                     "Use Colors:",
-#                     paste(levels(pl$Legend$Color, collapse = ", "))
-#     return(pl)
+    vals$pl <- plot(rdml.obj(),
+                    print.legend = FALSE,
+                    separate.by = list(colors = sep.col,
+                                       notes = sep.note),
+                    col = col
+    )
+    #     isolate ({
+    #     updateTextInput(session,
+    #                     "colors.overview",
+    #                     "Use Colors:",
+    #                     paste(levels(vals$pl$Legend$Color), collapse = ", ")
+    #                     )
+    #     })
+    #     return(pl)
   })
-
+  
   output$overview.legend <- renderTable({
     if (is.null(vals$pl))
       return()
     vals$pl$Legend
   })
-
+  
 #   observe({
 #     if(input$rand.col.overview > 0){
 #       isolate ({        
@@ -113,7 +119,10 @@ shinyServer(function(input, output, session) {
   output$rdml.summary.out <- renderPrint({        
     if (is.null(rdml.obj()))
       return()    
-    summary(rdml.obj())
+    withProgress(message = "Generating summary",
+                 value = 0, 
+                 { summary(rdml.obj())
+                  })
   })
   
   fdata.data <- reactive({
