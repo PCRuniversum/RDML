@@ -1,18 +1,14 @@
 plot.RDML_object <- function(object,
                              print.legend = TRUE,
-                             separate.by = list(colors = c("name", "type", "targets"),
-                                            notes = c("name", "type", "targets")),
+                             separate.by = list(left = c("name", "type", "targets"),
+                                            right = c("name", "type", "targets")),
                              col = NA,
-                             notecol = "black",
-                             key = TRUE,
                              ...) {
-  ## create matrices for heatmap values and notes
-  matrix.template <- matrix(ncol = object$Plate.Dims["columns"],
-                            nrow = object$Plate.Dims["rows"])
-  colnames(matrix.template) <- 1:object$Plate.Dims["columns"]
-  rownames(matrix.template) <- LETTERS[1:object$Plate.Dims["rows"]]
-  plate.matrix <- list(colors = matrix.template,
-                       notes = matrix.template)
+  ## create matrix for type and notes values of tubes
+  matr <- matrix(ncol = 2,
+                 nrow = object$Plate.Dims["columns"] * 
+                   object$Plate.Dims["rows"])
+  colnames(matr) <- c("left", "right")
   
   ## create matrices for types of tubes (defined by separate.by
   ## parametres) at plate 
@@ -21,8 +17,8 @@ plot.RDML_object <- function(object,
                                                   "Name",
                                                   "Type",
                                                   "Targets")))
-  tube.types <- list(colors = tube.types.template,
-                     notes = tube.types.template)
+  tube.types <- list(left = tube.types.template,
+                     right = tube.types.template)
   
   ## create matrix for plot legend
   legend <- matrix(ncol = 6, nrow = length(object$Plate.Map),
@@ -44,7 +40,7 @@ plot.RDML_object <- function(object,
     legend[index,"Targets"] <- paste(object$Plate.Map[[index]]$Targets,
                                        collapse = "; ")
     
-    for(var in c("colors", "notes")) {      
+    for(var in c("left", "right")) {      
       sname<- ifelse("name" %in% separate.by[[var]],
                            object$Plate.Map[[index]]$Name,
                            NA)
@@ -73,13 +69,13 @@ plot.RDML_object <- function(object,
         tube.type.index <- length(tube.types[[var]]["Hash",])
       }
       
-      ## add type off tube (index of tube hash at tube.types) 
-      ## to plate.matrix
-      plate.matrix[[var]][row.index, col.index] <- tube.type.index
+      ## add type of tube (index of tube hash at tube.types) 
+      ## matr
+      matr[row.index + col.index * 8, var] <- tube.type.index + 1
       
       ## add type off tube (index of tube hash at tube.types) 
       ## to legend
-      if(var == "colors")
+      if(var == "left")
         legend[index,"Color ID"] <- tube.type.index
       else
         legend[index,"Note ID"] <- tube.type.index
@@ -94,15 +90,15 @@ plot.RDML_object <- function(object,
     error = function(e) {}
     )
   if(is.na(col) || col == "") col <- NA
-  if(is.na(col) || (length(col) < length(tube.types$colors["Hash",]) &&
+  if(is.na(col) || (length(col) < length(tube.types$left["Hash",]) &&
        col.is.not.closure)) {
     cl <- colors()
     if(!is.na(col)) {
-      col = c(col, cl[runif(length(tube.types$colors["Hash",]) - length(col),
+      col = c(col, cl[runif(length(tube.types$left["Hash",]) - length(col),
                             1, length(cl))])
     }
     else {
-      col = cl[runif(length(tube.types$colors["Hash",]),
+      col = cl[runif(length(tube.types$left["Hash",]),
                      1, length(cl))]
     }
   }  
@@ -112,30 +108,42 @@ plot.RDML_object <- function(object,
                              function(col.id) {
                                col[as.integer(col.id)]})  
   
-  # heatmap.2 doesn't work with one color!!
-  # adding one color works for plot,
-  # but breaks "key"
-  if(length(col) == 1 && col.is.not.closure) {
-    col <- c(col, "red")
-    key <- FALSE
-  }
+#   # heatmap.2 doesn't work with one color!!
+#   # adding one color works for plot,
+#   # but breaks "key"
+#   if(length(col) == 1 && col.is.not.closure) {
+#     col <- c(col, "red")
+#     key <- FALSE
+#   }
   
+  col = c("white" , col)
   ## draw plate
-  hmap <- heatmap.2(plate.matrix$colors,
-                    Rowv = FALSE,
-                    Colv = "Rowv",
-                    dendrogram = "none",
-                    col = col,            
-                    colsep = 0:object$Plate.Dims["columns"],
-                    rowsep = 0:object$Plate.Dims["rows"],
-                    sepcolor = "black",
-                    sepwidth = c(0.01, 0.01),
-                    trace = "none",
-                    cellnote = plate.matrix$notes,
-                    notecol = notecol,
-                    key = key,
-                    key.title = NA,
-                    ...)
+#   hmap <- heatmap.2(plate.matrix$colors,
+#                     Rowv = FALSE,
+#                     Colv = "Rowv",
+#                     dendrogram = "none",
+#                     col = col,            
+#                     colsep = 0:object$Plate.Dims["columns"],
+#                     rowsep = 0:object$Plate.Dims["rows"],
+#                     sepcolor = "black",
+#                     sepwidth = c(0.01, 0.01),
+#                     trace = "none",
+#                     cellnote = plate.matrix$notes,
+#                     notecol = notecol,
+#                     key = key,
+#                     key.title = NA,
+#                     ...)
+  matr[is.na(matr)] <- 0
+  matr.dpcr <- create_dpcr(matr, n = 1L, type = "nm") 
+  plot_panel(extract_dpcr(matr.dpcr, "left"), nx_a = object$Plate.Dims["columns"],
+             ny_a = object$Plate.Dims["rows"],
+             col = col,
+             legend = FALSE, 
+             half = "left")
+  par(new = TRUE)
+  plot_panel(extract_dpcr(matr.dpcr, 2), nx_a = object$Plate.Dims["columns"],
+             ny_a = object$Plate.Dims["rows"],             
+             legend = FALSE, half = "right")
   
   legend <- as.data.frame(legend)
   
@@ -145,7 +153,7 @@ plot.RDML_object <- function(object,
     cat("\n")
   }
   
-  res <- list(Hmap = hmap,
-              Legend = legend)
-  invisible(res)
+#   res <- list(Hmap = hmap,
+#               Legend = legend)
+#   invisible(res)
 }
