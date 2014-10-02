@@ -83,14 +83,14 @@ shinyServer(function(input, output, session) {
     if(input$sep.type.note) sep.note <- c(sep.note, "type")
     if(input$sep.targets.note) sep.note <- c(sep.note, "targets")
     
+    ## color input not works for now!!!
     col <- gsub("[[:blank:]]","", input$colors.overview)    
     if(col != "") col <- unlist(strsplit(col, "[,]"))    
     
     vals$pl <- plot(rdml.obj(),
                     print.legend = FALSE,
-                    separate.by = list(colors = sep.col,
-                                       notes = sep.note),
-                    col = col
+                    separate.by = list(left = sep.col,
+                                       right = sep.note)
     )
     #     isolate ({
     #     updateTextInput(session,
@@ -105,7 +105,7 @@ shinyServer(function(input, output, session) {
   output$overview.legend <- renderTable({
     if (is.null(vals$pl))
       return()
-    vals$pl$Legend
+    vals$pl
   })
   
 #   observe({

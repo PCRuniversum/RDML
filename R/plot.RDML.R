@@ -1,13 +1,23 @@
 plot.RDML_object <- function(object,
                              print.legend = TRUE,
                              separate.by = list(left = c("name", "type", "targets"),
-                                            right = c("name", "type", "targets")),
-                             col = NA,
+                                                right = c("name", "type", "targets")),
+                             col = list(left = NA,
+                                        right = NA),
+                             empty.col = "white",
                              ...) {
-  ## create matrix for type and notes values of tubes
+  for(half in c("left", "right")) {
+    for(opt in separate.by[[half]]) {      
+      if(!opt %in%  c("name", "type", "targets", "", NA))
+        stop(paste0(c("'", opt, "' is not correct option for separate.by!!!")))
+    }
+  }
+  cnum = object$Plate.Dims["columns"]
+  rnum = object$Plate.Dims["rows"]
+  
+  ## create matrix for left and right values of tubes
   matr <- matrix(ncol = 2,
-                 nrow = object$Plate.Dims["columns"] * 
-                   object$Plate.Dims["rows"])
+                 nrow = cnum * rnum)
   colnames(matr) <- c("left", "right")
   
   ## create matrices for types of tubes (defined by separate.by
@@ -21,10 +31,11 @@ plot.RDML_object <- function(object,
                      right = tube.types.template)
   
   ## create matrix for plot legend
-  legend <- matrix(ncol = 6, nrow = length(object$Plate.Map),
-                   dimnames = list(c(), c("Color ID",
-                                          "Color",
-                                          "Note ID",
+  legend <- matrix(ncol = 7, nrow = length(object$Plate.Map),
+                   dimnames = list(c(), c("Left ID",
+                                          "L. Color",
+                                          "Right ID",
+                                          "R. Color",
                                           "Tube Name",
                                           "Type",
                                           "Targets")))
@@ -38,23 +49,23 @@ plot.RDML_object <- function(object,
     legend[index,"Tube Name"] <- object$Plate.Map[[index]]$Name
     legend[index,"Type"] <- object$Plate.Map[[index]]$Type
     legend[index,"Targets"] <- paste(object$Plate.Map[[index]]$Targets,
-                                       collapse = "; ")
+                                     collapse = "; ")
     
-    for(var in c("left", "right")) {      
-      sname<- ifelse("name" %in% separate.by[[var]],
-                           object$Plate.Map[[index]]$Name,
-                           NA)
+    for(half in c("left", "right")) {
+      sname<- ifelse("name" %in% separate.by[[half]],
+                     object$Plate.Map[[index]]$Name,
+                     NA)
       ttype <- object$Plate.Map[[index]]$Type
       ## remove variable name
       names(ttype) <- ""
-      ttype <- ifelse("type" %in% separate.by[[var]],
-                           ttype,
-                           NA)
+      ttype <- ifelse("type" %in% separate.by[[half]],
+                      ttype,
+                      NA)
       ## collapse all targets to one string
-      targets <- ifelse("targets" %in% separate.by[[var]],
-                             paste(object$Plate.Map[[index]]$Targets,
-                                   collapse = "; "),
-                             NA)    
+      targets <- ifelse("targets" %in% separate.by[[half]],
+                        paste(object$Plate.Map[[index]]$Targets,
+                              collapse = "; "),
+                        NA)    
       
       tube <- c(sname, ttype, targets)
       ## generate hash of tube
@@ -62,88 +73,86 @@ plot.RDML_object <- function(object,
       
       ## test if tube with given hash already exists and
       ## If not exists - add tube to tube.types matrix
-      tube.type.index <- which(tube.types[[var]]["Hash",] == tube.hash)
+      tube.type.index <- which(tube.types[[half]]["Hash",] == tube.hash)
       if(length(tube.type.index) == 0) {      
-        if(index == 1) tube.types[[var]][,1] <- c(tube.hash, tube)
-        else tube.types[[var]] <- cbind(tube.types[[var]], c(tube.hash, tube))
-        tube.type.index <- length(tube.types[[var]]["Hash",])
+        if(index == 1) tube.types[[half]][,1] <- c(tube.hash, tube)
+        else tube.types[[half]] <- cbind(tube.types[[half]], 
+                                         c(tube.hash, tube))
+        tube.type.index <- length(tube.types[[half]]["Hash",])
       }
       
       ## add type of tube (index of tube hash at tube.types) 
       ## matr
-      matr[row.index + col.index * 8, var] <- tube.type.index + 1
+      matr[row.index + col.index * 8, half] <- tube.type.index        
       
       ## add type off tube (index of tube hash at tube.types) 
       ## to legend
-      if(var == "left")
-        legend[index,"Color ID"] <- tube.type.index
+      if(half == "left")
+        legend[index,"Left ID"] <- tube.type.index
       else
-        legend[index,"Note ID"] <- tube.type.index
+        legend[index,"Right ID"] <- tube.type.index
+      
     }
+    
+  }
+  ## generate random colors for cells
+  for(half in c("left", "right")) {
+    if(is.na(col[[half]]) || col[[half]] == "") col[[half]] <- NA
+    if(is.na(col[[half]]) || 
+         (length(col[[half]]) < length(tube.types$left["Hash",]) )) {
+      cl <- colors()
+      if(!is.na(col[[half]])) {
+        col[[half]] <- c(col[[half]], cl[runif(length(tube.types[[half]]["Hash",]) - length(col[[half]]),
+                                               1, length(cl))])
+      }
+      else {
+        col[[half]] <- cl[runif(length(tube.types[[half]]["Hash",]),
+                                1, length(cl))]
+      }
+    }
+    ## add used colors to legend
+    if(half == "left") 
+      legend[,"L. Color"] <- sapply(legend[,"Left ID"],
+                                    function(col.id) {
+                                      col[[half]][as.integer(col.id)]})
+    else legend[,"R. Color"] <- sapply(legend[,"Right ID"],
+                                       function(col.id) {
+                                         col[[half]][as.integer(col.id)]})
+    col[[half]] <- c(empty.col , col[[half]])
   }
   
-  ## generate random colors for cells
-  col.is.not.closure <- TRUE
-  tryCatch({
-    if(typeof(get(col)) == "closure") col.is.not.closure <- FALSE
-    },
-    error = function(e) {}
-    )
-  if(is.na(col) || col == "") col <- NA
-  if(is.na(col) || (length(col) < length(tube.types$left["Hash",]) &&
-       col.is.not.closure)) {
-    cl <- colors()
-    if(!is.na(col)) {
-      col = c(col, cl[runif(length(tube.types$left["Hash",]) - length(col),
-                            1, length(cl))])
-    }
-    else {
-      col = cl[runif(length(tube.types$left["Hash",]),
-                     1, length(cl))]
-    }
-  }  
-  
-  ## add used colors to legend
-  legend[,"Color"] <- sapply(legend[,"Color ID"],
-                             function(col.id) {
-                               col[as.integer(col.id)]})  
-  
-#   # heatmap.2 doesn't work with one color!!
-#   # adding one color works for plot,
-#   # but breaks "key"
-#   if(length(col) == 1 && col.is.not.closure) {
-#     col <- c(col, "red")
-#     key <- FALSE
-#   }
-  
-  col = c("white" , col)
-  ## draw plate
-#   hmap <- heatmap.2(plate.matrix$colors,
-#                     Rowv = FALSE,
-#                     Colv = "Rowv",
-#                     dendrogram = "none",
-#                     col = col,            
-#                     colsep = 0:object$Plate.Dims["columns"],
-#                     rowsep = 0:object$Plate.Dims["rows"],
-#                     sepcolor = "black",
-#                     sepwidth = c(0.01, 0.01),
-#                     trace = "none",
-#                     cellnote = plate.matrix$notes,
-#                     notecol = notecol,
-#                     key = key,
-#                     key.title = NA,
-#                     ...)
   matr[is.na(matr)] <- 0
-  matr.dpcr <- create_dpcr(matr, n = 1L, type = "nm") 
-  plot_panel(extract_dpcr(matr.dpcr, "left"), nx_a = object$Plate.Dims["columns"],
-             ny_a = object$Plate.Dims["rows"],
-             col = col,
+  matr.dpcr <- create_dpcr(matr, n = 1L, type = "nm")
+  
+  ########## plotting
+  ## plot left halfs of tubes
+  plot_panel(extract_dpcr(matr.dpcr, "left"), 
+             nx_a = cnum,
+             ny_a = rnum,
+             col = col[["left"]],
              legend = FALSE, 
-             half = "left")
+             half = "left",
+             use_breaks = FALSE,
+             ...)
   par(new = TRUE)
-  plot_panel(extract_dpcr(matr.dpcr, 2), nx_a = object$Plate.Dims["columns"],
-             ny_a = object$Plate.Dims["rows"],             
-             legend = FALSE, half = "right")
+  ## plot right halfs of tubes
+  plot_panel(extract_dpcr(matr.dpcr, "right"),
+             nx_a = cnum,
+             ny_a = rnum,
+             col = col[["right"]],
+             legend = FALSE,
+             half = "right",
+             use_breaks = FALSE,
+             ...)
+  ## add axes
+  box()
+  # cols
+  axis(side = 3, at = 1:cnum, labels = 1:cnum, ...)
+  # rows
+  axis(side = 2, at = 1:rnum, labels = rev(LETTERS[1:rnum]),
+       las = 1, # the style of axis labels: always horizontal.
+       ...)
+  ########## end plotting
   
   legend <- as.data.frame(legend)
   
@@ -151,9 +160,7 @@ plot.RDML_object <- function(object,
     cat("\nPlot legend:\n")
     print(legend)
     cat("\n")
-  }
+  }  
   
-#   res <- list(Hmap = hmap,
-#               Legend = legend)
-#   invisible(res)
+  invisible(legend)
 }
