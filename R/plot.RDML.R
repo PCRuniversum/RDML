@@ -46,6 +46,7 @@ plot.RDML_object <- function(object,
     row.index <- which(LETTERS == 
                          str_extract(names(object$Plate.Map)[index], 
                                      "[[:upper:]]"))
+    
     legend[index,"Tube Name"] <- object$Plate.Map[[index]]$Name
     legend[index,"Type"] <- object$Plate.Map[[index]]$Type
     legend[index,"Targets"] <- paste(object$Plate.Map[[index]]$Targets,
@@ -83,7 +84,7 @@ plot.RDML_object <- function(object,
       
       ## add type of tube (index of tube hash at tube.types) 
       ## matr
-      matr[row.index + col.index * 8, half] <- tube.type.index        
+      matr[row.index + (col.index - 1)  * rnum, half] <- tube.type.index        
       
       ## add type off tube (index of tube hash at tube.types) 
       ## to legend

@@ -20,11 +20,10 @@ shinyServer(function(input, output, session) {
     if(is.null(rdml.obj()) ||
          is.null(input$dataTypeSelector))
       return()
-    targets <- ifelse(is.null(input$targets),
-                      vals$targets,
-                      input$targets)
+    if(is.null(input$targets)) targets <- vals$targets
+    else targets <- input$targets    
     vals$types <- unique(as.vector(sapply(targets, function(fluorTarget) {
-      names(rdml.obj()[[input$dataTypeSelector]][[fluorTarget]])})))
+      names(rdml.obj()[[input$dataTypeSelector]][[fluorTarget]])})))    
     selectInput("types", "Types:",
                 vals$types,
                 multiple = TRUE)
@@ -83,7 +82,7 @@ shinyServer(function(input, output, session) {
     if(input$sep.type.note) sep.note <- c(sep.note, "type")
     if(input$sep.targets.note) sep.note <- c(sep.note, "targets")
     
-    ## color input not works for now!!!
+    ## color input not works for now!!4^!
     col <- gsub("[[:blank:]]","", input$colors.overview)    
     if(col != "") col <- unlist(strsplit(col, "[,]"))    
     

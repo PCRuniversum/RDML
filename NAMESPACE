@@ -1,6 +1,6 @@
 ## functions
-S3method(summary,RDML_object)
-S3method(plot,RDML_object)
+S3method(summary, RDML_object)
+S3method(plot, RDML_object)
 
 export(
 RDML,
@@ -15,4 +15,4 @@ importFrom(shiny, runApp)
 importFrom(XML, getNodeSet, xmlGetAttr, xmlParse, xmlValue, xpathSApply)
 importFrom(digest, digest)
 importFrom(stringr, str_extract)
-importFrom(gplots, heatmap.2)
+importFrom(dpcR, plot_panel)

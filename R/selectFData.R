@@ -11,20 +11,20 @@ selectFData <- function(object,
   
   # if targets=NA, then all available targets in run
   if (anyNA(targets)) targets <- names(object[[runtype]])
-  # if types=NA, then all available types for specified targets
-  if (anyNA(types)) {
-    types <- as.vector(sapply(targets, function(fluorTarget) {
-      names(object[[runtype]][[fluorTarget]])      
-    }))    
-    types <- unique(types)    
-  }  
-  # add first column with cycles
-  output <- object[[runtype]][[targets[1]]][[types[1]]][1]
+  
+  # add first column with cycles ot temperatures
+  output <- object[[runtype]][[1]][[1]][1]
+  
   for(fluorTarget in targets)
   {
-    for(fluorType in types)
+    at.target.types <- names(object[[runtype]][[fluorTarget]])
+    at.target.types <- unique(at.target.types)
+    # if types=NA, then all available types for current target
+    if (is.na(types)) use.types <-  at.target.types
+    else use.types <- intersect(at.target.types, types)    
+    for(fluorType in use.types)
     {      
-      if(is.na(snames)) {
+      if(is.na(snames)) {      
         output <- cbind(output, object[[runtype]][[fluorTarget]][[fluorType]][-1])
       }
       else {
