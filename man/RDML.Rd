@@ -6,7 +6,7 @@ qPCR data import function
 \description{
 Imports fluorescence data from RDML v1.1 format files (Lefever et al. 2009) and 
 transforms it to the appropriate format of the \code{qpcR} (Ritz et al. 2008, 
-Spiess et al. 2008) and \code{chiPCR} packages. Real-time PCR Data Markup 
+Spiess et al. 2008) and \code{chipPCR} packages. Real-time PCR Data Markup 
 Language (RDML) is the recommended file format element in the Minimum 
 Information for Publication of Quantitative Real-Time PCR Experiments (MIQE) 
 guidelines (Bustin et al. 2009). Data imports as a list of tables split by targets and samples types (see 
@@ -153,11 +153,11 @@ tmp <- lc96[["qPCR"]][["Hex@X"]][["std"]]
 ## Fetch vector of dillutions for HEX chanel
 dilution <- as.vector(lc96[["Dilutions"]][["Hex"]])
 
-## Use plotCurves function from the chiPCR package to 
+## Use plotCurves function from the chipPCR package to 
 ## get an overview of the amplification curves
 plotCurves(tmp[, 1], tmp[, -1])
 par(mfrow = c(1,1))
-## Use inder function from the chiPCR package to 
+## Use inder function from the chipPCR package to 
 ## calculate the Cq (second derivative maximum, SDM)
 SDMout <- sapply(2L:ncol(tmp), function(i) {
   SDM <- summary(inder(tmp[, 1], tmp[, i]), print = FALSE)[2]
@@ -177,7 +177,7 @@ PATH <- path.package("RDML")
 filename <- paste(PATH, "/extdata/", "BioRad_qPCR_melt.rdml", sep ="")
 cfx96 <- RDML(filename,
               name.pattern = "\%TUBE\%_\%NAME\%_\%TYPE\%_\%TARGET\%")
-## Use plotCurves function from the chiPCR package to 
+## Use plotCurves function from the chipPCR package to 
 ## get an overview of the amplification curves
 library(chipPCR)
 ## Extract all qPCR data without splitting by targets and types
