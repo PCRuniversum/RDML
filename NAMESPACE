@@ -8,6 +8,7 @@ selectFData,
 RDML_gui
 )
 
+import(R6)
 importFrom(chipPCR, MFIaggr)
 importFrom(MBmca, diffQ2)
 importMethodsFrom(chipPCR, summary)

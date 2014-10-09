@@ -1,21 +1,3 @@
-# Unzips RDML to get inner XML content
-GetRDMLdoc <- function(file)
-{  
-  unzipped.rdml <- unzip(file)
-  tryCatch({
-    if(length(unzipped.rdml) > 1)
-    {
-      rdml.doc <- xmlParse("rdml_data.xml")
-    }
-    else
-    {
-      rdml.doc <- xmlParse(unzipped.rdml)
-    }},
-    error = function(e) { print(e) },
-    finally = unlink(unzipped.rdml))
-  return(rdml.doc)
-}
-
 # Gets file publisher (instrumant manufacturer)
 GetPublisher <- function(rdml.doc)
 {
@@ -31,7 +13,7 @@ GetPublisher <- function(rdml.doc)
 # Gets PCR samples descriptions vector from XML
 GetDescriptions <- function(RDMLdoc)
 {
-  samplesids <- xpathSApply(
+  samples.ids <- xpathSApply(
     RDMLdoc, 
     "/rdml:rdml/rdml:sample",
     xmlGetAttr,
@@ -42,14 +24,14 @@ GetDescriptions <- function(RDMLdoc)
     "/rdml:rdml/rdml:sample/rdml:description",
     xmlValue,
     namespaces = c(rdml = "http://www.rdml.org"))  
-  names(descriptions) <- samplesids
+  names(descriptions) <- samples.ids
   return(descriptions)
 }
 
 # Gets plate dimensions from XML
 GetPlateDimensions <- function(rdml.doc)
 {
-  
+  # delete trycatch, better to stop execution on error
   rows <- tryCatch({as.integer(xpathSApply(
     rdml.doc, 
     "/rdml:rdml/rdml:experiment/rdml:run/rdml:pcrFormat/rdml:rows",
@@ -107,54 +89,73 @@ GetDilutions <- function(rdml.doc)
   return(dils)  
 } 
 
-# Get dilutions Roche
-GetDilutionsRoche <- function(file)
+
+GetDilutionsRoche <- function()
 {
-  unzipped.rdml <- unzip(file)
+#   unzipped.rdml <- unzip(file)
   tryCatch({
     rdml.doc <- xmlParse("calculated_data.xml")
-    unlink(unzipped.rdml) 
-    
-    nodes<- getNodeSet(
+    concs<-as.numeric(xpathSApply(
+      rdml.doc,
+      "//ns:absQuantDataSource/ns:standard",   
+      namespaces = c(ns = "http://www.roche.ch/LC96AbsQuantCalculatedDataModel"),
+      xmlValue))
+    concs.guids<-xpathSApply(
+      rdml.doc,
+      "//ns:absQuantDataSource/ns:standard/../ns:graphId",   
+      namespaces = c(ns = "http://www.roche.ch/LC96AbsQuantCalculatedDataModel"),
+      xmlValue)
+    names(concs) <- concs.guids
+    concs <- sort(concs, decreasing=TRUE)
+    positions <- xpathSApply(
       rdml.doc, 
-      "//ns:absQuantDataSource/ns:standard/..",    
+      paste0("//ns:standardPoints/ns:standardPoint/ns:position"), 
+      xmlValue,
       namespaces = c(ns = "http://www.roche.ch/LC96AbsQuantCalculatedDataModel"))
-    
-    dilutions <- list()
-    for(node in nodes){
-      quant <- xmlValue(node[["standard"]])
-      position <- xpathSApply(
-        rdml.doc, 
-        paste0("//ns:standardPoints/ns:standardPoint/ns:graphIds/ns:guid[text() ='",
-               xmlValue(node[["graphId"]]), "']/../../ns:position"), xmlValue,
-        namespaces = c(ns = "http://www.roche.ch/LC96AbsQuantCalculatedDataModel"))
-      dye <- xpathSApply(
-        rdml.doc, 
-        paste0("//ns:standardPoints/ns:standardPoint/ns:graphIds/ns:guid[text() ='",
-               xmlValue(node[["graphId"]]), "']/../../ns:dyeName"), xmlValue,
-        namespaces = c(ns = "http://www.roche.ch/LC96AbsQuantCalculatedDataModel"))
-      dilutions[[dye]] <- cbind(dilutions[[dye]],c(position, quant))
-    }
-    dilutions <- lapply(dilutions, function(dilution){
-      quant <- as.numeric(dilution[2, ])
-      quant <- t(as.data.frame(quant))
-      colnames(quant) <- dilution[1, ]
-      return(quant) })
+    dye.names <- position <- xpathSApply(
+      rdml.doc, 
+      paste0("//ns:standardPoints/ns:standardPoint/ns:dyeName"), 
+      xmlValue,
+      namespaces = c(ns = "http://www.roche.ch/LC96AbsQuantCalculatedDataModel"))
+    positions.guids <- position <- xpathSApply(
+      rdml.doc, 
+      paste0("//ns:standardPoints/ns:standardPoint/ns:graphIds/ns:guid"), 
+      xmlValue,
+      namespaces = c(ns = "http://www.roche.ch/LC96AbsQuantCalculatedDataModel"))
+    positions.table <- matrix(c(dye.names,
+                                positions),
+                              ncol = length(positions),
+                              nrow = 2,
+                              byrow = TRUE,
+                              dimnames = list(c("dye.name","position"),
+                                              positions.guids))
+    positions.table <- positions.table[,
+      order(match(colnames(positions.table), names(concs)))]
+    positions.table <- rbind(positions.table, conc = concs)
+    dyes <- unique(positions.table["dye.name",])
+    dilutions <- lapply(dyes, function(dye) {
+      dye.group.indecies <- which(positions.table["dye.name",] == dye)
+      concs.by.dye <- concs[dye.group.indecies]
+      names(concs.by.dye) <- positions.table["position",
+                                             dye.group.indecies]
+      concs.by.dye
+    })
+    names(dilutions) <- dyes
   },
-  error = function(e) { print(e) },
-  finally = unlink(unzipped.rdml))
+  error = function(e) { print(e) }#,
+#   finally = unlink(unzipped.rdml)
+  )
   return(dilutions)
 }
-
 # Generates sample name by specified pattern
 GenSName <- function (name.pattern,
-                                plate.dims,
-                                react.id,
-                                tube.name,
-                                tube,
-                                target,
-                                type,
-                                publisher)
+                      plate.dims,
+                      react.id,
+                      tube.name,
+                      tube,
+                      target,
+                      type,
+                      publisher)
 { 
   name.pattern <- gsub("%NAME%",
                        tube.name,
@@ -175,113 +176,179 @@ GenSName <- function (name.pattern,
 }
 
 RDMLnew <- R6Class("RDML",
-                public = list(                
-                  plate.name = NA,
-                  publisher = NA,
-                  dilutions = NA,
-                  plate.dims = NA,
-                  initialize = function(file.name,
-                                        name.pattern = "%NAME%__%TUBE%") {
-                    rdml.doc <- GetRDMLdoc(file.name)
-                    self$publisher <- GetPublisher(rdml.doc)
-                    if(self$publisher == "Roche Diagnostics") 
-                      self$dilutions <- GetDilutionsRoche(file.name)                    
-                    else self$dilutions <- GetDilutions(rdml.doc)
-                    types <- GetSamplesTypes(rdml.doc)
-                    self$plate.dims <- GetPlateDimensions(rdml.doc) 
-                    if(self$publisher == "Roche Diagnostics")
-                      sdescs <- GetDescriptions(rdml.doc)
-                    
-                    reacts <- getNodeSet(
-                      rdml.doc,
-                      "/rdml:rdml/rdml:experiment/rdml:run/rdml:react",
-                      namespaces = c(rdml = "http://www.rdml.org"))
-                    n.reacts = length(reacts)
-                    n.qpcr.cycles <- length(reacts[[1]][["data"]]["adp"])
-                    temp.stages <- sapply(reacts[[1]][["data"]]["mdp"], 
-                                          function(mdp) {xmlValue(mdp[["tmp"]])})
-                    n.temp.stages <- length(temp.stages)
-                    
-                    if(!is.na(n.qpcr.cycles)) {
-                      private$qPCR.fdata <- matrix(nrow = n.qpcr.cycles,
-                                            ncol = n.reacts,
-                                            dimnames = list(row = 1:n.qpcr.cycles))
-                    }
-                    if(!is.na(n.temp.stages)) {
-                      private$melt.fdata <- matrix(nrow = n.temp.stages,
-                                            ncol = n.reacts,
-                                            dimnames = list(row = temp.stages))
-                    }
-                    private$plate.map <- matrix(nrow = 5,
-                                        ncol = n.reacts,
-                                        dimnames = list(row = c("ReactID",
-                                                                "Tube",
-                                                                "TubeName",
-                                                                "Target",
-                                                                "Type"
-                                                                )
-                                                        ))
-                    
-                    for(react.i in 1:n.reacts) {                      
-                      react.id <- xmlGetAttr(reacts[[react.i]], name = "id")
-                      sample.id <- xmlGetAttr(reacts[[react.i]][["sample"]], name = "id")
-                      tube.name <- ifelse(self$publisher == "Roche Diagnostics",
-                                         sdescs[sample.id],
-                                         sample.id)    
-                      type <- types[sample.id]
-                      # omit empty Bio-Rad data
-#                       try({
-                        for(fdata in reacts[[react.i]]["data", all = TRUE])
-                        {
-                          tube <- ifelse((
-                            self$publisher == "StepOne"),
-                            react.id,
-                            {
-                              react.id <- as.integer(react.id)
-                              paste0(LETTERS[react.id %/% 
-                                               self$plate.dims["columns"] + 1],
-                                     react.id %% self$plate.dims["columns"])
-                            }
-                          )                            
-                          target.id <- xmlGetAttr(fdata[["tar"]], name = "id")
-                          if(target.id == "") target.id <- "NA"
-                          adps <- sapply(fdata["adp", all = TRUE],
-                                         function(x) as.numeric(xmlValue(x[["fluor"]])))
-                          mdps <- sapply(fdata["mdp", all = TRUE],
-                                         function(x) as.numeric(xmlValue(x[["fluor"]])))                            
-                          # add qPCR data                          
-                          if(length(adps) != 0) private$qPCR.fdata[,react.i] <- adps
-                          # add melting data
-                          if(length(mdps) != 0) private$melt.fdata[,react.i] <- mdps
-                          
-                          private$plate.map[,react.i] <- c(react.id,
-                                                           tube,
-                                                           tube.name,
-                                                           target.id,
-                                                           type)
-                        }
-#                       }
-#                       , silent = TRUE)
-                    }
-                  },
-                  GetFData = function(i) {
-                    print(private$plate.map[,i])
-                    print(private$qPCR.fdata[,i])
-                    print(private$melt.fdata[,i])
-                  }
-                ),
-                private = list(
-                  qPCR.fdata = NA,                  
-                  melt.fdata = NA,
-                  plate.map = NA
-                ),
-                active = list(
-                  targets = function() { NULL
-                    
-                  },
-                  types = function(target = NA) { NULL
-                    
-                  }                  
-                )
-)
-              
+                   public = list(                
+                     plate.name = NA,
+                     publisher = NA,
+                     dilutions = NA,
+                     plate.dims = NA,
+                     initialize = function(file.name,
+                                           name.pattern = "%NAME%__%TUBE%") {
+                       # Unzips RDML to get inner XML content                       
+                       unzipped.rdml <- unzip(file.name)
+                       tryCatch({
+                         if(length(unzipped.rdml) > 1)
+                         {
+                           rdml.doc <- xmlParse("rdml_data.xml")
+                           self$dilutions <- GetDilutionsRoche()
+                         }
+                         else
+                         {
+                           rdml.doc <- xmlParse(unzipped.rdml)
+                           self$dilutions <- GetDilutions(rdml.doc)
+                         }},
+                         error = function(e) { print(e) },
+                         finally = unlink(unzipped.rdml))
+                       ####
+                       
+                       self$publisher <- GetPublisher(rdml.doc)                       
+                       types <- GetSamplesTypes(rdml.doc)
+                       if(self$publisher == "Roche Diagnostics") {
+                         ntp.sample.id <- names(types)[which(types=="ntp")]
+                         reacts.req <- 
+                           paste0("/rdml:rdml/rdml:experiment/rdml:run/rdml:react/rdml:sample[@id!='",
+                                    ntp.sample.id,
+                                    "']/..")
+                         qpcr.data.req <- paste0("/rdml:rdml/rdml:experiment/rdml:run/rdml:react/rdml:sample[@id!='",
+                                                   ntp.sample.id,
+                                                   "']/../rdml:data/rdml:adp/rdml:fluor")
+                         melt.data.req <- paste0("/rdml:rdml/rdml:experiment/rdml:run/rdml:react/rdml:sample[@id!='",
+                                                   ntp.sample.id,
+                                                   "']/../rdml:data/rdml:mdp/rdml:fluor")
+                         samples.ids.req <- paste0("/rdml:rdml/rdml:experiment/rdml:run/rdml:react/rdml:sample[@id!='",
+                                                     ntp.sample.id,
+                                                     "']")
+                         reacts.ids.req <- paste0("/rdml:rdml/rdml:experiment/rdml:run/rdml:react/rdml:sample[@id!='",
+                                                     ntp.sample.id,
+                                                     "']/..")
+                         targets.req <- paste0("/rdml:rdml/rdml:experiment/rdml:run/rdml:react/rdml:sample[@id!='",
+                                                     ntp.sample.id,
+                                                     "']/../rdml:data/rdml:tar")
+                       }
+                       else {
+                         reacts.req <-"/rdml:rdml/rdml:experiment/rdml:run/rdml:react"
+                         qpcr.data.req <- "/rdml:rdml/rdml:experiment/rdml:run/rdml:react/rdml:data/rdml:adp/rdml:fluor"
+                         melt.data.req <- "/rdml:rdml/rdml:experiment/rdml:run/rdml:react/rdml:data/rdml:mdp/rdml:fluor"
+                         samples.ids.req <- "/rdml:rdml/rdml:experiment/rdml:run/rdml:react/rdml:sample"
+                         reacts.ids.req <- "/rdml:rdml/rdml:experiment/rdml:run/rdml:react"
+                         targets.req <- "/rdml:rdml/rdml:experiment/rdml:run/rdml:react/rdml:data/rdml:tar"                                                  
+                       }                       
+                       self$plate.dims <- GetPlateDimensions(rdml.doc) 
+                       if(self$publisher == "Roche Diagnostics")
+                         sdescs <- GetDescriptions(rdml.doc)
+                       
+                       reacts <- getNodeSet(
+                         rdml.doc,
+                         reacts.req,
+                         namespaces = c(rdml = "http://www.rdml.org"))
+                       n.reacts = length(reacts)
+                       n.qpcr.cycles <- length(reacts[[1]][["data"]]["adp"])
+                       temp.stages <- sapply(reacts[[1]][["data"]]["mdp"], 
+                                             function(mdp) {xmlValue(mdp[["tmp"]])})
+                       n.temp.stages <- length(temp.stages)
+                       data.per.react <- length(reacts[[1]]["data", all = TRUE])
+                       if(!is.na(n.qpcr.cycles)) {
+                         fqpcr <- as.numeric(xpathSApply( rdml.doc,
+                                                          qpcr.data.req,
+                                                          xmlValue,
+                                                          namespaces = c(rdml = "http://www.rdml.org")))
+                         
+                         
+                         private$qPCR.fdata <- matrix(fqpcr,
+                                                      nrow = n.qpcr.cycles,
+                                                      dimnames = list(row = 1:n.qpcr.cycles))
+                       }
+                       if(!is.na(n.temp.stages)) {
+                         fmelt <- as.numeric(xpathSApply( rdml.doc,
+                                                          melt.data.req,
+                                                          xmlValue,
+                                                          namespaces = c(rdml = "http://www.rdml.org")))
+                         
+                         private$melt.fdata <- matrix(fmelt,
+                                                      nrow = n.temp.stages,
+                                                      dimnames = list(row = temp.stages))
+                       }
+                       
+                                                  
+                       samples.ids <- xpathSApply( rdml.doc,
+                                                   samples.ids.req,
+                                                   xmlGetAttr,
+                                                   name = "id",
+                                                   namespaces = c(rdml = "http://www.rdml.org"))
+                       if(self$publisher == "Roche Diagnostics") tube.names <- sdescs[samples.ids]
+                       else tube.names <- samples.ids
+                       reacts.ids <- xpathSApply( rdml.doc,
+                                                  reacts.ids.req,
+                                                  xmlGetAttr,
+                                                  name = "id",
+                                                  namespaces = c(rdml = "http://www.rdml.org"))
+                       targets <- xpathSApply(rdml.doc,
+                                    targets.req, 
+                                    xmlGetAttr,
+                                    name = "id",
+                                    namespaces = c(rdml = "http://www.rdml.org"))
+                       types <- types[samples.ids]
+                       tubes <- sapply(reacts.ids,
+                                       function(react.id) { ifelse(                                         
+                                         (self$publisher == "StepOne"),
+                                         react.id, {
+                                           react.id <- as.integer(react.id)
+                                           paste0(LETTERS[react.id %/% self$plate.dims["columns"] + 1],
+                                                  react.id %% self$plate.dims["columns"])
+                                         }                                       
+                                       )
+                                       }
+                       )
+                       if(data.per.react != 1) {
+                         tube.names <- rep(tube.names, each = data.per.react)
+                         reacts.ids <- rep(reacts.ids, each = data.per.react)
+                         types <- rep(types, each = data.per.react)
+                         tubes <- rep(tubes, each = data.per.react)
+                       }
+                       private$plate.map <- matrix(nrow = 6,
+                                                   ncol = length(targets),
+                                                   dimnames = list(row = c("ReactID",                                                    
+                                                                           "Tube",
+                                                                           "TubeName",
+                                                                           "Target",
+                                                                           "Type",
+                                                                           "FDataName")))
+                                                    
+                       private$plate.map["TubeName",] <- tube.names
+                       private$plate.map["ReactID",] <- reacts.ids
+                       private$plate.map["Target",] <- targets
+                       private$plate.map["Type",] <- types
+                       private$plate.map["Tube",] <- tubes
+                       for(i in 1:length(targets)) {
+                         private$plate.map["FDataName",i] <- GenSName(name.pattern,
+                                                                      self$plate.dims,
+                                                                      private$plate.map["ReactID", i],
+                                                                      private$plate.map["TubeName", i],
+                                                                      private$plate.map["Tube", i],
+                                                                      private$plate.map["Target", i],
+                                                                      private$plate.map["Type", i],
+                                                                      self$publisher)
+                       }
+                     },
+                     GetFData = function(i) {
+                       print(private$plate.map[,i])                       
+                       print(private$qPCR.fdata[,i])
+                       print(private$melt.fdata[,i])
+                     }
+                                                   ),
+                   private = list(
+                     qPCR.fdata = NA,                  
+                     melt.fdata = NA,
+                     plate.map = NA
+                   ),
+                   active = list(
+                     targets = function() { NULL
+                                            
+                     },
+                     types = function(target = NA) { NULL
+                                                     
+                     },
+                     qd = function() private$qPCR.fdata,
+                     md = function() private$melt.fdata,
+                     pm = function() private$plate.map
+                   )
+                       )
