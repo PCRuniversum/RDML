@@ -4,9 +4,9 @@
 \alias{plot.RDML_object}
 \title{Plot RDML_objects}
 \usage{
-\method{plot}{RDML_object}(x, print.legend = TRUE, separate.by = list(left =
-  c("name", "type", "targets"), right = c("name", "type", "targets")),
-  col = list(left = NA, right = NA), empty.col = "white", ...)
+plot.RDML_object(x, print.legend = TRUE, separate.by = list(left = c("name",
+  "type", "targets"), right = c("name", "type", "targets")), col = list(left =
+  NA, right = NA), empty.col = "white", ...)
 }
 \arguments{
 \item{x}{an object of class \code{RDML_object}.}

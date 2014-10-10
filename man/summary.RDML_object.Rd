@@ -4,7 +4,7 @@
 \alias{summary.RDML_object}
 \title{Summary RDML_objects}
 \usage{
-\method{summary}{RDML_object}(object, print = TRUE, ...)
+summary.RDML_object(object, print = TRUE, ...)
 }
 \arguments{
 \item{object}{an object of class \code{RDML_object}.}
