@@ -1,4 +1,17 @@
-plot.RDML_object <- function(object,
+#' Plot RDML_objects
+#' 
+#' Plots \code{RDML_object}s.
+#' 
+#' @aliases plot.RDML_object plot,RDML_object-method
+#' @param x an object of class \code{RDML_object}.
+#' @param print.legend \code{logical}
+#' @param separate.by \code{list}
+#' @param col sth
+#' @param empty.col sth
+#' @param ... additional graphical parameters.
+#' @export
+
+plot.RDML_object <- function(x,
                              print.legend = TRUE,
                              separate.by = list(left = c("name", "type", "targets"),
                                                 right = c("name", "type", "targets")),
@@ -12,8 +25,8 @@ plot.RDML_object <- function(object,
         stop(paste0(c("'", opt, "' is not correct option for separate.by!!!")))
     }
   }
-  cnum = object$Plate.Dims["columns"]
-  rnum = object$Plate.Dims["rows"]
+  cnum = x$Plate.Dims["columns"]
+  rnum = x$Plate.Dims["rows"]
   
   ## create matrix for left and right values of tubes
   matr <- matrix(ncol = 2,
@@ -31,7 +44,7 @@ plot.RDML_object <- function(object,
                      right = tube.types.template)
   
   ## create matrix for plot legend
-  legend <- matrix(ncol = 7, nrow = length(object$Plate.Map),
+  legend <- matrix(ncol = 7, nrow = length(x$Plate.Map),
                    dimnames = list(c(), c("Left ID",
                                           "L. Color",
                                           "Right ID",
@@ -40,23 +53,23 @@ plot.RDML_object <- function(object,
                                           "Type",
                                           "Targets")))
   
-  for(index in 1:length(object$Plate.Map)) {
-    col.index <- as.integer(str_extract(names(object$Plate.Map)[index],
+  for(index in 1:length(x$Plate.Map)) {
+    col.index <- as.integer(str_extract(names(x$Plate.Map)[index],
                                         "[[:digit:]]+"))
     row.index <- which(LETTERS == 
-                         str_extract(names(object$Plate.Map)[index], 
+                         str_extract(names(x$Plate.Map)[index], 
                                      "[[:upper:]]"))
     
-    legend[index,"Tube Name"] <- object$Plate.Map[[index]]$Name
-    legend[index,"Type"] <- object$Plate.Map[[index]]$Type
-    legend[index,"Targets"] <- paste(object$Plate.Map[[index]]$Targets,
+    legend[index,"Tube Name"] <- x$Plate.Map[[index]]$Name
+    legend[index,"Type"] <- x$Plate.Map[[index]]$Type
+    legend[index,"Targets"] <- paste(x$Plate.Map[[index]]$Targets,
                                      collapse = "; ")
     
     for(half in c("left", "right")) {
       sname<- ifelse("name" %in% separate.by[[half]],
-                     object$Plate.Map[[index]]$Name,
+                     x$Plate.Map[[index]]$Name,
                      NA)
-      ttype <- object$Plate.Map[[index]]$Type
+      ttype <- x$Plate.Map[[index]]$Type
       ## remove variable name
       names(ttype) <- ""
       ttype <- ifelse("type" %in% separate.by[[half]],
@@ -64,7 +77,7 @@ plot.RDML_object <- function(object,
                       NA)
       ## collapse all targets to one string
       targets <- ifelse("targets" %in% separate.by[[half]],
-                        paste(object$Plate.Map[[index]]$Targets,
+                        paste(x$Plate.Map[[index]]$Targets,
                               collapse = "; "),
                         NA)    
       
