@@ -176,8 +176,9 @@ GenFDataName <- function (name.pattern,
 }
 
 InitRDML <- function(self, private, file.name) {
-  # Unzips RDML to get inner XML content                       
-  unzipped.rdml <- unzip(file.name)
+  # Unzips RDML to get inner XML content
+  uniq.folder <- UUIDgenerate()
+  unzipped.rdml <- unzip(file.name, exdir = uniq.folder)
   tryCatch({
     if(length(unzipped.rdml) > 1)
     {
@@ -190,7 +191,7 @@ InitRDML <- function(self, private, file.name) {
       self$dilutions <- GetDilutions(rdml.doc)
     }},
            error = function(e) { print(e) },
-           finally = unlink(unzipped.rdml))
+           finally = unlink(uniq.folder, recursive = TRUE))
   ####
   
   self$publisher <- GetPublisher(rdml.doc)                       

@@ -89,6 +89,7 @@
 #' @importFrom stringr str_extract
 #' @importFrom dpcR plot_panel create_dpcr extract_dpcr
 #' @importFrom R6 R6Class
+#' @importFrom uuid UUIDgenerate
 #' @examples
 #' 
 #' ## EXAMPLE 1:
