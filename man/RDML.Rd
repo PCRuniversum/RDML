@@ -3,7 +3,7 @@
 \name{RDML}
 \alias{RDML}
 \title{qPCR data import function}
-\format{\preformatted{Class 'R6ClassGenerator' <environment: 0xb823618> 
+\format{\preformatted{Class 'R6ClassGenerator' <environment: 0x98f87c0> 
  - attr(*, "name")= chr "RDML_generator"
 }}
 \usage{
