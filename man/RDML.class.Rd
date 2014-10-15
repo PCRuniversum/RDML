@@ -5,7 +5,7 @@
 \alias{RDML.class}
 \title{R6 class \code{RDML} -- contains methods to read and overview fluorescence
 data from RDML v1.1 format files}
-\format{\preformatted{Class 'R6ClassGenerator' <environment: 0x9de4a70> 
+\format{\preformatted{Class 'R6ClassGenerator' <environment: 0xc02c150> 
  - attr(*, "name")= chr "RDML_generator"
 }}
 \usage{
@@ -43,12 +43,13 @@ Possible keys in \code{name.pattern} \describe{
 }
 \section{Fields}{
  \describe{ \item{publisher}{name of PCR device manufacturer
-  -- \emph{READ ONLY}} \item{dilutions}{\code{list} of dillutions with their
+  } \item{dilutions}{\code{list} of dillutions with their
   positions at plate splitted by targets } \item{plate.dims}{plate dimensions
   -- number of rows and columns at plate} \item{targets}{targets (genes or
   dyes names) used by experiment} \item{types}{ \code{list} of samples types
   splitted by targets} \item{name.pattern}{ name pattern to generate
   fluorescence data vectors names (see 'Details') } }
+  All the fields are read only except \code{name.pattern}!!!.
 }
 
 \section{Methods}{
@@ -67,24 +68,27 @@ filename <- paste(PATH, "/extdata/", "lc96_bACTXY.rdml", sep ="")
 lc96 <- RDML$new(filename)
 
 ## Show targets names
-lc96$targets
+targets <- lc96$targets
+targets
 ## Make names easier to type
-lc96$SetTargets(c("famatbact", "hexatx", "texasredaty", "cy5atipc"))
+names(targets) <- c("famatbact", "hexatx", "texasredaty", "cy5atipc")
 ## Show types of the samples for target 'famatbact'
-lc96$types("famatbact")
+lc96$types[[targets["famatbact"]]]
 
 ## Show dilutions for dye - FAM
 lc96$dilutions$FAM
 \dontrun{
-COPIES <- unique(lc96$Dilutions$FAM["quant",])
+COPIES <- unique(lc96$dilutions$FAM)
 ## Define calibration curves (type of the samples - 'std').
 ## No replicates.
 library(qpcR)
-CAL <- modlist(lc96$qPCR[["famatbact"]]$std,
+CAL <- modlist(lc96$GetFData(filter=list(targets=targets["famatbact"],
+                                         types="std", method="qPCR")),
                fluo = c(2, 4, 6, 8, 10))
 ## Define samples to predict (first two samples with the type - 'unkn').
-PRED <- modlist(lc96$qPCR[["famatbact"]]$unkn[1:5],
-                fluo = grep("^S", names(lc96$qPCR[["famatbact"]]$unkn)[1:2]))
+PRED <- modlist(lc96$GetFData(filter=list(targets=targets["famatbact"],
+                                         types="std", method="qPCR")),
+                fluo = 1:2)
 ## Conduct quantification.
 calib(refcurve = CAL, predcurve = PRED, thresh = "cpD2",
       dil = COPIES)
@@ -98,18 +102,23 @@ calib(refcurve = CAL, predcurve = PRED, thresh = "cpD2",
 library(chipPCR)
 PATH <- path.package("RDML")
 filename <- paste(PATH, "/extdata/", "lc96_bACTXY.rdml", sep ="")
-lc96 <- RDML(filename)
+lc96 <- RDML$new(filename)
 
 ## Compactly display the structure of the lc96 object
-str(lc96)
+#!! str(lc96)
+lc96$types
+## Make names easier to type
+names(targets) <- c("famatbact", "hexatx", "texasredaty", "cy5atipc")
 ## Fetch cycle dependent fluorescence for HEX chanel
-tmp <- lc96[["qPCR"]][["hexatx"]][["std"]]
+tmp <- lc96$GetFData(filter = list(method = "qPCR",
+                                   targets = targets["hexatx"],
+                                   types = "std"))
 ## Fetch vector of dillutions for HEX chanel
-dilution <- as.vector(lc96[["Dilutions"]][["Hex"]])
+dilution <- as.vector(lc96$dilutions$Hex)
 
 ## Use plotCurves function from the chipPCR package to
 ## get an overview of the amplification curves
-plotCurves(tmp[, 1], tmp[, -1])
+plotCurves(tmp[,1], tmp[,-1])
 par(mfrow = c(1,1))
 ## Use inder function from the chipPCR package to
 ## calculate the Cq (second derivative maximum, SDM)
@@ -129,22 +138,24 @@ plot(effcalc(dilution, SDMout), CI = TRUE)
 ## Import with custom name pattern.
 PATH <- path.package("RDML")
 filename <- paste(PATH, "/extdata/", "BioRad_qPCR_melt.rdml", sep ="")
-cfx96 <- RDML(filename,
-              name.pattern = "\\\%TUBE\\\%_\\\%NAME\\\%_\\\%TYPE\\\%_\\\%TARGET\\\%")
+cfx96 <- RDML$new(filename,
+              name.pattern = "\%TUBE\%_\%NAME\%_\%TYPE\%_\%TARGET\%")
 ## Use plotCurves function from the chipPCR package to
 ## get an overview of the amplification curves
 library(chipPCR)
 ## Extract all qPCR data without splitting by targets and types
-cfx96.qPCR <- selectFData(cfx96)
-plotCurves(cfx96.qPCR[, 1], cfx96.qPCR[, -1], type = "l")
+cfx96.qPCR <- cfx96$GetFData()
+plotCurves(cfx96.qPCR[,1], cfx96.qPCR[,-1], type = "l")
 
 ## Extract all melting data without splitting by targets and types
-cfx96.melt <- selectFData(cfx96, melt = TRUE)
+cfx96.melt <- cfx96$GetFData(filter = list(method = "melt"))
 ## Show some generated names for samples.
 names(cfx96.melt[2L:5])
-## Select index numbers of the columns that contain
-## samples with dye 'EvaGreen' and have type 'pos'.
-cols <- selectFData(cfx96, melt = TRUE, snames = "pos_EvaGreen$")
+## Select columns that contain
+## samples with dye 'EvaGreen' and have type 'pos'
+## using filtering by names.
+cols <- cfx96$GetFData(filter = list(method = "melt",
+                                     names = "pos_EvaGreen$"))
 ## Conduct melting curve analysis.
 library(qpcR)
 invisible(meltcurve(cols, fluos = 2:length(cols),
