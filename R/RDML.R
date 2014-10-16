@@ -580,7 +580,7 @@ RDML <- R6Class("RDML",
                                filtered.map$FDataName),]
                     }
                     filtered.fdata.ids <- filtered.map$FDataID
-                    if(filter$method == "melt") {
+                    if(!is.null(filter$method) && filter$method == "melt") {
                       filtered <- as.data.frame(private$.melt.fdata[,filtered.fdata.ids])
                       filtered <- cbind(as.numeric(rownames(private$.melt.fdata)),
                                         filtered)

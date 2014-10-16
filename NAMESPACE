@@ -2,7 +2,7 @@
 
 S3method(names,RDML)
 export(RDML)
-export(RDML_gui)
+export(RDML.gui)
 export(plot.RDML)
 export(selectFData)
 export(summary.RDML)
