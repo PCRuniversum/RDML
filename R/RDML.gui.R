@@ -1,6 +1,6 @@
 #' Graphical User Interface for .rdml data import
 #' 
-#' \code{RDML_gui} is a web-browser based graphical interface allowing user to
+#' \code{RDML.gui} is a web-browser based graphical interface allowing user to
 #' read \code{.rdml} file, extract data and save it in an other format.
 #' Additional features include summary statistics and plotting functions.
 #' 
@@ -18,8 +18,8 @@
 #' 
 #' \donttest{
 #' library(shiny)
-#' RDML_gui()
+#' RDML.gui()
 #' }
 #' 
-RDML_gui <- function()
+RDML.gui <- function()
   runApp(system.file("RDML_gui", package = "RDML"))

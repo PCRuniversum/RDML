@@ -10,7 +10,7 @@ shinyServer(function(input, output, session) {
     if(is.null(input$rdml.file) ||
          is.null(input$dataTypeSelector))
       return()
-    vals$targets <- names(rdml.obj()[[input$dataTypeSelector]])
+    vals$targets <- rdml.obj()$targets
     selectInput("targets", "Targets:",
                 vals$targets,
                 multiple = TRUE)
@@ -23,7 +23,7 @@ shinyServer(function(input, output, session) {
     if(is.null(input$targets)) targets <- vals$targets
     else targets <- input$targets    
     vals$types <- unique(as.vector(sapply(targets, function(fluorTarget) {
-      names(rdml.obj()[[input$dataTypeSelector]][[fluorTarget]])})))    
+      rdml.obj()$targets[[fluorTarget]]})))    
     selectInput("types", "Types:",
                 vals$types,
                 multiple = TRUE)
@@ -49,20 +49,19 @@ shinyServer(function(input, output, session) {
     isolate({
       withProgress(message = "Processing RDML data",
                    value = 0, {
-                     vals$rdml.obj <- RDML(input$rdml.file$datapath,
-                                           name.pattern = input$pattern,
-                                           omit.ntp = input$omit.ntp)
+                     vals$rdml.obj <- RDML$new(input$rdml.file$datapath,
+                                           name.pattern = input$pattern)
                      vals$dtypeSelectorVars <- c()
                      vals$melt <- TRUE
-                     if("qPCR" %in% names(vals$rdml.obj)) 
+                     if("qPCR" %in% rdml.obj()$used.methods) 
                      {
                        vals$dtypeSelectorVars <- c(vals$dtypeSelectorVars, 
                                                    "qPCR" = "qPCR")
                        vals$melt <- FALSE
                      }
-                     if("Melt" %in% names(vals$rdml.obj)) 
+                     if("melt" %in% rdml.obj()$used.methods) 
                        vals$dtypeSelectorVars <- c(vals$dtypeSelectorVars, 
-                                                   "Melting" = "Melt")
+                                                   "Melting" = "melt")
                    })
       return(vals$rdml.obj)
     })
@@ -120,7 +119,7 @@ shinyServer(function(input, output, session) {
       return()    
     withProgress(message = "Generating summary",
                  value = 0, 
-                 { summary(rdml.obj())
+                 { rdml.obj()$Summarize()
                   })
   })
   
