@@ -200,7 +200,7 @@ RDML$set("public", "initialize", function(file.name,
   # Unzips RDML to unique folder to get inner XML content.
   # Unique folder is needed to prevent file ovewriting
   # by parallel function usage.
-  uniq.folder <- UUIDgenerate()  
+  uniq.folder <- paste0(".temp/", UUIDgenerate())
   unzipped.rdml <- unzip(file.name, exdir = uniq.folder)
   tryCatch({
     # Roche use more than one file at RDML zip.
@@ -216,7 +216,8 @@ RDML$set("public", "initialize", function(file.name,
       private$.dilutions <- GetDilutions(rdml.doc)
     }},
     error = function(e) { print(e) },
-    finally = unlink(uniq.folder, recursive = TRUE))
+    finally = unlink(uniq.folder, recursive = TRUE)
+    )
   ####
   
   # get publisher info
