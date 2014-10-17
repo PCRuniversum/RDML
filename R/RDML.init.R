@@ -175,10 +175,25 @@ GenFDataName <- function (name.pattern,
   return(name.pattern)
 }
 
-#' Inits RDML
+#' Creates new instance of \code{RDML} class object
 #' 
-#' Inits RDML
+#' This function has been designed to import fluorescence data from instruments 
+#' that support RDML v1.1 format export.
+#' 
+#' @section Warning: Although the format RDML claimed as data exchange format, 
+#'   the specific implementation of the format at devices from different 
+#'   manufacturers differ significantly. Currently this function is checked 
+#'   against RDML data from devices: \emph{Bio-Rad CFX96}, \emph{Roche 
+#'   LightCycler 96} and \emph{Applied Biosystems StepOne}.
+#' @param rdmlfile RDML file with fluorescence data.
+#' @param name.pattern sample name pattern (see 'Details' at \link{RDML}).
+#' @author Konstantin A. Blagodatskikh <k.blag@@yandex.ru>, Stefan Roediger 
+#'   <stefan.roediger@@hs-lausitz.de>, Michal Burdukiewicz 
+#'   <michalburdukiewicz@@gmail.com>
+#' @docType methods
 #' @name new
+#' @aliases RDML.new
+#' @rdname new-method
 #' @include RDML.R
 RDML$set("public", "initialize", function(file.name,
                                           name.pattern = "%NAME%__%TUBE%") {

@@ -1,10 +1,23 @@
+#' S3 wrapper for \code{RDML$Summarize()} method
+#' 
+#' See \link{RDML.Summarize}.
+#' 
+#' 
+#' @keywords manip summary
+#' @export
+#' @include RDML.R
+summary.RDML <- function(object, print = TRUE, ...) {
+  object$Summarize(print, ...)
+}
+
 #' Summary RDML R6 objects
 #' 
 #' Prints and silently returns summary statistics of \code{RDML} objects.
 #' 
-#' 
-#' @aliases summary.RDML_object summary,RDML_object-method#' 
-#' @param object an object of class \code{RDML_object}.
+#' @name Summarize
+#' @aliases RDML.Summarize
+#' @rdname summarize-method
+#' @docType methods
 #' @param print logical, if \code{TRUE} summary is printed to console.
 #' @param ...  currently ignored.
 #' @return A list of length at most 3 (less if \code{object} does not contain
@@ -18,19 +31,12 @@
 #' @seealso Summary statistics are calculated using
 #' \code{\link[chipPCR]{MFIaggr}}.
 #' @keywords manip summary
-#' @export
-#' @include RDML.R
 #' @examples
 #' 
 #' lc96 <- RDML$new(system.file("extdata/lc96_bACTXY.rdml", package = "RDML"))
 #' summary(lc96)
 #' #store raw results of summary without printing
-#' res <- summary(lc96, print = FALSE)
-#' 
-summary.RDML <- function(object, print = TRUE, ...) {
-  object$Summarize(print, ...)
-}
-
+#' res <- lc96$Summarize(print = FALSE)
 RDML$set("public", "Summarize", function(print = TRUE, ...) {
   #### Info about dilutions
   if(!is.null(private$.dilutions)) {

@@ -1,14 +1,7 @@
-#' Plot RDML_objects
+#' S3 wrapper for \code{RDML$Plot()} method
 #' 
-#' Plots \code{RDML} objects.
+#' See \link{RDML.Plot}.
 #' 
-#' @aliases plot.RDML_object plot,RDML_object-method
-#' @param object an object of class \code{RDML}.
-#' @param print.legend \code{logical}
-#' @param separate.by \code{list}
-#' @param col sth
-#' @param empty.col sth
-#' @param ... additional graphical parameters.
 #' @export
 #' @include RDML.R
 plot.RDML <- function(object,
@@ -22,6 +15,22 @@ plot.RDML <- function(object,
   object$Plot(print.legend, separate.by, col, empty.col, ...)
 }
 
+#' Plots \code{RDML} object
+#' 
+#' Plots \code{RDML} objects.
+#' 
+#' @param print.legend \code{logical} defines print or not plot legend
+#' @param separate.by \code{list}
+#' @param col sth
+#' @param empty.col sth
+#' @param ... additional graphical parameters.
+#' @author Konstantin A. Blagodatskikh <k.blag@@yandex.ru>, Stefan Roediger 
+#'   <stefan.roediger@@hs-lausitz.de>, Michal Burdukiewicz 
+#'   <michalburdukiewicz@@gmail.com>
+#' @docType methods
+#' @name Plot
+#' @aliases RDML.Plot
+#' @rdname plot-method
 RDML$set("public", "Plot", function(print.legend,
                                     separate.by,
                                     col,

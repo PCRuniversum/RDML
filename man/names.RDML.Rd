@@ -11,6 +11,6 @@
 }
 \description{
 Just wraps \code{ls()} function to show RDML public fields
-and methods. Useful for RStudio autocomplete.
+and methods. Useful for autocomplete at R editors.
 }
 
