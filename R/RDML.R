@@ -74,9 +74,6 @@
 #'   structured language and reporting guidelines for real-time quantitative PCR
 #'   data.  \emph{Nucleic Acids Res.} 37, 2065--2069. doi:10.1093/nar/gkp056
 #' @keywords Bio--Rad CFX96 file IO LightCycler qPCR RDML StepOne
-#' @include plot.RDML.R
-#' @include summary.RDML.R
-#' @include RDML.inner.logic.R
 #' @export
 #' @importFrom chipPCR MFIaggr
 #' @importMethodsFrom chipPCR summary
@@ -195,73 +192,18 @@
 #' }
 RDML <- R6Class("RDML",
                 public = list(
-                  initialize = function(file.name,
-                                        name.pattern = "%NAME%__%TUBE%") {
-                    init <- InitRDML(self, private, file.name)
-                    self <- init[["self"]]
-                    private <- init[["private"]]
-                    self$name.pattern <- name.pattern
-                  },
-                  GetFData = function(filter = list(method = "qPCR")) {
-                    params.names <- names(filter)
-                    if(!("method" %in% params.names))
-                      filter$method <- "qPCR"
-                    if("react.ids" %in% params.names)
-                      filtered.indices <- which(
-                        private$.plate.map$ReactID %in% as.character(
-                          filter$react.ids))
-                    else if("tubes" %in% params.names)
-                      filtered.indices <- which(
-                        private$.plate.map$Tube %in% filter$tubes)
-                    else { 
-                      filtered.map <- private$.plate.map
-                      if("targets" %in% params.names)
-                        filtered.map <- filtered.map[which(
-                          filtered.map$Target %in% filter$targets),]
-                      if("types" %in% params.names)
-                        filtered.map <-filtered.map[
-                          which(filtered.map$Type %in% filter$types),]
-                      if("names" %in% params.names)
-                        filtered.map <-filtered.map[
-                          grep(filter$names, 
-                               filtered.map$FDataName),]
-                    }
-                    filtered.fdata.ids <- filtered.map$FDataID
-                    if(!is.null(filter$method) && filter$method == "melt") {
-                      filtered <- as.data.frame(private$.melt.fdata[,filtered.fdata.ids])
-                      filtered <- cbind(as.numeric(rownames(private$.melt.fdata)),
-                                        filtered)
-                      names(filtered) <- c("Temp.", 
-                                           filtered.map$FDataName)
-                    }
-                    else {
-                      filtered <- as.data.frame(
-                        private$.qPCR.fdata[,filtered.fdata.ids],
-                        row.names = rownames(private$.qPCR.fdata))
-                      filtered <- cbind(as.numeric(rownames(private$.qPCR.fdata)),
-                                        filtered)
-                      names(filtered) <- c("Cycles", 
-                                           filtered.map$FDataName)
-                    }
-                    return(filtered)
-                  },
-                  Summarize = function(print = TRUE, ...) {
-                    Create.RDML.summary(self, private, print, ...)
-                  },
-                  Plot = function(print.legend = TRUE,
-                                  separate.by = list(left = c("name", "type", "targets"),
-                                                     right = c("name", "type", "targets")),
-                                  col = list(left = NA,
-                                             right = NA),
-                                  empty.col = "white",
-                                  ...) {
-                    Create.RDML.plot(self, private,
-                                     print.legend,
-                                     separate.by,
-                                     col,
-                                     empty.col,
-                                     ...)
-                  }
+                ###               WARNING
+                ### All RDML functions are store at separate files!!!
+                ### Empty functions are added to let roxygen work.
+                ###
+                ## initialize() - RDML.init.R
+                ## GetFData() - RDML.GetFData.R
+                ## Plot() - plot.RDML.R
+                ## Summarize() - summary.RDML.R
+                  initialize = function() {},
+                  GetFData = function() {},
+                  Plot = function() {},
+                  Summarize = function() {}
                 ),
                 private = list(
                   .publisher = NA,

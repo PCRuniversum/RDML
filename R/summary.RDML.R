@@ -19,6 +19,7 @@
 #' \code{\link[chipPCR]{MFIaggr}}.
 #' @keywords manip summary
 #' @export
+#' @include RDML.R
 #' @examples
 #' 
 #' lc96 <- RDML$new(system.file("extdata/lc96_bACTXY.rdml", package = "RDML"))
@@ -27,10 +28,10 @@
 #' res <- summary(lc96, print = FALSE)
 #' 
 summary.RDML <- function(object, print = TRUE, ...) {
-  object$CreateSummary(print, ...)
+  object$Summarize(print, ...)
 }
 
-Create.RDML.summary <- function(self, private, print, ...) {
+RDML$set("public", "Summarize", function(print = TRUE, ...) {
   #### Info about dilutions
   if(!is.null(private$.dilutions)) {
     dilTable <- do.call(rbind, private$.dilutions)
@@ -157,3 +158,4 @@ Create.RDML.summary <- function(self, private, print, ...) {
   
   invisible(res)
 }
+, overwrite = TRUE)

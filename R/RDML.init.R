@@ -175,7 +175,13 @@ GenFDataName <- function (name.pattern,
   return(name.pattern)
 }
 
-InitRDML <- function(self, private, file.name) {
+#' Inits RDML
+#' 
+#' Inits RDML
+#' @name new
+#' @include RDML.R
+RDML$set("public", "initialize", function(file.name,
+                                          name.pattern = "%NAME%__%TUBE%") {
   # Unzips RDML to unique folder to get inner XML content.
   # Unique folder is needed to prevent file ovewriting
   # by parallel function usage.
@@ -350,6 +356,6 @@ InitRDML <- function(self, private, file.name) {
                                    Target = targets,
                                    Type = types,
                                    FDataName = "")
-  return(list(self = self,
-              private = private))
+  self$name.pattern <- name.pattern
 }
+, overwrite = TRUE)

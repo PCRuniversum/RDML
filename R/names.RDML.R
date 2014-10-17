@@ -6,6 +6,7 @@
 #' @aliases names.RDML names,RDML-method
 #' @param object an object of class \code{RDML}.
 #' @export
+#' @include RDML.R
 names.RDML <- function(object) {
   ls(object)
 }

@@ -10,23 +10,23 @@
 #' @param empty.col sth
 #' @param ... additional graphical parameters.
 #' @export
+#' @include RDML.R
 plot.RDML <- function(object,
-                             print.legend = TRUE,
-                             separate.by = list(left = c("name", "type", "targets"),
-                                                right = c("name", "type", "targets")),
-                             col = list(left = NA,
-                                        right = NA),
-                             empty.col = "white",
-                             ...) {
+                      print.legend = TRUE,
+                      separate.by = list(left = c("name", "type", "targets"),
+                                         right = c("name", "type", "targets")),
+                      col = list(left = NA,
+                                 right = NA),
+                      empty.col = "white",
+                      ...) {
   object$Plot(print.legend, separate.by, col, empty.col, ...)
 }
 
-Create.RDML.plot <- function(self, private,
-                             print.legend,
-                             separate.by,
-                             col,
-                             empty.col,
-                             ...) {
+RDML$set("public", "Plot", function(print.legend,
+                                    separate.by,
+                                    col,
+                                    empty.col,
+                                    ...) {
   for(half in c("left", "right")) {
     for(opt in separate.by[[half]]) {      
       if(!opt %in%  c("name", "type", "targets", "", NA))
@@ -188,3 +188,4 @@ Create.RDML.plot <- function(self, private,
   
   invisible(legend)
 }
+, overwrite = TRUE)

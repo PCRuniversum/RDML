@@ -31,10 +31,11 @@ Imports:
 Suggests:
     qpcR (>= 1.3-9)
 Collate:
-    'summary.RDML.R'
-    'plot.RDML.R'
-    'RDML.inner.logic.R'
     'RDML.R'
+    'RDML.GetFData.R'
     'RDML.gui.R'
+    'RDML.init.R'
     'names.RDML.R'
+    'plot.RDML.R'
     'selectFData.R'
+    'summary.RDML.R'
