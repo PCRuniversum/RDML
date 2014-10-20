@@ -33,6 +33,7 @@ Suggests:
 Collate:
     'RDML.R'
     'RDML.GetFData.R'
+    'RDML.Save.RDML.R'
     'RDML.gui.R'
     'RDML.init.R'
     'names.RDML.R'

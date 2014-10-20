@@ -5,7 +5,7 @@
 \alias{RDML.class}
 \title{R6 class \code{RDML} -- contains methods to read and overview fluorescence
 data from RDML v1.1 format files}
-\format{\preformatted{Class 'R6ClassGenerator' <environment: 0x783fe20> 
+\format{\preformatted{Class 'R6ClassGenerator' <environment: 0x94fd890> 
  - attr(*, "name")= chr "RDML_generator"
 }}
 \usage{
