@@ -1,33 +1,88 @@
 RDML$set("public", "Save.RDML", function() {
-  tree <- newXMLNode("rdml", namespace = list(rdml = "http://www.rdml.org", "http://www.rdml.org"))  
-  addAttributes(tree, version = "1.2")
+  ### header
+  tree.node <- newXMLNode("rdml",
+                          namespace = list(rdml = "http://www.rdml.org", "http://www.rdml.org"))  
+  addAttributes(tree.node, version = "1.2")
+  ### samples
+  samples.names <- unique(private$.plate.map["TubeName"])
+  for(id in rownames(samples.names)) {    
+    sample.node <- newXMLNode("sample")
+    # sample name
+    addAttributes(sample.node,
+                  id = as.character(samples.names[as.character(id),]))  
+    # sample type    
+    sample.type <- private$.plate.map[id, "Type"]    
+    addChildren(sample.node, newXMLNode("type", sample.type))
+    # sample quantity
+    sample.tube <- private$.plate.map[id, "Tube"]
+    sample.quantity <- private$.dilutions[[1]][as.character(sample.tube)]
+    if(!is.na(sample.quantity)) {
+      quantity.node <- newXMLNode("quantity")
+      addChildren(quantity.node, newXMLNode("value",
+                                            sample.quantity))
+      addChildren(quantity.node, newXMLNode("unit",
+                                            "ng")) # ng!!!
+      addChildren(sample.node, quantity.node)
+    }
+    # add sample to tree
+    addChildren(tree.node, sample.node)
+  }
   
-  exp <- newXMLNode("experiment")
-  addAttributes(exp, id = "?")
+  exp.node <- newXMLNode("experiment")
+  addAttributes(exp.node, id = "exp1")
   
-  run <- newXMLNode("run")
-  addAttributes(run, id = "1")
+  run.node <- newXMLNode("run")
+  addAttributes(run.node, id = "run1")
   
-  pcr.format <- newXMLNode("pcrFormat")
-  addChildren(pcr.format, newXMLNode("rows", "8"))
-  addChildren(pcr.format, newXMLNode("columns", "12"))
-  addChildren(pcr.format, newXMLNode("rowLabel", "ABC"))
-  addChildren(pcr.format, newXMLNode("columnLabel", "123"))
+  ### plate format
+  pcr.format.node <- newXMLNode("pcrFormat")
+  addChildren(pcr.format.node, newXMLNode("rows",
+                                          private$.plate.dims["rows"]))
+  addChildren(pcr.format.node, newXMLNode("columns",
+                                          private$.plate.dims["columns"]))
+  addChildren(pcr.format.node, newXMLNode("rowLabel", "ABC"))
+  addChildren(pcr.format.node, newXMLNode("columnLabel", "123"))
+  addChildren(run.node, pcr.format.node)
   
-  react <- newXMLNode("react")
-  addChildren(react, newXMLNode("sample", "Sa1"))
+  ### add reacts
+  react.ids <- unique(private$.plate.map[["ReactID"]])
+  for(id in react.ids) {
+    react.node <- newXMLNode("react")
+    addAttributes(react.node, id = id)
+    react <- private$.plate.map[which(private$.plate.map["ReactID"] == id),]
+    # sample name to react  
+    sample.name <- react[1, "TubeName"]        
+    addChildren(react.node, newXMLNode("sample", sample.name))
+    # daat by targets
+    for(target.i in 1:length(react[["Target"]])) {
+      data.node <- newXMLNode("data")
+      addChildren(data.node, newXMLNode("tar", react[["Target"]][target.i]))
+      print(react[["Target"]][target.i])
+      fdata.id = react[target.i, "FDataID"]
+      if(!is.null(private$.qPCR.fdata)) {        
+        adps <- private$.qPCR.fdata[, fdata.id]        
+        for(adp.i in 1:length(adps)) {
+          adp.node <- newXMLNode("adp")          
+          addChildren(adp.node, newXMLNode("cyc", names(adps[adp.i])))
+          addChildren(adp.node, newXMLNode("fluor", adps[adp.i]))
+          addChildren(data.node, adp.node)
+        }        
+      }
+      if(!is.null(private$.melt.fdata)) {        
+        mdps <- private$.melt.fdata[, fdata.id]        
+        for(mdp.i in 1:length(mdps)) {
+          mdp.node <- newXMLNode("mdp")          
+          addChildren(mdp.node, newXMLNode("tmp", names(mdps[mdp.i])))
+          addChildren(mdp.node, newXMLNode("fluor", mdps[mdp.i]))
+          addChildren(data.node, mdp.node)
+        }        
+      }
+      addChildren(react.node, data.node)
+    }
+    addChildren(run.node, react.node)
+  }
   
-  data <- newXMLNode("data")
-  addChildren(data, newXMLNode("tar", "tar1"))
-  adp <- newXMLNode("adp")
-  addChildren(adp, newXMLNode("cyc", "1"))
-  addChildren(adp, newXMLNode("fluor", "1000"))
-  addChildren(data, adp)
-  
-  addChildren(react, data)
-  
-  addChildren(run, pcr.format)
-  addChildren(run, react)
-  addChildren(exp, run)
-  addChildren(tree, exp)
+  addChildren(exp.node, run.node)
+  addChildren(tree.node, exp.node)
+  return(tree.node)
 }, overwrite = TRUE)
