@@ -52,12 +52,14 @@ RDML$set("public", "Save.RDML", function() {
     react <- private$.plate.map[which(private$.plate.map["ReactID"] == id),]
     # sample name to react  
     sample.name <- react[1, "TubeName"]        
-    addChildren(react.node, newXMLNode("sample", sample.name))
+    addChildren(react.node, newXMLNode("sample",
+                                       attrs = list(id = as.character(sample.name))))
     # daat by targets
     for(target.i in 1:length(react[["Target"]])) {
       data.node <- newXMLNode("data")
-      addChildren(data.node, newXMLNode("tar", react[["Target"]][target.i]))
-      print(react[["Target"]][target.i])
+      addChildren(data.node, 
+                  newXMLNode("tar",
+                             attrs = list(id = as.character(react[["Target"]][target.i]))))      
       fdata.id = react[target.i, "FDataID"]
       if(!is.null(private$.qPCR.fdata)) {        
         adps <- private$.qPCR.fdata[, fdata.id]        
