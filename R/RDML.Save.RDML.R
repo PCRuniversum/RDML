@@ -78,7 +78,7 @@ RDML$set("public", "Save.RDML", function(file.name = NULL) {
       addChildren(data.node, 
                   newXMLNode("tar",
                              attrs = list(id = as.character(react[["Target"]][target.i]))))      
-      fdata.id = react[target.i, "FDataID"]
+      fdata.id <- react[target.i, "FDataID"]
       if(!is.null(private$.qPCR.fdata)) {        
         adps <- private$.qPCR.fdata[, fdata.id]        
         for(adp.i in 1:length(adps)) {
