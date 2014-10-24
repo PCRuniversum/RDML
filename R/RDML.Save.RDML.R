@@ -1,8 +1,14 @@
-RDML$set("public", "Save.RDML", function() {
+RDML$set("public", "Save.RDML", function(file.name = NULL) {
   ### header
   tree.node <- newXMLNode("rdml",
                           namespace = list(rdml = "http://www.rdml.org", "http://www.rdml.org"))  
   addAttributes(tree.node, version = "1.2")
+  ### dyes
+  for(dye in unique(private$.plate.map[["Dye"]])) {
+    addChildren(tree.node,
+                newXMLNode("dye", attrs = list(id = dye)))
+  }
+  
   ### samples
   samples.names <- unique(private$.plate.map["TubeName"])
   for(id in rownames(samples.names)) {    
@@ -26,6 +32,18 @@ RDML$set("public", "Save.RDML", function() {
     }
     # add sample to tree
     addChildren(tree.node, sample.node)
+  }
+  
+  # targets
+  targets.ids <- unique(private$.plate.map["Target"])
+  for(id in rownames(targets.ids)) {
+    dye <- as.character(private$.plate.map[id, "Dye"])
+    target <- as.character(private$.plate.map[id, "Target"])
+    addChildren(tree.node,
+                newXMLNode("target",
+                           newXMLNode("dyeId",
+                                      attrs = list(id = dye)),
+                           attrs = list(id = target)))
   }
   
   exp.node <- newXMLNode("experiment")
@@ -86,5 +104,19 @@ RDML$set("public", "Save.RDML", function() {
   
   addChildren(exp.node, run.node)
   addChildren(tree.node, exp.node)
-  return(tree.node)
+  if(is.null(file.name))
+    return(tree.node)
+  else {
+    uniq.folder <- paste0(".temp/", UUIDgenerate())
+    tryCatch({
+      dir.create(uniq.folder)
+      file <- saveXML(tree.node, file = paste0(uniq.folder,
+                                               "/rdml_data.xml"))
+      zip(file.name, file, extras = "-j")
+    },
+    error = function(e) { print(e) },
+    finally = unlink(uniq.folder, recursive = TRUE)
+    )    
+  }
+    
 }, overwrite = TRUE)

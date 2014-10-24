@@ -47,6 +47,25 @@ GetPlateDimensions <- function(rdml.doc)
   return(c(rows = rows, columns = columns))
 }
 
+# Gets used dyes (with targets as names)
+GetDyes <- function(rdml.doc)
+{
+  targets <- xpathSApply(
+    rdml.doc, 
+    "/rdml:rdml/rdml:target",
+    xmlGetAttr,
+    name = "id",
+    namespaces = c(rdml = "http://www.rdml.org"))
+  dyes <- xpathSApply(
+    rdml.doc, 
+    "/rdml:rdml/rdml:target/rdml:dyeId",
+    xmlGetAttr,
+    name = "id",
+    namespaces = c(rdml = "http://www.rdml.org"))
+  names(dyes) <- targets
+  return(dyes)
+}
+
 # Getstype (Unknown, Positive, Standart, etc.)
 # of each sample from XML
 GetSamplesTypes <- function(rdml.doc)
@@ -329,12 +348,16 @@ RDML$set("public", "initialize", function(file.name,
                              name = "id",
                              namespaces = c(rdml = "http://www.rdml.org"))
   
-  # get targets used at each react
+  # get targets used at each data
   targets <- xpathSApply(rdml.doc,
                          targets.req, 
                          xmlGetAttr,
                          name = "id",
                          namespaces = c(rdml = "http://www.rdml.org"))
+  
+  # get dye at each data
+  used.dyes <- GetDyes(rdml.doc)
+  dyes <- sapply(targets, function(target) used.dyes[target])
   
   # get types used at each react
   types <- types[samples.ids]
@@ -369,6 +392,7 @@ RDML$set("public", "initialize", function(file.name,
                                    ReactID = reacts.ids,                                                    
                                    Tube = tubes,
                                    TubeName = tube.names,
+                                   Dye = dyes,
                                    Target = targets,
                                    Type = types,
                                    FDataName = "")

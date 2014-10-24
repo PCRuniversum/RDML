@@ -217,7 +217,7 @@ RDML <- R6Class("RDML",
                   .name.pattern = NA
                 ),
                 active = list(
-                  md = function() private$.melt.fdata,
+                  pm = function() private$.plate.map,
                   publisher = function(value) {
                     if(missing(value))
                       return(private$.publisher)
