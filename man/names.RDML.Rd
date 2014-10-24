@@ -4,10 +4,12 @@
 \alias{names.RDML}
 \title{The Names of the RDML object}
 \usage{
-\method{names}{RDML}(object)
+\method{names}{RDML}(object, ...)
 }
 \arguments{
 \item{object}{an object of class \code{RDML}.}
+
+\item{...}{other arguments passed to \code{\link[base]{ls}} function.}
 }
 \description{
 Just wraps \code{ls()} function to show RDML public fields

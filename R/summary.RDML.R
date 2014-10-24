@@ -51,17 +51,14 @@ RDML$set("public", "Summarize", function(print = TRUE, ...) {
   
   #### Pretty structure of run
   
-  runStr <- c()
-  for(target in self$targets) {  
-    for(stype in self$types[[target]]) {
-      runStr <- rbind(runStr, c(Targets = target, Types = stype, 
-                                No.Samples = 
-                                  (length(self$GetFData(filter = 
-                                                          list(targets = target,
-                                                               types = stype)))-1)))      
-    }
-  }
-  runStr <- as.data.frame(runStr)
+  runStr <- do.call(rbind, unlist(lapply(self$targets, function(target)
+    lapply(self$types[[target]], function(stype)
+      data.frame(Targets = target, 
+                 Types = stype, 
+                 No.Samples = length(self$GetFData(filter = list(targets = target,
+                                                     types = stype))) - 1))), 
+    recursive = FALSE))
+      
   if(print) {
     cat("\nStructure of run:\n")
     print(runStr) 

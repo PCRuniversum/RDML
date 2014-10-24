@@ -5,8 +5,9 @@
 #' 
 #' @aliases names.RDML names,RDML-method
 #' @param object an object of class \code{RDML}.
+#' @param ... other arguments passed to \code{\link[base]{ls}} function.
 #' @export
 #' @include RDML.R
-names.RDML <- function(object) {
-  ls(object)
+names.RDML <- function(object, ...) {
+  ls(object, ...)
 }
