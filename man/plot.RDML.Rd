@@ -3,9 +3,9 @@
 \alias{plot.RDML}
 \title{S3 wrapper for \code{RDML$Plot()} method}
 \usage{
-plot.RDML(object, print.legend = TRUE, separate.by = list(left = c("name",
-  "type", "targets"), right = c("name", "type", "targets")), col = list(left =
-  NA, right = NA), empty.col = "white", ...)
+\method{plot}{RDML}(object, print.legend = TRUE, separate.by = list(left =
+  c("name", "type", "targets"), right = c("name", "type", "targets")),
+  col = list(left = NA, right = NA), empty.col = "white", ...)
 }
 \description{
 See \link{RDML.Plot}.

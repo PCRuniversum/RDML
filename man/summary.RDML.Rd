@@ -3,7 +3,7 @@
 \alias{summary.RDML}
 \title{S3 wrapper for \code{RDML$Summarize()} method}
 \usage{
-summary.RDML(object, print = TRUE, ...)
+\method{summary}{RDML}(object, print = TRUE, ...)
 }
 \description{
 See \link{RDML.Summarize}.
