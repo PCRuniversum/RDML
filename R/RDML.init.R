@@ -214,176 +214,214 @@ GenFDataName <- function (name.pattern,
 #' @aliases RDML.new
 #' @rdname new-method
 #' @include RDML.R
-RDML$set("public", "initialize", function(file.name,
+RDML$set("public", "initialize", function(input,
                                           name.pattern = "%NAME%__%TUBE%") {
-  # Unzips RDML to unique folder to get inner XML content.
-  # Unique folder is needed to prevent file ovewriting
-  # by parallel function usage.
-  uniq.folder <- paste0(".temp/", UUIDgenerate())
-  unzipped.rdml <- unzip(file.name, exdir = uniq.folder)
-  tryCatch({
-    # Roche use more than one file at RDML zip.
-    # One of the files store dilutions information.
-    if(length(unzipped.rdml) > 1)
-    {
-      rdml.doc <- xmlParse(paste0(uniq.folder,"/rdml_data.xml"))
-      private$.dilutions <- GetDilutionsRoche(uniq.folder)
+  if(typeof(input) == "list") {
+    
+    private$.publisher <- "Unknown"
+    
+    n.samples <- length(input) - 1
+    private$.plate.dims <- c(rows = ceiling(n.samples / 12),
+                                columns = 12)
+                                          
+    if(names(input)[1] == "Cycle") {
+      private$.qPCR.fdata <- as.matrix(input[-1])
+      rownames(private$.qPCR.fdata) <- input[["Cycle"]]
     }
-    else
-    {
-      rdml.doc <- xmlParse(unzipped.rdml)
-      private$.dilutions <- GetDilutions(rdml.doc)
-    }},
-    error = function(e) { print(e) },
-    finally = unlink(uniq.folder, recursive = TRUE)
-    )
-  ####
-  
-  # get publisher info
-  private$.publisher <- GetPublisher(rdml.doc)
-  # get type of each sample
-  types <- GetSamplesTypes(rdml.doc)
-  
-  # Roche file contains empty tubes - "ntp" type.
-  # Special request omits them (by corresponding sample name)
-  if(private$.publisher == "Roche Diagnostics") {
-    ntp.sample.id <- names(types)[which(types=="ntp")]
-    reacts.req <- 
-      paste0("/rdml:rdml/rdml:experiment/rdml:run/rdml:react/rdml:sample[@id!='",
-             ntp.sample.id,
-             "']/..")
-    qpcr.data.req <- paste0("/rdml:rdml/rdml:experiment/rdml:run/rdml:react/rdml:sample[@id!='",
-                            ntp.sample.id,
-                            "']/../rdml:data/rdml:adp/rdml:fluor")
-    melt.data.req <- paste0("/rdml:rdml/rdml:experiment/rdml:run/rdml:react/rdml:sample[@id!='",
-                            ntp.sample.id,
-                            "']/../rdml:data/rdml:mdp/rdml:fluor")
-    samples.ids.req <- paste0("/rdml:rdml/rdml:experiment/rdml:run/rdml:react/rdml:sample[@id!='",
-                              ntp.sample.id,
-                              "']")
-    reacts.ids.req <- paste0("/rdml:rdml/rdml:experiment/rdml:run/rdml:react/rdml:sample[@id!='",
-                             ntp.sample.id,
-                             "']/..")
-    targets.req <- paste0("/rdml:rdml/rdml:experiment/rdml:run/rdml:react/rdml:sample[@id!='",
-                          ntp.sample.id,
-                          "']/../rdml:data/rdml:tar")
-  }
-  else {
-    reacts.req <-"/rdml:rdml/rdml:experiment/rdml:run/rdml:react"
-    qpcr.data.req <- "/rdml:rdml/rdml:experiment/rdml:run/rdml:react/rdml:data/rdml:adp/rdml:fluor"
-    melt.data.req <- "/rdml:rdml/rdml:experiment/rdml:run/rdml:react/rdml:data/rdml:mdp/rdml:fluor"
-    samples.ids.req <- "/rdml:rdml/rdml:experiment/rdml:run/rdml:react/rdml:sample"
-    reacts.ids.req <- "/rdml:rdml/rdml:experiment/rdml:run/rdml:react"
-    targets.req <- "/rdml:rdml/rdml:experiment/rdml:run/rdml:react/rdml:data/rdml:tar"                                                  
-  }
-  
-  # get plate dimensions
-  private$.plate.dims <- GetPlateDimensions(rdml.doc)
-  
-  # Roche uses generated samples IDs instead of samples names
-  # at fluorescense data nodes. Needs to get information how 
-  # they corresponds to each other.
-  if(private$.publisher == "Roche Diagnostics")
-    sdescs <- GetDescriptions(rdml.doc)
-  
-  # get all reacts containing fluor data
-  reacts <- getNodeSet(
-    rdml.doc,
-    reacts.req,
-    namespaces = c(rdml = "http://www.rdml.org"))
-  n.reacts = length(reacts)
-  # number of cycles
-  n.qpcr.cycles <- length(reacts[[1]][["data"]]["adp"])
-  # temperature stages for melting
-  temp.stages <- sapply(reacts[[1]][["data"]]["mdp"], 
-                        function(mdp) {xmlValue(mdp[["tmp"]])})
-  n.temp.stages <- length(temp.stages)
-  # number of fluorescence data vectors per react.
-  # Maybe more than one if publisher stores data for different
-  # targets of one sample at one "react".
-  data.per.react <- length(reacts[[1]]["data", all = TRUE])
-  
-  # test if file contains qPCR data
-  if(n.qpcr.cycles != 0) {
-    # get all fluorescence data as one vector
-    fqpcr <- as.numeric(xpathSApply( rdml.doc,
-                                     qpcr.data.req,
-                                     xmlValue,
-                                     namespaces = c(rdml = "http://www.rdml.org")))
-    # split this vector by number of cycles
-    private$.qPCR.fdata <- matrix(fqpcr,
-                                  nrow = n.qpcr.cycles,
-                                  dimnames = list(row = 1:n.qpcr.cycles))
-  }
-  
-  # test if file contains melting data
-  if(n.temp.stages != 0) {
-    # get all fluorescence data as one vector
-    fmelt <- as.numeric(xpathSApply( rdml.doc,
-                                     melt.data.req,
-                                     xmlValue,
-                                     namespaces = c(rdml = "http://www.rdml.org")))
-    # split this vector by number of temperature stages
-    private$.melt.fdata <- matrix(fmelt,
-                                  nrow = n.temp.stages,
-                                  dimnames = list(row = temp.stages))
-  }
-  
-  # get samples ids (samples names excluding Roche)
-  samples.ids <- xpathSApply( rdml.doc,
-                              samples.ids.req,
-                              xmlGetAttr,
-                              name = "id",
-                              namespaces = c(rdml = "http://www.rdml.org"))
-  # get samples names by samples ids for Roche or use
-  # use samples ids as names directly
-  if(private$.publisher == "Roche Diagnostics") tube.names <- sdescs[samples.ids]
-  else tube.names <- samples.ids
-  
-  # get react ids (number of tube at plate or 
-  # tube name (i.e. "A1") for StepOne )
-  reacts.ids <- xpathSApply( rdml.doc,
-                             reacts.ids.req,
-                             xmlGetAttr,
-                             name = "id",
-                             namespaces = c(rdml = "http://www.rdml.org"))
-  
-  # get targets used at each data
-  targets <- xpathSApply(rdml.doc,
-                         targets.req, 
-                         xmlGetAttr,
-                         name = "id",
-                         namespaces = c(rdml = "http://www.rdml.org"))
-  
-  # get dye at each data
-  used.dyes <- GetDyes(rdml.doc)
-  dyes <- sapply(targets, function(target) used.dyes[target])
-  
-  # get types used at each react
-  types <- types[samples.ids]
-  
-  # generate tube names (i.e. "A1") or
-  #  react ids for StepOne directly
-  tubes <- sapply(reacts.ids,
-                  function(react.id) { ifelse(                                         
-                    (private$.publisher == "StepOne"),
-                    react.id, {
-                      react.id <- as.integer(react.id)
+    
+   
+    if(names(input)[1] == "t") {
+      private$.melt.fdata <- as.matrix(input[-1])
+      rownames(private$.melt.fdata) <- input[["t"]]
+    }
+    
+    
+    samples.ids <- names(input)[-1]
+    tube.names <- samples.ids
+    reacts.ids <- 1:n.samples
+    targets <- rep("NA", n.samples) 
+    dyes <- rep("NA", n.samples) 
+    types <- rep("unkn", n.samples) 
+    
+    # generate tube names (i.e. "A1") or
+    #  react ids for StepOne directly
+    tubes <- sapply(reacts.ids,
+                    function(react.id) {                       
                       paste0(LETTERS[react.id %/% private$.plate.dims["columns"] + 1],
                              react.id %% private$.plate.dims["columns"])
-                    }                                       
-                  )
-                  }
-  )
-  
-  # if >1 fluorescence data vectors per react,
-  # then number of other react parametrs have to be
-  # multiplied to correspond length of targets vector
-  if(data.per.react != 1) {
-    tube.names <- rep(tube.names, each = data.per.react)
-    reacts.ids <- rep(reacts.ids, each = data.per.react)
-    types <- rep(types, each = data.per.react)
-    tubes <- rep(tubes, each = data.per.react)
+                    }                                      
+    )    
+  }
+  else if(typeof(input) == "character") {
+    # Unzips RDML to unique folder to get inner XML content.
+    # Unique folder is needed to prevent file ovewriting
+    # by parallel function usage.
+    uniq.folder <- paste0(".temp/", UUIDgenerate())
+    unzipped.rdml <- unzip(input, exdir = uniq.folder)
+    tryCatch({
+      # Roche use more than one file at RDML zip.
+      # One of the files store dilutions information.
+      if(length(unzipped.rdml) > 1)
+      {
+        rdml.doc <- xmlParse(paste0(uniq.folder,"/rdml_data.xml"))
+        private$.dilutions <- GetDilutionsRoche(uniq.folder)
+      }
+      else
+      {
+        rdml.doc <- xmlParse(unzipped.rdml)
+        private$.dilutions <- GetDilutions(rdml.doc)
+      }},
+      error = function(e) { print(e) },
+      finally = unlink(uniq.folder, recursive = TRUE)
+    )
+    ####
+    
+    # get publisher info
+    private$.publisher <- GetPublisher(rdml.doc)
+    # get type of each sample
+    types <- GetSamplesTypes(rdml.doc)
+    
+    # Roche file contains empty tubes - "ntp" type.
+    # Special request omits them (by corresponding sample name)
+    if(private$.publisher == "Roche Diagnostics") {
+      ntp.sample.id <- names(types)[which(types=="ntp")]
+      reacts.req <- 
+        paste0("/rdml:rdml/rdml:experiment/rdml:run/rdml:react/rdml:sample[@id!='",
+               ntp.sample.id,
+               "']/..")
+      qpcr.data.req <- paste0("/rdml:rdml/rdml:experiment/rdml:run/rdml:react/rdml:sample[@id!='",
+                              ntp.sample.id,
+                              "']/../rdml:data/rdml:adp/rdml:fluor")
+      melt.data.req <- paste0("/rdml:rdml/rdml:experiment/rdml:run/rdml:react/rdml:sample[@id!='",
+                              ntp.sample.id,
+                              "']/../rdml:data/rdml:mdp/rdml:fluor")
+      samples.ids.req <- paste0("/rdml:rdml/rdml:experiment/rdml:run/rdml:react/rdml:sample[@id!='",
+                                ntp.sample.id,
+                                "']")
+      reacts.ids.req <- paste0("/rdml:rdml/rdml:experiment/rdml:run/rdml:react/rdml:sample[@id!='",
+                               ntp.sample.id,
+                               "']/..")
+      targets.req <- paste0("/rdml:rdml/rdml:experiment/rdml:run/rdml:react/rdml:sample[@id!='",
+                            ntp.sample.id,
+                            "']/../rdml:data/rdml:tar")
+    }
+    else {
+      reacts.req <-"/rdml:rdml/rdml:experiment/rdml:run/rdml:react"
+      qpcr.data.req <- "/rdml:rdml/rdml:experiment/rdml:run/rdml:react/rdml:data/rdml:adp/rdml:fluor"
+      melt.data.req <- "/rdml:rdml/rdml:experiment/rdml:run/rdml:react/rdml:data/rdml:mdp/rdml:fluor"
+      samples.ids.req <- "/rdml:rdml/rdml:experiment/rdml:run/rdml:react/rdml:sample"
+      reacts.ids.req <- "/rdml:rdml/rdml:experiment/rdml:run/rdml:react"
+      targets.req <- "/rdml:rdml/rdml:experiment/rdml:run/rdml:react/rdml:data/rdml:tar"                                                  
+    }
+    
+    # get plate dimensions
+    private$.plate.dims <- GetPlateDimensions(rdml.doc)
+    
+    # Roche uses generated samples IDs instead of samples names
+    # at fluorescense data nodes. Needs to get information how 
+    # they corresponds to each other.
+    if(private$.publisher == "Roche Diagnostics")
+      sdescs <- GetDescriptions(rdml.doc)
+    
+    # get all reacts containing fluor data
+    reacts <- getNodeSet(
+      rdml.doc,
+      reacts.req,
+      namespaces = c(rdml = "http://www.rdml.org"))
+    n.reacts = length(reacts)
+    # number of cycles
+    n.qpcr.cycles <- length(reacts[[1]][["data"]]["adp"])
+    # temperature stages for melting
+    temp.stages <- sapply(reacts[[1]][["data"]]["mdp"], 
+                          function(mdp) {xmlValue(mdp[["tmp"]])})
+    n.temp.stages <- length(temp.stages)
+    # number of fluorescence data vectors per react.
+    # Maybe more than one if publisher stores data for different
+    # targets of one sample at one "react".
+    data.per.react <- length(reacts[[1]]["data", all = TRUE])
+    
+    # test if file contains qPCR data
+    if(n.qpcr.cycles != 0) {
+      # get all fluorescence data as one vector
+      fqpcr <- as.numeric(xpathSApply( rdml.doc,
+                                       qpcr.data.req,
+                                       xmlValue,
+                                       namespaces = c(rdml = "http://www.rdml.org")))
+      # split this vector by number of cycles
+      private$.qPCR.fdata <- matrix(fqpcr,
+                                    nrow = n.qpcr.cycles,
+                                    dimnames = list(row = 1:n.qpcr.cycles))
+    }
+    
+    # test if file contains melting data
+    if(n.temp.stages != 0) {
+      # get all fluorescence data as one vector
+      fmelt <- as.numeric(xpathSApply( rdml.doc,
+                                       melt.data.req,
+                                       xmlValue,
+                                       namespaces = c(rdml = "http://www.rdml.org")))
+      # split this vector by number of temperature stages
+      private$.melt.fdata <- matrix(fmelt,
+                                    nrow = n.temp.stages,
+                                    dimnames = list(row = temp.stages))
+    }
+    
+    # get samples ids (samples names excluding Roche)
+    samples.ids <- xpathSApply( rdml.doc,
+                                samples.ids.req,
+                                xmlGetAttr,
+                                name = "id",
+                                namespaces = c(rdml = "http://www.rdml.org"))
+    # get samples names by samples ids for Roche or use
+    # use samples ids as names directly
+    if(private$.publisher == "Roche Diagnostics") tube.names <- sdescs[samples.ids]
+    else tube.names <- samples.ids
+    
+    # get react ids (number of tube at plate or 
+    # tube name (i.e. "A1") for StepOne )
+    reacts.ids <- xpathSApply( rdml.doc,
+                               reacts.ids.req,
+                               xmlGetAttr,
+                               name = "id",
+                               namespaces = c(rdml = "http://www.rdml.org"))
+    
+    # get targets used at each data
+    targets <- xpathSApply(rdml.doc,
+                           targets.req, 
+                           xmlGetAttr,
+                           name = "id",
+                           namespaces = c(rdml = "http://www.rdml.org"))
+    
+    # get dye at each data
+    used.dyes <- GetDyes(rdml.doc)
+    dyes <- sapply(targets, function(target) used.dyes[target])
+    
+    # get types used at each react
+    types <- types[samples.ids]
+    
+    # generate tube names (i.e. "A1") or
+    #  react ids for StepOne directly
+    tubes <- sapply(reacts.ids,
+                    function(react.id) { ifelse(                                         
+                      (private$.publisher == "StepOne"),
+                      react.id, {
+                        react.id <- as.integer(react.id)
+                        paste0(LETTERS[react.id %/% private$.plate.dims["columns"] + 1],
+                               react.id %% private$.plate.dims["columns"])
+                      }                                       
+                    )
+                    }
+    )
+    
+    # if >1 fluorescence data vectors per react,
+    # then number of other react parametrs have to be
+    # multiplied to correspond length of targets vector
+    if(data.per.react != 1) {
+      tube.names <- rep(tube.names, each = data.per.react)
+      reacts.ids <- rep(reacts.ids, each = data.per.react)
+      types <- rep(types, each = data.per.react)
+      tubes <- rep(tubes, each = data.per.react)
+    }
   }
   
   # create plate map (matrix which stores target, type etc. 
@@ -396,6 +434,8 @@ RDML$set("public", "initialize", function(file.name,
                                    Target = targets,
                                    Type = types,
                                    FDataName = "")
+  
   self$name.pattern <- name.pattern
+  
 }
 , overwrite = TRUE)

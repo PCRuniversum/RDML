@@ -105,7 +105,7 @@ RDML$set("public", "GetFData", function(filter = list(method = "qPCR"),
   
   filtered.fdata.ids <- filtered.map$FDataID
   if(as.table) {
-    if(!is.null(filter$method) && filter$method == "melt") {
+    if(filter$method == "melt") {
       filtered <- as.data.frame(private$.melt.fdata[,filtered.fdata.ids])
       filtered <- cbind(as.numeric(rownames(private$.melt.fdata)),
                         filtered)
@@ -124,8 +124,51 @@ RDML$set("public", "GetFData", function(filter = list(method = "qPCR"),
     return(filtered)
   }
   else {
-    filtered.map <- private$.plate.map[filtered.fdata.ids,]
-    print(filtered.map)
+    tube.names <- as.character(unique(filtered.map$TubeName))
+    filtered.list <- lapply(tube.names, 
+                            function(name) {
+                              els <- filtered.map[
+                                which(filtered.map$TubeName == name),]
+                              ids <- els$FDataID
+                              print(els)
+                              output <- list(
+                                SampleName = name,
+                                ReactIDs = unique(as.character(
+                                  els$ReactID)),
+                                Tubes = unique(as.character(
+                                  els$Tube)),
+                                Dyes = unique(as.character(
+                                  els$Dye)),
+                                Targets = unique(as.character(
+                                  els$Target)),
+                                Types = unique(as.character(
+                                  els$Type))
+                              )
+                              
+                              if(!is.null(private$.melt.fdata)) {
+                                m.data <- as.data.frame(private$.melt.fdata[,ids])
+                                m.data <- cbind(as.numeric(rownames(private$.melt.fdata)),
+                                                m.data)
+                                names(m.data) <- c("Temp.", 
+                                                   els$FDataName)
+                                output$Melt <- m.data
+                              }
+                              if(!is.null(private$.qPCR.fdata)) {
+                                q.data <- as.data.frame(
+                                  private$.qPCR.fdata[,filtered.fdata.ids],
+                                  row.names = rownames(private$.qPCR.fdata)) 
+                                q.data <- cbind(as.numeric(rownames(private$.qPCR.fdata)),
+                                                q.data)
+                                names(q.data) <- c("Cycles", 
+                                                   filtered.map$FDataName)
+                                output$qPCR <- q.data
+                              }
+                              
+                              return(output)
+                              })
+    names(filtered.list) <- tube.names
+    return(filtered.list)
+    
   }
 }
 , overwrite = TRUE)

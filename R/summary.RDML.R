@@ -55,8 +55,7 @@ RDML$set("public", "Summarize", function(print = TRUE, ...) {
     lapply(self$types[[target]], function(stype)
       data.frame(Targets = target, 
                  Types = stype, 
-                 No.Samples = length(self$GetFData(filter = list(targets = target,
-                                                     types = stype))) - 1))), 
+                 No.Samples =  length(private$.plate.map)))), 
     recursive = FALSE))
       
   if(print) {

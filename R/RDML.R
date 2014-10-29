@@ -202,19 +202,19 @@ RDML <- R6Class("RDML",
                 ## GetFData() - RDML.GetFData.R
                 ## Plot() - plot.RDML.R
                 ## Summarize() - summary.RDML.R
-                  initialize = function() {},
-                  GetFData = function() {},
-                  Plot = function() {},
-                  Summarize = function() {}
+                  initialize = function() { },
+                  GetFData = function() { },
+                  Plot = function() { },
+                  Summarize = function() { }
                 ),
                 private = list(
-                  .publisher = NA,
-                  .dilutions = NA,
-                  .plate.dims = NA, 
+                  .publisher = NULL,
+                  .dilutions = NULL,
+                  .plate.dims = NULL, 
                   .qPCR.fdata = NULL,                  
                   .melt.fdata = NULL,
-                  .plate.map = NA,
-                  .name.pattern = NA
+                  .plate.map = NULL,
+                  .name.pattern = NULL
                 ),
                 active = list(
                   pm = function() private$.plate.map,
@@ -237,9 +237,9 @@ RDML <- R6Class("RDML",
                   used.methods = function(value) {
                     if(missing(value)) {
                       methods <- c()
-                      if(!(is.na(private$.qPCR.fdata))) 
+                      if(!(is.null(private$.qPCR.fdata))) 
                         methods <- c(methods, "qPCR")                      
-                      if(!(is.na(private$.melt.fdata)))
+                      if(!(is.null(private$.melt.fdata)))
                         methods <- c(methods, "melt")
                       return(methods)
                     }

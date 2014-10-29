@@ -31,10 +31,12 @@ plot.RDML <- function(object,
 #' @name Plot
 #' @aliases RDML.Plot
 #' @rdname plot-method
-RDML$set("public", "Plot", function(print.legend,
-                                    separate.by,
-                                    col,
-                                    empty.col,
+RDML$set("public", "Plot", function(print.legend = TRUE,
+                                    separate.by = list(left = c("name", "type", "targets"),
+                                                       right = c("name", "type", "targets")),
+                                    col = list(left = NA,
+                                               right = NA),
+                                    empty.col = "white",
                                     ...) {
   for(half in c("left", "right")) {
     for(opt in separate.by[[half]]) {      
