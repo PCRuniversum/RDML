@@ -217,21 +217,20 @@ RDML <- R6Class("RDML",
                   .name.pattern = NULL
                 ),
                 active = list(
-                  publisher = function(value) {
-                    if(missing(value))
+                  publisher = function(publisher) {
+                    if(missing(publisher))
                       return(private$.publisher)
-                    stop("RDML package is not an editor!!! Use RDML-Ninja!!!")
+                    private$.publisher <- publisher
                   },
                   dilutions = function(dilutions) {
                     if(missing(dilutions))
                       return(private$.dilutions)
-                    stop("RDML package is not an editor!!! Use RDML-Ninja!!!")
-                    #                     private$.dilutions <- dilutions
+                    private$.dilutions <- dilutions
                   },
-                  plate.dims = function(value) {
-                    if(missing(value))
+                  plate.dims = function(plate.dims) {
+                    if(missing(plate.dims))
                       return(private$.plate.dims)
-                    stop("RDML package is not an editor!!! Use RDML-Ninja!!!")
+                    private$.plate.dims <- plate.dims
                   },
                   used.methods = function(value) {
                     if(missing(value)) {
@@ -242,13 +241,12 @@ RDML <- R6Class("RDML",
                         methods <- c(methods, "melt")
                       return(methods)
                     }
-                    stop("RDML package is not an editor!!! Use RDML-Ninja!!!")
+                    stop("used.methods can't be setted directly!!!")
                   },
                   targets = function(targets.names) {
                     if(missing(targets.names))
                       return(as.vector(unique(private$.plate.map$Target)))
-                    stop("RDML package is not an editor!!! Use RDML-Ninja!!!")
-                    #                     levels(private$.plate.map$Target) <- targets.names
+                    levels(private$.plate.map$Target) <- targets.names
                   },
                   types = function(types.names) { 
                     if(missing(types.names)) {
@@ -262,20 +260,19 @@ RDML <- R6Class("RDML",
                       names(types) <- targets
                       return(types)
                     }
-                    stop("RDML package is not an editor!!! Use RDML-Ninja!!!")
-                    #                     private$.plate.map$Type <- as.character(private$.plate.map$Type)
-                    #                     for(target in names(types.names)) {
-                    #                       types <- as.vector(unique(private$.plate.map$Type[
-                    #                         which(private$.plate.map$Target == target)
-                    #                         ]))
-                    #                       for(type.i in 1:length(types)) {
-                    #                         private$.plate.map$Type[which(
-                    #                           private$.plate.map$Target == target & 
-                    #                             private$.plate.map$Type == types[type.i])] <- 
-                    #                           types.names[[target]][type.i]                        
-                    #                       }                      
-                    #                     }
-                    #                     private$.plate.map$Type <- as.factor(private$.plate.map$Type)
+                    private$.plate.map$Type <- as.character(private$.plate.map$Type)
+                    for(target in names(types.names)) {
+                      types <- as.vector(unique(private$.plate.map$Type[
+                        which(private$.plate.map$Target == target)
+                        ]))
+                      for(type.i in 1:length(types)) {
+                        private$.plate.map$Type[which(
+                          private$.plate.map$Target == target & 
+                            private$.plate.map$Type == types[type.i])] <- 
+                          types.names[[target]][type.i]                        
+                      }                      
+                    }
+                    private$.plate.map$Type <- as.factor(private$.plate.map$Type)
                   },                  
                   name.pattern = function(name.pattern) {
                     if(missing(name.pattern))
