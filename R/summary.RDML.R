@@ -49,13 +49,16 @@ RDML$set("public", "Summarize", function(print = TRUE, ...) {
     }
   }
   
-  #### Pretty structure of run
-  
+  #### Pretty structure of run  
   runStr <- do.call(rbind, unlist(lapply(self$targets, function(target)
     lapply(self$types[[target]], function(stype)
-      data.frame(Targets = target, 
-                 Types = stype, 
-                 No.Samples =  length(private$.plate.map[[1]])))), 
+      data.frame(Target = target, 
+                 Type = stype, 
+                 No.Samples = 
+                   length(self$GetFData(
+                     filter = list( method = self$used.methods[1],
+                                    targets = target,
+                                    types = stype))) - 1))), 
     recursive = FALSE))
   if(print) {
     cat("\nStructure of run:\n")
@@ -98,11 +101,14 @@ RDML$set("public", "Summarize", function(print = TRUE, ...) {
       tab <- do.call(rbind, 
                      lapply(self$types[[target]], 
                             function(type) {
-                              c(Target = target, Type = type, summary(
-                                MFIaggr(self$GetFData(filter = list(method = "qPCR",
-                                                                    targets = target,
-                                                                    types = type))), print = FALSE))
-                              
+                              c(Target = target,
+                                Type = type,
+                                summary(
+                                  MFIaggr(self$GetFData(
+                                    filter = list(method = "qPCR",
+                                                  targets = target,
+                                                  types = type))),
+                                  print = FALSE))                              
                             }
                      ))
       tab

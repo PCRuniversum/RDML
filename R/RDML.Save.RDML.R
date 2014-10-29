@@ -22,7 +22,7 @@ RDML$set("public", "Save.RDML", function(file.name = NULL) {
     # sample quantity
     sample.tube <- private$.plate.map[id, "Tube"]
     sample.quantity <- private$.dilutions[[1]][as.character(sample.tube)]
-    if(!is.na(sample.quantity)) {
+    if(!is.null(sample.quantity)) {
       quantity.node <- newXMLNode("quantity")
       addChildren(quantity.node, newXMLNode("value",
                                             sample.quantity))

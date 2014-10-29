@@ -216,7 +216,7 @@ GenFDataName <- function (name.pattern,
 #' @include RDML.R
 RDML$set("public", "initialize", function(input,
                                           name.pattern = "%NAME%__%TUBE%") {
-  if(typeof(input) == "list") {
+  if(is.data.frame(input)) {
     
     private$.publisher <- "Unknown"
     
@@ -251,8 +251,42 @@ RDML$set("public", "initialize", function(input,
                              react.id %% private$.plate.dims["columns"])
                     }                                      
     )    
+  }  
+  else if(is.list(input)) {
+    
+    private$.publisher <- "Unknown"
+    
+    n.samples <- length(input$map$name)
+    private$.plate.dims <- input$dims
+    
+    if("qPCR" %in% names(input)) {
+      private$.qPCR.fdata <- as.matrix(input$qPCR[-1])
+      rownames(private$.qPCR.fdata) <- input$qPCR[[1]]
+    }   
+    
+    if("melt" %in% names(input)) {
+      private$.melt.fdata <- as.matrix(input$melt[-1])
+      rownames(private$.melt.fdata) <- input$melt[[1]]
+    }  
+    
+    samples.ids <- input$map$name
+    tube.names <- samples.ids
+    reacts.ids <- as.integer(as.character(input$map$tube.id))
+    targets <- input$map$target
+    dyes <- input$map$dye 
+    types <- input$map$type
+    
+    # generate tube names (i.e. "A1") or
+    #  react ids for StepOne directly
+    tubes <- sapply(reacts.ids,
+                    function(react.id) {                       
+                      paste0(LETTERS[react.id %/% private$.plate.dims["columns"] + 1],
+                             react.id %% private$.plate.dims["columns"])
+                    }                                      
+    )    
   }
-  else if(typeof(input) == "character") {
+  
+  else if(is.character(input)) {
     # Unzips RDML to unique folder to get inner XML content.
     # Unique folder is needed to prevent file ovewriting
     # by parallel function usage.
