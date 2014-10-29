@@ -55,9 +55,8 @@ RDML$set("public", "Summarize", function(print = TRUE, ...) {
     lapply(self$types[[target]], function(stype)
       data.frame(Targets = target, 
                  Types = stype, 
-                 No.Samples =  length(private$.plate.map)))), 
+                 No.Samples =  length(private$.plate.map[[1]])))), 
     recursive = FALSE))
-      
   if(print) {
     cat("\nStructure of run:\n")
     print(runStr) 
