@@ -217,7 +217,6 @@ RDML <- R6Class("RDML",
                   .name.pattern = NULL
                 ),
                 active = list(
-                  pm = function() private$.plate.map,
                   publisher = function(value) {
                     if(missing(value))
                       return(private$.publisher)
