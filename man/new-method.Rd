@@ -5,13 +5,42 @@
 \alias{new}
 \title{Creates new instance of \code{RDML} class object}
 \arguments{
-\item{rdmlfile}{RDML file with fluorescence data.}
+\item{input}{\code{character} -- path to RDML file}
+
+\item{input}{\code{data.frame} -- \code{data.frame} with colnames as samples
+names and first column -- cycle number or temperature (see 'Details')}
+
+\item{input}{\code{list} -- \list{list} with table called 'qPCR' for qPCR
+data and/or table called 'melt' for melting data and \code{data.frame}
+'map' with description of samples (see 'Details')}
 
 \item{name.pattern}{sample name pattern (see 'Details' at \link{RDML}).}
 }
 \description{
 This function has been designed to import fluorescence data from instruments
-that support RDML v1.1 format export.
+that support RDML v1.1 format export or create new \code{RDML} class object
+from fluorescence data represented as table.
+}
+\details{
+Parameter \code{input} of this method can be \code{character} string for
+importing from RDML v1.1 file or \code{data.frame}/\code{list} for creating
+\code{RDML} object from table. Choosing variant of \code{input} parameter
+depends on samples descpription information that you have and want to use. If
+you have only fluoresence data and samples names then you can use
+\code{data.frame}. First column of such \code{data.frame} have to be named
+'Cycles' for qPCR data or 't' for melting data and to contain cycles numbers
+or temperature values respectively. All other columns have to contain
+fluoresence data (names of this columns will be names of samples). If you
+have information about samples position on plate, type, target -- you have
+provide \code{input} as \code{list}. Such \code{list} have to contain tables
+with fluorescence data called 'qpcr' for qPCR data and/or table called 'melt'
+for melting data. First columns of that tables have to contain cycles numbers
+or temperature. Also \code{list} have to contain \code{data.frame} called
+'map' with addition information about samples. Structure of this
+\code{data.frame} is \describe{ \item{name}{sample name} \item{tube.id}{id of
+tube at plate (i.e. 1, 2, 3)} \item{target}{target of this fluorescence data}
+\item{dye}{dye used for this target} \item{type}{type of the sample}} Another
+element of \code{list} is 'dims' -- dimensions of plate (see 'Example 3').
 }
 \section{Warning}{
  Although the format RDML claimed as data exchange format,
@@ -19,6 +48,30 @@ that support RDML v1.1 format export.
   manufacturers differ significantly. Currently this function is checked
   against RDML data from devices: \emph{Bio-Rad CFX96}, \emph{Roche
   LightCycler 96} and \emph{Applied Biosystems StepOne}.
+}
+\examples{
+## EXAMPLE 1
+## Import from RDML file
+PATH <- path.package("RDML")
+filename <- paste(PATH, "/extdata/", "lc96_bACTXY.rdml", sep ="")
+lc96 <- RDML$new(filename)
+
+## EXAMPLE 2
+## Import from data.frame
+library(qpcR)#'
+rdml <- RDML$new(reps)
+
+## EXAMPLE 3
+## Import from list
+qpcr <- C17[-1]
+smap <- data.frame(name = c("sample_a", "sample_a", "sample_b"),
+                tube.id = c("1", "1", "7"),
+                target = c("GAPDH", "bACT", "GAPDH"),
+                dye = c("FAM", "VIC", "FAM"),
+                type = c("unkn", "unkn", "unkn"))
+rdml <- RDML$new(list(map = smap,
+                    qPCR=qpcr,
+                    dims=c(rows=5,columns=6)))
 }
 \author{
 Konstantin A. Blagodatskikh <k.blag@yandex.ru>, Stefan Roediger

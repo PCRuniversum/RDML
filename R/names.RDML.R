@@ -6,6 +6,9 @@
 #' @aliases names.RDML names,RDML-method
 #' @param object an object of class \code{RDML}.
 #' @param ... other arguments passed to \code{\link[base]{ls}} function.
+#' @author Konstantin A. Blagodatskikh <k.blag@@yandex.ru>, Stefan Roediger
+#' <stefan.roediger@@hs-lausitz.de>, Michal Burdukiewicz
+#' <michalburdukiewicz@@gmail.com>
 #' @export
 #' @include RDML.R
 names.RDML <- function(object, ...) {

@@ -13,7 +13,7 @@
 }
 \description{
 Gets fluorescence data vectors from \code{RDML} object with specified types,
-targets, sample names and method of experiment.
+targets, dyes, sample names and method of experiment.
 }
 \details{
 If \code{targets = NA}, then use all the available targets from run.\cr If
@@ -40,7 +40,7 @@ specified \code{names}. \cr
 
 \section{Warning}{
  Resulting \code{data.frame} can contain columns with same
-  names! Use \code{name.pattern} at \code{RDML} oblect to avoid
+  names! Use \code{name.pattern} at \code{RDML} object to avoid
   this.
 }
 \examples{

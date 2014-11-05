@@ -1,3 +1,18 @@
+#' Saves \code{RDML} object as RDML v1.2 format file
+#' 
+#' Saves \code{RDML} object as RDML v1.2 format file (if \code{file.name} is
+#' specified) or returns XML tree as text.
+#' 
+#' @param file.name name of the generated RDML file
+#' @return \code{XML} representing \code{RDML} object as RDML v1.2 format
+#' @author Konstantin A. Blagodatskikh <k.blag@@yandex.ru>, Stefan Roediger 
+#'   <stefan.roediger@@hs-lausitz.de>, Michal Burdukiewicz 
+#'   <michalburdukiewicz@@gmail.com>
+#' @docType methods
+#' @name Save
+#' @aliases RDML.Save
+#' @rdname save-method
+#' @include RDML.R
 RDML$set("public", "Save.RDML", function(file.name = NULL) {
   ### header
   tree.node <- newXMLNode("rdml",

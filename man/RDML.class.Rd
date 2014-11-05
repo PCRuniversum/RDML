@@ -5,21 +5,20 @@
 \alias{RDML.class}
 \title{R6 class \code{RDML} -- contains methods to read and overview fluorescence
 data from RDML v1.1 format files}
-\format{\preformatted{Class 'R6ClassGenerator' <environment: 0x9cbe1f8> 
+\format{\preformatted{Class 'R6ClassGenerator' <environment: 0x95dcdd8> 
  - attr(*, "name")= chr "RDML_generator"
 }}
 \usage{
 RDML
 }
 \description{
-Main purpose of this class is to import fluorescence data from RDML v1.1
-format files (Lefever et al. 2009) and transform it to the appropriate format
+Main purpose of this class is to work with RDML format
+data (Lefever et al. 2009) and transform it to the appropriate format
 of the \code{qpcR} (Ritz et al. 2008, Spiess et al. 2008) and \code{chipPCR}
-packages (see \link{new.RDML} for import details). Real-time PCR Data Markup
+packages (see \link{new.RDML} for import and \link{RDML.Save} for export details). Real-time PCR Data Markup
 Language (RDML) is the recommended file format element in the Minimum
 Information for Publication of Quantitative Real-Time PCR Experiments (MIQE)
-guidelines (Bustin et al. 2009). After importing Fluorescence data from RDML
-file can be viewed as \code{data.frame} which contains \code{vectors} of
+guidelines (Bustin et al. 2009). After importing Fluorescence data it can be viewed as \code{data.frame} which contains \code{vectors} of
 fluroscence values filtered by experiment method (qPCR or melting), targets
 (genes or dyes names), types (i.e. 'negative', 'unknown'), tube positions on
 plate, samples names or fluorescence data \code{vector} names (see
@@ -48,8 +47,7 @@ of the sample inputted in the qPCR software (ex.: "Sample 1")}
   'qPCR' and/or 'melt'} \item{targets}{targets (genes or dyes names) used by
   experiment} \item{types}{ \code{list} of samples types splitted by targets}
   \item{name.pattern}{ name pattern to generate fluorescence data vectors
-  names (see 'Details') } } All the fields are read only except
-  \code{name.pattern}!!!.
+  names (see 'Details') } }
 }
 
 \section{Methods}{
@@ -57,7 +55,8 @@ of the sample inputted in the qPCR software (ex.: "Sample 1")}
   class object (see \link{RDML.new})} \item{GetFData}{gets fluorescence data
   vectors (see \link{RDML.GetFData})} \item{Plot}{plots \code{RDML} object
   (see \link{RDML.Plot})} \item{Summarize}{creates summary for \code{RDML}
-  object (see \link{RDML.Summarize})}}
+  object (see \link{RDML.Summarize})} \item{Save}{saves \code{RDML} object as RDML v1.2 format file
+  (see \link{RDML.Save})}}
 }
 \examples{
 ## EXAMPLE 1:

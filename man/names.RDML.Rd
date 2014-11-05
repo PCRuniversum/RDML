@@ -15,4 +15,9 @@
 Just wraps \code{ls()} function to show RDML public fields
 and methods. Useful for autocomplete at R editors.
 }
+\author{
+Konstantin A. Blagodatskikh <k.blag@yandex.ru>, Stefan Roediger
+<stefan.roediger@hs-lausitz.de>, Michal Burdukiewicz
+<michalburdukiewicz@gmail.com>
+}
 
