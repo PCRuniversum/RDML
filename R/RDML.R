@@ -272,7 +272,15 @@ RDML <- R6Class("RDML",
                       }                      
                     }
                     private$.plate.map$Type <- as.factor(private$.plate.map$Type)
-                  },                  
+                  },
+                  samples.names = function() {
+                    # not used levels to keap order
+                    as.character(unique(private$.plate.map$TubeName))                    
+                  },
+                  fdata.names = function() {
+                    # not used levels to keap order
+                    as.character(unique(private$.plate.map$FDataName))
+                  },
                   name.pattern = function(name.pattern) {
                     if(missing(name.pattern))
                       return(private$.name.pattern)
