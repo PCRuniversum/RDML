@@ -1,3 +1,25 @@
+library(assertthat)
+is.opt.string <- function(x) {
+  if(is.null(x)) return(TRUE)
+  is.string(x)
+}
+on_failure(is.opt.string) <- function(call, env) {
+  paste0(deparse(call$x), " is present but not a string ")
+}
+
+has.only.names <- function(x, only.names) {
+  !(FALSE %in% (names(x) %in% only.names))
+}
+on_failure(has.only.names) <- function(call, env) {
+  paste0(deparse(call$x), " has names not in: ", paste(call$only.names, collapse = ", "))
+}
+
+is.id <- function(x) {
+  is.count(x) || is.string(x)
+}
+on_failure(is.id) <- function(call, env) {
+  paste0(deparse(call$x), " is not an id (a string or a count)")
+}
 #' R6 class \code{RDML} -- contains methods to read and overview fluorescence 
 #' data from RDML v1.1 format files
 #' 
@@ -76,6 +98,7 @@
 #' @aliases RDML.class RDML
 #' @docType class
 #' @export
+#' @import assertthat
 #' @importFrom chipPCR MFIaggr
 #' @importMethodsFrom chipPCR summary
 #' @importFrom MBmca diffQ2
@@ -86,6 +109,7 @@
 #' @importFrom dpcR plot_panel create_dpcr extract_dpcr
 #' @importFrom R6 R6Class
 #' @importFrom uuid UUIDgenerate
+#' @importFrom plyr llply ldply
 #' @examples
 #' 
 #' ## EXAMPLE 1:
@@ -193,34 +217,102 @@
 #' }
 RDML <- R6Class("RDML",
                 public = list(
-                ###               WARNING
-                ### All RDML functions are store at separate files!!!
-                ### Empty functions are added to let roxygen work.
-                ###
-                ## initialize() - RDML.init.R
-                ## GetFData() - RDML.GetFData.R
-                ## Plot() - plot.RDML.R
-                ## Summarize() - summary.RDML.R
+                  ###               WARNING
+                  ### All RDML functions are store at separate files!!!
+                  ### Empty functions are added to let roxygen work.
+                  ###
+                  ## initialize() - RDML.init.R
+                  ## GetFData() - RDML.GetFData.R
+                  ## Plot() - plot.RDML.R
+                  ## Summarize() - summary.RDML.R
                   initialize = function() { },
                   GetFData = function() { },
                   Plot = function() { },
-                  Summarize = function() { }
+                  Summarize = function() { },
+                  Init2 = function() { }
                 ),
-                private = list(
-                  .publisher = NULL,
-                  .dilutions = NULL,
-                  .plate.dims = NULL, 
-                  .qPCR.fdata = NULL,                  
-                  .melt.fdata = NULL,
-                  .plate.map = NULL,
-                  .name.pattern = NULL
+                private = list(                  
+                  .dateMade = NULL,
+                  .dateUpdated = NULL,                  
+                  .id = NULL,
+                  .experimenter = NULL,
+                  .documentation = NULL,
+                  .dye = NULL,
+                  .sample = NULL,
+                  .target = NULL,
+                  .thermalCyclingConditions = NULL,
+                  .experiment = NULL
                 ),
                 active = list(
+                  date.made = function(date.made) {
+                    if(missing(date.made))
+                      return(private$.dateMade)
+                    assert_that(is.string(date.made))
+                    private$.dateMade <- date.made
+                  },
+                  
+                  date.updated = function(date.updated) {
+                    if(missing(date.updated))
+                      return(private$.date.updated)
+                    assert_that(is.string(date.updated))
+                    private$.dateUpdated <- date.updated
+                  },
+                  
+                  id = function(new.id) {
+                    if(missing(new.id))
+                      return(private$.id)                    
+                    assert_that(is.list(new.id))
+                    assert_that(has.only.names(new.id, c("id",
+                                                         "publisher",
+                                                         "serialNumber",
+                                                         "MD5Hash")))
+                    assert_that(is.string(new.id$publisher))
+                    assert_that(is.string(new.id$serialNumber))
+                    assert_that(is.opt.string(new.id$MD5Hash))
+                    if(is.null(new.id$id)) {
+                      private$.id <- c(private$.id,
+                                       list(id = new.id))
+                    } else {
+                      id.i <- new.id$id
+                      assert_that(is.count(id.i))
+                      new.id$id <- NULL
+                      private$.id[[id.i]] <- new.id
+                    }
+                  },
+                  
+                  experimenter = function(new.experimenter) {
+                    if(missing(new.experimenter))
+                      return(private$.experimenter)
+                    assert_that(is.list(new.experimenter))
+                    assert_that(has.only.names(new.experimenter, c("id",
+                                                         "firstName",
+                                                         "lastName",
+                                                         "email",
+                                                         "labName",
+                                                         "labAddress")))
+                    assert_that(is.id(new.experimenter$id))
+                    assert_that(is.string(new.experimenter$firstName))
+                    assert_that(is.string(new.experimenter$lastName))
+                    assert_that(is.opt.string(new.experimenter$email))
+                    assert_that(is.opt.string(new.experimenter$labName))
+                    assert_that(is.opt.string(new.experimenter$labAddress))
+                    id <- new.experimenter$id                      
+                    new.experimenter$id <- NULL
+                    private$.experimenter[[id]] <- new.experimenter
+                  },
+                  
+                  experiment = function() {
+                    private$.experiment
+                  },
+                  
+                  
                   publisher = function(publisher) {
                     if(missing(publisher))
                       return(private$.publisher)
                     private$.publisher <- publisher
                   },
+                  
+                  
                   dilutions = function(dilutions) {
                     if(missing(dilutions))
                       return(private$.dilutions)
