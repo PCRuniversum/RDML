@@ -1,25 +1,3 @@
-library(assertthat)
-is.opt.string <- function(x) {
-  if(is.null(x)) return(TRUE)
-  is.string(x)
-}
-on_failure(is.opt.string) <- function(call, env) {
-  paste0(deparse(call$x), " is present but not a string ")
-}
-
-has.only.names <- function(x, only.names) {
-  !(FALSE %in% (names(x) %in% only.names))
-}
-on_failure(has.only.names) <- function(call, env) {
-  paste0(deparse(call$x), " has names not in: ", paste(call$only.names, collapse = ", "))
-}
-
-is.id <- function(x) {
-  is.count(x) || is.string(x)
-}
-on_failure(is.id) <- function(call, env) {
-  paste0(deparse(call$x), " is not an id (a string or a count)")
-}
 #' R6 class \code{RDML} -- contains methods to read and overview fluorescence 
 #' data from RDML v1.1 format files
 #' 
@@ -98,7 +76,7 @@ on_failure(is.id) <- function(call, env) {
 #' @aliases RDML.class RDML
 #' @docType class
 #' @export
-#' @import assertthat
+#' @include RDML.asserts.R
 #' @importFrom chipPCR MFIaggr
 #' @importMethodsFrom chipPCR summary
 #' @importFrom MBmca diffQ2
@@ -228,8 +206,7 @@ RDML <- R6Class("RDML",
                   initialize = function() { },
                   GetFData = function() { },
                   Plot = function() { },
-                  Summarize = function() { },
-                  Init2 = function() { }
+                  Summarize = function() { },                  
                 ),
                 private = list(                  
                   .dateMade = NULL,
@@ -258,25 +235,37 @@ RDML <- R6Class("RDML",
                     private$.dateUpdated <- date.updated
                   },
                   
-                  id = function(new.id) {
-                    if(missing(new.id))
+                  id = function(ids) {
+                    if(missing(ids))
                       return(private$.id)                    
-                    assert_that(is.list(new.id))
-                    assert_that(has.only.names(new.id, c("id",
-                                                         "publisher",
-                                                         "serialNumber",
-                                                         "MD5Hash")))
-                    assert_that(is.string(new.id$publisher))
-                    assert_that(is.string(new.id$serialNumber))
-                    assert_that(is.opt.string(new.id$MD5Hash))
-                    if(is.null(new.id$id)) {
-                      private$.id <- c(private$.id,
-                                       list(id = new.id))
-                    } else {
-                      id.i <- new.id$id
-                      assert_that(is.count(id.i))
-                      new.id$id <- NULL
-                      private$.id[[id.i]] <- new.id
+                    assert_that(is.list(ids))
+                    # convert to list of ids if only one id given
+                    if(has.only.names(ids,
+                                      c("id",
+                                        "publisher",
+                                        "serialNumber",
+                                        "MD5Hash")))
+                      ids <- list(ids)                
+                    for(id in ids) {
+                      assert_thet(is.list(id))
+                      assert_that(
+                        has.only.names(id,
+                                       c("id",
+                                         "publisher",
+                                         "serialNumber",
+                                         "MD5Hash")))
+                      assert_that(is.string(id$publisher))
+                      assert_that(is.string(id$serialNumber))
+                      assert_that(is.opt.string(id$MD5Hash))
+                      if(is.null(id$id)) {
+                        private$.id <- c(private$.id,
+                                         list(id = id))
+                      } else {
+                        id.i <- id$id
+                        assert_that(is.count(id.i))
+                        new.id$id <- NULL
+                        private$.id[[id.i]] <- new.id
+                      }
                     }
                   },
                   
@@ -301,10 +290,39 @@ RDML <- R6Class("RDML",
                     private$.experimenter[[id]] <- new.experimenter
                   },
                   
+                  documentation = function(doc) {
+                    if(missing(doc))
+                      return(private$.documentation)
+                    assert_that(is.list(doc))
+                    #                     assert_that(has.only.names(doc,
+                    #                                                  c("text",
+                    #                                                    "text")))
+                    #                     assert_that(is.id(doc$id))
+                    assert_that(is.string(doc$text))
+                    tmp <- private$.documentation                    
+                    tmp[[paste0(substitute(doc,
+                                           env = globalenv()))]] <-
+                      doc
+                    print(tmp)
+                    private$.documentation <- tmp
+                  },
+                  
+                  sample = function() {
+                    private$.sample
+                  },
+                  
+                  target = function() {
+                    private$.target
+                  },
+                  
+                  
+                  thermalCyclingConditions = function() {
+                    private$.thermalCyclingConditions
+                  },                  
+                  
                   experiment = function() {
                     private$.experiment
                   },
-                  
                   
                   publisher = function(publisher) {
                     if(missing(publisher))
