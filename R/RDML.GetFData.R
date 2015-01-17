@@ -73,7 +73,6 @@
 #'                                      names="(Sample 39)|(Sample 4)"))
 #' ## Show names of selected samples
 #' names(fdata)
-#' 
 RDML$set("public", "GetFData", function(filter = list(method = "qPCR"),
                                         as.table = TRUE) {
   params.names <- names(filter)

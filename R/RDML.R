@@ -206,7 +206,45 @@ RDML <- R6Class("RDML",
                   initialize = function() { },
                   GetFData = function() { },
                   Plot = function() { },
-                  Summarize = function() { },                  
+                  Summarize = function() { },
+                  Test = function(...) {
+                    a<-list(aa=1)
+                    for(x in list(1,2)) 
+                      print(eval(substitute(list(...))))
+                  },
+                  Sexperiment = function(...) {
+                    #                     cols <- c(experiment$id,
+                    #                               run$id,
+                    #                               react$id,
+                    #                               sample = react$sample,
+                    #                               sample.description = private$.sample[[react$sample]]$description,
+                    #                               data$id,
+                    #                               add.cols)
+                    #                     if(missing(add.cols)) add.cols <- c()
+                    out<-data.frame()
+                    for(experiment in private$.experiment) {                      
+                      for(run in experiment$run) {                                    
+                        for(react in run$react) {                          
+                          for(data in react$data){
+                            add.cols <- eval(substitute(list(...)))
+                            
+                            out<-rbind(out,
+                              data.frame(
+                                experiment$id,
+                                run$id,
+                                react$id,
+                                sample = react$sample,
+                                sample.description = private$.sample[[react$sample]]$description,
+                                data$id,
+                                unlist(add.cols)
+                              )
+                            )
+                          }
+                        }
+                      }
+                    }
+                    out
+                  }
                 ),
                 private = list(                  
                   .dateMade = NULL,
@@ -264,7 +302,9 @@ RDML <- R6Class("RDML",
                         id.i <- id$id
                         assert_that(is.count(id.i))
                         new.id$id <- NULL
-                        private$.id[[id.i]] <- new.id
+                        if(is.to.remove.list(id)) {
+                          private$.id[[id.i]] <- NULL
+                        } else { private$.id[[id.i]] <- id }
                       }
                     }
                   },
@@ -274,11 +314,11 @@ RDML <- R6Class("RDML",
                       return(private$.experimenter)
                     assert_that(is.list(new.experimenter))
                     assert_that(has.only.names(new.experimenter, c("id",
-                                                         "firstName",
-                                                         "lastName",
-                                                         "email",
-                                                         "labName",
-                                                         "labAddress")))
+                                                                   "firstName",
+                                                                   "lastName",
+                                                                   "email",
+                                                                   "labName",
+                                                                   "labAddress")))
                     assert_that(is.id(new.experimenter$id))
                     assert_that(is.string(new.experimenter$firstName))
                     assert_that(is.string(new.experimenter$lastName))
@@ -323,6 +363,8 @@ RDML <- R6Class("RDML",
                   experiment = function() {
                     private$.experiment
                   },
+                  
+                  
                   
                   publisher = function(publisher) {
                     if(missing(publisher))

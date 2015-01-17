@@ -21,3 +21,13 @@ is.id <- function(x) {
 on_failure(is.id) <- function(call, env) {
   paste0(deparse(call$x), " is not an id (a string or a count)")
 }
+
+is.to.remove.list <- function(x) {  
+  for(el in x[-which(names(x) == "id")]) { 
+    if(!is.na(el)) return(FALSE)        
+  }
+  TRUE
+}
+on_failure(is.to.remove.list) <- function(call, env) {
+  paste0(deparse(call$x), " is not a command to remove from list")
+}

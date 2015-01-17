@@ -396,6 +396,7 @@ RDML$set("public", "initialize", function(input,
             )
           })
     names(sample.list) <- GetIds(sample.list)
+    sample.list
   }
   
   private$.target <- {
@@ -598,7 +599,7 @@ RDML$set("public", "initialize", function(input,
                                                                            "']/..")                                                      
                                                         list(
                                                           id = tar.id, # id==tar
-                                                          cq = xmlValue(data[["cq"]]),
+                                                          cq = as.numeric(xmlValue(data[["cq"]])),
                                                           excl = xmlValue(data[["excl"]]),
                                                           adp = {                                                                                    
                                                             cyc <- as.numeric(xpathSApply(rdml.doc,
@@ -653,7 +654,7 @@ RDML$set("public", "initialize", function(input,
                                                                                      c("tmp", "fluor")))
                                                           },
                                                           endPt = xmlValue(data[["endPt"]]),
-                                                          bgFluor = xmlValue(data[["bgFluor"]]),
+                                                          bgFluor = as.numeric(xmlValue(data[["bgFluor"]])),
                                                           bgFluorSp = xmlValue(data[["bgFluorSp"]]),
                                                           quantFluor = xmlValue(data[["quantFluor"]])
                                                         )
