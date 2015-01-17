@@ -212,32 +212,33 @@ RDML <- R6Class("RDML",
                     for(x in list(1,2)) 
                       print(eval(substitute(list(...))))
                   },
-                  Sexperiment = function(...) {
-                    #                     cols <- c(experiment$id,
-                    #                               run$id,
-                    #                               react$id,
-                    #                               sample = react$sample,
-                    #                               sample.description = private$.sample[[react$sample]]$description,
-                    #                               data$id,
-                    #                               add.cols)
-                    #                     if(missing(add.cols)) add.cols <- c()
+                  AsTable = function(.default = list(
+                    exp.id = experiment$id,
+                    run.id = run$id,
+                    react.id = react$id,
+                    sample = react$sample,
+                    sample.description = private$.sample[[react$sample]]$description,
+                    sample.type=private$.sample[[react$sample]]$type,
+                    target = data$id,
+                    target.dyeId = private$.target[[data$id]]$dyeId),
+                    name.pattern = paste(
+                      react$id,
+                      react$sample,
+                      private$.sample[[react$sample]]$type,
+                      data$id,
+                      sep = "_"),                    
+                    ...) {
                     out<-data.frame()
                     for(experiment in private$.experiment) {                      
                       for(run in experiment$run) {                                    
                         for(react in run$react) {                          
                           for(data in react$data){
-                            add.cols <- eval(substitute(list(...)))
-                            
                             out<-rbind(out,
-                              data.frame(
-                                experiment$id,
-                                run$id,
-                                react$id,
-                                sample = react$sample,
-                                sample.description = private$.sample[[react$sample]]$description,
-                                data$id,
-                                unlist(add.cols)
-                              )
+                                       data.frame(
+                                         eval(substitute(list(.default, ...))),
+                                         row.names = eval(substitute(name.pattern)),
+                                         stringsAsFactors = FALSE
+                                       )
                             )
                           }
                         }

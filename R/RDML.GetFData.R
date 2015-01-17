@@ -73,8 +73,28 @@
 #'                                      names="(Sample 39)|(Sample 4)"))
 #' ## Show names of selected samples
 #' names(fdata)
-RDML$set("public", "GetFData", function(filter = list(method = "qPCR"),
-                                        as.table = TRUE) {
+RDML$set("public", "GetFData",
+         function(request) {
+           fdata <- unlist(request[1,])
+           cbind(Cycle = private$.experiment[[fdata["exp.id"]]]$
+                   run[[fdata["run.id"]]]$
+                   react[[fdata["react.id"]]]$
+                   data[[fdata["target"]]]$
+                   adp[, "cyc"],
+                 apply(request, 1,
+                       function(fdata) {                         
+                         private$.experiment[[fdata["exp.id"]]]$
+                           run[[fdata["run.id"]]]$
+                           react[[fdata["react.id"]]]$
+                           data[[fdata["target"]]]$
+                           adp[, "fluor"]
+                       })
+           )
+         }
+         , overwrite = TRUE)
+
+RDML$set("public", "GetFData2", function(filter = list(method = "qPCR"),
+                                         as.table = TRUE) {
   params.names <- names(filter)
   if(!("method" %in% params.names))
     filter$method <- "qPCR"
