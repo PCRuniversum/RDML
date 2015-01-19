@@ -87,7 +87,8 @@
 #' @importFrom dpcR plot_panel create_dpcr extract_dpcr
 #' @importFrom R6 R6Class
 #' @importFrom uuid UUIDgenerate
-#' @importFrom plyr llply ldply
+#' @importFrom plyr llply ldply ddply
+#' @importFrom pipeR %>>%
 #' @examples
 #' 
 #' ## EXAMPLE 1:

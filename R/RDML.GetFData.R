@@ -74,95 +74,57 @@
 #' ## Show names of selected samples
 #' names(fdata)
 RDML$set("public", "GetFData",
-         function(request) {
-           fdata <- unlist(request[1,])
-           cbind(Cycle = private$.experiment[[fdata["exp.id"]]]$
-                   run[[fdata["run.id"]]]$
-                   react[[fdata["react.id"]]]$
-                   data[[fdata["target"]]]$
-                   adp[, "cyc"],
-                 apply(request, 1,
-                       function(fdata) {                         
-                         private$.experiment[[fdata["exp.id"]]]$
-                           run[[fdata["run.id"]]]$
-                           react[[fdata["react.id"]]]$
-                           data[[fdata["target"]]]$
-                           adp[, "fluor"]
-                       })
+         function(request,
+                  data.type = "qPCR",
+                  long.table = FALSE) {
+           data.type <- {
+             if(data.type == "qPCR" || data.type == "adp") {
+               c(data.type = "adp",
+                 first.col.name = "cyc")
+             } else {
+               c(data.type = "mdp",
+                 first.col.name = "tmp")
+             }
+           }           
+           
+             fdata <- unlist(request[1,])
+           out <- cbind(cyc = private$.experiment[[fdata["exp.id"]]]$
+                          run[[fdata["run.id"]]]$
+                          react[[fdata["react.id"]]]$
+                          data[[fdata["target"]]]
+                        [[data.type["data.type"]]][, data.type["first.col.name"]],
+                        apply(request, 1,
+                              function(fdata) {                         
+                                private$.experiment[[fdata["exp.id"]]]$
+                                  run[[fdata["run.id"]]]$
+                                  react[[fdata["react.id"]]]$
+                                  data[[fdata["target"]]][[data.type["data.type"]]][, "fluor"]
+                              })
            )
+           if(long.table) {
+             out2 <- data.frame(
+               fdata.name = rep(rownames(request), 
+                                each= nrow(out)))
+             for(col.id in names(request)) {
+               out2 <- cbind(
+                 out2,
+                 rep(request[, col.id], each= nrow(out)) 
+                 )
+             }
+             print(nrow(out2))
+             out2 <- cbind(
+               out2,
+               out[, "cyc"] 
+             )
+             out2 <- cbind(
+               out2,
+               c(out[, -1])
+             )             
+             colnames(out2) <- c("fdata.name",
+                                 names(request),
+                                 "cyc",
+                                 "fluo")
+             return(out2)               
+           } 
          }
          , overwrite = TRUE)
-
-RDML$set("public", "GetFData2", function(filter = list(method = "qPCR"),
-                                         as.table = TRUE) {
-  params.names <- names(filter)
-  if(!("method" %in% params.names))
-    filter$method <- "qPCR"
-  filtered.map <- private$.plate.map
-  if("react.ids" %in% params.names)
-    filtered.map <- filtered.map[which(
-      private$.plate.map$ReactID %in% as.character(
-        filter$react.ids))]
-  if("tubes" %in% params.names)
-    filtered.map <- filtered.map[which(
-      private$.plate.map$Tube %in% filter$tubes)]
-  if("dyes" %in% params.names)
-    filtered.map <- filtered.map[which(
-      filtered.map$Dye %in% filter$dyes),]
-  if("targets" %in% params.names)
-    filtered.map <- filtered.map[which(
-      filtered.map$Target %in% filter$targets),]
-  if("types" %in% params.names)
-    filtered.map <-filtered.map[
-      which(filtered.map$Type %in% filter$types),]
-  if("names" %in% params.names)
-    filtered.map <-filtered.map[
-      grep(filter$names, 
-           filtered.map$FDataName),]
-  
-  filtered.fdata.ids <- filtered.map$FDataID
-  if(as.table) {
-    if(filter$method == "melt") {
-      filtered <- as.data.frame(private$.melt.fdata[,filtered.fdata.ids])
-      filtered <- cbind(as.numeric(rownames(private$.melt.fdata)),
-                        filtered)
-      names(filtered) <- c("Temp.", 
-                           filtered.map$FDataName)
-    }
-    else {
-      filtered <- as.data.frame(
-        private$.qPCR.fdata[,filtered.fdata.ids],
-        row.names = rownames(private$.qPCR.fdata))
-      filtered <- cbind(as.numeric(rownames(private$.qPCR.fdata)),
-                        filtered)
-      names(filtered) <- c("Cycles", 
-                           filtered.map$FDataName)
-    }
-    return(filtered)
-  }
-  else { # as.table == FALSE
-    filtered.map <- data.frame(lapply(filtered.map,
-                                      as.character),
-                               stringsAsFactors=FALSE)    
-    tubes <- as.character(unique(filtered.map$Tubes))    
-    filtered.list <- lapply(1:length(filtered.map[, 1]),
-                            function(i) {
-                              output <-as.list(filtered.map[i, ])                              
-                              if(filter$method == "melt" &&
-                                   !is.null(private$.melt.fdata)) {                                
-                                m.data <- private$.melt.fdata[, as.integer(output$FDataID)]                                
-                                names(m.data) <- rownames(private$.melt.fdata)
-                                output$Melt <- m.data
-                              }
-                              if(filter$method == "qPCR" &&
-                                   !is.null(private$.qPCR.fdata)) {
-                                q.data <- private$.qPCR.fdata[, as.integer(output$FDataID)]                      
-                                names(q.data) <- rownames(private$.qPCR.fdata)
-                                output$qPCR <- q.data
-                              }
-                              output
-                            })    
-    return(filtered.list)    
-  }
-}
-, overwrite = TRUE)
