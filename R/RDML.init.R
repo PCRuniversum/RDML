@@ -1,115 +1,5 @@
 GetIds <- function(l) {
-  sapply(l, function(el) el$id) %>>% unname
-}
-
-# Gets file publisher (instrumant manufacturer)
-GetPublisher <- function(rdml.doc)
-{
-  publisher <- xpathSApply(
-    rdml.doc, 
-    "/rdml:rdml/rdml:id/rdml:publisher",
-    xmlValue,
-    namespaces = c(rdml = "http://www.rdml.org"))  
-  if(length(publisher) != 0){ return(publisher) }
-  else { return("StepOne") }
-}   
-
-# Gets PCR samples descriptions vector from XML
-GetDescriptions <- function(RDMLdoc)
-{
-  samples.ids <- xpathSApply(
-    RDMLdoc, 
-    "/rdml:rdml/rdml:sample",
-    xmlGetAttr,
-    name = "id",
-    namespaces = c(rdml = "http://www.rdml.org"))
-  descriptions <- xpathSApply(
-    RDMLdoc, 
-    "/rdml:rdml/rdml:sample/rdml:description",
-    xmlValue,
-    namespaces = c(rdml = "http://www.rdml.org"))  
-  names(descriptions) <- samples.ids
-  return(descriptions)
-}
-
-# Gets plate dimensions from XML
-GetPlateDimensions <- function(rdml.doc)
-{
-  # delete trycatch, better to stop execution on error
-  rows <- tryCatch({as.integer(xpathSApply(
-    rdml.doc, 
-    "/rdml:rdml/rdml:experiment/rdml:run/rdml:pcrFormat/rdml:rows",
-    xmlValue,
-    namespaces = c(rdml = "http://www.rdml.org"))[1])},
-    error = function(e) 8)
-  columns <- tryCatch({as.integer(xpathSApply(
-    rdml.doc, 
-    "/rdml:rdml/rdml:experiment/rdml:run/rdml:pcrFormat/rdml:columns",
-    xmlValue,
-    namespaces = c(rdml = "http://www.rdml.org"))[1])},
-    error = function(e) 12)
-  return(c(rows = rows, columns = columns))
-}
-
-# Gets used dyes (with targets as names)
-GetDyes <- function(rdml.doc)
-{
-  targets <- xpathSApply(
-    rdml.doc, 
-    "/rdml:rdml/rdml:target",
-    xmlGetAttr,
-    name = "id",
-    namespaces = c(rdml = "http://www.rdml.org"))
-  dyes <- xpathSApply(
-    rdml.doc, 
-    "/rdml:rdml/rdml:target/rdml:dyeId",
-    xmlGetAttr,
-    name = "id",
-    namespaces = c(rdml = "http://www.rdml.org"))
-  names(dyes) <- targets
-  return(dyes)
-}
-
-# Getstype (Unknown, Positive, Standart, etc.)
-# of each sample from XML
-GetSamplesTypes <- function(rdml.doc)
-{    
-  samples.ids <- xpathSApply(
-    rdml.doc, 
-    "/rdml:rdml/rdml:sample",
-    xmlGetAttr,
-    name = "id",
-    namespaces = c(rdml = "http://www.rdml.org"))
-  samples.types <- xpathSApply(
-    rdml.doc, 
-    "/rdml:rdml/rdml:sample/rdml:type",
-    xmlValue,
-    namespaces = c(rdml = "http://www.rdml.org"))  
-  names(samples.types) <- samples.ids
-  return(samples.types)
-}
-
-# Gets concentrations (quantity) of each 
-# dilution from XML
-GetDilutions <- function(rdml.doc)
-{
-  # XML nodes that contain "quantity" information
-  nodes <- getNodeSet(
-    rdml.doc, 
-    "/rdml:rdml/rdml:sample/rdml:quantity/rdml:value/../..",    
-    namespaces = c(rdml = "http://www.rdml.org"))  
-  if(is.null(nodes)) return()
-  values <- sapply(nodes, function(node) {
-    as.numeric(xmlValue(node[["quantity"]][["value"]]))})
-  # names of the samples that contain "quantity" information
-  samplesids <- sapply(nodes, xmlGetAttr, name = "id")
-  names(values) <- samplesids
-  # sorting quantities by sample name
-  values <- values[order(names(values))]
-  dils<- list()
-  dils[[1]] <- values
-  names(dils) <- "All Targets"
-  return(dils)  
+  unname(sapply(l, function(el) el$id))
 }
 
 # Gets concentrations (quantity) of each 
@@ -145,7 +35,8 @@ GetDilutionsRoche <- function(uniq.folder)
       rdml.doc, 
       paste0("//ns:standardPoints/ns:standardPoint/ns:graphIds/ns:guid"), 
       xmlValue,
-      namespaces = c(ns = "http://www.roche.ch/LC96AbsQuantCalculatedDataModel"))
+      namespaces = c(ns = "http://www.roche.ch/LC96AbsQuantCalculatedDataModel"))    
+    print(concs)
     positions.table <- matrix(c(dye.names,
                                 positions),
                               ncol = length(positions),
@@ -170,32 +61,6 @@ GetDilutionsRoche <- function(uniq.folder)
   #   finally = unlink(unzipped.rdml)
   )
   return(dilutions)
-}
-
-# Generates fluorescence data vector name by specified pattern
-GenFDataName <- function (name.pattern,
-                          react.id,
-                          tube.name,
-                          tube,
-                          target,
-                          type)
-{ 
-  name.pattern <- gsub("%NAME%",
-                       tube.name,
-                       name.pattern)
-  name.pattern <- gsub("%ID%",
-                       react.id,
-                       name.pattern)
-  name.pattern <- gsub("%TUBE%",
-                       tube,
-                       name.pattern)
-  name.pattern <- gsub("%TARGET%",
-                       target,
-                       name.pattern)
-  name.pattern <- gsub("%TYPE%",
-                       type,
-                       name.pattern)
-  return(name.pattern)
 }
 
 #' Creates new instance of \code{RDML} class object
@@ -280,7 +145,8 @@ RDML$set("public", "initialize", function(input,
     if(length(unzipped.rdml) > 1)
     {
       rdml.doc <- xmlParse(paste0(uniq.folder,"/rdml_data.xml"))
-      #     private$.dilutions <- GetDilutionsRoche(uniq.folder)
+      dilutions.r <- GetDilutionsRoche(uniq.folder)
+      print(dilutions.r)
     }
     else
     {
@@ -356,6 +222,12 @@ RDML$set("public", "initialize", function(input,
     sample.list <- 
       llply(rdml.root["sample"],
           function(sample) {
+            type <- xmlValue(sample[["type"]])
+            ######
+            # remove Roche omitted ('ntp') samples
+            if(type == "ntp")
+              return(NULL)
+            #####################
             list(
               id = xmlAttrs(sample, "id"),
                  description = xmlValue(sample[["description"]]),
@@ -374,10 +246,13 @@ RDML$set("public", "initialize", function(input,
                                       property = xmlValue(annotation[["property"]]),
                                       value = xmlValue(annotation[["value"]])
                                     )),
-                 type = xmlValue(sample[["type"]]),
+                 type = type,
                  interRunCalibrator = xmlValue(sample[["interRunCalibrator"]]),
                  quantity = 
-                   c(value = xmlValue(sample[["quantity"]][["value"]]),
+                   c(value = {
+                     xmlValue(sample[["quantity"]][["value"]])
+                     
+                     },
                      unit = xmlValue(sample[["quantity"]][["unit"]])),
                  calibaratorSample = xmlValue(sample[["calibaratorSample"]]),
                  cdnaSynthesisMethod = 
@@ -394,9 +269,9 @@ RDML$set("public", "initialize", function(input,
                    c(conc = xmlValue(sample[["templateQuantity"]][["conc"]]),
                      nucleotide = xmlValue(sample[["templateQuantity"]][["nucleotide"]]))
             )
-          })
+          })    
     names(sample.list) <- GetIds(sample.list)
-    sample.list
+    compact(sample.list)
   }
   
   private$.target <- {
@@ -567,8 +442,8 @@ RDML$set("public", "initialize", function(input,
                                   xmlAttrs(run[["thermalCyclingConditions"]], "id")
                               },
                               pcrFormat = list(
-                                rows = xmlValue(run[["pcrFormat"]][["rows"]]),
-                                columns = xmlValue(run[["pcrFormat"]][["columns"]]),
+                                rows = as.integer(xmlValue(run[["pcrFormat"]][["rows"]])),
+                                columns = as.integer(xmlValue(run[["pcrFormat"]][["columns"]])),
                                 rowLabel = xmlValue(run[["pcrFormat"]][["rowLabel"]]),
                                 columnLabel = xmlValue(run[["pcrFormat"]][["columnLabel"]])
                               ),
@@ -577,11 +452,19 @@ RDML$set("public", "initialize", function(input,
                                 react.list <- 
                                   llply(run["react"],
                                         function(react) {          
-                                          react.id <- xmlAttrs(react, "id")                                          
+                                          react.id <- as.integer(xmlAttrs(react, "id"))
+                                          sample <- xmlAttrs(react[["sample"]],
+                                                            "id")
+                                          ######
+                                          # remove Roche omitted ('ntp') samples
+                                          if(is.null(private$.sample[[sample]]))
+                                            return(NULL)
+                                          #######
                                           list(
                                             id = react.id,
-                                            sample = xmlAttrs(react[["sample"]],
-                                                              "id"),
+                                            # will be calculated at the end of init
+                                            position = NA,
+                                            sample = sample,
                                             data = {
                                               data.list <-                                         
                                                 llply(react["data"],
@@ -666,9 +549,8 @@ RDML$set("public", "initialize", function(input,
                                           )
                                         }
                                   )
-                                
                                 names(react.list) <- GetIds(react.list)
-                                react.list
+                                compact(react.list)                                
                               }
                             )
                             
@@ -685,5 +567,7 @@ RDML$set("public", "initialize", function(input,
     names(experiment.list) <- GetIds(experiment.list)
     experiment.list
   }
+  
+  private$.recalcPositions()
 }, 
 overwrite = TRUE)

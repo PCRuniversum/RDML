@@ -87,7 +87,7 @@ RDML$set("public", "GetFData",
              }
            }           
            
-             fdata <- unlist(request[1,])
+           fdata <- unlist(request[1,])
            out <- cbind(cyc = private$.experiment[[fdata["exp.id"]]]$
                           run[[fdata["run.id"]]]$
                           react[[fdata["react.id"]]]$
@@ -125,6 +125,7 @@ RDML$set("public", "GetFData",
                                  "cyc",
                                  "fluo")
              return(out2)               
-           } 
+           }
+           out
          }
          , overwrite = TRUE)

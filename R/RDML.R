@@ -216,7 +216,7 @@ RDML <- R6Class("RDML",
                   AsTable = function(.default = list(
                     exp.id = experiment$id,
                     run.id = run$id,
-                    react.id = react$id,
+                    position = react$position,
                     sample = react$sample,
                     sample.description = private$.sample[[react$sample]]$description,
                     sample.type=private$.sample[[react$sample]]$type,
@@ -258,7 +258,28 @@ RDML <- R6Class("RDML",
                   .sample = NULL,
                   .target = NULL,
                   .thermalCyclingConditions = NULL,
-                  .experiment = NULL
+                  .experiment = NULL,
+                  .recalcPositions = function() {
+                    for(exp.id in names(private$.experiment)) {
+                      for(run.id in names(
+                        private$.experiment[[exp.id]]$run)) {
+                        for(react.id in names(
+                          private$.experiment[[exp.id]]$
+                            run[[run.id]]$react)) {
+                          private$.experiment[[exp.id]]$
+                            run[[run.id]]$
+                            react[[react.id]]$position <- {
+                              id <- as.integer(react.id)
+                              cols <- private$.experiment[[exp.id]]$
+                                run[[run.id]]$pcrFormat$columns
+                              sprintf("%s%02d",
+                                      LETTERS[(id - 1) %/% cols + 1],
+                                     (id - 1) %% cols + 1)
+                            }
+                        }
+                      }
+                    }
+                  }
                 ),
                 active = list(
                   date.made = function(date.made) {
