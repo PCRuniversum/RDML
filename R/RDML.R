@@ -88,7 +88,6 @@
 #' @importFrom R6 R6Class
 #' @importFrom uuid UUIDgenerate
 #' @importFrom plyr llply ldply ddply
-#' @importFrom pipeR %>>%
 #' @examples
 #' 
 #' ## EXAMPLE 1:
@@ -248,7 +247,9 @@ RDML <- R6Class("RDML",
                     out
                   }
                 ),
-                private = list(                  
+                private = list(
+                  .dilutions = NULL,
+                  
                   .dateMade = NULL,
                   .dateUpdated = NULL,                  
                   .id = NULL,
@@ -272,9 +273,9 @@ RDML <- R6Class("RDML",
                               id <- as.integer(react.id)
                               cols <- private$.experiment[[exp.id]]$
                                 run[[run.id]]$pcrFormat$columns
-                              sprintf("%s%02d",
+                              sprintf("%s%02i",
                                       LETTERS[(id - 1) %/% cols + 1],
-                                     (id - 1) %% cols + 1)
+                                     as.integer((id - 1) %% cols + 1))
                             }
                         }
                       }
@@ -353,6 +354,10 @@ RDML <- R6Class("RDML",
                     private$.experimenter[[id]] <- new.experimenter
                   },
                   
+                  dye = function() {
+                    private$.dye
+                  },
+                  
                   documentation = function(doc) {
                     if(missing(doc))
                       return(private$.documentation)
@@ -377,8 +382,7 @@ RDML <- R6Class("RDML",
                   target = function() {
                     private$.target
                   },
-                  
-                  
+                                    
                   thermalCyclingConditions = function() {
                     private$.thermalCyclingConditions
                   },                  

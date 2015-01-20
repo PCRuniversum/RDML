@@ -1,3 +1,10 @@
+FromPositionToId <- function (react.id) {
+  row <- which(LETTERS ==
+                 gsub("([A-Z])[0-9]+", "\\1", react.id))
+  col <- as.integer(gsub("[A-Z]([0-9]+)", "\\1", react.id))
+  (row - 1) * 12 + col
+}
+
 GetIds <- function(l) {
   unname(sapply(l, function(el) el$id))
 }
@@ -21,11 +28,14 @@ GetDilutionsRoche <- function(uniq.folder)
       xmlValue)
     names(concs) <- concs.guids
     concs <- sort(concs, decreasing=TRUE)
-    positions <- xpathSApply(
-      rdml.doc, 
-      paste0("//ns:standardPoints/ns:standardPoint/ns:position"), 
-      xmlValue,
-      namespaces = c(ns = "http://www.roche.ch/LC96AbsQuantCalculatedDataModel"))
+    positions <- 
+      xpathSApply(
+        rdml.doc, 
+        paste0("//ns:standardPoints/ns:standardPoint/ns:position"), 
+        xmlValue,
+        namespaces = 
+          c(ns = "http://www.roche.ch/LC96AbsQuantCalculatedDataModel"))
+    positions <- sapply(positions, FromPositionToId)
     dye.names <-xpathSApply(
       rdml.doc, 
       paste0("//ns:standardPoints/ns:standardPoint/ns:dyeName"), 
@@ -146,7 +156,7 @@ RDML$set("public", "initialize", function(input,
     {
       rdml.doc <- xmlParse(paste0(uniq.folder,"/rdml_data.xml"))
       dilutions.r <- GetDilutionsRoche(uniq.folder)
-      print(dilutions.r)
+      
     }
     else
     {
@@ -157,6 +167,7 @@ RDML$set("public", "initialize", function(input,
     finally = unlink(uniq.folder, recursive = TRUE)
   )
   ####
+  private$.dilutions <- dilutions.r
   rdml.root <- xmlRoot(rdml.doc)
   rdml.namespace <- c(rdml = "http://www.rdml.org")
   
@@ -195,11 +206,11 @@ RDML$set("public", "initialize", function(input,
   private$.documentation <- {
     documentation.list <- 
       llply(rdml.root["documentation"],
-          function(el) 
-            list(
-              id = xmlAttrs(el, "id"),
-              text = xmlValue(el[["text"]])
-            )          
+            function(el) 
+              list(
+                id = xmlAttrs(el, "id"),
+                text = xmlValue(el[["text"]])
+              )          
       )
     names(documentation.list) <- GetIds(documentation.list)
     documentation.list
@@ -208,12 +219,12 @@ RDML$set("public", "initialize", function(input,
   private$.dye <- {
     dye.list <- 
       llply(rdml.root["dye"],
-          function(el) 
-            list(
-              id = xmlAttrs(el, "id"),
-              description = xmlValue(el[["description"]])
-            )
-    )
+            function(el) 
+              list(
+                id = xmlAttrs(el, "id"),
+                description = xmlValue(el[["description"]])
+              )
+      )
     names(dye.list) <- GetIds(dye.list)
     dye.list
   }
@@ -221,121 +232,121 @@ RDML$set("public", "initialize", function(input,
   private$.sample <- {
     sample.list <- 
       llply(rdml.root["sample"],
-          function(sample) {
-            type <- xmlValue(sample[["type"]])
-            ######
-            # remove Roche omitted ('ntp') samples
-            if(type == "ntp")
-              return(NULL)
-            #####################
-            list(
-              id = xmlAttrs(sample, "id"),
-                 description = xmlValue(sample[["description"]]),
-                 documentation = sapply(sample["documentation"],
-                                        function(documentation)
-                                          if(!is.null(documentation))
-                                            xmlAttrs(documentation, "id")
-                 ),
-                 xRef = ldply(sample["xRef"],
-                              function(xRef) c(
-                                name = xmlValue(xRef[["name"]]),
-                                id = xmlValue(xRef[["id"]])
-                              )),
-                 annotation = ldply(sample["annotation"],
-                                    function(annotation) c(
-                                      property = xmlValue(annotation[["property"]]),
-                                      value = xmlValue(annotation[["value"]])
-                                    )),
-                 type = type,
-                 interRunCalibrator = xmlValue(sample[["interRunCalibrator"]]),
-                 quantity = 
-                   c(value = {
-                     xmlValue(sample[["quantity"]][["value"]])
-                     
-                     },
-                     unit = xmlValue(sample[["quantity"]][["unit"]])),
-                 calibaratorSample = xmlValue(sample[["calibaratorSample"]]),
-                 cdnaSynthesisMethod = 
-                   list(enzyme = xmlValue(sample[["cdnaSynthesisMethod"]][["enzyme"]]),
-                        primingMethod = xmlValue(sample[["cdnaSynthesisMethod"]][["primingMethod"]]),
-                        dnaseTreatment = xmlValue(sample[["cdnaSynthesisMethod"]][["dnaseTreatment"]]),
-                        thermalCyclingConditions = { 
-                          if(!is.null(sample[["cdnaSynthesisMethod"]][["thermalCyclingConditions"]]))
-                            xmlAttrs(sample[["cdnaSynthesisMethod"]][["thermalCyclingConditions"]],
-                                     "id")
-                        }
-                   ),
-                 templateQuantity = 
-                   c(conc = xmlValue(sample[["templateQuantity"]][["conc"]]),
-                     nucleotide = xmlValue(sample[["templateQuantity"]][["nucleotide"]]))
-            )
-          })    
+            function(sample) {
+              type <- xmlValue(sample[["type"]])
+              ######
+              # remove Roche omitted ('ntp') samples
+              if(type == "ntp")
+                return(NULL)
+              #####################
+              list(
+                id = xmlAttrs(sample, "id"),
+                description = xmlValue(sample[["description"]]),
+                documentation = sapply(sample["documentation"],
+                                       function(documentation)
+                                         if(!is.null(documentation))
+                                           xmlAttrs(documentation, "id")
+                ),
+                xRef = ldply(sample["xRef"],
+                             function(xRef) c(
+                               name = xmlValue(xRef[["name"]]),
+                               id = xmlValue(xRef[["id"]])
+                             )),
+                annotation = ldply(sample["annotation"],
+                                   function(annotation) c(
+                                     property = xmlValue(annotation[["property"]]),
+                                     value = xmlValue(annotation[["value"]])
+                                   )),
+                type = type,
+                interRunCalibrator = xmlValue(sample[["interRunCalibrator"]]),
+                quantity = 
+                  c(value = xmlValue(sample[["quantity"]][["value"]]),
+                    unit = xmlValue(sample[["quantity"]][["unit"]])),
+                calibaratorSample = xmlValue(sample[["calibaratorSample"]]),
+                cdnaSynthesisMethod = 
+                  list(enzyme = xmlValue(sample[["cdnaSynthesisMethod"]][["enzyme"]]),
+                       primingMethod = xmlValue(sample[["cdnaSynthesisMethod"]][["primingMethod"]]),
+                       dnaseTreatment = xmlValue(sample[["cdnaSynthesisMethod"]][["dnaseTreatment"]]),
+                       thermalCyclingConditions = { 
+                         if(!is.null(sample[["cdnaSynthesisMethod"]][["thermalCyclingConditions"]]))
+                           xmlAttrs(sample[["cdnaSynthesisMethod"]][["thermalCyclingConditions"]],
+                                    "id")
+                       }
+                  ),
+                templateQuantity = 
+                  c(conc = xmlValue(sample[["templateQuantity"]][["conc"]]),
+                    nucleotide = xmlValue(sample[["templateQuantity"]][["nucleotide"]]))
+              )
+            })    
     names(sample.list) <- GetIds(sample.list)
     compact(sample.list)
   }
   
   private$.target <- {
     target.list <- llply(rdml.root["target"],
-          function(target) { 
-            list(
-              id = xmlAttrs(target, "id"),
-              description = xmlValue(target[["description"]]),
-              documentation = sapply(target["documentation"],
-                                     function(documentation)
-                                       if(!is.null(documentation))
-                                         xmlAttrs(documentation, "id")
-              ),
-              xRef = ldply(target["xRef"],
-                           function(xRef) c(
-                             name = xmlValue(xRef[["name"]]),
-                             id = xmlValue(xRef[["id"]])
-                           )),
-              type = xmlValue(target[["type"]]),
-              amplificationEfficiencyMethod = xmlValue(target[["amplificationEfficiencyMethod"]]),
-              amplificationEfficiency = xmlValue(target[["amplificationEfficiency"]]),
-              amplificationEfficiencySE = xmlValue(target[["amplificationEfficiencySE"]]),
-              detectionLimit = xmlValue(target[["detectionLimit"]]),
-              dyeId = xmlAttrs(target[["dyeId"]],
-                               "id"),
-              sequences = list(
-                forwardPrimer = c(threePrimeTag = 
-                                    xmlValue(target[["sequences"]][["forwardPrimer"]][["threePrimeTag"]]),
-                                  fivePrimeTag = 
-                                    xmlValue(target[["sequences"]][["forwardPrimer"]][["fivePrimeTag"]]),
-                                  sequence = 
-                                    xmlValue(target[["sequences"]][["forwardPrimer"]][["sequence"]])),
-                reversePrimer = c(threePrimeTag = 
-                                    xmlValue(target[["sequences"]][["reversePrimer"]][["threePrimeTag"]]),
-                                  fivePrimeTag = 
-                                    xmlValue(target[["sequences"]][["reversePrimer"]][["fivePrimeTag"]]),
-                                  sequence = 
-                                    xmlValue(target[["sequences"]][["reversePrimer"]][["sequence"]])),
-                probe1 = c(threePrimeTag = 
-                             xmlValue(target[["sequences"]][["probe1"]][["threePrimeTag"]]),
-                           fivePrimeTag = 
-                             xmlValue(target[["sequences"]][["probe1"]][["fivePrimeTag"]]),
-                           sequence = 
-                             xmlValue(target[["sequences"]][["probe1"]][["sequence"]])),
-                probe2 = c(threePrimeTag = 
-                             xmlValue(target[["sequences"]][["probe2"]][["threePrimeTag"]]),
-                           fivePrimeTag = 
-                             xmlValue(target[["sequences"]][["probe2"]][["fivePrimeTag"]]),
-                           sequence = 
-                             xmlValue(target[["sequences"]][["probe2"]][["sequence"]])),
-                amplicon = c(threePrimeTag = 
-                               xmlValue(target[["sequences"]][["amplicon"]][["threePrimeTag"]]),
-                             fivePrimeTag = 
-                               xmlValue(target[["sequences"]][["amplicon"]][["fivePrimeTag"]]),
-                             sequence = 
-                               xmlValue(target[["sequences"]][["amplicon"]][["sequence"]]))
-              ),
-              commercialAssay = list(company = 
-                                       xmlValue(target[["commercialAssay"]][["company"]]),
-                                     orderNumber = 
-                                       xmlValue(target[["commercialAssay"]][["orderNumber"]]))
-              
-            )
-          }
+                         function(target) { 
+                           list(
+                             id = xmlAttrs(target, "id"),
+                             description = xmlValue(target[["description"]]),
+                             documentation = sapply(target["documentation"],
+                                                    function(documentation)
+                                                      if(!is.null(documentation))
+                                                        xmlAttrs(documentation, "id")
+                             ),
+                             xRef = ldply(target["xRef"],
+                                          function(xRef) c(
+                                            name = xmlValue(xRef[["name"]]),
+                                            id = xmlValue(xRef[["id"]])
+                                          )),
+                             type = xmlValue(target[["type"]]),
+                             amplificationEfficiencyMethod = xmlValue(target[["amplificationEfficiencyMethod"]]),
+                             amplificationEfficiency = xmlValue(target[["amplificationEfficiency"]]),
+                             amplificationEfficiencySE = xmlValue(target[["amplificationEfficiencySE"]]),
+                             detectionLimit = xmlValue(target[["detectionLimit"]]),
+                             dyeId = { 
+                               id <- xmlAttrs(target[["dyeId"]],"id")
+                               if(is.null(id)) NA
+                               else id
+                             },
+                             sequences = list(
+                               forwardPrimer = c(threePrimeTag = 
+                                                   xmlValue(target[["sequences"]][["forwardPrimer"]][["threePrimeTag"]]),
+                                                 fivePrimeTag = 
+                                                   xmlValue(target[["sequences"]][["forwardPrimer"]][["fivePrimeTag"]]),
+                                                 sequence = 
+                                                   xmlValue(target[["sequences"]][["forwardPrimer"]][["sequence"]])),
+                               reversePrimer = c(threePrimeTag = 
+                                                   xmlValue(target[["sequences"]][["reversePrimer"]][["threePrimeTag"]]),
+                                                 fivePrimeTag = 
+                                                   xmlValue(target[["sequences"]][["reversePrimer"]][["fivePrimeTag"]]),
+                                                 sequence = 
+                                                   xmlValue(target[["sequences"]][["reversePrimer"]][["sequence"]])),
+                               probe1 = c(threePrimeTag = 
+                                            xmlValue(target[["sequences"]][["probe1"]][["threePrimeTag"]]),
+                                          fivePrimeTag = 
+                                            xmlValue(target[["sequences"]][["probe1"]][["fivePrimeTag"]]),
+                                          sequence = 
+                                            xmlValue(target[["sequences"]][["probe1"]][["sequence"]])),
+                               probe2 = c(threePrimeTag = 
+                                            xmlValue(target[["sequences"]][["probe2"]][["threePrimeTag"]]),
+                                          fivePrimeTag = 
+                                            xmlValue(target[["sequences"]][["probe2"]][["fivePrimeTag"]]),
+                                          sequence = 
+                                            xmlValue(target[["sequences"]][["probe2"]][["sequence"]])),
+                               amplicon = c(threePrimeTag = 
+                                              xmlValue(target[["sequences"]][["amplicon"]][["threePrimeTag"]]),
+                                            fivePrimeTag = 
+                                              xmlValue(target[["sequences"]][["amplicon"]][["fivePrimeTag"]]),
+                                            sequence = 
+                                              xmlValue(target[["sequences"]][["amplicon"]][["sequence"]]))
+                             ),
+                             commercialAssay = list(company = 
+                                                      xmlValue(target[["commercialAssay"]][["company"]]),
+                                                    orderNumber = 
+                                                      xmlValue(target[["commercialAssay"]][["orderNumber"]]))
+                             
+                           )
+                         }
     )
     names(target.list) <- GetIds(target.list)
     target.list
@@ -344,230 +355,278 @@ RDML$set("public", "initialize", function(input,
   private$.thermalCyclingConditions <-{
     tcc.list <- 
       llply(rdml.root["thermalCyclingConditions"],
-          function(tcc) {
-            list(
-              id = xmlAttrs(tcc, "id"),
-              description = xmlValue(tcc[["description"]]),
-              documentation = sapply(tcc["documentation"],
-                                     function(documentation)
-                                       if(!is.null(documentation))
-                                         xmlAttrs(documentation, "id")
-              ),
-              lidTemperature = xmlValue(tcc[["lidTemperature"]]),
-              experimenter = sapply(tcc["experimenter"],
-                                    function(experimenter)
-                                      if(!is.null(experimenter))
-                                        xmlAttrs(experimenter, "id")
-              ),
-              step = llply(tcc["step"],
-                           function(step) list(
-                             nr = xmlValue(step[["nr"]]),
-                             description = xmlValue(step[["description"]]),
-                             temperature = c(
-                               temperature = xmlValue(step[["temperature"]][["temperature"]]),
-                               duration = xmlValue(step[["temperature"]][["duration"]]),
-                               temperatureChange = xmlValue(step[["temperature"]][["temperatureChange"]]),
-                               durationChange = xmlValue(step[["temperature"]][["durationChange"]]),
-                               measure = xmlValue(step[["temperature"]][["measure"]]),
-                               ramp = xmlValue(step[["temperature"]][["ramp"]])
-                             ),
-                             gradient = c(
-                               highTemperature = xmlValue(step[["gradient"]][["highTemperature"]]),
-                               lowTemperature = xmlValue(step[["gradient"]][["lowTemperature"]]),
-                               duration = xmlValue(step[["gradient"]][["duration"]]),
-                               temperatureChange = xmlValue(step[["gradient"]][["temperatureChange"]]),
-                               durationChange = xmlValue(step[["gradient"]][["durationChange"]]),
-                               measure = xmlValue(step[["gradient"]][["measure"]]),
-                               ramp = xmlValue(step[["gradient"]][["ramp"]])
-                             ),
-                             loop = c(
-                               goto = xmlValue(step[["loop"]][["goto"]]),
-                               repeatN = xmlValue(step[["loop"]][["repeat"]]) # should be called "repeat" but this is reserved word
-                             ),
-                             pause = c(
-                               temperature = xmlValue(step[["pause"]][["temperature"]])
-                             ),
-                             lidOpen = xmlValue(step[["lidOpen"]][["lidOpenType"]])                           
-                           )
+            function(tcc) {
+              list(
+                id = xmlAttrs(tcc, "id"),
+                description = xmlValue(tcc[["description"]]),
+                documentation = sapply(tcc["documentation"],
+                                       function(documentation)
+                                         if(!is.null(documentation))
+                                           xmlAttrs(documentation, "id")
+                ),
+                lidTemperature = xmlValue(tcc[["lidTemperature"]]),
+                experimenter = sapply(tcc["experimenter"],
+                                      function(experimenter)
+                                        if(!is.null(experimenter))
+                                          xmlAttrs(experimenter, "id")
+                ),
+                step = llply(tcc["step"],
+                             function(step) list(
+                               nr = xmlValue(step[["nr"]]),
+                               description = xmlValue(step[["description"]]),
+                               temperature = c(
+                                 temperature = xmlValue(step[["temperature"]][["temperature"]]),
+                                 duration = xmlValue(step[["temperature"]][["duration"]]),
+                                 temperatureChange = xmlValue(step[["temperature"]][["temperatureChange"]]),
+                                 durationChange = xmlValue(step[["temperature"]][["durationChange"]]),
+                                 measure = xmlValue(step[["temperature"]][["measure"]]),
+                                 ramp = xmlValue(step[["temperature"]][["ramp"]])
+                               ),
+                               gradient = c(
+                                 highTemperature = xmlValue(step[["gradient"]][["highTemperature"]]),
+                                 lowTemperature = xmlValue(step[["gradient"]][["lowTemperature"]]),
+                                 duration = xmlValue(step[["gradient"]][["duration"]]),
+                                 temperatureChange = xmlValue(step[["gradient"]][["temperatureChange"]]),
+                                 durationChange = xmlValue(step[["gradient"]][["durationChange"]]),
+                                 measure = xmlValue(step[["gradient"]][["measure"]]),
+                                 ramp = xmlValue(step[["gradient"]][["ramp"]])
+                               ),
+                               loop = c(
+                                 goto = xmlValue(step[["loop"]][["goto"]]),
+                                 repeatN = xmlValue(step[["loop"]][["repeat"]]) # should be called "repeat" but this is reserved word
+                               ),
+                               pause = c(
+                                 temperature = xmlValue(step[["pause"]][["temperature"]])
+                               ),
+                               lidOpen = xmlValue(step[["lidOpen"]][["lidOpenType"]])                           
+                             )
+                )
               )
-            )
-          })
+            })
     names(tcc.list) <- GetIds(tcc.list)
     tcc.list
+  }
+  
+  GetData <- function(data, experiment.id, run.id, react.id) {
+    tar.id <- xmlAttrs(data[["tar"]], "id")
+    data.req <- paste0("/rdml:rdml/rdml:experiment[@id='",
+                       experiment.id,
+                       "']/rdml:run[@id='",                                                                         
+                       run.id,
+                       "']/rdml:react[@id='",
+                       #                                                                          react.id[length(react.id)],
+                       react.id,
+                       "']/rdml:data/rdml:tar[@id='",
+                       tar.id,
+                       "']/..")                                                      
+    list(
+      id = tar.id, # id==tar
+      cq = as.numeric(xmlValue(data[["cq"]])),
+      excl = xmlValue(data[["excl"]]),
+      adp = {                                                                                    
+        cyc <- as.numeric(xpathSApply(rdml.doc,
+                                      paste0(data.req,
+                                             "/rdml:adp/rdml:cyc"),
+                                      xmlValue,
+                                      namespaces = c(rdml = "http://www.rdml.org")))
+        tmp <- as.numeric(xpathSApply(rdml.doc,
+                                      paste0(data.req,
+                                             "/rdml:adp/rdml:tmp"),
+                                      xmlValue,
+                                      namespaces = c(rdml = "http://www.rdml.org")))                                                                        
+        fluor <- as.numeric(xpathSApply(rdml.doc,
+                                        paste0(data.req,
+                                               "/rdml:adp/rdml:fluor"),
+                                        xmlValue,
+                                        namespaces = c(rdml = "http://www.rdml.org")))
+        if(!is.null(fluor)) {
+          if(length(tmp) != 0) {
+            matrix(c(cyc, tmp, fluor), 
+                   byrow = FALSE,
+                   ncol = 3,
+                   dimnames = list(NULL,
+                                   c("cyc", "tmp", "fluor")))
+          }
+          else {
+            matrix(c(cyc, fluor), 
+                   byrow = FALSE,
+                   ncol = 2,
+                   dimnames = list(NULL,
+                                   c("cyc", "fluor")))
+          }
+        }
+      },
+      mdp = {                                                             
+        tmp <- as.numeric(xpathSApply(rdml.doc,
+                                      paste0(data.req,
+                                             "/rdml:mdp/rdml:tmp"),
+                                      xmlValue,
+                                      namespaces = c(rdml = "http://www.rdml.org")))
+        fluor <- as.numeric(xpathSApply(rdml.doc,
+                                        paste0(data.req,
+                                               "/rdml:mdp/rdml:fluor"),
+                                        xmlValue,
+                                        namespaces = c(rdml = "http://www.rdml.org")))
+        
+        if(length(fluor) != 0 && !is.null(fluor))
+          matrix(c(tmp, fluor), 
+                 byrow = FALSE,
+                 ncol = 2,
+                 dimnames = list(NULL,
+                                 c("tmp", "fluor")))
+      },
+      endPt = xmlValue(data[["endPt"]]),
+      bgFluor = as.numeric(xmlValue(data[["bgFluor"]])),
+      bgFluorSp = xmlValue(data[["bgFluorSp"]]),
+      quantFluor = xmlValue(data[["quantFluor"]])
+    )
+  }
+  
+  GetReact <- function(react, experiment.id, run.id) {
+    react.id <- xmlAttrs(react, "id")    
+    react.id <- tryCatch(
+      as.integer(react.id),
+      warning = function(cond) {
+        # if react.id is 'B1' not '13'
+        # like in StepOne
+        FromPositionToId(react.id)
+      }    
+    )    
+    sample <- xmlAttrs(react[["sample"]],
+                       "id")
+    ######
+    # remove Roche omitted ('ntp') samples
+    if(is.null(private$.sample[[sample]]))
+      return(NULL)
+    #######
+    list(
+      id = react.id,
+      # will be calculated at the end of init
+      position = NA,
+      sample = sample,
+      data = {
+        data.list <-                                         
+          llply(react["data"],
+                function(data) GetData(data,
+                                       experiment.id,
+                                       run.id,
+                                       react.id)
+          )
+        names(data.list) <- GetIds(data.list)
+        data.list
+      }
+    )
+  }  
+  
+  GetRun <- function(run, experiment.id) {
+    run.id <-xmlAttrs(run, "id")                          
+    list(
+      id = xmlAttrs(run, "id"),
+      description = xmlValue(run[["description"]]),
+      documentation = sapply(run["documentation"],
+                             function(documentation)
+                               if(!is.null(documentation))
+                                 xmlAttrs(documentation, "id")
+      ),
+      experimenter = sapply(run["experimenter"],
+                            function(experimenter)
+                              if(!is.null(experimenter))
+                                xmlAttrs(experimenter, "id")
+      ),
+      instrument = xmlValue(run[["instrument"]]),
+      dataCollectionSoftware = c(
+        name = xmlValue(run[["dataCollectionSoftware"]][["name"]]),
+        version = xmlValue(run[["dataCollectionSoftware"]][["version"]])
+      ),
+      backgroundDeterminationMethod = 
+        xmlValue(run[["backgroundDeterminationMethod"]]),
+      cqDetectionMethod = 
+        xmlValue(run[["cqDetectionMethod"]]),
+      thermalCyclingConditions = {
+        if(!is.null(run[["thermalCyclingConditions"]]))
+          xmlAttrs(run[["thermalCyclingConditions"]], "id")
+      },
+      pcrFormat = {
+        rows <- as.integer(xmlValue(run[["pcrFormat"]][["rows"]]))
+        # check for absent of pcrFormat
+        # like in StepOne
+        if(!is.na(rows)) {
+          list(
+            rows = rows,
+            columns = as.integer(xmlValue(run[["pcrFormat"]][["columns"]])),
+            rowLabel = xmlValue(run[["pcrFormat"]][["rowLabel"]]),
+            columnLabel = xmlValue(run[["pcrFormat"]][["columnLabel"]])
+          )
+        } else {
+          list(
+            rows = 12,
+            columns = 8,
+            rowLabel = "ABC",
+            columnLabel = "123"
+          )
+        }
+      },
+      runDate = xmlValue(run[["runDate"]]),
+      react = {
+        react.list <- 
+          llply(run["react"],
+                function(react) GetReact(react, 
+                                         experiment.id,
+                                         run.id)
+          )
+        names(react.list) <- GetIds(react.list)
+        compact(react.list)                                
+      }
+    )
+    
+  }                      
+  
+  GetExperiment <- function(experiment) {
+    experiment.id <- xmlAttrs(experiment, "id")            
+    list(
+      id = experiment.id,
+      description = xmlValue(experiment[["description"]]),
+      documentation = sapply(experiment["documentation"],
+                             function(documentation)
+                               if(!is.null(documentation))
+                                 xmlAttrs(documentation, "id")
+      ),
+      run = {
+        run.list <- 
+          llply(experiment["run"],
+                function(run) GetRun(run, experiment.id)
+          )
+        
+        names(run.list) <- GetIds(run.list)
+        run.list
+      }
+    )
+    
   }
   
   
   private$.experiment<- {
     experiment.list <- 
       llply(rdml.root["experiment"],
-            function(experiment) {
-              experiment.id <- xmlAttrs(experiment, "id")            
-              list(
-                id = experiment.id,
-                description = xmlValue(experiment[["description"]]),
-                documentation = sapply(experiment["documentation"],
-                                       function(documentation)
-                                         if(!is.null(documentation))
-                                           xmlAttrs(documentation, "id")
-                ),
-                run = {
-                  run.list <- 
-                    llply(experiment["run"],
-                          function(run) {
-                            run.id <-xmlAttrs(run, "id")                          
-                            list(
-                              id = xmlAttrs(run, "id"),
-                              description = xmlValue(run[["description"]]),
-                              documentation = sapply(run["documentation"],
-                                                     function(documentation)
-                                                       if(!is.null(documentation))
-                                                         xmlAttrs(documentation, "id")
-                              ),
-                              experimenter = sapply(run["experimenter"],
-                                                    function(experimenter)
-                                                      if(!is.null(experimenter))
-                                                        xmlAttrs(experimenter, "id")
-                              ),
-                              instrument = xmlValue(run[["instrument"]]),
-                              dataCollectionSoftware = c(
-                                name = xmlValue(run[["dataCollectionSoftware"]][["name"]]),
-                                version = xmlValue(run[["dataCollectionSoftware"]][["version"]])
-                              ),
-                              backgroundDeterminationMethod = 
-                                xmlValue(run[["backgroundDeterminationMethod"]]),
-                              cqDetectionMethod = 
-                                xmlValue(run[["cqDetectionMethod"]]),
-                              thermalCyclingConditions = {
-                                if(!is.null(run[["thermalCyclingConditions"]]))
-                                  xmlAttrs(run[["thermalCyclingConditions"]], "id")
-                              },
-                              pcrFormat = list(
-                                rows = as.integer(xmlValue(run[["pcrFormat"]][["rows"]])),
-                                columns = as.integer(xmlValue(run[["pcrFormat"]][["columns"]])),
-                                rowLabel = xmlValue(run[["pcrFormat"]][["rowLabel"]]),
-                                columnLabel = xmlValue(run[["pcrFormat"]][["columnLabel"]])
-                              ),
-                              runDate = xmlValue(run[["runDate"]]),
-                              react = {
-                                react.list <- 
-                                  llply(run["react"],
-                                        function(react) {          
-                                          react.id <- as.integer(xmlAttrs(react, "id"))
-                                          sample <- xmlAttrs(react[["sample"]],
-                                                            "id")
-                                          ######
-                                          # remove Roche omitted ('ntp') samples
-                                          if(is.null(private$.sample[[sample]]))
-                                            return(NULL)
-                                          #######
-                                          list(
-                                            id = react.id,
-                                            # will be calculated at the end of init
-                                            position = NA,
-                                            sample = sample,
-                                            data = {
-                                              data.list <-                                         
-                                                llply(react["data"],
-                                                      function(data) {
-                                                        tar.id <- xmlAttrs(data[["tar"]], "id")
-                                                        data.req <- paste0("/rdml:rdml/rdml:experiment[@id='",
-                                                                           experiment.id[length(experiment.id)],
-                                                                           "']/rdml:run[@id='",                                                                         
-                                                                           run.id,
-                                                                           "']/rdml:react[@id='",
-                                                                           #                                                                          react.id[length(react.id)],
-                                                                           react.id,
-                                                                           "']/rdml:data/rdml:tar[@id='",
-                                                                           tar.id,
-                                                                           "']/..")                                                      
-                                                        list(
-                                                          id = tar.id, # id==tar
-                                                          cq = as.numeric(xmlValue(data[["cq"]])),
-                                                          excl = xmlValue(data[["excl"]]),
-                                                          adp = {                                                                                    
-                                                            cyc <- as.numeric(xpathSApply(rdml.doc,
-                                                                                          paste0(data.req,
-                                                                                                 "/rdml:adp/rdml:cyc"),
-                                                                                          xmlValue,
-                                                                                          namespaces = c(rdml = "http://www.rdml.org")))
-                                                            tmp <- as.numeric(xpathSApply(rdml.doc,
-                                                                                          paste0(data.req,
-                                                                                                 "/rdml:adp/rdml:tmp"),
-                                                                                          xmlValue,
-                                                                                          namespaces = c(rdml = "http://www.rdml.org")))                                                                        
-                                                            fluor <- as.numeric(xpathSApply(rdml.doc,
-                                                                                            paste0(data.req,
-                                                                                                   "/rdml:adp/rdml:fluor"),
-                                                                                            xmlValue,
-                                                                                            namespaces = c(rdml = "http://www.rdml.org")))
-                                                            if(!is.null(fluor)) {
-                                                              if(length(tmp) != 0) {
-                                                                matrix(c(cyc, tmp, fluor), 
-                                                                       byrow = FALSE,
-                                                                       ncol = 3,
-                                                                       dimnames = list(NULL,
-                                                                                       c("cyc", "tmp", "fluor")))
-                                                              }
-                                                              else {
-                                                                matrix(c(cyc, fluor), 
-                                                                       byrow = FALSE,
-                                                                       ncol = 2,
-                                                                       dimnames = list(NULL,
-                                                                                       c("cyc", "fluor")))
-                                                              }
-                                                            }
-                                                          },
-                                                          mdp = {                                                             
-                                                            tmp <- as.numeric(xpathSApply(rdml.doc,
-                                                                                          paste0(data.req,
-                                                                                                 "/rdml:mdp/rdml:tmp"),
-                                                                                          xmlValue,
-                                                                                          namespaces = c(rdml = "http://www.rdml.org")))
-                                                            fluor <- as.numeric(xpathSApply(rdml.doc,
-                                                                                            paste0(data.req,
-                                                                                                   "/rdml:mdp/rdml:fluor"),
-                                                                                            xmlValue,
-                                                                                            namespaces = c(rdml = "http://www.rdml.org")))
-                                                            
-                                                            if(length(fluor) != 0 && !is.null(fluor))
-                                                              matrix(c(tmp, fluor), 
-                                                                     byrow = FALSE,
-                                                                     ncol = 2,
-                                                                     dimnames = list(NULL,
-                                                                                     c("tmp", "fluor")))
-                                                          },
-                                                          endPt = xmlValue(data[["endPt"]]),
-                                                          bgFluor = as.numeric(xmlValue(data[["bgFluor"]])),
-                                                          bgFluorSp = xmlValue(data[["bgFluorSp"]]),
-                                                          quantFluor = xmlValue(data[["quantFluor"]])
-                                                        )
-                                                      }
-                                                )
-                                              names(data.list) <- GetIds(data.list)
-                                              data.list
-                                            }
-                                          )
-                                        }
-                                  )
-                                names(react.list) <- GetIds(react.list)
-                                compact(react.list)                                
-                              }
-                            )
-                            
-                          }                      
-                    )
-                  
-                  names(run.list) <- GetIds(run.list)
-                  run.list
-                }
-              )
-              
-            }
+            function(experiment) GetExperiment(experiment)
       )
     names(experiment.list) <- GetIds(experiment.list)
     experiment.list
   }
   
   private$.recalcPositions()
+  
+  if(private$.id[[1]]$publisher == "Roche Diagnostics") {
+    for(conc.i in 1:length(dilutions.r[[1]])) {
+      sample.id <- private$.experiment[[1]]$run[[1]]$react[[
+        which(names(private$.experiment[[1]]$run[[1]]$react) == 
+                names(dilutions.r[[1]])[conc.i])]]$sample
+      print(sample.id)
+      private$.sample[[sample.id]]$quantity <- c(
+        value = dilutions.r[[1]][conc.i],
+        unit = "other"
+      )
+    }
+  }
 }, 
 overwrite = TRUE)
