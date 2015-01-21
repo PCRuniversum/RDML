@@ -1,4 +1,3 @@
-
 #' @import assertthat
 is.opt.string <- function(x) {
   if(is.null(x)) return(TRUE)

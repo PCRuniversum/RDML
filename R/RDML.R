@@ -215,12 +215,13 @@ RDML <- R6Class("RDML",
                   AsTable = function(.default = list(
                     exp.id = experiment$id,
                     run.id = run$id,
+                    react.id = react$id,
                     position = react$position,
                     sample = react$sample,
                     sample.description = private$.sample[[react$sample]]$description,
-                    sample.type=private$.sample[[react$sample]]$type,
                     target = data$id,
-                    target.dyeId = private$.target[[data$id]]$dyeId),
+                    target.dyeId = private$.target[[data$id]]$dyeId,
+                    sample.type=private$.sample[[react$sample]]$type),
                     name.pattern = paste(
                       react$id,
                       react$sample,
@@ -228,6 +229,17 @@ RDML <- R6Class("RDML",
                       data$id,
                       sep = "_"),                    
                     ...) {
+                    # create short names
+                    dateMade <- private$.dateMade
+                    dateUpdated <- private$.dateUpdated
+                    id <- private$.id
+                    experimenter <- private$.experimenter
+                    documentation <- private$.documentation
+                    dye <- private$.dye
+                    sample <- private$.sample
+                    target <- private$.target
+                    thermalCyclingConditions <- private$.thermalCyclingConditions
+                    
                     out<-data.frame()
                     for(experiment in private$.experiment) {                      
                       for(run in experiment$run) {                                    

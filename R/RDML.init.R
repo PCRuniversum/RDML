@@ -46,7 +46,6 @@ GetDilutionsRoche <- function(uniq.folder)
       paste0("//ns:standardPoints/ns:standardPoint/ns:graphIds/ns:guid"), 
       xmlValue,
       namespaces = c(ns = "http://www.roche.ch/LC96AbsQuantCalculatedDataModel"))    
-    print(concs)
     positions.table <- matrix(c(dye.names,
                                 positions),
                               ncol = length(positions),
@@ -142,8 +141,8 @@ GetDilutionsRoche <- function(uniq.folder)
 #' rdml <- RDML$new(list(map = smap,                  
 #'                     qPCR=qpcr,
 #'                     dims=c(rows=5,columns=6)))
-RDML$set("public", "initialize", function(input,
-                                          name.pattern = "%NAME%__%TUBE%") {  
+RDML$set("public", "initialize", function(input) {  
+  assert_that(is.string(input))
   # Unzips RDML to unique folder to get inner XML content.
   # Unique folder is needed to prevent file ovewriting
   # by parallel function usage.
@@ -258,15 +257,15 @@ RDML$set("public", "initialize", function(input,
                                      value = xmlValue(annotation[["value"]])
                                    )),
                 type = type,
-                interRunCalibrator = xmlValue(sample[["interRunCalibrator"]]),
+                interRunCalibrator = as.logical(xmlValue(sample[["interRunCalibrator"]])),
                 quantity = 
-                  c(value = xmlValue(sample[["quantity"]][["value"]]),
-                    unit = xmlValue(sample[["quantity"]][["unit"]])),
-                calibaratorSample = xmlValue(sample[["calibaratorSample"]]),
+                  list(value = as.numeric(xmlValue(sample[["quantity"]][["value"]])),
+                       unit = xmlValue(sample[["quantity"]][["unit"]])),
+                calibaratorSample = as.logical(xmlValue(sample[["calibaratorSample"]])),
                 cdnaSynthesisMethod = 
                   list(enzyme = xmlValue(sample[["cdnaSynthesisMethod"]][["enzyme"]]),
                        primingMethod = xmlValue(sample[["cdnaSynthesisMethod"]][["primingMethod"]]),
-                       dnaseTreatment = xmlValue(sample[["cdnaSynthesisMethod"]][["dnaseTreatment"]]),
+                       dnaseTreatment = as.logical(xmlValue(sample[["cdnaSynthesisMethod"]][["dnaseTreatment"]])),
                        thermalCyclingConditions = { 
                          if(!is.null(sample[["cdnaSynthesisMethod"]][["thermalCyclingConditions"]]))
                            xmlAttrs(sample[["cdnaSynthesisMethod"]][["thermalCyclingConditions"]],
@@ -274,7 +273,7 @@ RDML$set("public", "initialize", function(input,
                        }
                   ),
                 templateQuantity = 
-                  c(conc = xmlValue(sample[["templateQuantity"]][["conc"]]),
+                  list(conc = as.numeric(xmlValue(sample[["templateQuantity"]][["conc"]])),
                     nucleotide = xmlValue(sample[["templateQuantity"]][["nucleotide"]]))
               )
             })    
@@ -299,10 +298,14 @@ RDML$set("public", "initialize", function(input,
                                             id = xmlValue(xRef[["id"]])
                                           )),
                              type = xmlValue(target[["type"]]),
-                             amplificationEfficiencyMethod = xmlValue(target[["amplificationEfficiencyMethod"]]),
-                             amplificationEfficiency = xmlValue(target[["amplificationEfficiency"]]),
-                             amplificationEfficiencySE = xmlValue(target[["amplificationEfficiencySE"]]),
-                             detectionLimit = xmlValue(target[["detectionLimit"]]),
+                             amplificationEfficiencyMethod = 
+                               xmlValue(target[["amplificationEfficiencyMethod"]]),
+                             amplificationEfficiency = 
+                               as.numeric(xmlValue(target[["amplificationEfficiency"]])),
+                             amplificationEfficiencySE = 
+                               as.numeric(xmlValue(target[["amplificationEfficiencySE"]])),
+                             detectionLimit = 
+                               as.numeric(xmlValue(target[["detectionLimit"]])),
                              dyeId = { 
                                id <- xmlAttrs(target[["dyeId"]],"id")
                                if(is.null(id)) NA
@@ -364,7 +367,8 @@ RDML$set("public", "initialize", function(input,
                                          if(!is.null(documentation))
                                            xmlAttrs(documentation, "id")
                 ),
-                lidTemperature = xmlValue(tcc[["lidTemperature"]]),
+                lidTemperature = 
+                  as.numeric(xmlValue(tcc[["lidTemperature"]])),
                 experimenter = sapply(tcc["experimenter"],
                                       function(experimenter)
                                         if(!is.null(experimenter))
@@ -374,29 +378,42 @@ RDML$set("public", "initialize", function(input,
                              function(step) list(
                                nr = xmlValue(step[["nr"]]),
                                description = xmlValue(step[["description"]]),
-                               temperature = c(
-                                 temperature = xmlValue(step[["temperature"]][["temperature"]]),
-                                 duration = xmlValue(step[["temperature"]][["duration"]]),
-                                 temperatureChange = xmlValue(step[["temperature"]][["temperatureChange"]]),
-                                 durationChange = xmlValue(step[["temperature"]][["durationChange"]]),
+                               temperature = list(
+                                 temperature = 
+                                   as.numeric(xmlValue(step[["temperature"]][["temperature"]])),
+                                 duration = 
+                                   as.integer(xmlValue(step[["temperature"]][["duration"]])),
+                                 temperatureChange = 
+                                   as.numeric(xmlValue(step[["temperature"]][["temperatureChange"]])),
+                                 durationChange = 
+                                   as.integer(xmlValue(step[["temperature"]][["durationChange"]])),
                                  measure = xmlValue(step[["temperature"]][["measure"]]),
-                                 ramp = xmlValue(step[["temperature"]][["ramp"]])
+                                 ramp = 
+                                   as.numeric(xmlValue(step[["temperature"]][["ramp"]]))
                                ),
-                               gradient = c(
-                                 highTemperature = xmlValue(step[["gradient"]][["highTemperature"]]),
-                                 lowTemperature = xmlValue(step[["gradient"]][["lowTemperature"]]),
-                                 duration = xmlValue(step[["gradient"]][["duration"]]),
-                                 temperatureChange = xmlValue(step[["gradient"]][["temperatureChange"]]),
-                                 durationChange = xmlValue(step[["gradient"]][["durationChange"]]),
+                               gradient = list(
+                                 highTemperature = 
+                                   as.numeric(xmlValue(step[["gradient"]][["highTemperature"]])),
+                                 lowTemperature = 
+                                   as.numeric(xmlValue(step[["gradient"]][["lowTemperature"]])),
+                                 duration = 
+                                   as.integer(xmlValue(step[["gradient"]][["duration"]])),
+                                 temperatureChange = 
+                                   as.numeric(xmlValue(step[["gradient"]][["temperatureChange"]])),
+                                 durationChange = 
+                                   as.integer(xmlValue(step[["gradient"]][["durationChange"]])),
                                  measure = xmlValue(step[["gradient"]][["measure"]]),
-                                 ramp = xmlValue(step[["gradient"]][["ramp"]])
+                                 ramp = 
+                                   as.numeric(xmlValue(step[["gradient"]][["ramp"]]))
                                ),
-                               loop = c(
-                                 goto = xmlValue(step[["loop"]][["goto"]]),
-                                 repeatN = xmlValue(step[["loop"]][["repeat"]]) # should be called "repeat" but this is reserved word
+                               loop = list(
+                                 goto = as.integer(xmlValue(step[["loop"]][["goto"]])),
+                                 # should be called "repeat" but this is reserved word
+                                 repeatN = as.integer(xmlValue(step[["loop"]][["repeat"]])) 
                                ),
-                               pause = c(
-                                 temperature = xmlValue(step[["pause"]][["temperature"]])
+                               pause = list(
+                                 temperature = 
+                                   as.numeric(xmlValue(step[["pause"]][["temperature"]]))
                                ),
                                lidOpen = xmlValue(step[["lidOpen"]][["lidOpenType"]])                           
                              )
@@ -475,10 +492,10 @@ RDML$set("public", "initialize", function(input,
                  dimnames = list(NULL,
                                  c("tmp", "fluor")))
       },
-      endPt = xmlValue(data[["endPt"]]),
+      endPt = as.numeric(xmlValue(data[["endPt"]])),
       bgFluor = as.numeric(xmlValue(data[["bgFluor"]])),
-      bgFluorSp = xmlValue(data[["bgFluorSp"]]),
-      quantFluor = xmlValue(data[["quantFluor"]])
+      bgFluorSp = as.numeric(xmlValue(data[["bgFluorSp"]])),
+      quantFluor = as.numeric(xmlValue(data[["quantFluor"]]))
     )
   }
   
@@ -620,9 +637,8 @@ RDML$set("public", "initialize", function(input,
     for(conc.i in 1:length(dilutions.r[[1]])) {
       sample.id <- private$.experiment[[1]]$run[[1]]$react[[
         which(names(private$.experiment[[1]]$run[[1]]$react) == 
-                names(dilutions.r[[1]])[conc.i])]]$sample
-      print(sample.id)
-      private$.sample[[sample.id]]$quantity <- c(
+                names(dilutions.r[[1]])[conc.i])]]$sample      
+      private$.sample[[sample.id]]$quantity <- list(
         value = dilutions.r[[1]][conc.i],
         unit = "other"
       )

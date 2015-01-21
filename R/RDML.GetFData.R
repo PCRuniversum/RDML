@@ -101,6 +101,7 @@ RDML$set("public", "GetFData",
                                   data[[fdata["target"]]][[data.type["data.type"]]][, "fluor"]
                               })
            )
+           print(out)
            if(long.table) {
              out2 <- data.frame(
                fdata.name = rep(rownames(request), 
