@@ -13,62 +13,62 @@ GetIds <- function(l) {
 # dilution from XML for Roche
 GetDilutionsRoche <- function(uniq.folder)
 {
-  #   unzipped.rdml <- unzip(file)
-  tryCatch({
-    rdml.doc <- xmlParse(paste0(uniq.folder,"/calculated_data.xml"))
-    concs<-as.numeric(xpathSApply(
-      rdml.doc,
-      "//ns:absQuantDataSource/ns:standard",   
-      namespaces = c(ns = "http://www.roche.ch/LC96AbsQuantCalculatedDataModel"),
-      xmlValue))
-    concs.guids<-xpathSApply(
-      rdml.doc,
-      "//ns:absQuantDataSource/ns:standard/../ns:graphId",   
-      namespaces = c(ns = "http://www.roche.ch/LC96AbsQuantCalculatedDataModel"),
-      xmlValue)
-    names(concs) <- concs.guids
-    concs <- sort(concs, decreasing=TRUE)
-    positions <- 
-      xpathSApply(
-        rdml.doc, 
-        paste0("//ns:standardPoints/ns:standardPoint/ns:position"), 
-        xmlValue,
-        namespaces = 
-          c(ns = "http://www.roche.ch/LC96AbsQuantCalculatedDataModel"))
-    positions <- sapply(positions, FromPositionToId)
-    dye.names <-xpathSApply(
+  cat("\nParsing Roche standards data...")
+  if(!file.exists(paste0(uniq.folder,"/calculated_data.xml"))) {
+    cat("NO SUCH FILE")
+    return(NA)
+  }
+  rdml.doc <- xmlParse(paste0(uniq.folder,"/calculated_data.xml"))
+  concs<-as.numeric(xpathSApply(
+    rdml.doc,
+    "//ns:absQuantDataSource/ns:standard",   
+    namespaces = c(ns = "http://www.roche.ch/LC96AbsQuantCalculatedDataModel"),
+    xmlValue))
+  concs.guids<-xpathSApply(
+    rdml.doc,
+    "//ns:absQuantDataSource/ns:standard/../ns:graphId",   
+    namespaces = c(ns = "http://www.roche.ch/LC96AbsQuantCalculatedDataModel"),
+    xmlValue)
+  names(concs) <- concs.guids
+  concs <- sort(concs, decreasing=TRUE)
+  positions <- 
+    xpathSApply(
       rdml.doc, 
-      paste0("//ns:standardPoints/ns:standardPoint/ns:dyeName"), 
+      paste0("//ns:standardPoints/ns:standardPoint/ns:position"), 
       xmlValue,
-      namespaces = c(ns = "http://www.roche.ch/LC96AbsQuantCalculatedDataModel"))
-    positions.guids <- xpathSApply(
-      rdml.doc, 
-      paste0("//ns:standardPoints/ns:standardPoint/ns:graphIds/ns:guid"), 
-      xmlValue,
-      namespaces = c(ns = "http://www.roche.ch/LC96AbsQuantCalculatedDataModel"))    
-    positions.table <- matrix(c(dye.names,
-                                positions),
-                              ncol = length(positions),
-                              nrow = 2,
-                              byrow = TRUE,
-                              dimnames = list(c("dye.name","position"),
-                                              positions.guids))
-    positions.table <- positions.table[,
-                                       order(match(colnames(positions.table), names(concs)))]
-    positions.table <- rbind(positions.table, conc = concs)
-    dyes <- unique(positions.table["dye.name",])
-    dilutions <- lapply(dyes, function(dye) {
-      dye.group.indecies <- which(positions.table["dye.name",] == dye)
-      concs.by.dye <- concs[dye.group.indecies]
-      names(concs.by.dye) <- positions.table["position",
-                                             dye.group.indecies]
-      concs.by.dye
-    })
-    names(dilutions) <- dyes
-  },
-  error = function(e) { print(e) }#,
-  #   finally = unlink(unzipped.rdml)
-  )
+      namespaces = 
+        c(ns = "http://www.roche.ch/LC96AbsQuantCalculatedDataModel"))
+  positions <- sapply(positions, FromPositionToId)
+  dye.names <-xpathSApply(
+    rdml.doc, 
+    paste0("//ns:standardPoints/ns:standardPoint/ns:dyeName"), 
+    xmlValue,
+    namespaces = c(ns = "http://www.roche.ch/LC96AbsQuantCalculatedDataModel"))
+  positions.guids <- xpathSApply(
+    rdml.doc, 
+    paste0("//ns:standardPoints/ns:standardPoint/ns:graphIds/ns:guid"), 
+    xmlValue,
+    namespaces = c(ns = "http://www.roche.ch/LC96AbsQuantCalculatedDataModel"))    
+  positions.table <- matrix(c(dye.names,
+                              positions),
+                            ncol = length(positions),
+                            nrow = 2,
+                            byrow = TRUE,
+                            dimnames = list(c("dye.name","position"),
+                                            positions.guids))
+  positions.table <- positions.table[,
+                                     order(match(colnames(positions.table), names(concs)))]
+  positions.table <- rbind(positions.table, conc = concs)
+  dyes <- unique(positions.table["dye.name",])
+  dilutions <- lapply(dyes, function(dye) {
+    dye.group.indecies <- which(positions.table["dye.name",] == dye)
+    concs.by.dye <- concs[dye.group.indecies]
+    names(concs.by.dye) <- positions.table["position",
+                                           dye.group.indecies]
+    concs.by.dye
+  })
+  names(dilutions) <- dyes
+  cat("OK")
   return(dilutions)
 }
 
@@ -147,18 +147,21 @@ RDML$set("public", "initialize", function(input) {
   # Unique folder is needed to prevent file ovewriting
   # by parallel function usage.
   uniq.folder <- paste0(".temp/", UUIDgenerate())
-  unzipped.rdml <- unzip(input, exdir = uniq.folder)
+  cat(sprintf("Unzipping %s...", input))
+  unzipped.rdml <- unzip(input, exdir = uniq.folder)  
   tryCatch({
     # Roche use more than one file at RDML zip.
     # One of the files store dilutions information.
     if(length(unzipped.rdml) > 1)
     {
+      cat("\nParsing Roche(?) data...")
       rdml.doc <- xmlParse(paste0(uniq.folder,"/rdml_data.xml"))
-      dilutions.r <- GetDilutionsRoche(uniq.folder)
-      
+      cat("OK")
+      dilutions.r <- GetDilutionsRoche(uniq.folder)      
     }
     else
     {
+      cat("\nParsing data...")
       rdml.doc <- xmlParse(unzipped.rdml)
       #     private$.dilutions <- GetDilutions(rdml.doc)
     }},
@@ -170,10 +173,13 @@ RDML$set("public", "initialize", function(input) {
   rdml.root <- xmlRoot(rdml.doc)
   rdml.namespace <- c(rdml = "http://www.rdml.org")
   
+  cat("\nGetting dateMade")
   private$.dateMade <- xmlValue(rdml.root[["dateMade"]])
   
+  cat("\nGetting dateUpdated")
   private$.dateUpdated <- xmlValue(rdml.root[["dateUpdated"]])
   
+  cat("\nGetting id")
   private$.id <- 
     llply(rdml.root["id"],
           function(id) 
@@ -183,7 +189,7 @@ RDML$set("public", "initialize", function(input) {
             )
     )
   
-  
+  cat("\nGetting experementer")
   private$.experimenter <- {
     experimenter.list <- 
       llply(rdml.root["experimenter"],
@@ -202,6 +208,7 @@ RDML$set("public", "initialize", function(input) {
     experimenter.list
   }  
   
+  cat("\nGetting documentation")
   private$.documentation <- {
     documentation.list <- 
       llply(rdml.root["documentation"],
@@ -215,6 +222,7 @@ RDML$set("public", "initialize", function(input) {
     documentation.list
   }
   
+  cat("\nGetting dye")
   private$.dye <- {
     dye.list <- 
       llply(rdml.root["dye"],
@@ -228,6 +236,7 @@ RDML$set("public", "initialize", function(input) {
     dye.list
   }
   
+  cat("\nGetting sample")
   private$.sample <- {
     sample.list <- 
       llply(rdml.root["sample"],
@@ -274,13 +283,14 @@ RDML$set("public", "initialize", function(input) {
                   ),
                 templateQuantity = 
                   list(conc = as.numeric(xmlValue(sample[["templateQuantity"]][["conc"]])),
-                    nucleotide = xmlValue(sample[["templateQuantity"]][["nucleotide"]]))
+                       nucleotide = xmlValue(sample[["templateQuantity"]][["nucleotide"]]))
               )
             })    
     names(sample.list) <- GetIds(sample.list)
     compact(sample.list)
   }
   
+  cat("\nGetting target")
   private$.target <- {
     target.list <- llply(rdml.root["target"],
                          function(target) { 
@@ -355,6 +365,7 @@ RDML$set("public", "initialize", function(input) {
     target.list
   }
   
+  cat("\nGetting thermalCyclingConditions")
   private$.thermalCyclingConditions <-{
     tcc.list <- 
       llply(rdml.root["thermalCyclingConditions"],
@@ -424,7 +435,7 @@ RDML$set("public", "initialize", function(input) {
     tcc.list
   }
   
-  GetData <- function(data, experiment.id, run.id, react.id) {
+  GetData <- function(data, experiment.id, run.id, react.id) {    
     tar.id <- xmlAttrs(data[["tar"]], "id")
     data.req <- paste0("/rdml:rdml/rdml:experiment[@id='",
                        experiment.id,
@@ -508,7 +519,8 @@ RDML$set("public", "initialize", function(input) {
         # like in StepOne
         FromPositionToId(react.id)
       }    
-    )    
+    )
+    cat(sprintf("\nreact: %i", react.id))
     sample <- xmlAttrs(react[["sample"]],
                        "id")
     ######
@@ -536,7 +548,8 @@ RDML$set("public", "initialize", function(input) {
   }  
   
   GetRun <- function(run, experiment.id) {
-    run.id <-xmlAttrs(run, "id")                          
+    run.id <-xmlAttrs(run, "id")
+    cat(sprintf("\nrun: %s", run.id))
     list(
       id = xmlAttrs(run, "id"),
       description = xmlValue(run[["description"]]),
@@ -599,7 +612,8 @@ RDML$set("public", "initialize", function(input) {
   }                      
   
   GetExperiment <- function(experiment) {
-    experiment.id <- xmlAttrs(experiment, "id")            
+    experiment.id <- xmlAttrs(experiment, "id")
+    cat(sprintf("\nGetting experiment: %s", experiment.id))
     list(
       id = experiment.id,
       description = xmlValue(experiment[["description"]]),
@@ -633,7 +647,9 @@ RDML$set("public", "initialize", function(input) {
   
   private$.recalcPositions()
   
-  if(private$.id[[1]]$publisher == "Roche Diagnostics") {
+  if(private$.id[[1]]$publisher == "Roche Diagnostics"
+     && !is.na(dilutions.r)) {
+    cat("Adding Roche standards")
     for(conc.i in 1:length(dilutions.r[[1]])) {
       sample.id <- private$.experiment[[1]]$run[[1]]$react[[
         which(names(private$.experiment[[1]]$run[[1]]$react) == 

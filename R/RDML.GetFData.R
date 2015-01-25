@@ -88,7 +88,7 @@ RDML$set("public", "GetFData",
            }           
            
            fdata <- unlist(request[1,])
-           out <- cbind(cyc = private$.experiment[[fdata["exp.id"]]]$
+           out <- cbind(private$.experiment[[fdata["exp.id"]]]$
                           run[[fdata["run.id"]]]$
                           react[[fdata["react.id"]]]$
                           data[[fdata["target"]]]
@@ -101,6 +101,7 @@ RDML$set("public", "GetFData",
                                   data[[fdata["target"]]][[data.type["data.type"]]][, "fluor"]
                               })
            )
+           colnames(out)[1] <- data.type["first.col.name"]
            print(out)
            if(long.table) {
              out2 <- data.frame(

@@ -76,18 +76,12 @@
 #' @aliases RDML.class RDML
 #' @docType class
 #' @export
-#' @include RDML.asserts.R
-#' @importFrom chipPCR MFIaggr
-#' @importMethodsFrom chipPCR summary
-#' @importFrom MBmca diffQ2
-#' @importFrom shiny runApp
+#' @importFrom assertthat on_failure assert_that
 #' @importFrom XML getNodeSet xmlGetAttr xmlParse xmlValue xpathSApply
-#' @importFrom digest digest
-#' @importFrom stringr str_extract
-#' @importFrom dpcR plot_panel create_dpcr extract_dpcr
 #' @importFrom R6 R6Class
 #' @importFrom uuid UUIDgenerate
-#' @importFrom plyr llply ldply ddply
+#' @importFrom plyr llply ldply ddply compact
+#' @include RDML.asserts.R
 #' @examples
 #' 
 #' ## EXAMPLE 1:
@@ -205,63 +199,10 @@ RDML <- R6Class("RDML",
                   ## Summarize() - summary.RDML.R
                   initialize = function() { },
                   GetFData = function() { },
-                  Plot = function() { },
-                  Summarize = function() { },
-                  Test = function(...) {
-                    a<-list(aa=1)
-                    for(x in list(1,2)) 
-                      print(eval(substitute(list(...))))
-                  },
-                  AsTable = function(.default = list(
-                    exp.id = experiment$id,
-                    run.id = run$id,
-                    react.id = react$id,
-                    position = react$position,
-                    sample = react$sample,
-                    sample.description = private$.sample[[react$sample]]$description,
-                    target = data$id,
-                    target.dyeId = private$.target[[data$id]]$dyeId,
-                    sample.type=private$.sample[[react$sample]]$type),
-                    name.pattern = paste(
-                      react$id,
-                      react$sample,
-                      private$.sample[[react$sample]]$type,
-                      data$id,
-                      sep = "_"),                    
-                    ...) {
-                    # create short names
-                    dateMade <- private$.dateMade
-                    dateUpdated <- private$.dateUpdated
-                    id <- private$.id
-                    experimenter <- private$.experimenter
-                    documentation <- private$.documentation
-                    dye <- private$.dye
-                    sample <- private$.sample
-                    target <- private$.target
-                    thermalCyclingConditions <- private$.thermalCyclingConditions
-                    
-                    out<-data.frame()
-                    for(experiment in private$.experiment) {                      
-                      for(run in experiment$run) {                                    
-                        for(react in run$react) {                          
-                          for(data in react$data){
-                            out<-rbind(out,
-                                       data.frame(
-                                         eval(substitute(list(.default, ...))),
-                                         row.names = eval(substitute(name.pattern)),
-                                         stringsAsFactors = FALSE
-                                       )
-                            )
-                          }
-                        }
-                      }
-                    }
-                    out
-                  }
+                  AsTable = function() { }
                 ),
                 private = list(
-                  .dilutions = NULL,
-                  
+                  .dilutions = NULL,                  
                   .dateMade = NULL,
                   .dateUpdated = NULL,                  
                   .id = NULL,
@@ -309,19 +250,12 @@ RDML <- R6Class("RDML",
                     private$.dateUpdated <- date.updated
                   },
                   
-                  id = function(ids) {
-                    if(missing(ids))
+                  id = function(new.ids) {
+                    if(missing(new.ids))
                       return(private$.id)                    
-                    assert_that(is.list(ids))
-                    # convert to list of ids if only one id given
-                    if(has.only.names(ids,
-                                      c("id",
-                                        "publisher",
-                                        "serialNumber",
-                                        "MD5Hash")))
-                      ids <- list(ids)                
-                    for(id in ids) {
-                      assert_thet(is.list(id))
+                    assert_that(is.list(new.ids))                                  
+                    for(id in new.ids) {
+                      assert_that(is.list(id))
                       assert_that(
                         has.only.names(id,
                                        c("id",
@@ -331,61 +265,57 @@ RDML <- R6Class("RDML",
                       assert_that(is.string(id$publisher))
                       assert_that(is.string(id$serialNumber))
                       assert_that(is.opt.string(id$MD5Hash))
-                      if(is.null(id$id)) {
-                        private$.id <- c(private$.id,
-                                         list(id = id))
-                      } else {
-                        id.i <- id$id
-                        assert_that(is.count(id.i))
-                        new.id$id <- NULL
-                        if(is.to.remove.list(id)) {
-                          private$.id[[id.i]] <- NULL
-                        } else { private$.id[[id.i]] <- id }
-                      }
                     }
+                    private$.ids <- new.ids
                   },
                   
-                  experimenter = function(new.experimenter) {
-                    if(missing(new.experimenter))
+                  experimenter = function(new.experimenters) {
+                    if(missing(new.experimenters))
                       return(private$.experimenter)
-                    assert_that(is.list(new.experimenter))
-                    assert_that(has.only.names(new.experimenter, c("id",
-                                                                   "firstName",
-                                                                   "lastName",
-                                                                   "email",
-                                                                   "labName",
-                                                                   "labAddress")))
-                    assert_that(is.id(new.experimenter$id))
-                    assert_that(is.string(new.experimenter$firstName))
-                    assert_that(is.string(new.experimenter$lastName))
-                    assert_that(is.opt.string(new.experimenter$email))
-                    assert_that(is.opt.string(new.experimenter$labName))
-                    assert_that(is.opt.string(new.experimenter$labAddress))
-                    id <- new.experimenter$id                      
-                    new.experimenter$id <- NULL
-                    private$.experimenter[[id]] <- new.experimenter
+                    
+                    experimenter.fields <- c("id",
+                                             "firstName",
+                                             "lastName",
+                                             "email",
+                                             "labName",
+                                             "labAddress")
+                    assert_that(is.list(new.experimenters))
+                    for(experimenter in new.experimenters) {
+                      assert_that(is.list(experimenter))
+                      assert_that(has.only.names(experimenter,
+                                                 experimenter.fields))
+                      assert_that(is.string(experimenter$id))
+                      assert_that(is.string(experimenter$firstName))
+                      assert_that(is.string(experimenter$lastName))
+                      assert_that(is.opt.string(experimenter$email))
+                      assert_that(is.opt.string(experimenter$labName))
+                      assert_that(is.opt.string(experimenter$labAddress))                      
+                    }
+                    names(new.experimenters) <- GetIds(new.experimenters)
+                    private$.experimenters <- new.experimenters
+                  },
+                  
+                  documentation = function(new.docs) {
+                    if(missing(new.docs))
+                      return(private$.documentation)
+                    assert_that(is.list(new.docs))                    
+                    for(doc in new.docs) {
+                      assert_that(is.list(doc))
+                      assert_that(has.only.names(doc,
+                                                 c("id",
+                                                   "text")))
+                      assert_that(is.string(doc$id))
+                      assert_that(is.string(doc$text))
+                    }
+                    names(new.docs) <- GetIds(new.docs)
+                    private$.docs <- new.docs
                   },
                   
                   dye = function() {
                     private$.dye
                   },
                   
-                  documentation = function(doc) {
-                    if(missing(doc))
-                      return(private$.documentation)
-                    assert_that(is.list(doc))
-                    #                     assert_that(has.only.names(doc,
-                    #                                                  c("text",
-                    #                                                    "text")))
-                    #                     assert_that(is.id(doc$id))
-                    assert_that(is.string(doc$text))
-                    tmp <- private$.documentation                    
-                    tmp[[paste0(substitute(doc,
-                                           env = globalenv()))]] <-
-                      doc
-                    print(tmp)
-                    private$.documentation <- tmp
-                  },
+                  
                   
                   sample = function() {
                     private$.sample
@@ -402,8 +332,6 @@ RDML <- R6Class("RDML",
                   experiment = function() {
                     private$.experiment
                   },
-                  
-                  
                   
                   publisher = function(publisher) {
                     if(missing(publisher))
