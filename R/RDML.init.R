@@ -157,7 +157,8 @@ RDML$set("public", "initialize", function(input) {
       cat("\nParsing Roche(?) data...")
       rdml.doc <- xmlParse(paste0(uniq.folder,"/rdml_data.xml"))
       cat("OK")
-      dilutions.r <- GetDilutionsRoche(uniq.folder)      
+      dilutions.r <- GetDilutionsRoche(uniq.folder)
+      private$.dilutions <- dilutions.r
     }
     else
     {
@@ -169,7 +170,7 @@ RDML$set("public", "initialize", function(input) {
     finally = unlink(uniq.folder, recursive = TRUE)
   )
   ####
-  private$.dilutions <- dilutions.r
+  
   rdml.root <- xmlRoot(rdml.doc)
   rdml.namespace <- c(rdml = "http://www.rdml.org")
   
@@ -250,12 +251,12 @@ RDML$set("public", "initialize", function(input) {
               list(
                 id = xmlAttrs(sample, "id"),
                 description = xmlValue(sample[["description"]]),
-                documentation = sapply(sample["documentation"],
+                documentation = llply(sample["documentation"],
                                        function(documentation)
                                          if(!is.null(documentation))
                                            xmlAttrs(documentation, "id")
                 ),
-                xRef = ldply(sample["xRef"],
+                xRef = llply(sample["xRef"],
                              function(xRef) c(
                                name = xmlValue(xRef[["name"]]),
                                id = xmlValue(xRef[["id"]])
@@ -267,10 +268,13 @@ RDML$set("public", "initialize", function(input) {
                                    )),
                 type = type,
                 interRunCalibrator = as.logical(xmlValue(sample[["interRunCalibrator"]])),
-                quantity = 
-                  list(value = as.numeric(xmlValue(sample[["quantity"]][["value"]])),
-                       unit = xmlValue(sample[["quantity"]][["unit"]])),
-                calibaratorSample = as.logical(xmlValue(sample[["calibaratorSample"]])),
+                quantity = {
+                  quantity.list <- list(value = as.numeric(xmlValue(sample[["quantity"]][["value"]])),
+                       unit = xmlValue(sample[["quantity"]][["unit"]]))
+                  if(is.na(quantity.list$value)) NULL
+                  else quantity.list
+                  },
+                calibratorSample = as.logical(xmlValue(sample[["calibaratorSample"]])),
                 cdnaSynthesisMethod = 
                   list(enzyme = xmlValue(sample[["cdnaSynthesisMethod"]][["enzyme"]]),
                        primingMethod = xmlValue(sample[["cdnaSynthesisMethod"]][["primingMethod"]]),
@@ -297,12 +301,12 @@ RDML$set("public", "initialize", function(input) {
                            list(
                              id = xmlAttrs(target, "id"),
                              description = xmlValue(target[["description"]]),
-                             documentation = sapply(target["documentation"],
+                             documentation = llply(target["documentation"],
                                                     function(documentation)
                                                       if(!is.null(documentation))
                                                         xmlAttrs(documentation, "id")
                              ),
-                             xRef = ldply(target["xRef"],
+                             xRef = llply(target["xRef"],
                                           function(xRef) c(
                                             name = xmlValue(xRef[["name"]]),
                                             id = xmlValue(xRef[["id"]])
@@ -373,7 +377,7 @@ RDML$set("public", "initialize", function(input) {
               list(
                 id = xmlAttrs(tcc, "id"),
                 description = xmlValue(tcc[["description"]]),
-                documentation = sapply(tcc["documentation"],
+                documentation = llply(tcc["documentation"],
                                        function(documentation)
                                          if(!is.null(documentation))
                                            xmlAttrs(documentation, "id")
@@ -387,7 +391,7 @@ RDML$set("public", "initialize", function(input) {
                 ),
                 step = llply(tcc["step"],
                              function(step) list(
-                               nr = xmlValue(step[["nr"]]),
+                               nr = as.integer(xmlValue(step[["nr"]])),
                                description = xmlValue(step[["description"]]),
                                temperature = list(
                                  temperature = 
@@ -553,12 +557,12 @@ RDML$set("public", "initialize", function(input) {
     list(
       id = xmlAttrs(run, "id"),
       description = xmlValue(run[["description"]]),
-      documentation = sapply(run["documentation"],
+      documentation = llply(run["documentation"],
                              function(documentation)
                                if(!is.null(documentation))
                                  xmlAttrs(documentation, "id")
       ),
-      experimenter = sapply(run["experimenter"],
+      experimenter = llply(run["experimenter"],
                             function(experimenter)
                               if(!is.null(experimenter))
                                 xmlAttrs(experimenter, "id")
@@ -602,7 +606,8 @@ RDML$set("public", "initialize", function(input) {
           llply(run["react"],
                 function(react) GetReact(react, 
                                          experiment.id,
-                                         run.id)
+                                         run.id),
+                .parallel = FALSE
           )
         names(react.list) <- GetIds(react.list)
         compact(react.list)                                
@@ -617,7 +622,7 @@ RDML$set("public", "initialize", function(input) {
     list(
       id = experiment.id,
       description = xmlValue(experiment[["description"]]),
-      documentation = sapply(experiment["documentation"],
+      documentation = llply(experiment["documentation"],
                              function(documentation)
                                if(!is.null(documentation))
                                  xmlAttrs(documentation, "id")

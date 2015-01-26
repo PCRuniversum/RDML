@@ -88,21 +88,23 @@ RDML$set("public", "GetFData",
            }           
            
            fdata <- unlist(request[1,])
-           out <- cbind(private$.experiment[[fdata["exp.id"]]]$
-                          run[[fdata["run.id"]]]$
-                          react[[fdata["react.id"]]]$
-                          data[[fdata["target"]]]
-                        [[data.type["data.type"]]][, data.type["first.col.name"]],
+           out <- private$.experiment[[fdata["exp.id"]]]$
+             run[[fdata["run.id"]]]$
+             react[[fdata["react.id"]]]$
+             data[[fdata["target"]]][[data.type["data.type"]]][, data.type["first.col.name"]]
+           out <- cbind(out,
                         apply(request, 1,
                               function(fdata) {                         
-                                private$.experiment[[fdata["exp.id"]]]$
+                                dat <- private$.experiment[[fdata["exp.id"]]]$
                                   run[[fdata["run.id"]]]$
                                   react[[fdata["react.id"]]]$
                                   data[[fdata["target"]]][[data.type["data.type"]]][, "fluor"]
+                                if(is.null(dat))
+                                  return(rep(NA, length(out)))
+                                dat
                               })
            )
            colnames(out)[1] <- data.type["first.col.name"]
-           print(out)
            if(long.table) {
              out2 <- data.frame(
                fdata.name = rep(rownames(request), 
@@ -111,20 +113,12 @@ RDML$set("public", "GetFData",
                out2 <- cbind(
                  out2,
                  rep(request[, col.id], each= nrow(out)) 
-                 )
-             }
-             print(nrow(out2))
-             out2 <- cbind(
-               out2,
-               out[, "cyc"] 
-             )
-             out2 <- cbind(
-               out2,
-               c(out[, -1])
-             )             
+               )}             
+             out2 <- cbind(out2, out[, data.type["first.col.name"]])
+             out2 <- cbind(out2, c(out[, -1]))             
              colnames(out2) <- c("fdata.name",
                                  names(request),
-                                 "cyc",
+                                 data.type["first.col.name"],
                                  "fluo")
              return(out2)               
            }
