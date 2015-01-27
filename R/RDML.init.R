@@ -148,7 +148,9 @@ RDML$set("public", "initialize", function(input) {
   # by parallel function usage.
   uniq.folder <- paste0(".temp/", UUIDgenerate())
   cat(sprintf("Unzipping %s...", input))
-  unzipped.rdml <- unzip(input, exdir = uniq.folder)  
+  unzipped.rdml <- unzip(input, exdir = uniq.folder)
+  dilutions.r <- NA
+  
   tryCatch({
     # Roche use more than one file at RDML zip.
     # One of the files store dilutions information.
@@ -486,6 +488,10 @@ RDML$set("public", "initialize", function(input) {
                    dimnames = list(NULL,
                                    c("cyc", "fluor")))
           }
+        } else {
+          matrix(ncol = 2,
+                 dimnames = list(NULL,
+                                 c("cyc", "tmp", "fluor")))
         }
       },
       mdp = {                                                             
@@ -506,17 +512,21 @@ RDML$set("public", "initialize", function(input) {
                  ncol = 2,
                  dimnames = list(NULL,
                                  c("tmp", "fluor")))
+        else
+          matrix(ncol = 2,
+                 dimnames = list(NULL,
+                                 c("tmp", "fluor")))
       },
       endPt = as.numeric(xmlValue(data[["endPt"]])),
       bgFluor = as.numeric(xmlValue(data[["bgFluor"]])),
-      bgFluorSp = as.numeric(xmlValue(data[["bgFluorSp"]])),
+      bgFluorSlp = as.numeric(xmlValue(data[["bgFluorSp"]])),
       quantFluor = as.numeric(xmlValue(data[["quantFluor"]]))
     )
   }
   
   GetReact <- function(react, experiment.id, run.id) {
     react.id <- xmlAttrs(react, "id")    
-    react.id <- tryCatch(
+    react.id.corrected <- tryCatch(
       as.integer(react.id),
       warning = function(cond) {
         # if react.id is 'B1' not '13'
@@ -524,7 +534,7 @@ RDML$set("public", "initialize", function(input) {
         FromPositionToId(react.id)
       }    
     )
-    cat(sprintf("\nreact: %i", react.id))
+    #     cat(sprintf("\nreact: %i", react.id))
     sample <- xmlAttrs(react[["sample"]],
                        "id")
     ######
@@ -533,7 +543,7 @@ RDML$set("public", "initialize", function(input) {
       return(NULL)
     #######
     list(
-      id = react.id,
+      id = react.id.corrected, #sample.id
       # will be calculated at the end of init
       position = NA,
       sample = sample,
@@ -568,7 +578,7 @@ RDML$set("public", "initialize", function(input) {
                                 xmlAttrs(experimenter, "id")
       ),
       instrument = xmlValue(run[["instrument"]]),
-      dataCollectionSoftware = c(
+      dataCollectionSoftware = list(
         name = xmlValue(run[["dataCollectionSoftware"]][["name"]]),
         version = xmlValue(run[["dataCollectionSoftware"]][["version"]])
       ),
@@ -607,7 +617,8 @@ RDML$set("public", "initialize", function(input) {
                 function(react) GetReact(react, 
                                          experiment.id,
                                          run.id),
-                .parallel = FALSE
+                .parallel = FALSE,
+                .progress = "text"
           )
         names(react.list) <- GetIds(react.list)
         compact(react.list)                                
@@ -650,9 +661,10 @@ RDML$set("public", "initialize", function(input) {
     experiment.list
   }
   
-  private$.recalcPositions()
+  private$.recalcPositions()  
   
-  if(private$.id[[1]]$publisher == "Roche Diagnostics"
+  if(length(private$.id) != 0 &&
+    private$.id[[1]]$publisher == "Roche Diagnostics"
      && !is.na(dilutions.r)) {
     cat("Adding Roche standards")
     for(conc.i in 1:length(dilutions.r[[1]])) {
@@ -664,6 +676,6 @@ RDML$set("public", "initialize", function(input) {
         unit = "other"
       )
     }
-  }
+  }  
 }, 
 overwrite = TRUE)
