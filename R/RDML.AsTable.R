@@ -1,15 +1,16 @@
 #' @include RDML.R
 RDML$set("public", "AsTable",
-         function(.default = list(
-           exp.id = experiment$id,
-           run.id = run$id,
-           react.id = react$id,
-           position = react$position,
-           sample = react$sample,
-           sample.description = private$.sample[[react$sample]]$description,
-           target = data$id,
-           target.dyeId = private$.target[[data$id]]$dyeId,
-           sample.type=private$.sample[[react$sample]]$type),
+         function(
+           .default = list(
+             exp.id = experiment$id,
+             run.id = run$id,
+             react.id = react$id,
+             position = react$position,
+             sample = react$sample,
+             sample.description = sample[[react$sample]]$description,
+             target = data$id,
+             target.dyeId = target[[data$id]]$dyeId,
+             sample.type = sample[[react$sample]]$type),
            name.pattern = paste(
              react$id,
              react$sample,
@@ -35,8 +36,11 @@ RDML$set("public", "AsTable",
                  for(data in react$data){
                    out<-rbind(out,
                               data.frame(
-                                eval(substitute(list(.default, ...))),
-                                row.names = eval(substitute(name.pattern)),
+                                eval(substitute(list(
+                                  fdata.name = name.pattern,
+                                  .default,
+                                  ...))),
+#                                 row.names = eval(substitute(name.pattern)),
                                 stringsAsFactors = FALSE
                               )
                    )

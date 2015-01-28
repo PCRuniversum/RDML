@@ -17,13 +17,14 @@
 #' 
 #' 
 #' @section Fields: Type, structure of data and description of fields can be 
-#'   viewed at RDML v1.2 file description. Names of fields are first level of 
+#'   viewed at RDML v1.2 file description
+#'   \link{http://rdml.org/files.php?v=1.2}. Names of fields are first level of 
 #'   XML tree. All setters for fields contain data validators (asserts). Thus 
-#'   invalid data can not be setted. }
+#'   invalid data can not be setted.}
 #' @section Methods: \describe{\item{new}{creates new instance of \code{RDML} 
-#'   class object (see \link{RDML.new})} \item{AsTable}{represent RDML data as
-#'   \code{data.frame} (see \link{RDML.AsTable})}\item{GetFData}{gets fluorescence
-#'   data (see \link{RDML.GetFData})}}
+#'   class object (see \link{RDML.new})} \item{AsTable}{represent RDML data as 
+#'   \code{data.frame} (see \link{RDML.AsTable})}\item{GetFData}{gets
+#'   fluorescence data (see \link{RDML.GetFData})}}
 #'   
 #' @author Konstantin A. Blagodatskikh <k.blag@@yandex.ru>, Stefan Roediger 
 #'   <stefan.roediger@@hs-lausitz.de>, Michal Burdukiewicz 
@@ -76,28 +77,30 @@
 #' filename <- paste(PATH, "/extdata/", "lc96_bACTXY.rdml", sep ="")
 #' lc96 <- RDML$new(filename)
 #' 
-#' ## Show targets names
-#' targets <- lc96$targets
-#' targets
-#' ## Make names easier to type
-#' names(targets) <- c("famatbact", "hexatx", "texasredaty", "cy5atipc")
-#' ## Show types of the samples for target 'famatbact'
-#' lc96$types[[targets["famatbact"]]]
+#' tab <- lc96$AsTable(name.pattern = paste(sample[[react$sample]]$description,
+#'                                          react$id), 
+#'                     quantity = sample[[react$sample]]$quantity$value)
+#' ## Show dyes names
+#' unique(tab$target.dyeId)
+#' ## Show types of the samples for dye 'FAM'
+#' library(dplyr)
+#' unique(filter(tab, target.dyeId == "FAM")$sample.type)
 #' 
-#' ## Show dilutions for dye - FAM
-#' lc96$dilutions$FAM
+#' ## Show template quantities for dye 'FAM' type 'std'#' 
 #' \dontrun{
-#' COPIES <- unique(lc96$dilutions$FAM)
+#' COPIES <- filter(tab, target.dyeId == "FAM", sample.type == "std")$quantity
 #' ## Define calibration curves (type of the samples - 'std').
 #' ## No replicates.
 #' library(qpcR)
-#' CAL <- modlist(lc96$GetFData(filter=list(targets=targets["famatbact"],
-#'                                          types="std", method="qPCR")),
-#'                fluo = c(2, 4, 6, 8, 10))
+#' CAL <- modlist(lc96$GetFData(filter(tab, 
+#'                                     target.dyeId == "FAM", 
+#'                                     sample.type == "std")),
+#'                baseline="lin", basecyc=8:15)
 #' ## Define samples to predict (first two samples with the type - 'unkn').
-#' PRED <- modlist(lc96$GetFData(filter=list(targets=targets["famatbact"],
-#'                                          types="std", method="qPCR")),
-#'                 fluo = 2:3)
+#' PRED <- modlist(lc96$GetFData(filter(tab, 
+#'                                     target.dyeId == "FAM", 
+#'                                     sample.type == "unkn")),
+#'                baseline="lin", basecyc=8:15)
 #' ## Conduct quantification.
 #' calib(refcurve = CAL, predcurve = PRED, thresh = "cpD2",
 #'       dil = COPIES)
@@ -113,17 +116,15 @@
 #' filename <- paste(PATH, "/extdata/", "lc96_bACTXY.rdml", sep ="")
 #' lc96 <- RDML$new(filename)
 #' 
-#' ## Compactly display the structure of the lc96 object
-#' #!! str(lc96)
-#' lc96$types
-#' ## Make names easier to type
-#' names(targets) <- c("famatbact", "hexatx", "texasredaty", "cy5atipc")
+#' tab <- lc96$AsTable(name.pattern = paste(sample[[react$sample]]$description,
+#'                                          react$id), 
+#'                     quantity = sample[[react$sample]]$quantity$value)
+#' ## Show targets names
+#' unique(tab$target)
 #' ## Fetch cycle dependent fluorescence for HEX chanel
-#' tmp <- lc96$GetFData(filter = list(method = "qPCR",
-#'                                    targets = targets["hexatx"],
-#'                                    types = "std"))
-#' ## Fetch vector of dillutions for HEX chanel
-#' dilution <- as.vector(lc96$dilutions$Hex)
+#' tmp <- lc96$GetFData(filter(tab, target == "FAM@bACT", sample.type == "std"))
+#' ## Fetch vector of dillutions 
+#' dilution <- filter(tab, target.dyeId == "FAM", sample.type == "std")$quantity
 #' 
 #' ## Use plotCurves function from the chipPCR package to 
 #' ## get an overview of the amplification curves
@@ -147,13 +148,13 @@
 #' ## Import with custom name pattern.
 #' PATH <- path.package("RDML")
 #' filename <- paste(PATH, "/extdata/", "BioRad_qPCR_melt.rdml", sep ="")
-#' cfx96 <- RDML$new(filename,
-#'               name.pattern = "%TUBE%_%NAME%_%TYPE%_%TARGET%")
+#' cfx96 <- RDML$new(filename)
 #' ## Use plotCurves function from the chipPCR package to 
 #' ## get an overview of the amplification curves
 #' library(chipPCR)
 #' ## Extract all qPCR data without splitting by targets and types
-#' cfx96.qPCR <- cfx96$GetFData()
+#' tab <- cfx96$AsTable()
+#' cfx96.qPCR <- cfx96$GetFData(tab)
 #' plotCurves(cfx96.qPCR[,1], cfx96.qPCR[,-1], type = "l")
 #' 
 #' ## Extract all melting data without splitting by targets and types
@@ -354,8 +355,11 @@ RDML <- R6Class("RDML",
                         assert_that(has.only.names(quantity,
                                                    c("value",
                                                      "unit")))
-                        assert_that(is.double(quantity$value))
-                        assert_that(is.string(quantity$unit))
+                        if(!is.na(quantity$value) &&
+                             !is.na(quantity$unit)) {
+                          assert_that(is.double(quantity$value))
+                          assert_that(is.string(quantity$unit))
+                        }
                       }
                       assert_that(is.opt.logical(sample$calibrationSample))
                       assert_that(is.opt.list(sample$cdnaSynthesisMethod))                      

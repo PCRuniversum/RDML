@@ -270,12 +270,8 @@ RDML$set("public", "initialize", function(input) {
                                    )),
                 type = type,
                 interRunCalibrator = as.logical(xmlValue(sample[["interRunCalibrator"]])),
-                quantity = {
-                  quantity.list <- list(value = as.numeric(xmlValue(sample[["quantity"]][["value"]])),
-                       unit = xmlValue(sample[["quantity"]][["unit"]]))
-                  if(is.na(quantity.list$value)) NULL
-                  else quantity.list
-                  },
+                quantity = list(value = as.numeric(xmlValue(sample[["quantity"]][["value"]])),
+                       unit = xmlValue(sample[["quantity"]][["unit"]])),
                 calibratorSample = as.logical(xmlValue(sample[["calibaratorSample"]])),
                 cdnaSynthesisMethod = 
                   list(enzyme = xmlValue(sample[["cdnaSynthesisMethod"]][["enzyme"]]),
@@ -563,7 +559,7 @@ RDML$set("public", "initialize", function(input) {
   
   GetRun <- function(run, experiment.id) {
     run.id <-xmlAttrs(run, "id")
-    cat(sprintf("\nrun: %s", run.id))
+    cat(sprintf("\nrun: %s\n", run.id))
     list(
       id = xmlAttrs(run, "id"),
       description = xmlValue(run[["description"]]),
@@ -672,7 +668,7 @@ RDML$set("public", "initialize", function(input) {
         which(names(private$.experiment[[1]]$run[[1]]$react) == 
                 names(dilutions.r[[1]])[conc.i])]]$sample      
       private$.sample[[sample.id]]$quantity <- list(
-        value = dilutions.r[[1]][conc.i],
+        value = unname(dilutions.r[[1]][conc.i]),
         unit = "other"
       )
     }

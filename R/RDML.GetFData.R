@@ -104,20 +104,20 @@ RDML$set("public", "GetFData",
                                 dat
                               })
            )
-           colnames(out)[1] <- data.type["first.col.name"]
+           colnames(out) <- c(data.type["first.col.name"],
+                              request$fdata.name)
            if(long.table) {
              out2 <- data.frame(
-               fdata.name = rep(rownames(request), 
-                                each= nrow(out)))
-             for(col.id in names(request)) {
+               fdata.name = rep(request$fdata.name, 
+                                each = nrow(out)))
+             for(col.id in names(request)[-1]) {
                out2 <- cbind(
                  out2,
-                 rep(request[, col.id], each= nrow(out)) 
-               )}             
+                 rep(request[, col.id], each = nrow(out)))
+             }             
              out2 <- cbind(out2, out[, data.type["first.col.name"]])
              out2 <- cbind(out2, c(out[, -1]))             
-             colnames(out2) <- c("fdata.name",
-                                 names(request),
+             colnames(out2) <- c(names(request),
                                  data.type["first.col.name"],
                                  "fluo")
              return(out2)               
