@@ -25,11 +25,13 @@ Imports:
     shiny,
     digest,
     stringr,
-    dpcR
+    dpcR,
+    dplyr
 Collate:
     'RDML.asserts.R'
     'RDML.R'
     'RDML.AsTable.R'
     'RDML.GetFData.R'
+    'RDML.SetFData.R'
     'RDML.init.R'
     'names.RDML.R'
