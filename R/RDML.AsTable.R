@@ -40,7 +40,7 @@
 #' library(chipPCR)
 #' PATH <- path.package("RDML")
 #' filename <- paste(PATH, "/extdata/", "stepone_std.rdml", sep ="")
-#' stepone <- RDML$new(filename)#' 
+#' stepone <- RDML$new(filename)
 #' ## Mark fluorescense data which Cq > 30 and add quantities to
 #' ## AsTable output. 
 #' ## Names for fluorescense data will contain sample name and react 
@@ -108,8 +108,7 @@ RDML$set("public", "AsTable",
                                   ...))),
                                 row.names = eval(substitute(name.pattern)),
                                 stringsAsFactors = FALSE
-                              )
-                   )
+                              ))
                  }
                }
              }

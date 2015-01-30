@@ -66,20 +66,13 @@ RDML$set("public", "GetFData",
            out <- cbind(out,
                         apply(request, 1,
                               function(fdata) {
-                                dat <- private$.experiment[[fdata["exp.id"]]]$
+                                private$.experiment[[fdata["exp.id"]]]$
                                   run[[fdata["run.id"]]]$
                                   react[[fdata["react.id"]]]$
-                                  data[[fdata["target"]]][[data.type]][, "fluor"]
-                                if(is.null(dat)) {
-                                  out.fdata.names <<-
-                                    out.fdata.names[-which(out.fdata.names == fdata["fdata.name"])]
-                                  return(rep(NA, length(out)))
-                                }
-                                dat
+                                  data[[fdata["target"]]][[data.type]][, "fluor"]                                
                               })
            )
            
-           out <- out[, apply(out, 2, function(x) {!all(is.na(x))})]
            colnames(out) <- c(first.col.name,
                               out.fdata.names)           
            if(long.table) {

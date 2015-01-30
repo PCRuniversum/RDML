@@ -20,18 +20,15 @@ URL: https://github.com/kablag/RDML
 Imports:
     R6,
     assertthat,
-    chipPCR (>= 0.0.8-1),
-    MBmca,
-    shiny,
-    digest,
-    stringr,
     dpcR,
+    plyr,
     dplyr
 Collate:
     'RDML.asserts.R'
     'RDML.R'
     'RDML.AsTable.R'
     'RDML.GetFData.R'
+    'RDML.Merge.R'
     'RDML.SetFData.R'
     'RDML.init.R'
     'names.RDML.R'

@@ -180,7 +180,8 @@ RDML <- R6Class("RDML",
                   initialize = function() { },                  
                   AsTable = function() { },
                   GetFData = function() { },
-                  SetFData = function() { }
+                  SetFData = function() { },
+                  Merge = function() { }
                 ),
                 private = list(
                   .dilutions = NA,                

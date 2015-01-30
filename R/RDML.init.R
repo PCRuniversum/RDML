@@ -488,8 +488,13 @@ RDML$set("public", "initialize", function(input) {
       }    
     )
     #     cat(sprintf("\nreact: %i", react.id))
-    sample <- xmlAttrs(react[["sample"]],
-                       "id")
+    sample <- {
+      ## Better names for Roche
+      if(private$.id[[1]]$publisher == "Roche Diagnostics")
+        private.sample[[xmlAttrs(react[["sample"]],"id")]]$description
+      else
+        xmlAttrs(react[["sample"]],"id")
+    }
     ######
     # remove Roche omitted ('ntp') samples
     if(is.null(private$.sample[[sample]]))
@@ -629,6 +634,6 @@ RDML$set("public", "initialize", function(input) {
         unit = "other"
       )
     }
-  }  
+  }
 }, 
 overwrite = TRUE)
