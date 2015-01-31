@@ -8,8 +8,7 @@
 #' \describe{ \item{exp.id}{experiment$id} \item{run.id}{run$id} 
 #' \item{react.id}{react$id} 
 #' \item{position}{react$position} 
-#' \item{sample}{react$sample} 
-#' \item{sample.description}{sample[[react$sample]]$description} 
+#' \item{sample}{react$sample}
 #' \item{target}{data$id} \item{target.dyeId}{target[[data$id]]$dyeId} 
 #' \item{sample.type}{sample[[react$sample]]$type} } You can overload default 
 #' columns list by parameter \code{.default} but note that columns \code{exp.id,
@@ -74,7 +73,6 @@ RDML$set("public", "AsTable",
              react.id = react$id,
              position = react$position,
              sample = react$sample,
-             sample.description = sample[[react$sample]]$description,
              target = data$id,
              target.dyeId = target[[data$id]]$dyeId,
              sample.type = sample[[react$sample]]$type),

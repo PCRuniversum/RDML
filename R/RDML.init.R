@@ -99,6 +99,7 @@ GetDilutionsRoche <- function(uniq.folder)
 #' ## Some kind of overview for lc96
 #' lc96$AsTable(name.pattern = sample[[react$sample]]$description)
 RDML$set("public", "initialize", function(input) {  
+  if(missing(input)) return()
   assert_that(is.string(input))
   # Unzips RDML to unique folder to get inner XML content.
   # Unique folder is needed to prevent file ovewriting
@@ -106,7 +107,7 @@ RDML$set("public", "initialize", function(input) {
   uniq.folder <- paste0(".temp/", UUIDgenerate())
   cat(sprintf("Unzipping %s...", input))
   unzipped.rdml <- unzip(input, exdir = uniq.folder)
-  dilutions.r <- NA
+  dilutions.r <- NULL
   
   tryCatch({
     # Roche use more than one file at RDML zip.
@@ -211,9 +212,9 @@ RDML$set("public", "initialize", function(input) {
                 id = xmlAttrs(sample, "id"),
                 description = xmlValue(sample[["description"]]),
                 documentation = llply(sample["documentation"],
-                                       function(documentation)
-                                         if(!is.null(documentation))
-                                           xmlAttrs(documentation, "id")
+                                      function(documentation)
+                                        if(!is.null(documentation))
+                                          xmlAttrs(documentation, "id")
                 ),
                 xRef = llply(sample["xRef"],
                              function(xRef) c(
@@ -228,7 +229,7 @@ RDML$set("public", "initialize", function(input) {
                 type = type,
                 interRunCalibrator = as.logical(xmlValue(sample[["interRunCalibrator"]])),
                 quantity = list(value = as.numeric(xmlValue(sample[["quantity"]][["value"]])),
-                       unit = xmlValue(sample[["quantity"]][["unit"]])),
+                                unit = xmlValue(sample[["quantity"]][["unit"]])),
                 calibratorSample = as.logical(xmlValue(sample[["calibaratorSample"]])),
                 cdnaSynthesisMethod = 
                   list(enzyme = xmlValue(sample[["cdnaSynthesisMethod"]][["enzyme"]]),
@@ -257,9 +258,9 @@ RDML$set("public", "initialize", function(input) {
                              id = xmlAttrs(target, "id"),
                              description = xmlValue(target[["description"]]),
                              documentation = llply(target["documentation"],
-                                                    function(documentation)
-                                                      if(!is.null(documentation))
-                                                        xmlAttrs(documentation, "id")
+                                                   function(documentation)
+                                                     if(!is.null(documentation))
+                                                       xmlAttrs(documentation, "id")
                              ),
                              xRef = llply(target["xRef"],
                                           function(xRef) c(
@@ -333,9 +334,9 @@ RDML$set("public", "initialize", function(input) {
                 id = xmlAttrs(tcc, "id"),
                 description = xmlValue(tcc[["description"]]),
                 documentation = llply(tcc["documentation"],
-                                       function(documentation)
-                                         if(!is.null(documentation))
-                                           xmlAttrs(documentation, "id")
+                                      function(documentation)
+                                        if(!is.null(documentation))
+                                          xmlAttrs(documentation, "id")
                 ),
                 lidTemperature = 
                   as.numeric(xmlValue(tcc[["lidTemperature"]])),
@@ -488,18 +489,17 @@ RDML$set("public", "initialize", function(input) {
       }    
     )
     #     cat(sprintf("\nreact: %i", react.id))
-    sample <- {
-      ## Better names for Roche
-      if(private$.id[[1]]$publisher == "Roche Diagnostics")
-        private.sample[[xmlAttrs(react[["sample"]],"id")]]$description
-      else
-        xmlAttrs(react[["sample"]],"id")
-    }
+    sample <- xmlAttrs(react[["sample"]],"id")
     ######
-    # remove Roche omitted ('ntp') samples
-    if(is.null(private$.sample[[sample]]))
-      return(NULL)
-    #######
+    if(length(private$.id) != 0 && 
+         private$.id[[1]]$publisher == "Roche Diagnostics") {
+      # remove Roche omitted ('ntp') samples
+      if(is.null(private$.sample[[sample]]))
+        return(NULL)
+      ## Better names for Roche    
+      sample <- private$.sample[[xmlAttrs(react[["sample"]],"id")]]$description
+    }
+    #######    
     list(
       id = react.id.corrected, #sample.id
       # will be calculated at the end of init
@@ -526,14 +526,14 @@ RDML$set("public", "initialize", function(input) {
       id = xmlAttrs(run, "id"),
       description = xmlValue(run[["description"]]),
       documentation = llply(run["documentation"],
-                             function(documentation)
-                               if(!is.null(documentation))
-                                 xmlAttrs(documentation, "id")
+                            function(documentation)
+                              if(!is.null(documentation))
+                                xmlAttrs(documentation, "id")
       ),
       experimenter = llply(run["experimenter"],
-                            function(experimenter)
-                              if(!is.null(experimenter))
-                                xmlAttrs(experimenter, "id")
+                           function(experimenter)
+                             if(!is.null(experimenter))
+                               xmlAttrs(experimenter, "id")
       ),
       instrument = xmlValue(run[["instrument"]]),
       dataCollectionSoftware = list(
@@ -592,9 +592,9 @@ RDML$set("public", "initialize", function(input) {
       id = experiment.id,
       description = xmlValue(experiment[["description"]]),
       documentation = llply(experiment["documentation"],
-                             function(documentation)
-                               if(!is.null(documentation))
-                                 xmlAttrs(documentation, "id")
+                            function(documentation)
+                              if(!is.null(documentation))
+                                xmlAttrs(documentation, "id")
       ),
       run = {
         run.list <- 
@@ -621,18 +621,22 @@ RDML$set("public", "initialize", function(input) {
   
   private$.recalcPositions()  
   
-  if(length(private$.id) != 0 &&
-    private$.id[[1]]$publisher == "Roche Diagnostics"
-     && !is.na(dilutions.r)) {
-    cat("Adding Roche standards")
-    for(conc.i in 1:length(dilutions.r[[1]])) {
-      sample.id <- private$.experiment[[1]]$run[[1]]$react[[
-        which(names(private$.experiment[[1]]$run[[1]]$react) == 
-                names(dilutions.r[[1]])[conc.i])]]$sample      
-      private$.sample[[sample.id]]$quantity <- list(
-        value = unname(dilutions.r[[1]][conc.i]),
-        unit = "other"
-      )
+  if(length(private$.id) != 0 && private$.id[[1]]$publisher == "Roche Diagnostics") {    
+    for(i in 1:length(private$.sample)) {
+      private$.sample[[i]]$id <- private$.sample[[i]]$description
+    }
+    names(private$.sample) <- GetIds(private$.sample)
+    if(!is.null(dilutions.r)) {
+      cat("Adding Roche standards")
+      for(conc.i in 1:length(dilutions.r[[1]])) {
+        sample.id <- private$.experiment[[1]]$run[[1]]$react[[
+          which(names(private$.experiment[[1]]$run[[1]]$react) == 
+                  names(dilutions.r[[1]])[conc.i])]]$sample      
+        private$.sample[[sample.id]]$quantity <- list(
+          value = unname(dilutions.r[[1]][conc.i]),
+          unit = "other"
+        )
+      }
     }
   }
 }, 
