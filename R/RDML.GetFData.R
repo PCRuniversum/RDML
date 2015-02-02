@@ -38,43 +38,76 @@
 #' ## Show names for getted fdata
 #' names(fdata)
 RDML$set("public", "GetFData",
-         function(request,                  
+         function(request,
+                  limit.cycles = NULL,
                   data.type = "adp",
                   first.col.name = NULL,
                   long.table = FALSE) {
-#            data.type <- {
-#              if(data.type == "qPCR" || data.type == "adp") {
-#                c(data.type = "adp",
-#                  first.col.name = "cyc")
-#              } else {
-#                c(data.type = "mdp",
-#                  first.col.name = "tmp")
-#              }
-#            }           
            
            first.col.req <- unlist(request[1,])
            if(is.null(first.col.name))
              first.col.name <- colnames(private$.experiment[[first.col.req["exp.id"]]]$
-                                       run[[first.col.req["run.id"]]]$
-                                       react[[first.col.req["react.id"]]]$
-                                       data[[first.col.req["target"]]][[data.type]])[1]
+                                          run[[first.col.req["run.id"]]]$
+                                          react[[first.col.req["react.id"]]]$
+                                          data[[first.col.req["target"]]][[data.type]])[1]
            out.fdata.names <- request$fdata.name
            out <- private$.experiment[[first.col.req["exp.id"]]]$
              run[[first.col.req["run.id"]]]$
              react[[first.col.req["react.id"]]]$
-             data[[first.col.req["target"]]][[data.type]][, first.col.name]           
-           out <- cbind(out,
-                        apply(request, 1,
-                              function(fdata) {
-                                private$.experiment[[fdata["exp.id"]]]$
-                                  run[[fdata["run.id"]]]$
-                                  react[[fdata["react.id"]]]$
-                                  data[[fdata["target"]]][[data.type]][, "fluor"]                                
-                              })
-           )
+             data[[first.col.req["target"]]][[data.type]][, first.col.name]
+           if(is.null(limit.cycles))
+             limit.cycles <- c(out[1], tail(out, n = 1))
+          
+           from <- which(out == limit.cycles[1])
+           if(length(from) == 0)
+             out <- c(limit.cycles[1]:(out[1] - 1), out)
+           else
+             out <- out[from:length(out)]
+           
+           to <- which(out == limit.cycles[2])
+           if(length(to) == 0) 
+             out <- c(out, (tail(out, 1) + 1) : limit.cycles[2])
+           else
+             out <- head(out, to)
+             
+           out <- 
+             cbind(out,
+                   apply(request, 1,
+                         function(fdata) {
+                           cycles <- private$.experiment[[fdata["exp.id"]]]$
+                             run[[fdata["run.id"]]]$
+                             react[[fdata["react.id"]]]$
+                             data[[fdata["target"]]][[data.type]][, first.col.name]                           
+                           data <- private$.experiment[[fdata["exp.id"]]]$
+                             run[[fdata["run.id"]]]$
+                             react[[fdata["react.id"]]]$
+                             data[[fdata["target"]]][[data.type]][, "fluor"]                           
+                           
+                             from <- which(cycles == limit.cycles[1])
+                             if(length(from) == 0) {
+                               data <- c(
+                                 rep(data[1], cycles[1] - limit.cycles[1]), data)
+                               cycles <- c(limit.cycles[1]:(cycles[1] - 1), cycles)
+                             }
+                             else {
+                               data <- data[from:length(data)]
+                               cycles <- cycles[from:length(cycles)]
+                             }
+                           
+                             to <- which(cycles == limit.cycles[2])
+                             if(length(to) == 0) 
+                               data <- c(data, 
+                                         rep(tail(data, 1),
+                                             limit.cycles[2] - tail(cycles, 1)))
+                             
+                             else
+                               data <- head(data, to)
+                             data
+                         })
+             )
            
            colnames(out) <- c(first.col.name,
-                              out.fdata.names)           
+                              out.fdata.names) 
            if(long.table) {
              out2 <- data.frame(
                fdata.name = rep(out.fdata.names, 
