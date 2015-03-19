@@ -184,7 +184,8 @@ RDML <- R6Class("RDML",
                   Merge = function() { }
                 ),
                 private = list(
-                  .dilutions = NA,                
+                  .dilutions = NULL,
+                  .conditions = NULL,
                   .dateMade = NULL,
                   .dateUpdated = NULL,                  
                   .id = NULL,
@@ -662,8 +663,12 @@ RDML <- R6Class("RDML",
                     private$.recalcPositions()
                   },
                   
-                  dilution = function() {
+                  dilutions = function() {
                     return(private$.dilutions)
+                  },
+                  
+                  conditions = function() {
+                    return(private$.conditions)
                   }
                     
                 )

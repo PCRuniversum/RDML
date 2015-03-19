@@ -67,10 +67,63 @@ GetDilutionsRoche <- function(uniq.folder)
                                            dye.group.indecies]
     concs.by.dye
   })
+  if (length(dilutions) == 0) {
+    cat("NONE")
+    return(NULL)
+  }
   names(dilutions) <- dyes
   cat("OK")
   return(dilutions)
 }
+
+GetConditionsRoche <- function(uniq.folder)
+{
+  cat("\nParsing Roche conditions data...")
+  if(!file.exists(paste0(uniq.folder,"/app_data.xml"))) {
+    cat("NO SUCH FILE")
+    return(NA)
+  }
+  rdml.doc <- xmlParse(paste0(uniq.folder,"/app_data.xml"))
+  nodes <- getNodeSet(rdml.doc,
+                       "/ns:rocheLC96AppExtension/ns:experiment/ns:run/ns:react/ns:condition/..",
+                       namespaces = c(ns = "http://www.roche.ch/LC96AppExtensionSchema"))
+  
+  reacts <- sapply(nodes,
+                   function(node)  xmlAttrs(node, "id"))
+  conditions <- sapply(nodes,
+                      function(node)  xmlValue(node[["condition"]]))
+  if (length(conditions) == 0) {
+    cat("NONE")
+    return(NULL)
+  }
+  names(conditions) <- reacts
+  cat("OK")
+  return(conditions)
+}
+
+GetRefGenesRoche <- function(uniq.folder)
+{
+  cat("\nParsing Roche reference genes data...")
+  if(!file.exists(paste0(uniq.folder,"/module_data.xml"))) {
+    cat("NO SUCH FILE")
+    return(NA)
+  }
+  rdml.doc <- xmlParse(paste0(uniq.folder,"/module_data.xml"))
+  
+  ref <- getNodeSet(
+    rdml.doc,
+    "//ns:geneSettings/ns:relQuantGeneSettings",
+    namespace = c(ns = "http://www.roche.ch/LC96RelQuantGeneralDataModel"))
+  
+  if (length(ref) == 0) {
+    cat("NONE")
+    return(NULL)
+  }
+  
+  cat("OK")
+  return(ref)
+}
+
 
 #' Creates new instance of \code{RDML} class object
 #' 
@@ -118,7 +171,9 @@ RDML$set("public", "initialize", function(input) {
       rdml.doc <- xmlParse(paste0(uniq.folder,"/rdml_data.xml"))
       cat("OK")
       dilutions.r <- GetDilutionsRoche(uniq.folder)
-      private$.dilutions <- dilutions.r
+      conditions.r <- GetConditionsRoche(uniq.folder)
+      ref.genes.r <- GetRefGenesRoche(uniq.folder)
+      # private$.dilutions <- dilutions.r
     }
     else
     {
@@ -621,6 +676,20 @@ RDML$set("public", "initialize", function(input) {
   
   private$.recalcPositions()  
   
+  if(length(ref.genes.r) != 0) {
+   for(ref.gene in ref.genes.r) {
+     geneName <- xmlValue(ref.gene[["geneName"]])
+     geneI <- grep(
+       sprintf("@%s$", geneName),
+       names(private$.target))
+     private$.target[[geneI]]$type <-
+       ifelse(as.logical(xmlValue(ref.gene[["isReference"]])),
+              "ref",
+              "toi")
+   }
+  }
+    
+  
   if(length(private$.id) != 0 && private$.id[[1]]$publisher == "Roche Diagnostics") {    
     for(i in 1:length(private$.sample)) {
       private$.sample[[i]]$id <- private$.sample[[i]]$description
@@ -638,6 +707,11 @@ RDML$set("public", "initialize", function(input) {
         )
       }
     }
+    
+    private$.dilutions[[private$.experiment[[1]]$id]] <-
+      dilutions.r
+    private$.conditions[[private$.experiment[[1]]$id]] <-
+      conditions.r
   }
 }, 
 overwrite = TRUE)

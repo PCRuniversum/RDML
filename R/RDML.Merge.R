@@ -17,14 +17,18 @@
 #' lc96$AsTable()
 RDML$set("public", "Merge",
          function(to.merge) {
+           
            for(element in c("id",
-                              "experimenter",
-                              "documentation",
-                              "dye",
-                              "sample",
-                              "target",
-                              "thermalCyclingConditions",
-                              "experiment")) {
+                            "experimenter",
+                            "documentation",
+                            "dye",
+                            "sample",
+                            "target",
+                            "thermalCyclingConditions",
+                            "experiment",
+                            "dilutions",
+                            "conditions"
+                            )) {
              private[[paste0(".", element)]] <- 
                c(private[[paste0(".", element)]],
                  to.merge[[element]])

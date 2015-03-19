@@ -93,6 +93,8 @@ RDML$set("public", "AsTable",
            sample <- private$.sample
            target <- private$.target
            thermalCyclingConditions <- private$.thermalCyclingConditions
+           dilutions <- private$.dilutions
+           conditions <- private$.conditions
            
            out<-data.frame()
            for(experiment in private$.experiment) {                      
