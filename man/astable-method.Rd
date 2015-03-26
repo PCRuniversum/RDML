@@ -23,7 +23,6 @@ By default input this function forms \code{data.frame} with such columns:
 \item{react.id}{react$id}
 \item{position}{react$position}
 \item{sample}{react$sample}
-\item{sample.description}{sample[[react$sample]]$description}
 \item{target}{data$id} \item{target.dyeId}{target[[data$id]]$dyeId}
 \item{sample.type}{sample[[react$sample]]$type} } You can overload default
 columns list by parameter \code{.default} but note that columns \code{exp.id,
@@ -59,8 +58,7 @@ tab[c("cq30", "quantity")]
 library(dplyr)
 fdata <- stepone$GetFData(
            filter(tab, sample.type == "std"),
-           long.table = TRUE
-)
+           long.table = TRUE)
 ## Plot fdata with colour by cq30 and shape by quantity
 library(ggplot2)
 ggplot(fdata, aes(x = cyc, y = fluo,

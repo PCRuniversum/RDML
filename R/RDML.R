@@ -66,7 +66,7 @@
 #' @importFrom R6 R6Class
 #' @importFrom uuid UUIDgenerate
 #' @importFrom plyr llply ldply ddply compact
-#' @importFrom dplyr filter
+#' @import dplyr
 #' @include RDML.asserts.R
 #' @examples 
 #' ## EXAMPLE 1:
@@ -181,7 +181,8 @@ RDML <- R6Class("RDML",
                   AsTable = function() { },
                   GetFData = function() { },
                   SetFData = function() { },
-                  Merge = function() { }
+                  Merge = function() { },
+                  AsDendrogram = function() { }
                 ),
                 private = list(
                   .dilutions = NULL,
