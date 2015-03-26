@@ -26,6 +26,7 @@ Imports:
 Collate:
     'RDML.asserts.R'
     'RDML.R'
+    'RDML.AsDendrogram.R'
     'RDML.AsTable.R'
     'RDML.GetFData.R'
     'RDML.Merge.R'

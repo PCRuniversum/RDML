@@ -126,5 +126,5 @@ RDML$set("public", "GetFData",
              return(out2)               
            }           
            out
-         }
-         , overwrite = TRUE)
+         }, 
+         overwrite = TRUE)

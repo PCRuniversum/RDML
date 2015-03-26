@@ -58,8 +58,7 @@ tab[c("cq30", "quantity")]
 library(dplyr)
 fdata <- stepone$GetFData(
            filter(tab, sample.type == "std"),
-           long.table = TRUE
-)
+           long.table = TRUE)
 ## Plot fdata with colour by cq30 and shape by quantity
 library(ggplot2)
 ggplot(fdata, aes(x = cyc, y = fluo,

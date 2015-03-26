@@ -157,10 +157,11 @@ RDML$set("public", "initialize", function(input) {
   # Unzips RDML to unique folder to get inner XML content.
   # Unique folder is needed to prevent file ovewriting
   # by parallel function usage.
-  uniq.folder <- paste0(".temp/", UUIDgenerate())
+  uniq.folder <- paste0(tempdir(), UUIDgenerate())
   cat(sprintf("Unzipping %s...", input))
   unzipped.rdml <- unzip(input, exdir = uniq.folder)
   dilutions.r <- NULL
+  ref.genes.r <- NULL
   
   tryCatch({
     # Roche use more than one file at RDML zip.
@@ -674,9 +675,8 @@ RDML$set("public", "initialize", function(input) {
     experiment.list
   }
   
-  private$.recalcPositions()  
-  
-  if(length(ref.genes.r) != 0) {
+  private$.recalcPositions()
+  if(!is.null(ref.genes.r) && length(ref.genes.r) != 0) {
    for(ref.gene in ref.genes.r) {
      geneName <- xmlValue(ref.gene[["geneName"]])
      geneI <- grep(
