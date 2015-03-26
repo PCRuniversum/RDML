@@ -80,7 +80,6 @@ RDML$set("public", "AsDendrogram",
                           height = 1,
                           edgetext = stype)
                    for(exp.type in c("adp", "mdp")) {
-                     tree[[exper.id]][[r.id]][[trgt]][[stype]][[exp.type]] <- list()
                      n.rows <- total.table %>% 
                        filter(exp.id == exper.id,
                               run.id == r.id,
@@ -88,6 +87,8 @@ RDML$set("public", "AsDendrogram",
                               sample.type == stype) %>% 
                        filter_(sprintf("%s == TRUE", exp.type)) %>% 
                        nrow
+                     if(n.rows == 0) next()
+                     tree[[exper.id]][[r.id]][[trgt]][[stype]][[exp.type]] <- list()
                      attributes(tree[[exper.id]][[r.id]][[trgt]][[stype]][[exp.type]]) <- 
                        list(members = 1,
                             height = 0,
