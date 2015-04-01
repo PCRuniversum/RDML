@@ -76,7 +76,7 @@ RDML$set("public", "AsTable",
              target.dyeId = target[[data$id]]$dyeId,
              sample.type = sample[[react$sample]]$type),
            name.pattern = paste(
-             react$id,
+             react$position,
              react$sample,
              private$.sample[[react$sample]]$type,
              data$id,

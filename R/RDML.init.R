@@ -24,31 +24,64 @@ GetDilutionsRoche <- function(uniq.folder)
     "//ns:absQuantDataSource/ns:standard",   
     namespaces = c(ns = "http://www.roche.ch/LC96AbsQuantCalculatedDataModel"),
     xmlValue))
-  concs.guids<-xpathSApply(
-    rdml.doc,
-    "//ns:absQuantDataSource/ns:standard/../ns:graphId",   
-    namespaces = c(ns = "http://www.roche.ch/LC96AbsQuantCalculatedDataModel"),
-    xmlValue)
-  names(concs) <- concs.guids
-  concs <- sort(concs, decreasing=TRUE)
-  positions <- 
-    xpathSApply(
+  if(length(concs) == 0) {
+    concs<-as.numeric(xpathSApply(
+      rdml.doc,
+      "//ns:relQuantDataSource/ns:standard",   
+      namespaces = c(ns = "http://www.roche.ch/LC96RelQuantCalculatedDataModel"),
+      xmlValue))
+    concs.guids<-xpathSApply(
+      rdml.doc,
+      "//ns:relQuantDataSource/ns:standard/../ns:graphId",   
+      namespaces = c(ns = "http://www.roche.ch/LC96RelQuantCalculatedDataModel"),
+      xmlValue)
+    names(concs) <- concs.guids
+    concs <- sort(concs, decreasing=TRUE)
+    positions <- 
+      xpathSApply(
+        rdml.doc, 
+        paste0("//ns:standardPoints/ns:standardPoint/ns:position"), 
+        xmlValue,
+        namespaces = 
+          c(ns = "http://www.roche.ch/LC96RelQuantCalculatedDataModel"))
+    positions <- sapply(positions, FromPositionToId)
+    dye.names <-xpathSApply(
       rdml.doc, 
-      paste0("//ns:standardPoints/ns:standardPoint/ns:position"), 
+      paste0("//ns:standardPoints/ns:standardPoint/ns:dyeName"), 
       xmlValue,
-      namespaces = 
-        c(ns = "http://www.roche.ch/LC96AbsQuantCalculatedDataModel"))
-  positions <- sapply(positions, FromPositionToId)
-  dye.names <-xpathSApply(
-    rdml.doc, 
-    paste0("//ns:standardPoints/ns:standardPoint/ns:dyeName"), 
-    xmlValue,
-    namespaces = c(ns = "http://www.roche.ch/LC96AbsQuantCalculatedDataModel"))
-  positions.guids <- xpathSApply(
-    rdml.doc, 
-    paste0("//ns:standardPoints/ns:standardPoint/ns:graphIds/ns:guid"), 
-    xmlValue,
-    namespaces = c(ns = "http://www.roche.ch/LC96AbsQuantCalculatedDataModel"))    
+      namespaces = c(ns = "http://www.roche.ch/LC96RelQuantCalculatedDataModel"))
+    positions.guids <- xpathSApply(
+      rdml.doc, 
+      paste0("//ns:standardPoints/ns:standardPoint/ns:graphIds/ns:guid"), 
+      xmlValue,
+      namespaces = c(ns = "http://www.roche.ch/LC96RelQuantCalculatedDataModel"))
+  } else {
+    concs.guids<-xpathSApply(
+      rdml.doc,
+      "//ns:absQuantDataSource/ns:standard/../ns:graphId",   
+      namespaces = c(ns = "http://www.roche.ch/LC96AbsQuantCalculatedDataModel"),
+      xmlValue)
+    names(concs) <- concs.guids
+    concs <- sort(concs, decreasing=TRUE)
+    positions <- 
+      xpathSApply(
+        rdml.doc, 
+        paste0("//ns:standardPoints/ns:standardPoint/ns:position"), 
+        xmlValue,
+        namespaces = 
+          c(ns = "http://www.roche.ch/LC96AbsQuantCalculatedDataModel"))
+    positions <- sapply(positions, FromPositionToId)
+    dye.names <-xpathSApply(
+      rdml.doc, 
+      paste0("//ns:standardPoints/ns:standardPoint/ns:dyeName"), 
+      xmlValue,
+      namespaces = c(ns = "http://www.roche.ch/LC96AbsQuantCalculatedDataModel"))
+    positions.guids <- xpathSApply(
+      rdml.doc, 
+      paste0("//ns:standardPoints/ns:standardPoint/ns:graphIds/ns:guid"), 
+      xmlValue,
+      namespaces = c(ns = "http://www.roche.ch/LC96AbsQuantCalculatedDataModel"))    
+  }
   positions.table <- matrix(c(dye.names,
                               positions),
                             ncol = length(positions),
@@ -85,13 +118,13 @@ GetConditionsRoche <- function(uniq.folder)
   }
   rdml.doc <- xmlParse(paste0(uniq.folder,"/app_data.xml"))
   nodes <- getNodeSet(rdml.doc,
-                       "/ns:rocheLC96AppExtension/ns:experiment/ns:run/ns:react/ns:condition/..",
-                       namespaces = c(ns = "http://www.roche.ch/LC96AppExtensionSchema"))
+                      "/ns:rocheLC96AppExtension/ns:experiment/ns:run/ns:react/ns:condition/..",
+                      namespaces = c(ns = "http://www.roche.ch/LC96AppExtensionSchema"))
   
   reacts <- sapply(nodes,
                    function(node)  xmlAttrs(node, "id"))
   conditions <- sapply(nodes,
-                      function(node)  xmlValue(node[["condition"]]))
+                       function(node)  xmlValue(node[["condition"]]))
   if (length(conditions) == 0) {
     cat("NONE")
     return(NULL)
@@ -548,7 +581,7 @@ RDML$set("public", "initialize", function(input) {
     sample <- xmlAttrs(react[["sample"]],"id")
     ######
     if(length(private$.id) != 0 && 
-         private$.id[[1]]$publisher == "Roche Diagnostics") {
+       private$.id[[1]]$publisher == "Roche Diagnostics") {
       # remove Roche omitted ('ntp') samples
       if(is.null(private$.sample[[sample]]))
         return(NULL)
@@ -677,18 +710,18 @@ RDML$set("public", "initialize", function(input) {
   
   private$.recalcPositions()
   if(!is.null(ref.genes.r) && length(ref.genes.r) != 0) {
-   for(ref.gene in ref.genes.r) {
-     geneName <- xmlValue(ref.gene[["geneName"]])
-     geneI <- grep(
-       sprintf("@%s$", geneName),
-       names(private$.target))
-     private$.target[[geneI]]$type <-
-       ifelse(as.logical(xmlValue(ref.gene[["isReference"]])),
-              "ref",
-              "toi")
-   }
+    for(ref.gene in ref.genes.r) {
+      geneName <- xmlValue(ref.gene[["geneName"]])
+      geneI <- grep(
+        sprintf("@%s$", geneName),
+        names(private$.target))
+      private$.target[[geneI]]$type <-
+        ifelse(as.logical(xmlValue(ref.gene[["isReference"]])),
+               "ref",
+               "toi")
+    }
   }
-    
+  
   
   if(length(private$.id) != 0 && private$.id[[1]]$publisher == "Roche Diagnostics") {    
     for(i in 1:length(private$.sample)) {
