@@ -1,6 +1,8 @@
-#' Merges one \code{RDML} object into another
+#' Merges \code{RDML} objects
 #' 
-#' Write docs here
+#' Merges one \code{RDML} object into another.
+#' 
+#' @param to.merge \code{RDML} object that should be merged into current object.
 #' 
 #' @docType methods
 #' @name Merge

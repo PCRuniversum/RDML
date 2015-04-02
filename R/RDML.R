@@ -4,14 +4,12 @@
 #' Main purpose of this class is to work with RDML format data (Lefever et al. 
 #' 2009) and transform it to the appropriate format of the \code{qpcR} (Ritz et 
 #' al. 2008, Spiess et al. 2008) and \code{chipPCR} packages (see 
-#' \link{new.RDML} for import and \link{RDML.Save} for export details). 
+#' \link{new.RDML} for import details). 
 #' Real-time PCR Data Markup Language (RDML) is the recommended file format 
 #' element in the Minimum Information for Publication of Quantitative Real-Time 
-#' PCR Experiments (MIQE) guidelines (Bustin et al. 2009). After importing all 
-#' data contained at RDML file can be accessed (getted or setted) by 
-#' \code{fields}. Inner structure of imported data mimics structure of RDML file
-#' v1.2. Also data can be represented as \code{data.frame} by method 
-#' \code{AsTable}. Such variant of data representation allows easy samples 
+#' PCR Experiments (MIQE) guidelines (Bustin et al. 2009). Inner structure of 
+#' imported data mimics structure of RDML file v1.2. All data except fluorescence values
+#' can be represented as \code{data.frame} by method \code{AsTable}. Such variant of data representation allows easy samples 
 #' filtering (by targets, types, etc.) and serves as request for \code{GetFData}
 #' method -- gets fluorescence data for specified samples.
 #' 
@@ -19,13 +17,14 @@
 #' @section Fields: Type, structure of data and description of fields can be 
 #'   viewed at RDML v1.2 file description
 #'   \link{http://rdml.org/files.php?v=1.2}. Names of fields are first level of 
-#'   XML tree. All setters for fields contain data validators (asserts). Thus 
-#'   invalid data can not be setted.
+#'   XML tree.
 #' @section Methods: \describe{\item{new}{creates new instance of \code{RDML} 
 #'   class object (see \link{RDML.new})} \item{AsTable}{represent RDML data as 
 #'   \code{data.frame} (see \link{RDML.AsTable})}\item{GetFData}{gets
 #'   fluorescence data (see \link{RDML.GetFData})}\item{SetFData}{sets
-#'   fluorescence data (see \link{RDML.SetFData})}}
+#'   fluorescence data (see \link{RDML.SetFData})}\item{Merge}{merges two 
+#'   \code{RDML} to one (see \link{RDML.Merge})}
+#'   \item{As.Dendrogram}{represents structure of \code{RDML} j,ject as dendrogram(see \link{RDML.AsDendrogram})}}
 #'   
 #' @author Konstantin A. Blagodatskikh <k.blag@@yandex.ru>, Stefan Roediger 
 #'   <stefan.roediger@@hs-lausitz.de>, Michal Burdukiewicz 
@@ -61,10 +60,8 @@
 #' @aliases RDML.class RDML
 #' @docType class
 #' @export
-#' @import assertthat
-#' @import XML
+#' @import assertthat 
 #' @importFrom R6 R6Class
-#' @importFrom uuid UUIDgenerate
 #' @importFrom plyr llply ldply ddply compact
 #' @import dplyr
 #' @include RDML.asserts.R
@@ -203,7 +200,7 @@ RDML <- R6Class("RDML",
                         private$.experiment[[exp.id]]$run)) {
                         for(react.id in names(
                           private$.experiment[[exp.id]]$
-                            run[[run.id]]$react)) {
+                          run[[run.id]]$react)) {
                           private$.experiment[[exp.id]]$
                             run[[run.id]]$
                             react[[react.id]]$position <- {
@@ -361,7 +358,7 @@ RDML <- R6Class("RDML",
                                                    c("value",
                                                      "unit")))
                         if(!is.na(quantity$value) &&
-                             !is.na(quantity$unit)) {
+                           !is.na(quantity$unit)) {
                           assert_that(is.double(quantity$value))
                           assert_that(is.string(quantity$unit))
                         }
@@ -671,6 +668,6 @@ RDML <- R6Class("RDML",
                   conditions = function() {
                     return(private$.conditions)
                   }
-                    
+                  
                 )
 )

@@ -175,8 +175,11 @@ GetRefGenesRoche <- function(uniq.folder)
 #' @name new
 #' @aliases RDML.new
 #' @rdname new-method
+#' @import XML
+#' @import uuid
 #' @include RDML.R
 #' @examples
+#' \dontrun{
 #' ## Import from RDML file
 #' PATH <- path.package("RDML")
 #' filename <- paste(PATH, "/extdata/", "lc96_bACTXY.rdml", sep ="")
@@ -184,6 +187,8 @@ GetRefGenesRoche <- function(uniq.folder)
 #' 
 #' ## Some kind of overview for lc96
 #' lc96$AsTable(name.pattern = sample[[react$sample]]$description)
+#' lc96$AsDendrogram()
+#' }
 RDML$set("public", "initialize", function(input) {  
   if(missing(input)) return()
   assert_that(is.string(input))

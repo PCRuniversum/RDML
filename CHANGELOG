@@ -1,3 +1,6 @@
+Changes from Version 0.8-1 to 0.8-2 [April 2 2015]
+* Added AsDendrogram
+
 Changes from Version 0.7-1 to 0.8-1 [January 27 2015]
 * All code rewritten
 * Working functions: AsTable, GetFData
