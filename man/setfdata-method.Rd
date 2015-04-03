@@ -5,10 +5,20 @@
 \alias{RDML.SetFData}
 \alias{SetFData}
 \title{Sets fluorescence data vectors to \code{RDML} object}
+\arguments{
+\item{data}{\code{matrix} that contains at first column constant data for all fluorescence vectors(i.e. cycle numbers or temperature)
+and fluorescence values at other columns. Name of column is the name of constant data.
+Names of other column are \code{fdata.names} (links to rows at \code{description}). Name of
+matrix passed to param becomes type of data.}
+
+\item{descrition}{output from \code{AsTable} function that descrips fluorescence data.}
+}
 \description{
-Write docs here
+Sets fluorescence data vectors to \code{RDML} object for specified method
+of experiment.
 }
 \examples{
+\dontrun{
 PATH <- path.package("RDML")
 filename <- paste0(PATH, "/extdata/", "stepone_std.rdml")
 cfx96 <- RDML$new(filename)
@@ -25,9 +35,10 @@ cfx96$SetFData(cpp, tab)
 library(ggplot2)
 library(gridExtra)
 cfx96.gg <- cfx96$GetFData(tab, long.table = TRUE)
-cpp.gg <- cfx96$GetFData(tab, data.type = "cpp", long.table = TRUE)
+cpp.gg <- cfx96$GetFData(tab, fdata.type = "cpp", long.table = TRUE)
 plot1 <- ggplot(cfx96.gg, aes(x = cyc, y = fluo,group=fdata.name)) + geom_line() + ggtitle("Raw data")
 plot2 <- ggplot(cpp.gg, aes(x = cyc, y = fluo,group=fdata.name)) + geom_line() + ggtitle("CPP processed data")
 grid.arrange(plot1, plot2, nrow=2)
+}
 }
 

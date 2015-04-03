@@ -6,7 +6,7 @@
 \alias{RDML.class}
 \title{R6 class \code{RDML} -- contains methods to read and overview fluorescence
 data from RDML v1.1 and v1.2 format files}
-\format{\preformatted{Class 'R6ClassGenerator' <environment: 0x00000000196018a0> 
+\format{\preformatted{Class 'R6ClassGenerator' <environment: 0x00000000097281f0> 
  - attr(*, "name")= chr "RDML_generator"
 }}
 \usage{
@@ -16,7 +16,7 @@ RDML
 Main purpose of this class is to work with RDML format data (Lefever et al.
 2009) and transform it to the appropriate format of the \code{qpcR} (Ritz et
 al. 2008, Spiess et al. 2008) and \code{chipPCR} packages (see
-\link{new.RDML} for import details).
+\link{RDML.new} for import details).
 Real-time PCR Data Markup Language (RDML) is the recommended file format
 element in the Minimum Information for Publication of Quantitative Real-Time
 PCR Experiments (MIQE) guidelines (Bustin et al. 2009). Inner structure of

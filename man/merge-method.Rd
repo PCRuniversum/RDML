@@ -4,9 +4,12 @@
 \name{Merge}
 \alias{Merge}
 \alias{RDML.Merge}
-\title{Merges one \code{RDML} object into another}
+\title{Merges \code{RDML} objects}
+\arguments{
+\item{to.merge}{\code{RDML} object that should be merged into current object.}
+}
 \description{
-Write docs here
+Merges one \code{RDML} object into another.
 }
 \examples{
 PATH <- path.package("RDML")

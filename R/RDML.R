@@ -4,7 +4,7 @@
 #' Main purpose of this class is to work with RDML format data (Lefever et al. 
 #' 2009) and transform it to the appropriate format of the \code{qpcR} (Ritz et 
 #' al. 2008, Spiess et al. 2008) and \code{chipPCR} packages (see 
-#' \link{new.RDML} for import details). 
+#' \link{RDML.new} for import details). 
 #' Real-time PCR Data Markup Language (RDML) is the recommended file format 
 #' element in the Minimum Information for Publication of Quantitative Real-Time 
 #' PCR Experiments (MIQE) guidelines (Bustin et al. 2009). Inner structure of 

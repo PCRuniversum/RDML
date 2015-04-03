@@ -19,6 +19,7 @@ This function has been designed to import data from RDML v1.1 and v1.2 format fi
   LightCycler 96} and \emph{Applied Biosystems StepOne}.
 }
 \examples{
+\dontrun{
 ## Import from RDML file
 PATH <- path.package("RDML")
 filename <- paste(PATH, "/extdata/", "lc96_bACTXY.rdml", sep ="")
@@ -26,6 +27,8 @@ lc96 <- RDML$new(filename)
 
 ## Some kind of overview for lc96
 lc96$AsTable(name.pattern = sample[[react$sample]]$description)
+lc96$AsDendrogram()
+}
 }
 \author{
 Konstantin A. Blagodatskikh <k.blag@yandex.ru>, Stefan Roediger

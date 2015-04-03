@@ -6,7 +6,7 @@
 #' @param request Output from AsTable method(\link{RDML.AsTable})
 #' @param limits \code{vector} with two values (min and max values) that limits
 #' cycles or temperature that should be getted. If this values are smaller or bigger 
-#' than min or max values at dats - NAs will be generated.
+#' than min or max values at dats - NAwill be used nearest available fluorescence data.
 #' @param data.type Type of fluorescence data (i.e. 'adp' for qPCR or 'mdp' for
 #'   melting)
 #' @param first.col.name name of the column that contains constant data for all samples
@@ -62,7 +62,7 @@ RDML$set("public", "GetFData",
              data[[first.col.req["target"]]][[data.type]][, first.col.name]
            if(is.null(limits))
              limits <- c(out[1], tail(out, n = 1))
-          
+           
            from <- which(out == limits[1])
            if(length(from) == 0)
              out <- c(limits[1]:(out[1] - 1), out)
@@ -74,7 +74,7 @@ RDML$set("public", "GetFData",
              out <- c(out, (tail(out, 1) + 1) : limits[2])
            else
              out <- head(out, to)
-             
+           
            out <- 
              cbind(out,
                    apply(request, 1,
@@ -88,26 +88,26 @@ RDML$set("public", "GetFData",
                              react[[fdata["react.id"]]]$
                              data[[fdata["target"]]][[data.type]][, "fluor"]                           
                            
-                             from <- which(cycles == limits[1])
-                             if(length(from) == 0) {
-                               data <- c(
-                                 rep(data[1], cycles[1] - limits[1]), data)
-                               cycles <- c(limits[1]:(cycles[1] - 1), cycles)
-                             }
-                             else {
-                               data <- data[from:length(data)]
-                               cycles <- cycles[from:length(cycles)]
-                             }
+                           from <- which(cycles == limits[1])
+                           if(length(from) == 0) {
+                             data <- c(
+                               rep(data[1], cycles[1] - limits[1]), data)
+                             cycles <- c(limits[1]:(cycles[1] - 1), cycles)
+                           }
+                           else {
+                             data <- data[from:length(data)]
+                             cycles <- cycles[from:length(cycles)]
+                           }
                            
-                             to <- which(cycles == limits[2])
-                             if(length(to) == 0) 
-                               data <- c(data, 
-                                         rep(tail(data, 1),
-                                             limits[2] - tail(cycles, 1)))
-                             
-                             else
-                               data <- head(data, to)
-                             data
+                           to <- which(cycles == limits[2])
+                           if(length(to) == 0) 
+                             data <- c(data, 
+                                       rep(tail(data, 1),
+                                           limits[2] - tail(cycles, 1)))
+                           
+                           else
+                             data <- head(data, to)
+                           data
                          })
              )
            
