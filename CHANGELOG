@@ -7,7 +7,7 @@ Changes from Version 0.7-1 to 0.8-1 [January 27 2015]
 
 Changes from Version 0.6-1 to 0.7-1 [September 23 2014]
 * Added plot S3
-* RDML rewrited as R6 object
+* RDML rewrote as R6 object
 
 Changes from Version 0.6 to 0.6-1 [September 23 2014] 
 * flat.table option removed from RDML function
