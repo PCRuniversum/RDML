@@ -1,11 +1,11 @@
 #' Represents structure of \code{RDML} file as dendrogram
 #' 
-#' Plots and/or returns structure of \code{RDML} file as dendrogram tree
+#' Plots and/or returns structure of \code{RDML} file as dendrogram (tree view)
 #' 
 #' @param plot.dendrogram plots dendrogram if \code{TRUE}
 #' @return \code{dendrogram} object
 #' @author Konstantin A. Blagodatskikh <k.blag@@yandex.ru>, Stefan Roediger 
-#'   <stefan.roediger@@hs-lausitz.de>, Michal Burdukiewicz 
+#'   <stefan.roediger@@b-tu.de>, Michal Burdukiewicz 
 #'   <michalburdukiewicz@@gmail.com>
 #' @keywords manip
 #' @docType methods

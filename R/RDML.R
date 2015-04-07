@@ -27,7 +27,7 @@
 #'   \item{As.Dendrogram}{represents structure of \code{RDML} j,ject as dendrogram(see \link{RDML.AsDendrogram})}}
 #'   
 #' @author Konstantin A. Blagodatskikh <k.blag@@yandex.ru>, Stefan Roediger 
-#'   <stefan.roediger@@hs-lausitz.de>, Michal Burdukiewicz 
+#'   <stefan.roediger@@b-tu.de>, Michal Burdukiewicz 
 #'   <michalburdukiewicz@@gmail.com>
 #' @references RDML format http://www.rdml.org/ \code{R6} package 
 #'   http://cran.r-project.org/web/packages/R6/index.html

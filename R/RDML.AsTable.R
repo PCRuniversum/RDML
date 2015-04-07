@@ -14,18 +14,18 @@
 #' columns list by parameter \code{.default} but note that columns \code{exp.id,
 #' run.id, react.id, target} are necessary for usage \code{AsTable} output as 
 #' input for \code{GetFData} and \code{SetFData}. \cr Additional columns can be 
-#' introduced by specifing them at input parameter \code{...} (see Examples). 
-#' All default and additional columns accessement expressions have to be 
+#' introduced by specifying them at input parameter \code{...} (see Examples). 
+#' All default and additional columns accession expressions have to be 
 #' named!!!\cr
 #' 
-#' Experiment, run, react and data to which belongs each fluoresence data vector
+#' Experiment, run, react and data to which belongs each fluorescence data vector
 #' can be accessed by \code{experiment, run, react, data} (see Examples).
 #' 
 #' @param .default \code{list} of default columns
 #' @param name.pattern expression to form \code{fdata.name} (see Examples)
 #' @param ... additional columns
 #' @author Konstantin A. Blagodatskikh <k.blag@@yandex.ru>, Stefan Roediger 
-#'   <stefan.roediger@@hs-lausitz.de>, Michal Burdukiewicz 
+#'   <stefan.roediger@@b-tu.de>, Michal Burdukiewicz 
 #'   <michalburdukiewicz@@gmail.com>
 #' @keywords manip
 #' @docType methods
