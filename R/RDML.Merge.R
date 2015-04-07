@@ -10,6 +10,7 @@
 #' @rdname merge-method
 #' @include RDML.R
 #' @examples
+#' \dontrun{
 #' PATH <- path.package("RDML")
 #' filename <- paste(PATH, "/extdata/", "lc96_bACTXY.rdml", sep ="")
 #' lc96 <- RDML$new(filename)
@@ -17,6 +18,7 @@
 #' stepone <- RDML$new(filename)
 #' lc96$Merge(stepone)
 #' lc96$AsTable()
+#' }
 RDML$set("public", "Merge",
          function(to.merge) {
            

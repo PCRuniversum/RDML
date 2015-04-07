@@ -7,7 +7,7 @@
 #' and fluorescence values at other columns. Name of column is the name of constant data.
 #' Names of other column are \code{fdata.names} (links to rows at \code{description}). Name of
 #' matrix passed to param becomes type of data.
-#' @param descrition output from \code{AsTable} function that descrips fluorescence data.
+#' @param description output from \code{AsTable} function that descrips fluorescence data.
 #' 
 #' @examples
 #' \dontrun{
@@ -27,9 +27,16 @@
 #' library(ggplot2)
 #' library(gridExtra)
 #' cfx96.gg <- cfx96$GetFData(tab, long.table = TRUE)
-#' cpp.gg <- cfx96$GetFData(tab, fdata.type = "cpp", long.table = TRUE)
-#' plot1 <- ggplot(cfx96.gg, aes(x = cyc, y = fluo,group=fdata.name)) + geom_line() + ggtitle("Raw data")
-#' plot2 <- ggplot(cpp.gg, aes(x = cyc, y = fluo,group=fdata.name)) + geom_line() + ggtitle("CPP processed data")
+#' cpp.gg <- cfx96$GetFData(tab, fdata.type = "cpp",
+#'                          long.table = TRUE)
+#' plot1 <- ggplot(cfx96.gg, aes(x = cyc, y = fluo,
+#'                 group=fdata.name)) +
+#'                  geom_line() +
+#'                  ggtitle("Raw data")
+#' plot2 <- ggplot(cpp.gg, aes(x = cyc, y = fluo,
+#'                 group=fdata.name)) +
+#'                  geom_line() +
+#'                  ggtitle("CPP processed data")
 #' grid.arrange(plot1, plot2, nrow=2)
 #' }
 #' @docType methods

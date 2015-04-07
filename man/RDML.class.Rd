@@ -6,7 +6,7 @@
 \alias{RDML.class}
 \title{R6 class \code{RDML} -- contains methods to read and overview fluorescence
 data from RDML v1.1 and v1.2 format files}
-\format{\preformatted{Class 'R6ClassGenerator' <environment: 0x00000000097281f0> 
+\format{\preformatted{Class 'R6ClassGenerator' <environment: 0x000000000975aee0> 
  - attr(*, "name")= chr "RDML_generator"
 }}
 \usage{
@@ -27,8 +27,7 @@ method -- gets fluorescence data for specified samples.
 }
 \section{Fields}{
  Type, structure of data and description of fields can be
-  viewed at RDML v1.2 file description
-  \link{http://rdml.org/files.php?v=1.2}. Names of fields are first level of
+  viewed at RDML v1.2 file description. Names of fields are first level of
   XML tree.
 }
 
@@ -39,7 +38,7 @@ method -- gets fluorescence data for specified samples.
   fluorescence data (see \link{RDML.GetFData})}\item{SetFData}{sets
   fluorescence data (see \link{RDML.SetFData})}\item{Merge}{merges two
   \code{RDML} to one (see \link{RDML.Merge})}
-  \item{As.Dendrogram}{represents structure of \code{RDML} j,ject as dendrogram(see \link{RDML.AsDendrogram})}}
+  \item{AsDendrogram}{represents structure of \code{RDML} object as dendrogram(see \link{RDML.AsDendrogram})}}
 }
 \examples{
 ## EXAMPLE 1:

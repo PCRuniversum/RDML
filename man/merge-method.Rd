@@ -12,6 +12,7 @@
 Merges one \code{RDML} object into another.
 }
 \examples{
+\dontrun{
 PATH <- path.package("RDML")
 filename <- paste(PATH, "/extdata/", "lc96_bACTXY.rdml", sep ="")
 lc96 <- RDML$new(filename)
@@ -19,5 +20,6 @@ filename <- paste(PATH, "/extdata/", "stepone_std.rdml", sep ="")
 stepone <- RDML$new(filename)
 lc96$Merge(stepone)
 lc96$AsTable()
+}
 }
 

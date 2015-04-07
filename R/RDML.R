@@ -15,8 +15,7 @@
 #' 
 #' 
 #' @section Fields: Type, structure of data and description of fields can be 
-#'   viewed at RDML v1.2 file description
-#'   \link{http://rdml.org/files.php?v=1.2}. Names of fields are first level of 
+#'   viewed at RDML v1.2 file description. Names of fields are first level of 
 #'   XML tree.
 #' @section Methods: \describe{\item{new}{creates new instance of \code{RDML} 
 #'   class object (see \link{RDML.new})} \item{AsTable}{represent RDML data as 
@@ -24,7 +23,7 @@
 #'   fluorescence data (see \link{RDML.GetFData})}\item{SetFData}{sets
 #'   fluorescence data (see \link{RDML.SetFData})}\item{Merge}{merges two 
 #'   \code{RDML} to one (see \link{RDML.Merge})}
-#'   \item{As.Dendrogram}{represents structure of \code{RDML} j,ject as dendrogram(see \link{RDML.AsDendrogram})}}
+#'   \item{AsDendrogram}{represents structure of \code{RDML} object as dendrogram(see \link{RDML.AsDendrogram})}}
 #'   
 #' @author Konstantin A. Blagodatskikh <k.blag@@yandex.ru>, Stefan Roediger 
 #'   <stefan.roediger@@hs-lausitz.de>, Michal Burdukiewicz 
