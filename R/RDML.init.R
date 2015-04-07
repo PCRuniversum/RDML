@@ -146,7 +146,7 @@ GetRefGenesRoche <- function(uniq.folder)
   ref <- getNodeSet(
     rdml.doc,
     "//ns:geneSettings/ns:relQuantGeneSettings",
-    namespace = c(ns = "http://www.roche.ch/LC96RelQuantGeneralDataModel"))
+    namespaces = c(ns = "http://www.roche.ch/LC96RelQuantGeneralDataModel"))
   
   if (length(ref) == 0) {
     cat("NONE")
@@ -349,7 +349,16 @@ RDML$set("public", "initialize", function(input) {
     target.list <- llply(rdml.root["target"],
                          function(target) { 
                            list(
-                             id = xmlAttrs(target, "id"),
+                             id = { 
+                               ifelse(length(private$.id) != 0 &&
+                                 private$.id[[1]]$publisher == "Roche Diagnostics",
+                                      {
+                                        id <- xmlAttrs(target, "id")
+                                        gsub("@(.+)$", "\\1", 
+                                             regmatches(id,gregexpr("@(.+)$",id))[[1]])
+                                      },
+                                      xmlAttrs(target, "id"))}
+                             ,
                              description = xmlValue(target[["description"]]),
                              documentation = llply(target["documentation"],
                                                    function(documentation)
@@ -502,7 +511,12 @@ RDML$set("public", "initialize", function(input) {
                        tar.id,
                        "']/..")                                                      
     list(
-      id = tar.id, # id==tar
+      id = ifelse(length(private$.id) != 0 &&
+                    private$.id[[1]]$publisher == "Roche Diagnostics",
+                  gsub("@(.+)$", "\\1", 
+                       regmatches(tar.id,gregexpr("@(.+)$",tar.id))[[1]])
+                  ,
+                  tar.id), # id==tar
       cq = as.numeric(xmlValue(data[["cq"]])),
       excl = xmlValue(data[["excl"]]),
       adp = {                                                                                    
@@ -718,7 +732,7 @@ RDML$set("public", "initialize", function(input) {
     for(ref.gene in ref.genes.r) {
       geneName <- xmlValue(ref.gene[["geneName"]])
       geneI <- grep(
-        sprintf("@%s$", geneName),
+        geneName,
         names(private$.target))
       private$.target[[geneI]]$type <-
         ifelse(as.logical(xmlValue(ref.gene[["isReference"]])),

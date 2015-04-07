@@ -106,6 +106,9 @@ RDML$set("public", "AsDendrogram",
                   at=xtick,
                   lty = "blank",
                   las = 2,
+                  labels = FALSE)
+             text(seq(0, 5, by=0.5),
+                  par("usr")[3] - 0.2,
                   labels = c("Number\nof samples",
                              "Data type",
                              "",
@@ -116,7 +119,8 @@ RDML$set("public", "AsDendrogram",
                              "Run ID",
                              "",
                              "Experiment ID",
-                             ""))
+                             ""),
+                  srt = 45, pos = 1, xpd = TRUE)
            }
            return(tree)},
          overwrite = TRUE)

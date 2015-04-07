@@ -11,7 +11,7 @@ and fluorescence values at other columns. Name of column is the name of constant
 Names of other column are \code{fdata.names} (links to rows at \code{description}). Name of
 matrix passed to param becomes type of data.}
 
-\item{descrition}{output from \code{AsTable} function that descrips fluorescence data.}
+\item{description}{output from \code{AsTable} function that descrips fluorescence data.}
 }
 \description{
 Sets fluorescence data vectors to \code{RDML} object for specified method
@@ -35,9 +35,16 @@ cfx96$SetFData(cpp, tab)
 library(ggplot2)
 library(gridExtra)
 cfx96.gg <- cfx96$GetFData(tab, long.table = TRUE)
-cpp.gg <- cfx96$GetFData(tab, fdata.type = "cpp", long.table = TRUE)
-plot1 <- ggplot(cfx96.gg, aes(x = cyc, y = fluo,group=fdata.name)) + geom_line() + ggtitle("Raw data")
-plot2 <- ggplot(cpp.gg, aes(x = cyc, y = fluo,group=fdata.name)) + geom_line() + ggtitle("CPP processed data")
+cpp.gg <- cfx96$GetFData(tab, fdata.type = "cpp",
+                         long.table = TRUE)
+plot1 <- ggplot(cfx96.gg, aes(x = cyc, y = fluo,
+                group=fdata.name)) +
+                 geom_line() +
+                 ggtitle("Raw data")
+plot2 <- ggplot(cpp.gg, aes(x = cyc, y = fluo,
+                group=fdata.name)) +
+                 geom_line() +
+                 ggtitle("CPP processed data")
 grid.arrange(plot1, plot2, nrow=2)
 }
 }

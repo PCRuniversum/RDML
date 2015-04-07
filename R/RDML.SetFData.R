@@ -27,9 +27,16 @@
 #' library(ggplot2)
 #' library(gridExtra)
 #' cfx96.gg <- cfx96$GetFData(tab, long.table = TRUE)
-#' cpp.gg <- cfx96$GetFData(tab, fdata.type = "cpp", long.table = TRUE)
-#' plot1 <- ggplot(cfx96.gg, aes(x = cyc, y = fluo,group=fdata.name)) + geom_line() + ggtitle("Raw data")
-#' plot2 <- ggplot(cpp.gg, aes(x = cyc, y = fluo,group=fdata.name)) + geom_line() + ggtitle("CPP processed data")
+#' cpp.gg <- cfx96$GetFData(tab, fdata.type = "cpp",
+#'                          long.table = TRUE)
+#' plot1 <- ggplot(cfx96.gg, aes(x = cyc, y = fluo,
+#'                 group=fdata.name)) +
+#'                  geom_line() +
+#'                  ggtitle("Raw data")
+#' plot2 <- ggplot(cpp.gg, aes(x = cyc, y = fluo,
+#'                 group=fdata.name)) +
+#'                  geom_line() +
+#'                  ggtitle("CPP processed data")
 #' grid.arrange(plot1, plot2, nrow=2)
 #' }
 #' @docType methods
