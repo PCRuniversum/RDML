@@ -1,3 +1,6 @@
+Changes from Version 0.8-2 to 0.8-3 [April 8 2015]
+* uuid usage removed
+
 Changes from Version 0.8-1 to 0.8-2 [April 2 2015]
 * Added AsDendrogram
 
