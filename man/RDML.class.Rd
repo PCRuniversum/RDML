@@ -6,7 +6,7 @@
 \alias{RDML.class}
 \title{R6 class \code{RDML} -- contains methods to read and overview fluorescence
 data from RDML v1.1 and v1.2 format files}
-\format{\preformatted{Class 'R6ClassGenerator' <environment: 0x000000000975aee0> 
+\format{\preformatted{Class 'R6ClassGenerator' <environment: 0x0000000008e512f0> 
  - attr(*, "name")= chr "RDML_generator"
 }}
 \usage{
@@ -147,7 +147,7 @@ invisible(meltcurve(cols, fluos = 2:ncol(cols),
 }
 \author{
 Konstantin A. Blagodatskikh <k.blag@yandex.ru>, Stefan Roediger
-  <stefan.roediger@hs-lausitz.de>, Michal Burdukiewicz
+  <stefan.roediger@b-tu.de>, Michal Burdukiewicz
   <michalburdukiewicz@gmail.com>
 }
 \references{

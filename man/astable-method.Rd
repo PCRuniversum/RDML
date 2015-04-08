@@ -29,7 +29,7 @@ columns list by parameter \code{.default} but note that columns \code{exp.id,
 run.id, react.id, target} are necessary for usage \code{AsTable} output as
 input for \code{GetFData} and \code{SetFData}. \cr Additional columns can be
 introduced by specifying them at input parameter \code{...} (see Examples).
-All default and additional columns assessment expressions have to be
+All default and additional columns accession expressions have to be
 named!!!\cr
 
 Experiment, run, react and data to which belongs each fluorescence data vector
@@ -71,7 +71,7 @@ ggplot(fdata, aes(x = cyc, y = fluo,
 }
 \author{
 Konstantin A. Blagodatskikh <k.blag@yandex.ru>, Stefan Roediger
-  <stefan.roediger@hs-lausitz.de>, Michal Burdukiewicz
+  <stefan.roediger@b-tu.de>, Michal Burdukiewicz
   <michalburdukiewicz@gmail.com>
 }
 \keyword{manip}

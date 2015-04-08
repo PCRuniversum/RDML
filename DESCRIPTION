@@ -21,7 +21,6 @@ Imports:
     R6,
     assertthat,
     XML,
-    uuid,
     plyr,
     dplyr
 Collate:

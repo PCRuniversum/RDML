@@ -12,7 +12,7 @@
 \code{dendrogram} object
 }
 \description{
-Plots and/or returns structure of \code{RDML} file as dendrogram tree
+Plots and/or returns structure of \code{RDML} file as dendrogram (tree view)
 }
 \examples{
 PATH <- path.package("RDML")
@@ -22,7 +22,7 @@ cfx96$AsDendrogram()
 }
 \author{
 Konstantin A. Blagodatskikh <k.blag@yandex.ru>, Stefan Roediger
-  <stefan.roediger@hs-lausitz.de>, Michal Burdukiewicz
+  <stefan.roediger@b-tu.de>, Michal Burdukiewicz
   <michalburdukiewicz@gmail.com>
 }
 \keyword{manip}
