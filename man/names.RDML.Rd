@@ -14,11 +14,11 @@
 }
 \description{
 Just wraps \code{ls()} function to show RDML public fields
-and methods. Useful for autocomplete at R editors.
+and methods. Useful for auto complete in R editors.
 }
 \author{
 Konstantin A. Blagodatskikh <k.blag@yandex.ru>, Stefan Roediger
-<stefan.roediger@hs-lausitz.de>, Michal Burdukiewicz
+<stefan.roediger@b-tu.de>, Michal Burdukiewicz
 <michalburdukiewicz@gmail.com>
 }
 

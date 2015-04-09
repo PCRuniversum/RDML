@@ -9,14 +9,14 @@
 \item{request}{Output from AsTable method(\link{RDML.AsTable})}
 
 \item{limits}{\code{vector} with two values (min and max values) that limits
-cycles or temperature that should be getted. If this values are smaller or bigger
+cycles or temperature that should be gotten. If this values are smaller or bigger
 than min or max values at dats - NAwill be used nearest available fluorescence data.}
 
 \item{data.type}{Type of fluorescence data (i.e. 'adp' for qPCR or 'mdp' for
 melting)}
 
 \item{first.col.name}{name of the column that contains constant data for all samples
-(i.e. for 'adp' it can be 'cyc' or 'tmp' as decribed at RDML v1.2 standard)}
+(i.e. for 'adp' it can be 'cyc' or 'tmp' as described at RDML v1.2 standard)}
 
 \item{long.table}{Output table is ready for ggplot (See \link{RDML.AsTable}
 for example)}
@@ -50,7 +50,7 @@ colnames(fdata)
 }
 \author{
 Konstantin A. Blagodatskikh <k.blag@yandex.ru>, Stefan Roediger
-  <stefan.roediger@hs-lausitz.de>, Michal Burdukiewicz
+  <stefan.roediger@b-tu.de>, Michal Burdukiewicz
   <michalburdukiewicz@gmail.com>
 }
 \keyword{manip}

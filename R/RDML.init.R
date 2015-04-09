@@ -176,7 +176,6 @@ GetRefGenesRoche <- function(uniq.folder)
 #' @aliases RDML.new
 #' @rdname new-method
 #' @import XML
-#' @import uuid
 #' @include RDML.R
 #' @examples
 #' \dontrun{
@@ -195,7 +194,7 @@ RDML$set("public", "initialize", function(input) {
   # Unzips RDML to unique folder to get inner XML content.
   # Unique folder is needed to prevent file ovewriting
   # by parallel function usage.
-  uniq.folder <- paste0(tempdir(), UUIDgenerate())
+  uniq.folder <- tempfile() #paste0(tempdir(), UUIDgenerate())
   cat(sprintf("Unzipping %s...", input))
   unzipped.rdml <- unzip(input, exdir = uniq.folder)
   dilutions.r <- NULL
@@ -732,7 +731,7 @@ RDML$set("public", "initialize", function(input) {
     for(ref.gene in ref.genes.r) {
       geneName <- xmlValue(ref.gene[["geneName"]])
       geneI <- grep(
-        geneName,
+        sprintf("^%s$", geneName),
         names(private$.target))
       private$.target[[geneI]]$type <-
         ifelse(as.logical(xmlValue(ref.gene[["isReference"]])),
