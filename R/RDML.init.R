@@ -731,7 +731,7 @@ RDML$set("public", "initialize", function(input) {
     for(ref.gene in ref.genes.r) {
       geneName <- xmlValue(ref.gene[["geneName"]])
       geneI <- grep(
-        geneName,
+        sprintf("^%s$", geneName),
         names(private$.target))
       private$.target[[geneI]]$type <-
         ifelse(as.logical(xmlValue(ref.gene[["isReference"]])),
