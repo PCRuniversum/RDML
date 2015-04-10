@@ -301,8 +301,13 @@ RDML$set("public", "initialize", function(input) {
               if(type == "ntp")
                 return(NULL)
               #####################
+              id <- xmlAttrs(sample, "id")
               list(
-                id = xmlAttrs(sample, "id"),
+                id = ifelse(is.null(conditions.sep),
+                            id,
+                            gsub(sprintf("^(.*)%s.*$",
+                                         conditions.sep),
+                                 "\\1", id)),
                 description = xmlValue(sample[["description"]]),
                 documentation = llply(sample["documentation"],
                                       function(documentation)
@@ -314,11 +319,18 @@ RDML$set("public", "initialize", function(input) {
                                name = xmlValue(xRef[["name"]]),
                                id = xmlValue(xRef[["id"]])
                              )),
-                annotation = ldply(sample["annotation"],
-                                   function(annotation) c(
-                                     property = xmlValue(annotation[["property"]]),
-                                     value = xmlValue(annotation[["value"]])
-                                   )),
+                annotation = rbind(ldply(sample["annotation"],
+                                         function(annotation) c(
+                                           property = xmlValue(annotation[["property"]]),
+                                           value = xmlValue(annotation[["value"]])
+                                         )),
+                                   ifelse(is.null(conditions.sep),
+                                          NULL,
+                                          c("condition",
+                                            gsub(sprintf("^.*%s(.*)$",
+                                                         conditions.sep),
+                                                 "\\1", id)))
+                ),
                 type = type,
                 interRunCalibrator = as.logical(xmlValue(sample[["interRunCalibrator"]])),
                 quantity = list(value = as.numeric(xmlValue(sample[["quantity"]][["value"]])),
@@ -350,76 +362,76 @@ RDML$set("public", "initialize", function(input) {
                            list(
                              id = { 
                                ifelse(length(private$.id) != 0 &&
-                                 private$.id[[1]]$publisher == "Roche Diagnostics",
-                                      {
-                                        id <- xmlAttrs(target, "id")
-                                        gsub("@(.+)$", "\\1", 
-                                             regmatches(id,gregexpr("@(.+)$",id))[[1]])
-                                      },
-                                      xmlAttrs(target, "id"))}
-                             ,
-                             description = xmlValue(target[["description"]]),
-                             documentation = llply(target["documentation"],
-                                                   function(documentation)
-                                                     if(!is.null(documentation))
-                                                       xmlAttrs(documentation, "id")
-                             ),
-                             xRef = llply(target["xRef"],
-                                          function(xRef) c(
-                                            name = xmlValue(xRef[["name"]]),
-                                            id = xmlValue(xRef[["id"]])
-                                          )),
-                             type = xmlValue(target[["type"]]),
-                             amplificationEfficiencyMethod = 
-                               xmlValue(target[["amplificationEfficiencyMethod"]]),
-                             amplificationEfficiency = 
-                               as.numeric(xmlValue(target[["amplificationEfficiency"]])),
-                             amplificationEfficiencySE = 
-                               as.numeric(xmlValue(target[["amplificationEfficiencySE"]])),
-                             detectionLimit = 
-                               as.numeric(xmlValue(target[["detectionLimit"]])),
-                             dyeId = { 
-                               id <- xmlAttrs(target[["dyeId"]],"id")
-                               if(is.null(id)) NA
-                               else id
-                             },
-                             sequences = list(
-                               forwardPrimer = c(threePrimeTag = 
-                                                   xmlValue(target[["sequences"]][["forwardPrimer"]][["threePrimeTag"]]),
-                                                 fivePrimeTag = 
-                                                   xmlValue(target[["sequences"]][["forwardPrimer"]][["fivePrimeTag"]]),
-                                                 sequence = 
-                                                   xmlValue(target[["sequences"]][["forwardPrimer"]][["sequence"]])),
-                               reversePrimer = c(threePrimeTag = 
-                                                   xmlValue(target[["sequences"]][["reversePrimer"]][["threePrimeTag"]]),
-                                                 fivePrimeTag = 
-                                                   xmlValue(target[["sequences"]][["reversePrimer"]][["fivePrimeTag"]]),
-                                                 sequence = 
-                                                   xmlValue(target[["sequences"]][["reversePrimer"]][["sequence"]])),
-                               probe1 = c(threePrimeTag = 
-                                            xmlValue(target[["sequences"]][["probe1"]][["threePrimeTag"]]),
-                                          fivePrimeTag = 
-                                            xmlValue(target[["sequences"]][["probe1"]][["fivePrimeTag"]]),
-                                          sequence = 
-                                            xmlValue(target[["sequences"]][["probe1"]][["sequence"]])),
-                               probe2 = c(threePrimeTag = 
-                                            xmlValue(target[["sequences"]][["probe2"]][["threePrimeTag"]]),
-                                          fivePrimeTag = 
-                                            xmlValue(target[["sequences"]][["probe2"]][["fivePrimeTag"]]),
-                                          sequence = 
-                                            xmlValue(target[["sequences"]][["probe2"]][["sequence"]])),
-                               amplicon = c(threePrimeTag = 
-                                              xmlValue(target[["sequences"]][["amplicon"]][["threePrimeTag"]]),
-                                            fivePrimeTag = 
-                                              xmlValue(target[["sequences"]][["amplicon"]][["fivePrimeTag"]]),
-                                            sequence = 
-                                              xmlValue(target[["sequences"]][["amplicon"]][["sequence"]]))
-                             ),
-                             commercialAssay = list(company = 
-                                                      xmlValue(target[["commercialAssay"]][["company"]]),
-                                                    orderNumber = 
-                                                      xmlValue(target[["commercialAssay"]][["orderNumber"]]))
-                             
+                                        private$.id[[1]]$publisher == "Roche Diagnostics",
+  {
+    id <- xmlAttrs(target, "id")
+    gsub("@(.+)$", "\\1", 
+         regmatches(id,gregexpr("@(.+)$",id))[[1]])
+  },
+  xmlAttrs(target, "id"))}
+  ,
+  description = xmlValue(target[["description"]]),
+  documentation = llply(target["documentation"],
+                        function(documentation)
+                          if(!is.null(documentation))
+                            xmlAttrs(documentation, "id")
+  ),
+  xRef = llply(target["xRef"],
+               function(xRef) c(
+                 name = xmlValue(xRef[["name"]]),
+                 id = xmlValue(xRef[["id"]])
+               )),
+  type = xmlValue(target[["type"]]),
+  amplificationEfficiencyMethod = 
+    xmlValue(target[["amplificationEfficiencyMethod"]]),
+  amplificationEfficiency = 
+    as.numeric(xmlValue(target[["amplificationEfficiency"]])),
+  amplificationEfficiencySE = 
+    as.numeric(xmlValue(target[["amplificationEfficiencySE"]])),
+  detectionLimit = 
+    as.numeric(xmlValue(target[["detectionLimit"]])),
+  dyeId = { 
+    id <- xmlAttrs(target[["dyeId"]],"id")
+    if(is.null(id)) NA
+    else id
+  },
+  sequences = list(
+    forwardPrimer = c(threePrimeTag = 
+                        xmlValue(target[["sequences"]][["forwardPrimer"]][["threePrimeTag"]]),
+                      fivePrimeTag = 
+                        xmlValue(target[["sequences"]][["forwardPrimer"]][["fivePrimeTag"]]),
+                      sequence = 
+                        xmlValue(target[["sequences"]][["forwardPrimer"]][["sequence"]])),
+    reversePrimer = c(threePrimeTag = 
+                        xmlValue(target[["sequences"]][["reversePrimer"]][["threePrimeTag"]]),
+                      fivePrimeTag = 
+                        xmlValue(target[["sequences"]][["reversePrimer"]][["fivePrimeTag"]]),
+                      sequence = 
+                        xmlValue(target[["sequences"]][["reversePrimer"]][["sequence"]])),
+    probe1 = c(threePrimeTag = 
+                 xmlValue(target[["sequences"]][["probe1"]][["threePrimeTag"]]),
+               fivePrimeTag = 
+                 xmlValue(target[["sequences"]][["probe1"]][["fivePrimeTag"]]),
+               sequence = 
+                 xmlValue(target[["sequences"]][["probe1"]][["sequence"]])),
+    probe2 = c(threePrimeTag = 
+                 xmlValue(target[["sequences"]][["probe2"]][["threePrimeTag"]]),
+               fivePrimeTag = 
+                 xmlValue(target[["sequences"]][["probe2"]][["fivePrimeTag"]]),
+               sequence = 
+                 xmlValue(target[["sequences"]][["probe2"]][["sequence"]])),
+    amplicon = c(threePrimeTag = 
+                   xmlValue(target[["sequences"]][["amplicon"]][["threePrimeTag"]]),
+                 fivePrimeTag = 
+                   xmlValue(target[["sequences"]][["amplicon"]][["fivePrimeTag"]]),
+                 sequence = 
+                   xmlValue(target[["sequences"]][["amplicon"]][["sequence"]]))
+  ),
+  commercialAssay = list(company = 
+                           xmlValue(target[["commercialAssay"]][["company"]]),
+                         orderNumber = 
+                           xmlValue(target[["commercialAssay"]][["orderNumber"]]))
+  
                            )
                          }
     )
