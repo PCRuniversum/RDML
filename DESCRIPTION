@@ -6,12 +6,13 @@ LazyData: true
 Date: 2015-04-08
 Description: Imports real-time thermo cycler (qPCR) data from Real-time PCR
     Data Markup Language (RDML) format files and transforms to the appropriate
-    formats of the 'qpcR' and 'chipPCR' packages.
+    formats of the 'qpcR' and 'chipPCR' packages. Contains a dendrogram visualization
+    for the structure of RDML object.
 Authors@R: c(
     person("Konstantin A.", "Blagodatskikh",
     email = "k.blag@yandex.ru", role = c("cre", "aut")),
     person("Stefan", "Roediger",
-    email = "stefan.roediger@hs-lausitz.de",
+    email = "stefan.roediger@b-tu.de",
     role = "aut"),
     person("Michal", "Burdukiewicz",
     email = "michalburdukiewicz@gmail.com", role = "aut"))
