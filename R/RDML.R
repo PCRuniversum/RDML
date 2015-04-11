@@ -662,10 +662,6 @@ RDML <- R6Class("RDML",
                   
                   dilutions = function() {
                     return(private$.dilutions)
-                  },
-                  
-                  conditions = function() {
-                    return(private$.conditions)
                   }
                   
                 )

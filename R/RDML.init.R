@@ -168,6 +168,7 @@ GetRefGenesRoche <- function(uniq.folder)
 #'   against RDML data from devices: \emph{Bio-Rad CFX96}, \emph{Roche 
 #'   LightCycler 96} and \emph{Applied Biosystems StepOne}.
 #' @param input \code{string} -- path to RDML file
+#' @param conditions.sep separator for condition defined at sample name
 #' @author Konstantin A. Blagodatskikh <k.blag@@yandex.ru>, Stefan Roediger 
 #'   <stefan.roediger@@hs-lausitz.de>, Michal Burdukiewicz 
 #'   <michalburdukiewicz@@gmail.com>
@@ -188,7 +189,8 @@ GetRefGenesRoche <- function(uniq.folder)
 #' lc96$AsTable(name.pattern = sample[[react$sample]]$description)
 #' lc96$AsDendrogram()
 #' }
-RDML$set("public", "initialize", function(input) {  
+RDML$set("public", "initialize", function(input,
+                                          conditions.sep = NULL) {  
   if(missing(input)) return()
   assert_that(is.string(input))
   # Unzips RDML to unique folder to get inner XML content.
@@ -303,11 +305,7 @@ RDML$set("public", "initialize", function(input) {
               #####################
               id <- xmlAttrs(sample, "id")
               list(
-                id = ifelse(is.null(conditions.sep),
-                            id,
-                            gsub(sprintf("^(.*)%s.*$",
-                                         conditions.sep),
-                                 "\\1", id)),
+                id = id,
                 description = xmlValue(sample[["description"]]),
                 documentation = llply(sample["documentation"],
                                       function(documentation)
@@ -319,18 +317,24 @@ RDML$set("public", "initialize", function(input) {
                                name = xmlValue(xRef[["name"]]),
                                id = xmlValue(xRef[["id"]])
                              )),
-                annotation = rbind(ldply(sample["annotation"],
-                                         function(annotation) c(
+                annotation = {
+                  annotations <- ldply(sample["annotation"],
+                                       function(annotation) 
+                                         data.frame(
                                            property = xmlValue(annotation[["property"]]),
-                                           value = xmlValue(annotation[["value"]])
-                                         )),
-                                   ifelse(is.null(conditions.sep),
-                                          NULL,
-                                          c("condition",
-                                            gsub(sprintf("^.*%s(.*)$",
-                                                         conditions.sep),
-                                                 "\\1", id)))
-                ),
+                                           value = xmlValue(annotation[["value"]]),
+                                           stringsAsFactors = FALSE)
+                  )
+                  if(!is.null(conditions.sep))
+                    rbind(annotations,
+                          data.frame(
+                            property = "condition",
+                            value = gsub(sprintf("^.*%s(.*)$",
+                                                 conditions.sep),
+                                         "\\1", id),
+                            stringsAsFactors = FALSE))
+                  annotations
+                },
                 type = type,
                 interRunCalibrator = as.logical(xmlValue(sample[["interRunCalibrator"]])),
                 quantity = list(value = as.numeric(xmlValue(sample[["quantity"]][["value"]])),
@@ -642,7 +646,7 @@ RDML$set("public", "initialize", function(input) {
     run.id <-xmlAttrs(run, "id")
     cat(sprintf("\nrun: %s\n", run.id))
     list(
-      id = xmlAttrs(run, "id"),
+      id = run.id, #xmlAttrs(run, "id"),
       description = xmlValue(run[["description"]]),
       documentation = llply(run["documentation"],
                             function(documentation)
@@ -773,8 +777,19 @@ RDML$set("public", "initialize", function(input) {
     
     private$.dilutions[[private$.experiment[[1]]$id]] <-
       dilutions.r
-    private$.conditions[[private$.experiment[[1]]$id]] <-
-      conditions.r
+    #     private$.conditions[[private$.experiment[[1]]$id]] <-
+    #       conditions.r
+    tbl <- self$AsTable()
+    for(r.id in conditions.r %>% names) {
+      sample.name <- filter(tbl, react.id == r.id)$sample[1]
+      private$.sample[[sample.name]]$annotation <- 
+        rbind(private$.sample[[sample.name]]$annotation,
+              data.frame(
+                property = sprintf("Roche_condition_at_%s",r.id),
+                value = conditions.r[r.id],
+                stringsAsFactors = FALSE))
+    }
+    
   }
 }, 
 overwrite = TRUE)
