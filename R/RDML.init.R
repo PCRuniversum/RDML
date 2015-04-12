@@ -743,43 +743,48 @@ RDML$set("public", "initialize", function(input,
   }
   
   private$.recalcPositions()
-  if(!is.null(ref.genes.r) && length(ref.genes.r) != 0) {
-    for(ref.gene in ref.genes.r) {
-      geneName <- xmlValue(ref.gene[["geneName"]])
-      geneI <- grep(
-        sprintf("^%s$", geneName),
-        names(private$.target))
-      private$.target[[geneI]]$type <-
-        ifelse(as.logical(xmlValue(ref.gene[["isReference"]])),
-               "ref",
-               "toi")
-    }
-  }
-  
   
   if(length(private$.id) != 0 && private$.id[[1]]$publisher == "Roche Diagnostics") {    
     for(i in 1:length(private$.sample)) {
       private$.sample[[i]]$id <- private$.sample[[i]]$description
     }
     names(private$.sample) <- GetIds(private$.sample)
-    if(!is.null(dilutions.r)) {
-      cat("Adding Roche standards")
-      for(conc.i in 1:length(dilutions.r[[1]])) {
-        sample.id <- private$.experiment[[1]]$run[[1]]$react[[
-          which(names(private$.experiment[[1]]$run[[1]]$react) == 
-                  names(dilutions.r[[1]])[conc.i])]]$sample      
-        private$.sample[[sample.id]]$quantity <- list(
-          value = unname(dilutions.r[[1]][conc.i]),
-          unit = "other"
-        )
+    
+    cat("Adding Roche ref genes\n")
+    if(!is.null(ref.genes.r) && length(ref.genes.r) != 0) {
+      for(ref.gene in ref.genes.r) {
+        geneName <- xmlValue(ref.gene[["geneName"]])
+        geneI <- grep(
+          sprintf("^%s$", geneName),
+          names(private$.target))
+        private$.target[[geneI]]$type <-
+          ifelse(as.logical(xmlValue(ref.gene[["isReference"]])),
+                 "ref",
+                 "toi")
       }
     }
     
-    private$.dilutions[[private$.experiment[[1]]$id]] <-
-      dilutions.r
-    #     private$.conditions[[private$.experiment[[1]]$id]] <-
-    #       conditions.r
     tbl <- self$AsTable()
+    cat("Adding Roche quantities\n")
+    for(target in dilutions.r %>% names) {
+      for(r.id in dilutions.r[[target]] %>% names) {
+        sample.name <- filter(tbl, react.id == r.id)$sample[1]
+        private$.sample[[sample.name]]$quantity <- list(
+          value = unname(dilutions.r[[1]][r.id]),
+          unit = "other"
+        )
+        private$.sample[[sample.name]]$annotation <- 
+          rbind(private$.sample[[sample.name]]$annotation,
+                data.frame(
+                  property = sprintf("Roche_quantity_at_%s_%s",
+                                     target,
+                                     r.id),
+                  value = dilutions.r[[target]][r.id],
+                  stringsAsFactors = FALSE))
+      }
+    }
+    
+    cat("Adding Roche conditions\n")
     for(r.id in conditions.r %>% names) {
       sample.name <- filter(tbl, react.id == r.id)$sample[1]
       private$.sample[[sample.name]]$annotation <- 

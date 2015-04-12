@@ -181,8 +181,6 @@ RDML <- R6Class("RDML",
                   AsDendrogram = function() { }
                 ),
                 private = list(
-                  .dilutions = NULL,
-                  .conditions = NULL,
                   .dateMade = NULL,
                   .dateUpdated = NULL,                  
                   .id = NULL,
@@ -658,10 +656,6 @@ RDML <- R6Class("RDML",
                     names(new.experiments) < GetIds(new.experiments)                    
                     private$.experiment <- new.experiments
                     private$.recalcPositions()
-                  },
-                  
-                  dilutions = function() {
-                    return(private$.dilutions)
                   }
                   
                 )

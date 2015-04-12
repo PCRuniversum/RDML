@@ -29,9 +29,7 @@ RDML$set("public", "Merge",
                             "sample",
                             "target",
                             "thermalCyclingConditions",
-                            "experiment",
-                            "dilutions",
-                            "conditions"
+                            "experiment"
                             )) {
              private[[paste0(".", element)]] <- 
                c(private[[paste0(".", element)]],
