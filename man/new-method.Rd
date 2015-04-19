@@ -7,6 +7,8 @@
 \title{Creates new instance of \code{RDML} class object}
 \arguments{
 \item{input}{\code{string} -- path to RDML file}
+
+\item{conditions.sep}{separator for condition defined at sample name}
 }
 \description{
 This function has been designed to import data from RDML v1.1 and v1.2 format files

@@ -14,10 +14,12 @@
 #' @rdname asdendrogram-method
 #' @include RDML.R
 #' @examples
+#' \dontrun{
 #' PATH <- path.package("RDML")
 #' filename <- paste(PATH, "/extdata/", "BioRad_qPCR_melt.rdml", sep ="")
 #' cfx96 <- RDML$new(filename)
 #' cfx96$AsDendrogram()
+#' }
 RDML$set("public", "AsDendrogram",
          function(plot.dendrogram = TRUE) {
            

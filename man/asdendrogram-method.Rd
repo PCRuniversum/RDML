@@ -15,10 +15,12 @@
 Plots and/or returns structure of \code{RDML} file as dendrogram (tree view)
 }
 \examples{
+\dontrun{
 PATH <- path.package("RDML")
 filename <- paste(PATH, "/extdata/", "BioRad_qPCR_melt.rdml", sep ="")
 cfx96 <- RDML$new(filename)
 cfx96$AsDendrogram()
+}
 }
 \author{
 Konstantin A. Blagodatskikh <k.blag@yandex.ru>, Stefan Roediger

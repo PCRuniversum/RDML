@@ -1,3 +1,7 @@
+Changes from Version 0.8-3 to 0.8-4 [April 19 2015]
+* progress bar disabled at non interactive mode
+* conditions and quantities moved to sample attributes
+
 Changes from Version 0.8-2 to 0.8-3 [April 8 2015]
 * uuid usage removed
 

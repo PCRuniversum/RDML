@@ -699,7 +699,9 @@ RDML$set("public", "initialize", function(input,
                                          experiment.id,
                                          run.id),
                 .parallel = FALSE,
-                .progress = "text"
+                .progress = ifelse(interactive(),
+                                   "text",
+                                   "none")
           )
         names(react.list) <- GetIds(react.list)
         compact(react.list)                                
