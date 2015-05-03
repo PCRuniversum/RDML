@@ -21,7 +21,8 @@
 #' }
 RDML$set("public", "Merge",
          function(to.merge) {
-           
+           private$.dateMade <- to.merge$dateMade
+           private$.dateUpdated <- to.merge$dateUpdated
            for(element in c("id",
                             "experimenter",
                             "documentation",
@@ -30,7 +31,8 @@ RDML$set("public", "Merge",
                             "target",
                             "thermalCyclingConditions",
                             "experiment"
-                            )) {
+           )) {
+             
              private[[paste0(".", element)]] <- 
                c(private[[paste0(".", element)]],
                  to.merge[[element]])
@@ -38,5 +40,5 @@ RDML$set("public", "Merge",
                private[[paste0(".", element)]][unique(
                  names(private[[paste0(".", element)]]))]
            }
-         }
-         , overwrite = TRUE)
+         },
+         overwrite = TRUE)
