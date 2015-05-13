@@ -35,5 +35,6 @@ Collate:
     'RDML.Clone.R'
     'RDML.GetFData.R'
     'RDML.SetFData.R'
+    'RDML.Write.R'
     'RDML.init.R'
     'names.RDML.R'

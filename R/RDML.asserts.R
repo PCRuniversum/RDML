@@ -55,12 +55,53 @@ on_failure(is.opt.integer) <- function(call, env) {
   paste0(deparse(call$x), " is present but not a integer or length > 1")
 }
 
+is.type <- function(x, test.type) {
+  class(x)[1] == substitute(test.type)
+}
+on_failure(is.type) <- function(call, env) {
+  sprintf("%s is not a '%s' or length > 1",
+          deparse(call$x),
+          deparse(call$test.type))
+}
+
+is.opt.type <- function(x, test.type) {
+  if(is.null(x)) return(TRUE)
+  class(x)[1] == substitute(test.type)
+}
+on_failure(is.opt.type) <- function(call, env) {
+  sprintf("%s is present but not a '%s' or length > 1",
+          deparse(call$x),
+          deparse(call$test.type))
+}
+
+is.opt.list.type <- function(x, test.type) {
+  if (is.null(x)) return(TRUE)
+  if (!is.list(x)) return(FALSE)
+  for(el in x) {
+    if (class(el)[1] != substitute(test.type))
+      return(FALSE)
+  }
+  TRUE
+}
+on_failure(is.opt.list.type) <- function(call, env) {
+  sprintf("%s is present but not a '%s' list",
+          deparse(call$x),
+          deparse(call$test.type))
+}
+
 is.opt.count <- function(x) {
   if(is.null(x) || is.na(x)) return(TRUE)
-  is.count(x) && length(x) == 1  
+  
 }
 on_failure(is.opt.integer) <- function(call, env) {
   paste0(deparse(call$x), " is present but not a count or length > 1")
+}
+
+is.float <- function(x) {
+  is.numeric(x) && length(x) == 1
+}
+on_failure(is.float) <- function(call, env) {
+  paste0(deparse(call$x), " is not a float (numeric) or length > 1")
 }
 
 has.only.names <- function(x, only.names) {
