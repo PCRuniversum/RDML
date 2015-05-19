@@ -23,11 +23,11 @@ on_failure(is.opt.list.one.el) <- function(call, env) {
   paste0(deparse(call$x), " is present but not a list or length > 1")
 }
 
-is.opt.logical <- function(x) {
+is.opt.flag <- function(x) {
   if(is.null(x) || is.na(x)) return(TRUE)
-  is.logical(x) && length(x) == 1  
+  is.flag(x)
 }
-on_failure(is.opt.logical) <- function(call, env) {
+on_failure(is.opt.flag) <- function(call, env) {
   paste0(deparse(call$x), " is present but not a logical or length > 1")
 }
 
@@ -89,6 +89,20 @@ on_failure(is.opt.list.type) <- function(call, env) {
           deparse(call$test.type))
 }
 
+is.list.type <- function(x, test.type) {
+  if (!is.list(x)) return(FALSE)
+  for(el in x) {
+    if (class(el)[1] != substitute(test.type))
+      return(FALSE)
+  }
+  TRUE
+}
+on_failure(is.list.type) <- function(call, env) {
+  sprintf("%s is not a '%s' list",
+          deparse(call$x),
+          deparse(call$test.type))
+}
+
 is.opt.count <- function(x) {
   if(is.null(x) || is.na(x)) return(TRUE)
   
@@ -102,6 +116,16 @@ is.float <- function(x) {
 }
 on_failure(is.float) <- function(call, env) {
   paste0(deparse(call$x), " is not a float (numeric) or length > 1")
+}
+
+is.enum <- function(x, levels) {
+  x %in% levels
+}
+on_failure(is.enum) <- function(call, env) {
+  sprintf("'%s' has level '%s' not in: %s",
+          deparse(call$x),
+          eval(call$x, envir = env),
+          paste0(eval(call$levels, envir = env), collapse = ", "))
 }
 
 has.only.names <- function(x, only.names) {

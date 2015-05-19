@@ -1,4 +1,4 @@
-"%>%" <- function(...) "%>>%"(...)
+# "%>%" <- function(...) "%>>%"(...)
 
 with.names <- function(l, id) {
   if (is.null(l))
@@ -87,6 +87,35 @@ rdmlIdType <-
             }
           ))
 
+# idType ------------------------------------------------------------
+idType <- 
+  R6Class("idType",
+          # class = FALSE,
+          inherit = rdmlBaseType,
+          public = list(
+            initialize = function(id) {
+              assert_that(is.string(id))
+              private$.id <- id
+            }
+          ),
+          private = list(
+            .id = NULL
+          ),
+          active = list(
+            id = function(id) {
+              if (missing(id))
+                return(private$.id)
+              assert_that(is.string(id))
+              private$.id <- id
+            }
+          ))
+
+# idReferencesType ------------------------------------------------------------
+idReferencesType <- 
+  R6Class("idReferencesType",
+          # class = FALSE,
+          inherit = idType)
+
 # experimenterType ------------------------------------------------------------
 experimenterType <- 
   R6Class("experimenterType",
@@ -99,7 +128,7 @@ experimenterType <-
                                   email = NULL,
                                   labName = NULL,
                                   labAddress = NULL) {
-              assert_that(is.string(id))
+              assert_that(is.type(id, idType))
               assert_that(is.string(firstName))
               assert_that(is.string(lastName))
               assert_that(is.opt.string(email))
@@ -125,7 +154,7 @@ experimenterType <-
             id = function(id) {
               if (missing(id))
                 return(private$.id)
-              assert_that(is.string(id))
+              assert_that(is.type(id, idType))
               private$.id <- id
             },
             firstName = function(firstName) {
@@ -168,7 +197,7 @@ documentationType <-
           public = list(
             initialize = function(id,
                                   text = NULL) {
-              assert_that(is.string(id))
+              assert_that(is.type(id, idType))
               assert_that(is.opt.string(text))
               private$.id <- id
               private$.text <- text
@@ -182,7 +211,7 @@ documentationType <-
             id = function(id) {
               if (missing(id))
                 return(private$.id)
-              assert_that(is.string(id))
+              assert_that(is.type(id, idType))
               private$.id <- id
             },
             text = function(text) {
@@ -201,7 +230,7 @@ dyeType <-
           public = list(
             initialize = function(id,
                                   description = NULL) {
-              assert_that(is.string(id))
+              assert_that(is.type(id, idType))
               assert_that(is.opt.string(description))
               private$.id <- id
               private$.description <- description
@@ -215,7 +244,7 @@ dyeType <-
             id = function(id) {
               if (missing(id))
                 return(private$.id)
-              assert_that(is.string(id))
+              assert_that(is.type(id, idType))
               private$.id <- id
             },
             description = function(description) {
@@ -226,28 +255,6 @@ dyeType <-
             }
           ))
 
-# idReferenceType ------------------------------------------------------------
-idReferenceType <- 
-  R6Class("idReferenceType",
-          # class = FALSE,
-          inherit = rdmlBaseType,
-          public = list(
-            initialize = function(id) {
-              assert_that(is.string(id))
-              private$.id <- id
-            }
-          ),
-          private = list(
-            .id = NULL
-          ),
-          active = list(
-            id = function(id) {
-              if (missing(id))
-                return(private$.id)
-              assert_that(is.string(id))
-              private$.id <- id
-            }
-          ))
 
 # xRefType ------------------------------------------------------------
 xRefType <- 
@@ -324,7 +331,8 @@ quantityType <-
             initialize = function(value,
                                   unit) {
               assert_that(is.float(value))
-              assert_that(is.string(unit))
+              assert_that(is.type(unit,
+                                  quantityUnitType))
               private$.value <- value
               private$.unit <- unit
             }
@@ -343,7 +351,8 @@ quantityType <-
             unit = function(unit) {
               if (missing(unit))
                 return(private$.unit)
-              assert_that(is.string(unit))
+              assert_that(is.type(unit,
+                                  quantityUnitType))
               private$.unit <- unit
             }
           ))
@@ -360,10 +369,11 @@ cdnaSynthesisMethodType <-
                                   dnaseTreatment = NULL,
                                   thermalCyclingConditions = NULL) {
               assert_that(is.opt.string(enzyme))
-              assert_that(is.opt.string(primingMethod))
-              assert_that(is.opt.logical(dnaseTreatment))
+              assert_that(is.opt.type(primingMethod,
+                                      primingMethodType))
+              assert_that(is.opt.flag(dnaseTreatment))
               assert_that(is.opt.type(thermalCyclingConditions,
-                                      idReferenceType))
+                                      idType))
               private$.enzyme <- enzyme
               private$.primingMethod <- primingMethod
               private$.dnaseTreatment <- dnaseTreatment
@@ -386,20 +396,21 @@ cdnaSynthesisMethodType <-
             primingMethod = function(primingMethod) {
               if (missing(primingMethod))
                 return(private$.primingMethod)
-              assert_that(is.opt.string(primingMethod))
+              assert_that(is.opt.type(primingMethod,
+                                      primingMethodType))
               private$.primingMethod <- primingMethod
             },
             dnaseTreatment = function(dnaseTreatment) {
               if (missing(dnaseTreatment))
                 return(private$.dnaseTreatment)
-              assert_that(is.opt.logical(dnaseTreatment))
+              assert_that(is.opt.flag(dnaseTreatment))
               private$.dnaseTreatment <- dnaseTreatment
             },
             thermalCyclingConditions = function(thermalCyclingConditions) {
               if (missing(thermalCyclingConditions))
                 return(private$.thermalCyclingConditions)
               assert_that(is.opt.type(thermalCyclingConditions,
-                                      idReferenceType))
+                                      idType))
               private$.thermalCyclingConditions <- thermalCyclingConditions
             }
           ))
@@ -413,7 +424,8 @@ templateQuantityType <-
             initialize = function(conc,
                                   nucleotide) {
               assert_that(is.float(conc))
-              assert_that(is.string(nucleotide))
+              assert_that(is.type(nucleotide,
+                                  nucleotideType))
               private$.conc <- conc
               private$.nucleotide <- nucleotide
             }
@@ -432,10 +444,84 @@ templateQuantityType <-
             nucleotide = function(nucleotide) {
               if (missing(nucleotide))
                 return(private$.nucleotide)
-              assert_that(is.string(nucleotide))
+              assert_that(is.type(nucleotide,
+                                  nucleotideType))
               private$.nucleotide <- nucleotide
             }
           ))
+
+
+# enumType ------------------------------------------------------------
+enumType <- 
+  R6Class("enumType",
+          # class = FALSE,
+          inherit = rdmlBaseType,
+          public = list(
+            initialize = function(value, ...) {
+              assert_that(is.enum(value, private$.levels))
+              private$.value <- value
+            }
+          ),
+          private = list(
+            .value = NULL
+          ),
+          active = list(
+            value = function(value) {
+              if (missing(value))
+                return(private$.value)
+              assert_that(is.enum(value, private$.levels))
+              private$.value <- value
+            }
+          ))
+
+# sampleTypeType ------------------------------------------------------------
+sampleTypeType <- 
+  R6Class("sampleTypeType",
+          # class = FALSE,
+          inherit = enumType,
+          private = list(
+            .levels = c("unkn", "ntc", "nac",
+                        "std", "ntp", "nrt",
+                        "pos", "opt")
+          )
+  )
+
+# quantityUnitType ------------------------------------------------------------
+quantityUnitType <- 
+  R6Class("quantityUnitType",
+          # class = FALSE,
+          inherit = enumType,
+          private = list(
+            .levels = c("cop", "fold", "dil", "ng", "nMol", "other")
+          )
+  )
+
+# primingMethodType ------------------------------------------------------------
+primingMethodType <- 
+  R6Class("primingMethodType",
+          # class = FALSE,
+          inherit = enumType,
+          private = list(
+            .levels = c("oligo-dt",
+                        "random",
+                        "target-specific",
+                        "oligo-dt and random",
+                        "other")
+          )
+  )
+
+# nucleotideType ------------------------------------------------------------
+nucleotideType <- 
+  R6Class("nucleotideType",
+          # class = FALSE,
+          inherit = enumType,
+          private = list(
+            .levels = c("DNA",
+                        "genomic-DNA",
+                        "cDNA",
+                        "RNA")
+          )
+  )
 
 # sampleType ------------------------------------------------------------
 sampleType <- 
@@ -448,25 +534,26 @@ sampleType <-
                                   documentation = NULL,
                                   xRef = NULL,
                                   annotation = NULL,
-                                  type = "unkn",
+                                  type = sampleTypeType$new("unkn"),
                                   interRunCalibrator = FALSE,
                                   quantity = NULL,
                                   calibratorSample = FALSE,
                                   cdnaSynthesisMethod = NULL,
                                   templateQuantity = NULL) {
-              assert_that(is.string(id))
+              assert_that(is.type(id, idType))
               assert_that(is.opt.string(description))
               assert_that(is.opt.list.type(documentation,
-                                           idReferenceType))
+                                           idReferencesType))
               assert_that(is.opt.list.type(xRef,
                                            xRefType))
               assert_that(is.opt.list.type(annotation,
                                            annotationType))
-              assert_that(is.string(type))
-              assert_that(is.opt.logical(interRunCalibrator))
+              assert_that(is.type(type,
+                                  sampleTypeType))
+              assert_that(is.opt.flag(interRunCalibrator))
               assert_that(is.opt.type(quantity,
                                       quantityType))
-              assert_that(is.opt.logical(calibratorSample))
+              assert_that(is.opt.flag(calibratorSample))
               assert_that(is.opt.type(cdnaSynthesisMethod,
                                       cdnaSynthesisMethodType))
               assert_that(is.opt.type(templateQuantity,
@@ -502,7 +589,7 @@ sampleType <-
             id = function(id) {
               if (missing(id))
                 return(private$.id)
-              assert_that(is.string(id))
+              assert_that(is.type(id, idType))
               private$.id <- id
             },
             description = function(description) {
@@ -515,7 +602,7 @@ sampleType <-
               if (missing(documentation))
                 return(private$.documentation)
               assert_that(is.opt.list.type(documentation,
-                                           idReferenceType))
+                                           idReferencesType))
               private$.documentation <- with.names(documentation, id)
             },
             xRef = function(xRef) {
@@ -535,13 +622,14 @@ sampleType <-
             type = function(type) {
               if (missing(type))
                 return(private$.type)
-              assert_that(is.string(type))
+              assert_that(is.type(type,
+                                  sampleTypeType))
               private$.type <- type
             },
             interRunCalibrator = function(interRunCalibrator) {
               if (missing(interRunCalibrator))
                 return(private$.interRunCalibrator)
-              assert_that(is.opt.logical(interRunCalibrator))
+              assert_that(is.opt.flag(interRunCalibrator))
               private$.interRunCalibrator <- interRunCalibrator
             },
             quantity = function(quantity) {
@@ -554,7 +642,7 @@ sampleType <-
             calibratorSample = function(calibratorSample) {
               if (missing(calibratorSample))
                 return(private$.calibratorSample)
-              assert_that(is.opt.logical(calibratorSample))
+              assert_that(is.opt.flag(calibratorSample))
               private$.calibratorSample <- calibratorSample
             },
             cdnaSynthesisMethod = function(cdnaSynthesisMethod) {
@@ -723,6 +811,18 @@ commercialAssayType <-
             }
           ))
 
+# targetTypeType ------------------------------------------------------------
+targetTypeType <- 
+  R6Class("targetTypeType",
+          # class = FALSE,
+          inherit = enumType,
+          private = list(
+            .levels = c("ref",
+                        "toi")
+          )
+  )
+
+
 # targetType ------------------------------------------------------------
 targetType <- 
   R6Class("targetType",
@@ -741,19 +841,20 @@ targetType <-
                                   dyeId,
                                   sequences = NULL,
                                   commercialAssay = NULL) {
-              assert_that(is.string(id))
+              assert_that(is.type(id, idType))
               assert_that(is.opt.string(description))
               assert_that(is.opt.list.type(documentation,
-                                           idReferenceType))
+                                           idReferencesType))
               assert_that(is.opt.list.type(xRef,
                                            xRefType))
-              assert_that(is.string(type))
+              assert_that(is.type(type,
+                                  targetTypeType))
               assert_that(is.opt.string(amplificationEfficiencyMethod))
               assert_that(is.opt.double(amplificationEfficiency))
               assert_that(is.opt.double(amplificationEfficiencySE))
               assert_that(is.opt.double(detectionLimit))
               assert_that(is.type(dyeId,
-                                  idReferenceType))
+                                  idReferencesType))
               assert_that(is.opt.list.type(sequences,
                                            sequencesType))
               assert_that(is.opt.list.type(commercialAssay,
@@ -791,7 +892,7 @@ targetType <-
             id = function(id) {
               if (missing(id))
                 return(private$.id)
-              assert_that(is.string(id))
+              assert_that(is.type(id, idType))
               private$.id <- id
             },
             description = function(description) {
@@ -804,7 +905,7 @@ targetType <-
               if (missing(documentation))
                 return(private$.documentation)
               assert_that(is.opt.list.type(documentation,
-                                           idReferenceType))
+                                           idReferencesType))
               private$.documentation <- with.names(documentation, id)
             },
             xRef = function(xRef) {
@@ -817,7 +918,8 @@ targetType <-
             type = function(type) {
               if (missing(type))
                 return(private$.type)
-              assert_that(is.string(type))
+              assert_that(is.type(type,
+                                  targetTypeType))
               private$.type <- type
             },
             amplificationEfficiencyMethod = 
@@ -849,7 +951,7 @@ targetType <-
               if (missing(dyeId))
                 return(private$.dyeId)
               assert_that(is.type(dyeId,
-                                  idReferenceType))
+                                  idReferencesType))
               private$.dyeId <- dyeId
             },
             sequences = function(sequences) {
@@ -865,5 +967,1013 @@ targetType <-
               assert_that(is.opt.list.type(commercialAssay,
                                            commercialAssayType))
               private$.commercialAssay <- commercialAssay
+            }
+          ))
+
+# dpAmpCurveType ------------------------------------------------------------
+dpAmpCurveType <- 
+  R6Class("dpAmpCurveType",
+          # class = FALSE,
+          inherit = rdmlBaseType,
+          public = list(
+            initialize = function(cyc,
+                                  tmp = NULL,
+                                  fluor) {
+              assert_that(is.float(cyc))
+              assert_that(is.opt.double(tmp))
+              assert_that(is.float(fluor))
+              private$.cyc <- cyc
+              private$.tmp <- tmp
+              private$.fluor <- fluor
+            },
+            AsVector = function() {
+              c(cyc = private$.cyc,
+                {
+                  if (!is.null(private$.tmp))
+                    c(tmp = private$.tmp)
+                  },
+                fluor = private$.fluor)
+            }
+          ),
+          private = list(
+            .cyc = NULL,
+            .tmp = NULL,
+            .fluor = NULL
+          ),
+          active = list(
+            cyc = function(cyc) {
+              if (missing(cyc))
+                return(private$.cyc)
+              assert_that(is.float(cyc))
+              private$.cyc <- cyc
+            },
+            tmp = function(tmp) {
+              if (missing(tmp))
+                return(private$.tmp)
+              assert_that(is.opt.double(tmp))
+              private$.tmp <- tmp
+            },
+            fluor = function(fluor) {
+              if (missing(fluor))
+                return(private$.fluor)
+              assert_that(is.float(fluor))
+              private$.fluor <- fluor
+            }
+          ))
+
+# dpMeltingCurveType ------------------------------------------------------------
+dpMeltingCurveType <- 
+  R6Class("dpMeltingCurveType",
+          # class = FALSE,
+          inherit = rdmlBaseType,
+          public = list(
+            initialize = function(tmp,
+                                  fluor) {
+              assert_that(is.float(tmp))
+              assert_that(is.float(fluor))
+              private$.tmp <- tmp
+              private$.fluor <- fluor
+            },
+            AsVector = function() {
+              c(cyc = private$.tmp,
+                fluor = private$.fluor)
+            }
+          ),
+          private = list(
+            .cyc = NULL,
+            .tmp = NULL,
+            .fluor = NULL
+          ),
+          active = list(
+            tmp = function(tmp) {
+              if (missing(tmp))
+                return(private$.tmp)
+              assert_that(is.float(tmp))
+              private$.tmp <- tmp
+            },
+            fluor = function(fluor) {
+              if (missing(fluor))
+                return(private$.fluor)
+              assert_that(is.float(fluor))
+              private$.fluor <- fluor
+            }
+          ))
+
+# dataType ------------------------------------------------------------
+dataType <- 
+  R6Class("dataType",
+          # class = FALSE,
+          inherit = rdmlBaseType,
+          public = list(
+            initialize = function(tar,
+                                  cq = NULL,
+                                  excl = NULL,
+                                  adp = NULL,
+                                  mdp = NULL,
+                                  endPt = NULL,
+                                  bgFluor = NULL,
+                                  bgFluorSlp = NULL,
+                                  quantFluor = NULL) {
+              assert_that(is.type(tar,
+                                  idReferencesType))
+              assert_that(is.opt.double(cq))
+              assert_that(is.opt.string(excl))
+              assert_that(is.opt.list.type(adp,
+                                           dpAmpCurveType))
+              assert_that(is.opt.list.type(mdp,
+                                           dpMeltingCurveType))
+              assert_that(is.opt.double(endPt))
+              assert_that(is.opt.double(bgFluor))
+              assert_that(is.opt.double(bgFluorSlp))
+              assert_that(is.opt.double(quantFluor))
+              
+              private$.tar <- tar
+              private$.cq <- cq
+              private$.excl <- excl
+              private$.adp <- adp
+              private$.mdp <- mdp
+              private$.endPt <- endPt 
+              private$.bgFluor <- bgFluor
+              private$.bgFluorSlp <- bgFluorSlp
+              private$.quantFluor <- quantFluor
+            },
+            AsDataFrame = function(dp.type = "adp") {
+              assert_that(is.string(dp.type))
+              ldply(private[[paste0(".", dp.type)]],
+                    function(dp) dp$AsVector())
+            }
+          ),
+          private = list(
+            .tar = NULL,
+            .cq = NULL,
+            .excl = NULL,
+            .adp = NULL,
+            .mdp = NULL,
+            .endPt = NULL,
+            .bgFluor = NULL,
+            .bgFluorSlp = NULL,
+            .quantFluor = NULL
+          ),
+          active = list(
+            tar = function(tar) {
+              if (missing(tar))
+                return(private$.tar)
+              assert_that(is.type(tar,
+                                  idReferencesType))
+              private$.tar <- tar
+            },
+            cq = function(cq) {
+              if (missing(cq))
+                return(private$.cq)
+              assert_that(is.opt.double(cq))
+              private$.cq <- cq
+            },
+            excl = function(excl) {
+              if (missing(excl))
+                return(private$.excl)
+              assert_that(is.opt.string(excl))
+              private$.excl <- excl
+            },
+            adp = function(adp) {
+              if (missing(adp))
+                return(private$.adp)
+              assert_that(is.opt.list.type(adp,
+                                           dpAmpCurveType))
+              private$.adp <- adp
+            },
+            mdp = function(mdp) {
+              if (missing(mdp))
+                return(private$.mdp)
+              assert_that(is.opt.list.type(mdp,
+                                           dpMeltingCurveType))
+              private$.mdp <- mdp
+            },
+            endPt = function(endPt) {
+              if (missing(endPt))
+                return(private$.endPt)
+              assert_that(is.opt.double(endPt))
+              private$.endPt <- endPt
+            },
+            bgFluor = function(bgFluor) {
+              if (missing(bgFluor))
+                return(private$.bgFluor)
+              assert_that(is.opt.double(bgFluor))
+              private$.bgFluor <- bgFluor
+            },
+            bgFluorSlp = function(bgFluorSlp) {
+              if (missing(bgFluorSlp))
+                return(private$.bgFluorSlp)
+              assert_that(is.opt.double(bgFluorSlp))
+              private$.bgFluorSlp <- bgFluorSlp
+            },
+            quantFluor = function(quantFluor) {
+              if (missing(quantFluor))
+                return(private$.quantFluor)
+              assert_that(is.opt.double(quantFluor))
+              private$.quantFluor <- quantFluor
+            }
+          ))
+
+# reactType ------------------------------------------------------------
+reactType <- 
+  R6Class("reactType",
+          # class = FALSE,
+          inherit = rdmlBaseType,
+          public = list(
+            initialize = function(id,
+                                  sample,
+                                  data) {
+              assert_that(is.count(id))
+              assert_that(is.type(sample,
+                                  idReferencesType))
+              assert_that(is.list.type(data,
+                                       dataType))
+              private$.id <- id
+              private$.sample <- sample
+              private$.data <- data
+            },
+            AsDataFrame = function(dp.type = "adp",
+                                   long.table = FALSE) {
+              assert_that(is.string(dp.type))
+              out <- pipeline({
+                private$.data
+                ldply(function(data)
+                  pipeline({
+                    data$AsDataFrame()
+                    cbind(.,
+                          tar = rep(data$tar$id, ncol(.)))
+                  }))
+              })
+              if (long.table == FALSE) out <- out %>% tidyr::spread(tar,
+                                                                    fluor) 
+              out
+            }
+          ),
+          private = list(
+            .id = NULL,
+            .sample = NULL,
+            .data = NULL
+          ),
+          active = list(
+            id = function(id) {
+              if (missing(id))
+                return(private$.id)
+              assert_that(is.count(id))
+              private$.id <- id
+            },
+            sample = function(sample) {
+              if (missing(sample))
+                return(private$.sample)
+              assert_that(is.type(sample,
+                                  idReferencesType))
+              private$.sample <- sample
+            },
+            data = function(data) {
+              if (missing(data))
+                return(private$.data)
+              assert_that(is.list.type(data,
+                                       dataType))
+              private$.data <- data
+            }
+          ))
+
+# dataCollectionSoftwareType ------------------------------------------------------------
+dataCollectionSoftwareType <- 
+  R6Class("dataCollectionSoftwareType",
+          # class = FALSE,
+          inherit = rdmlBaseType,
+          public = list(
+            initialize = function(name,
+                                  version) {
+              assert_that(is.string(name))
+              assert_that(is.string(version))
+              private$.name <- name
+              private$.version <- version
+            }
+          ),
+          private = list(
+            .name = NULL,
+            .version = NULL
+          ),
+          active = list(
+            name = function(name) {
+              if (missing(name))
+                return(private$.name)
+              assert_that(is.string(name))
+              private$.name <- name
+            },
+            version = function(version) {
+              if (missing(version))
+                return(private$.version)
+              assert_that(is.string(version))
+              private$.version <- version
+            }
+          ))
+
+# cqDetectionMethodType ------------------------------------------------------------
+cqDetectionMethodType <- 
+  R6Class("cqDetectionMethodType",
+          # class = FALSE,
+          inherit = enumType,
+          private = list(
+            .levels = c("automated threshold and baseline settings",
+                        "manual threshold and baseline settings",
+                        "second derivative maximum",
+                        "other")
+          )
+  )
+
+
+
+# labelFormatType ------------------------------------------------------------
+labelFormatType <- 
+  R6Class("labelFormatType",
+          # class = FALSE,
+          inherit = enumType,
+          private = list(
+            .levels = c("ABC",
+                        "123",
+                        "A1a1")
+          )
+  )
+
+
+# pcrFormatType ------------------------------------------------------------
+pcrFormatType <- 
+  R6Class("pcrFormatType",
+          # class = FALSE,
+          inherit = rdmlBaseType,
+          public = list(
+            initialize = function(rows,
+                                  columns,
+                                  rowLabel,
+                                  columnLabel) {
+              assert_that(is.count(rows))
+              assert_that(is.count(columns))
+              assert_that(is.type(rowLabel,
+                                  labelFormatType))
+              assert_that(is.type(columnLabel,
+                                  labelFormatType))
+              private$.rows <- rows
+              private$.columns <- columns
+              private$.rowLabel <- rowLabel
+              private$.columnLabel <- columnLabel
+            }
+          ),
+          private = list(
+            .rows = NULL,
+            .columns = NULL,
+            .rowLabel = NULL,
+            .columnLabel = NULL
+          ),
+          active = list(
+            rows = function(rows) {
+              if (missing(rows))
+                return(private$.rows)
+              assert_that(is.count(rows))
+              private$.rows <- rows
+            },
+            columns = function(columns) {
+              if (missing(columns))
+                return(private$.columns)
+              assert_that(is.count(columns))
+              private$.columns <- columns
+            },
+            rowLabel = function(rowLabel) {
+              if (missing(rowLabel))
+                return(private$.rowLabel)
+              assert_that(is.type(rowLabel,
+                                  labelFormatType))
+              private$.rowLabel <- rowLabel
+            },
+            columnLabel = function(columnLabel) {
+              if (missing(columnLabel))
+                return(private$.columnLabel)
+              assert_that(is.type(columnLabel,
+                                  labelFormatType))
+              private$.columnLabel <- columnLabel
+            }
+          ))
+
+# runType ------------------------------------------------------------
+runType <- 
+  R6Class("runType",
+          # class = FALSE,
+          inherit = rdmlBaseType,
+          public = list(
+            initialize = function(id,
+                                  description = NULL,
+                                  documentation = NULL,
+                                  experimenter = NULL,
+                                  instrument = NULL,
+                                  dataCollectionSoftware = NULL,
+                                  backgroundDeterminationMethod = NULL,
+                                  cqDetectionMethod = NULL,
+                                  thermalCyclingConditions = NULL,
+                                  pcrFormat,
+                                  runDate = NULL,
+                                  react = NULL) {
+              assert_that(is.type(id,
+                                  idType))
+              assert_that(is.string(description))
+              assert_that(is.list.type(documentation,
+                                       idReferencesType))
+              assert_that(is.list.type(experimenter,
+                                       idReferencesType))
+              assert_that(is.string(instrument))
+              assert_that(is.opt.type(dataCollectionSoftware,
+                                      dataCollectionSoftwareType))
+              assert_that(is.string(backgroundDeterminationMethod))
+              assert_that(is.opt.type(cqDetectionMethod,
+                                      cqDetectionMethodType))
+              assert_that(is.opt.type(thermalCyclingConditions,
+                                      idReferencesType))
+              assert_that(is.type(pcrFormat,
+                                  pcrFormatType))
+              assert_that(is.string(runDate)) # date time
+              assert_that(is.list.type(react,
+                                       reactType))
+              
+              private$.id <- id
+              private$.description <- description
+              private$.documentation <- documentation
+              private$.experimenter <- experimenter
+              private$.instrument <- instrument
+              private$.dataCollectionSoftware <- dataCollectionSoftware
+              private$.backgroundDeterminationMethod <- backgroundDeterminationMethod
+              private$.cqDetectionMethod <- cqDetectionMethod
+              private$.thermalCyclingConditions <- thermalCyclingConditions
+              private$.pcrFormat <- pcrFormat
+              private$.runDate <- runDate
+              private$.react <- react
+            },
+            AsDataFrame = function(dp.type = "adp",
+                                   long.table = FALSE) {
+              assert_that(is.string(dp.type))
+              out <- pipeline({
+                private$.react
+                ldply(function(react)
+                  pipeline({
+                    react$AsDataFrame(long.table = TRUE)
+                    cbind(.,
+                          sname = rep(
+                            sprintf("%s_%s",
+                                    react$id$id,
+                                    react$sample$id),
+                            ncol(.)))
+                  }))
+              })
+              if (long.table == FALSE) out <- out %>% tidyr::spread(tar,
+                                                                    fluor) 
+              out
+            }
+          ),
+          private = list(
+            .id = NULL,
+            .description = NULL,
+            .documentation = NULL,
+            .experimenter = NULL,
+            .instrument = NULL,
+            .dataCollectionSoftware = NULL,
+            .backgroundDeterminationMethod = NULL,
+            .cqDetectionMethod = NULL,
+            .thermalCyclingConditions = NULL,
+            .pcrFormat = NULL,
+            .runDate = NULL,
+            .react = NULL
+          ),
+          active = list(
+            id = function(id) {
+              if (missing(id))
+                return(private$.id)
+              assert_that(is.type(id,
+                                  idType))
+              private$.id <- id
+            },
+            description = function(description) {
+              if (missing(description))
+                return(private$.description)
+              assert_that(is.string(description))
+              private$.description <- description
+            },
+            documentation = function(documentation) {
+              if (missing(documentation))
+                return(private$.documentation)
+              assert_that(is.list.type(documentation,
+                                       idReferencesType))
+              private$.documentation <- documentation
+            },
+            experimenter = function(experimenter) {
+              if (missing(experimenter))
+                return(private$.experimenter)
+              assert_that(is.list.type(experimenter,
+                                       idReferencesType))
+              private$.experimenter <- experimenter
+            },
+            instrument = function(instrument) {
+              if (missing(instrument))
+                return(private$.instrument)
+              assert_that(is.string(instrument))
+              private$.instrument <- instrument
+            },
+            dataCollectionSoftware = function(dataCollectionSoftware) {
+              if (missing(dataCollectionSoftware))
+                return(private$.dataCollectionSoftware)
+              assert_that(is.opt.type(dataCollectionSoftware,
+                                      dataCollectionSoftwareType))
+              private$.dataCollectionSoftware <- dataCollectionSoftware
+            },
+            backgroundDeterminationMethod = function(backgroundDeterminationMethod) {
+              if (missing(backgroundDeterminationMethod))
+                return(private$.backgroundDeterminationMethod)
+              assert_that(is.string(backgroundDeterminationMethod))
+              private$.backgroundDeterminationMethod <- backgroundDeterminationMethod
+            },
+            cqDetectionMethod = function(cqDetectionMethod) {
+              if (missing(cqDetectionMethod))
+                return(private$.cqDetectionMethod)
+              assert_that(is.opt.type(cqDetectionMethod,
+                                      cqDetectionMethodType))
+              private$.cqDetectionMethod <- cqDetectionMethod
+            },
+            thermalCyclingConditions = function(thermalCyclingConditions) {
+              if (missing(thermalCyclingConditions))
+                return(private$.thermalCyclingConditions)
+              assert_that(is.opt.type(thermalCyclingConditions,
+                                      idReferencesType))
+              private$.thermalCyclingConditions <- thermalCyclingConditions
+            },
+            pcrFormat = function(pcrFormat) {
+              if (missing(pcrFormat))
+                return(private$.pcrFormat)
+              assert_that(is.type(pcrFormat,
+                                  pcrFormatType))
+              private$.pcrFormat <- pcrFormat
+            },
+            runDate = function(runDate) {
+              if (missing(runDate))
+                return(private$.runDate)
+              assert_that(is.string(runDate)) # date time
+              private$.runDate <- runDate
+            },
+            react = function(react) {
+              if (missing(react))
+                return(private$.react)
+              assert_that(is.list.type(react,
+                                       reactType))
+              private$.react <- react
+            }
+          ))
+
+# experimentType ------------------------------------------------------------
+experimentType <- 
+  R6Class("experimentType",
+          # class = FALSE,
+          inherit = rdmlBaseType,
+          public = list(
+            initialize = function(id,
+                                  description = NULL,
+                                  documentation = NULL,
+                                  run = NULL) {
+              assert_that(is.type(id,
+                                  idType))
+              assert_that(is.opt.string(description))
+              assert_that(is.opt.list.type(documentation,
+                                           idReferencesType))
+              assert_that(is.opt.list.type(run,
+                                           runType))
+              
+              private$.id <- id
+              private$.description <- description
+              private$.documentation <- with.names(documentation, id)
+              private$.run <- with.names(run, id)
+            },
+            AsDataFrame = function(dp.type = "adp",
+                                   long.table = FALSE) {
+              assert_that(is.string(dp.type))
+              out <- pipeline({
+                private$.run
+                ldply(function(run)
+                  pipeline({
+                    run$AsDataFrame(long.table = TRUE)
+                    cbind(., sname = rep(run$id$id, ncol(.)))
+                  }))
+              })
+              if (long.table == FALSE) out <- out %>% tidyr::spread(tar,
+                                                                    fluor) 
+              out
+            }
+          ),
+          private = list(
+            .id = NULL,
+            .description = NULL,
+            .documentation = NULL,
+            .run = NULL
+          ),
+          active = list(
+            id = function(id) {
+              if (missing(id))
+                return(private$.id)
+              assert_that(is.type(id, idType))
+              private$.id <- id
+            },
+            description = function(description) {
+              if (missing(description))
+                return(private$.description)
+              assert_that(is.opt.string(description))
+              private$.description <- description
+            },
+            documentation = function(documentation) {
+              if (missing(documentation))
+                return(private$.documentation)
+              assert_that(is.opt.list.type(documentation,
+                                           idReferencesType))
+              private$.documentation <- with.names(documentation, id)
+            },
+            run = function(run) {
+              if (missing(run))
+                return(private$.run)
+              assert_that(is.opt.list.type(run,
+                                           runType))
+              private$.run <- with.names(run, name)
+            }
+          ))
+
+# lidOpenType ------------------------------------------------------------
+lidOpenType <- 
+  R6Class("lidOpenType",
+          # class = FALSE,
+          inherit = rdmlBaseType,
+          public = list(
+            initialize = function() {
+            }
+          ),
+          private = list(
+            .lidOpen = ""
+          ))
+
+# pauseType ------------------------------------------------------------
+pauseType <- 
+  R6Class("pauseType",
+          # class = FALSE,
+          inherit = rdmlBaseType,
+          public = list(
+            initialize = function(temperature) {
+              assert_that(is.float(temperature))
+              private$.temperature <- temperature
+            }
+          ),
+          private = list(
+            .temperature = NULL
+          ),
+          active = list(
+            temperature = function(temperature) {
+              if (missing(temperature))
+                return(private$.temperature)
+              assert_that(is.float(temperature))
+              private$.temperature <- temperature
+            }
+          ))
+
+# loopType ------------------------------------------------------------
+loopType <- 
+  R6Class("loopType",
+          # class = FALSE,
+          inherit = rdmlBaseType,
+          public = list(
+            initialize = function(goto,
+                                  repeat.n) {
+              assert_that(is.count(goto))
+              assert_that(is.count(repeat.n))
+              private$.goto <- goto
+              private$.repeat <- repeat.n
+            }
+          ),
+          private = list(
+            .goto = NULL,
+            .repeat = NULL
+          ),
+          active = list(
+            goto = function(goto) {
+              if (missing(goto))
+                return(private$.goto)
+              assert_that(is.float(goto))
+              private$.goto <- goto
+            },
+            repeat.n = function(repeat.n) {
+              if (missing(repeat.n))
+                return(private$.repeat)
+              assert_that(is.float(repeat.n))
+              private$.repeat <- repeat.n
+            }
+          ))
+
+# measureType ------------------------------------------------------------
+measureType <- 
+  R6Class("measureType",
+          # class = FALSE,
+          inherit = enumType,
+          private = list(
+            .levels = c("real time",
+                        "meltcurve")
+          )
+  )
+
+# baseTemperatureType ------------------------------------------------------------
+baseTemperatureType <- 
+  R6Class("baseTemperatureType",
+          # class = FALSE,
+          inherit = rdmlBaseType,
+          public = list(
+            initialize = function(duration,
+                                  temperatureChange = NULL,
+                                  durationChange = NULL,
+                                  measure = NULL,
+                                  ramp = NULL) {
+              assert_that(is.count(duration))
+              assert_that(is.opt.double(temperatureChange))
+              assert_that(is.opt.count(durationChange))
+              assert_that(is.opt.type(measure,
+                                      measureType))
+              assert_that(is.opt.double(ramp))
+              
+              private$.duration <- duration
+              private$.temperatureChange <- temperatureChange
+              private$.durationChange <- durationChange
+              private$.measure <- measure
+              private$.ramp <- ramp
+            }
+          ),
+          private = list(
+            .duration = NULL,
+            .temperatureChange = NULL,
+            .durationChange = NULL,
+            .measure = NULL,
+            .ramp = NULL
+          ),
+          active = list(
+            duration = function(duration) {
+              if (missing(duration))
+                return(private$.duration)
+              assert_that(is.count(duration))
+              private$.duration <- duration
+            },
+            temperatureChange = function(temperatureChange) {
+              if (missing(temperatureChange))
+                return(private$.temperatureChange)
+              assert_that(is.opt.double(temperatureChange))
+              private$.temperatureChange <- temperatureChange
+            },
+            durationChange = function(durationChange) {
+              if (missing(durationChange))
+                return(private$.durationChange)
+              assert_that(is.opt.count(durationChange))
+              private$.durationChange <- durationChange
+            },
+            measure = function(measure) {
+              if (missing(measure))
+                return(private$.measure)
+              assert_that(is.opt.type(measure,
+                                      measureType))
+              private$.measure <- measure
+            },
+            ramp = function(ramp) {
+              if (missing(ramp))
+                return(private$.ramp)
+              assert_that(is.opt.double(ramp))
+              private$.ramp <- ramp
+            }
+          ))
+
+# temperatureType ------------------------------------------------------------
+temperatureType <- 
+  R6Class("temperatureType",
+          # class = FALSE,
+          inherit = baseTemperatureType,
+          public = list(
+            initialize = function(temperature) {
+              assert_that(is.float(temperature))
+              private$.temperature <- temperature
+            }
+          ),
+          private = list(
+            .temperature = NULL
+          ),
+          active = list(
+            temperature = function(temperature) {
+              if (missing(temperature))
+                return(private$.temperature)
+              assert_that(is.float(temperature))
+              private$.temperature <- temperature
+            }
+          ))
+
+# gradientType ------------------------------------------------------------
+gradientType <- 
+  R6Class("gradientType",
+          # class = FALSE,
+          inherit = baseTemperatureType,
+          public = list(
+            initialize = function(highTemperature,
+                                  lowTemperature) {
+              assert_that(is.float(highTemperature))
+              assert_that(is.float(lowTemperature))
+              private$.highTemperature <- highTemperature
+              private$.lowTemperature <- lowTemperature
+            }
+          ),
+          private = list(
+            .highTemperature = NULL,
+            .lowTemperature = NULL
+          ),
+          active = list(
+            highTemperature = function(highTemperature) {
+              if (missing(highTemperature))
+                return(private$.highTemperature)
+              assert_that(is.float(highTemperature))
+              private$.highTemperature <- highTemperature
+            },
+            lowTemperature = function(lowTemperature) {
+              if (missing(lowTemperature))
+                return(private$.lowTemperature)
+              assert_that(is.float(lowTemperature))
+              private$.lowTemperature <- lowTemperature
+            }
+          ))
+
+
+# stepType ------------------------------------------------------------
+stepType <- 
+  R6Class("stepType",
+          # class = FALSE,
+          inherit = rdmlBaseType,
+          public = list(
+            initialize = function(nr,
+                                  description = NULL,
+                                  temperature = NULL,
+                                  gradient = NULL,
+                                  loop = NULL,
+                                  pause = NULL,
+                                  lidOpen = NULL) {
+              assert_that(is.count(nr))
+              assert_that(is.opt.string(description))
+              assert_that(is.opt.type(temperature,
+                                      temperatureType))
+              assert_that(is.opt.type(gradient,
+                                      gradientType))
+              assert_that(is.opt.type(loop,
+                                      loopType))
+              assert_that(is.opt.type(pause,
+                                      pauseType))
+              assert_that(is.opt.type(lidOpen,
+                                      lidOpenType))
+              
+              private$.nr <- nr
+              private$.description <- description
+              private$.temperature <- temperature
+              private$.gradient <- gradient
+              private$.loop <- loop
+              private$.pause <- pause
+              private$.lidOpen <- lidOpen
+            }
+          ),
+          private = list(
+            .nr = NULL,
+            .description = NULL,
+            .temperature = NULL,
+            .gradient = NULL,
+            .loop = NULL,
+            .pause = NULL,
+            .lidOpen = NULL
+          ),
+          active = list(
+            nr = function(nr) {
+              if (missing(nr))
+                return(private$.nr)
+              assert_that(is.count(nr))
+              private$.nr <- nr
+            },
+            description = function(description) {
+              if (missing(description))
+                return(private$.description)
+              assert_that(is.opt.string(description))
+              private$.description <- description
+            },
+            temperature = function(temperature) {
+              if (missing(temperature))
+                return(private$.temperature)
+              assert_that(is.opt.type(temperature,
+                                      temperatureType))
+              private$.temperature <- temperature
+            },
+            gradient = function(gradient) {
+              if (missing(gradient))
+                return(private$.gradient)
+              assert_that(is.opt.type(gradient,
+                                      gradientType))
+              private$.gradient <- gradient
+            },
+            loop = function(loop) {
+              if (missing(loop))
+                return(private$.loop)
+              assert_that(is.opt.type(loop,
+                                      loopType))
+              private$.loop <- loop
+            },
+            pause = function(pause) {
+              if (missing(pause))
+                return(private$.pause)
+              assert_that(is.opt.type(pause,
+                                      pauseType))
+              private$.pause <- pause
+            },
+            lidOpen = function(lidOpen) {
+              if (missing(lidOpen))
+                return(private$.lidOpen)
+              assert_that(is.opt.type(lidOpen,
+                                      lidOpenType))
+              private$.lidOpen <- lidOpen
+            }
+          ))
+
+# thermalCyclingConditionsType ------------------------------------------------------------
+thermalCyclingConditionsType <- 
+  R6Class("thermalCyclingConditionsType",
+          # class = FALSE,
+          inherit = rdmlBaseType,
+          public = list(
+            initialize = function(id,
+                                  description = NULL,
+                                  documentation = NULL,
+                                  lidTemperature = NULL,
+                                  experimenter = NULL,
+                                  step) {
+              assert_that(is.type(id,
+                                  idType))
+              assert_that(is.opt.string(description))
+              assert_that(is.opt.list.type(documentation,
+                                           idReferencesType))
+              assert_that(is.opt.double(lidTemperature))
+              assert_that(is.opt.list.type(experimenter,
+                                           idReferencesType))
+              assert_that(is.opt.list.type(step,
+                                           stepType))
+              
+              private$.id <- id
+              private$.description <- description
+              private$.documentation <- with.names(documentation, id)
+              private$.lidTemperature <- lidTemperature
+              private$.experimenter <- with.names(experimenter, id)
+              private$.step <- with.names(step, id)
+                
+            }
+          ),
+          private = list(
+            .id = NULL,
+            .description = NULL,
+            .documentation = NULL,
+            .lidTemperature = NULL,
+            .experimenter = NULL,
+            .step = NULL
+          ),
+          active = list(
+            id = function(id) {
+              if (missing(id))
+                return(private$.id)
+              assert_that(is.type(id, idType))
+              private$.id <- id
+            },
+            description = function(description) {
+              if (missing(description))
+                return(private$.description)
+              assert_that(is.opt.string(description))
+              private$.description <- description
+            },
+            documentation = function(documentation) {
+              if (missing(documentation))
+                return(private$.documentation)
+              assert_that(is.opt.list.type(documentation,
+                                           idReferencesType))
+              private$.documentation <- with.names(documentation, id)
+            },
+            lidTemperature = function(lidTemperature) {
+              if (missing(lidTemperature))
+                return(private$.lidTemperature)
+              assert_that(is.opt.double(lidTemperature))
+              private$.lidTemperature <- lidTemperature
+            },
+            experimenter = function(experimenter) {
+              if (missing(experimenter))
+                return(private$.experimenter)
+              assert_that(is.opt.list.type(experimenter,
+                                           idReferencesType))
+              private$.experimenter <- with.names(experimenter, id)
+            },
+            step = function(step) {
+              if (missing(step))
+                return(private$.step)
+              assert_that(is.opt.list.type(step,
+                                           idReferencesType))
+              private$.step <- with.names(step, id)
             }
           ))

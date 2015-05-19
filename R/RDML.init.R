@@ -226,7 +226,7 @@ RDML$set("public", "initialize", function(input,
   )
   ####
   
-  rdml.root <<- xmlRoot(rdml.doc)
+  rdml.root <- xmlRoot(rdml.doc)
   rdml.namespace <- c(rdml = "http://www.rdml.org")
   
   cat("\nGetting dateMade")
