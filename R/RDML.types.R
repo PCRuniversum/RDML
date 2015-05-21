@@ -3,8 +3,9 @@
 with.names <- function(l, id) {
   if (is.null(l))
     return(NULL)
-  id <- substitute(id) %>% as.character
-  n <- unname(sapply(l, function(el) el[[id]]))
+  n <- list.select(l,
+                   eval(id)) %>% 
+    unlist
   if (is.null(n))
     return(l)
   names(l) <- n
@@ -59,6 +60,12 @@ rdmlIdType <-
               private$.publisher <- publisher
               private$.serialNumber <- serialNumber
               private$.MD5Hash <- MD5Hash
+            },
+            print = function(...) {
+              cat("Publisher\t: ",
+                  private$.publisher,
+                  "\nS/N\t\t: ",
+                  private$.serialNumber)
             }
           ),
           private = list(
@@ -855,10 +862,10 @@ targetType <-
               assert_that(is.opt.double(detectionLimit))
               assert_that(is.type(dyeId,
                                   idReferencesType))
-              assert_that(is.opt.list.type(sequences,
-                                           sequencesType))
-              assert_that(is.opt.list.type(commercialAssay,
-                                           commercialAssayType))
+              assert_that(is.opt.type(sequences,
+                                      sequencesType))
+              assert_that(is.opt.type(commercialAssay,
+                                      commercialAssayType))
               
               private$.id <- id
               private$.description <- description
@@ -957,15 +964,15 @@ targetType <-
             sequences = function(sequences) {
               if (missing(sequences))
                 return(private$.sequences)
-              assert_that(is.opt.list.type(sequences,
-                                           sequencesType))
+              assert_that(is.opt.type(sequences,
+                                      sequencesType))
               private$.sequences <- sequences
             },
             commercialAssay = function(commercialAssay) {
               if (missing(commercialAssay))
                 return(private$.commercialAssay)
-              assert_that(is.opt.list.type(commercialAssay,
-                                           commercialAssayType))
+              assert_that(is.opt.type(commercialAssay,
+                                      commercialAssayType))
               private$.commercialAssay <- commercialAssay
             }
           ))
@@ -1546,7 +1553,7 @@ experimentType <-
               private$.id <- id
               private$.description <- description
               private$.documentation <- with.names(documentation, id)
-              private$.run <- with.names(run, id)
+              private$.run <- run
             },
             AsDataFrame = function(dp.type = "adp",
                                    long.table = FALSE) {

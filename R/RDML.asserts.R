@@ -119,7 +119,8 @@ on_failure(is.float) <- function(call, env) {
 }
 
 is.enum <- function(x, levels) {
-  x %in% levels
+  if (is.null(x)) return(TRUE)
+  x %in% c(levels, NA)
 }
 on_failure(is.enum) <- function(call, env) {
   sprintf("'%s' has level '%s' not in: %s",

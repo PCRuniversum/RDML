@@ -37,4 +37,5 @@ Collate:
     'RDML.SetFData.R'
     'RDML.Write.R'
     'RDML.init.R'
+    'RDML.types.R'
     'names.RDML.R'
