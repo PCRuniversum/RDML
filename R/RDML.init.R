@@ -168,7 +168,7 @@ GetRefGenesRoche <- function(uniq.folder)
 #'   manufacturers differ significantly. Currently this function is checked 
 #'   against RDML data from devices: \emph{Bio-Rad CFX96}, \emph{Roche 
 #'   LightCycler 96} and \emph{Applied Biosystems StepOne}.
-#' @param input \code{string} -- path to RDML file
+#' @param filename \code{string} -- path to RDML file
 #' @param conditions.sep separator for condition defined at sample name
 #' @author Konstantin A. Blagodatskikh <k.blag@@yandex.ru>, Stefan Roediger 
 #'   <stefan.roediger@@hs-lausitz.de>, Michal Burdukiewicz 
@@ -190,16 +190,55 @@ GetRefGenesRoche <- function(uniq.folder)
 #' lc96$AsTable(name.pattern = sample[[react$sample]]$description)
 #' lc96$AsDendrogram()
 #' }
-RDML$set("public", "initialize", function(input,
+RDML$set("public", "initialize", function(filename,
+                                          date.made = NULL,
+                                          date.updated = NULL,
+                                          id = NULL,
+                                          experimenter = NULL,
+                                          documentation = NULL,
+                                          dye = NULL,
+                                          sample = NULL,
+                                          target = NULL,
+                                          thermalCyclingConditions = NULL,
+                                          experiment = NULL,
                                           conditions.sep = NULL) {  
-  if(missing(input)) return()
-  assert_that(is.string(input))
+  if(missing(filename)) {
+    assert_that(is.opt.string(date.made))
+    private$.dateMade <- date.made
+    assert_that(is.opt.string(date.updated))
+    private$.dateUpdated <- date.updated
+    assert_that(is.opt.list.type(id,
+                                 rdmlIdType))
+    private$.id <- id
+    assert_that(is.opt.list.type(experimenter,
+                                 experimenterType))
+    private$.experimenter <- experimenter
+    assert_that(is.opt.list.type(documentation,
+                                 documentationType))                    
+    private$.documentation <- documentation
+    assert_that(is.opt.list.type(dye,
+                                 dyeType))
+    private$.dye <- dye
+    assert_that(is.opt.list.type(sample,
+                                 sampleType))
+    private$.sample <- sample
+    assert_that(is.opt.list.type(target))
+    private$.target <- target
+    assert_that(is.opt.list.type(thermalCyclingConditions,
+                                 thermalCyclingConditionsType))
+    private$.thermalCyclingConditions <- thermalCyclingConditions
+    assert_that(is.opt.list.type(experiment,
+                                 experimentType))
+    private$.experiment <- experiment
+    return()
+  }
+  assert_that(is.string(filename))
   # Unzips RDML to unique folder to get inner XML content.
   # Unique folder is needed to prevent file ovewriting
   # by parallel function usage.
   uniq.folder <- tempfile() #paste0(tempdir(), UUIDgenerate())
-  cat(sprintf("Unzipping %s...", input))
-  unzipped.rdml <- unzip(input, exdir = uniq.folder)
+  cat(sprintf("Unzipping %s...", filename))
+  unzipped.rdml <- unzip(filename, exdir = uniq.folder)
   dilutions.r <- NULL
   ref.genes.r <- NULL
   
@@ -457,91 +496,94 @@ RDML$set("public", "initialize", function(input,
   
   
   cat("\nGetting thermalCyclingConditions")
-  private$.thermalCyclingConditions <- {
-    
+  private$.thermalCyclingConditions <- 
     llply(rdml.root["thermalCyclingConditions"],
           function(tcc) {
-            tlist <- 
-              c(
-                # id = xmlAttrs(tcc, "id"),
-                description = xmlValue(tcc[["description"]]),
-                { 
-                  docs <- laply(tcc["documentation"],
-                                function(doc) {
-                                  # if(!is.null(documentation))
-                                  documentation <- ""
-                                  attr(documentation, "id") <- xmlAttrs(doc, "id")
-                                  documentation
-                                })
-                  # docs <- list(1)
-                  names(docs) <- rep("documentation", length(docs))
-                  docs
-                },
-                lidTemperature = 
-                  as.numeric(xmlValue(tcc[["lidTemperature"]])),
-                { 
-                  expers <- laply(tcc["experimenter"],
-                                  function(exper) {
-                                    # if(!is.null(documentation))
-                                    experimenter <- ""
-                                    attr(experimenter, "id") <- xmlAttrs(exper, "id")
-                                    experimenter
-                                  })
-                  # docs <- list(1)
-                  names(expers) <- rep("experimenter", length(expers))
-                  expers
-                },
-                step = llply(tcc["step"],
-                             function(step) list(
+            thermalCyclingConditionsType$new(
+              id = idType$new(xmlAttrs(tcc, "id")),
+              description = xmlValue(tcc[["description"]]),
+              documentation = 
+                llply(tcc["documentation"],
+                      function(doc)
+                        idReferencesType$new(xmlAttrs(doc, "id"))
+                ),
+              lidTemperature = 
+                as.numeric(xmlValue(tcc[["lidTemperature"]])),
+              
+              experimenter = llply(tcc["experimenter"],
+                                   function(experimenter)
+                                     idReferencesType$new(xmlAttrs(experimenter, "id"))
+              ),
+              
+              step = llply(tcc["step"],
+                           function(step) 
+                             stepType$new(
                                nr = as.integer(xmlValue(step[["nr"]])),
                                description = xmlValue(step[["description"]]),
-                               temperature = list(
-                                 temperature = 
-                                   as.numeric(xmlValue(step[["temperature"]][["temperature"]])),
-                                 duration = 
-                                   as.integer(xmlValue(step[["temperature"]][["duration"]])),
-                                 temperatureChange = 
-                                   as.numeric(xmlValue(step[["temperature"]][["temperatureChange"]])),
-                                 durationChange = 
-                                   as.integer(xmlValue(step[["temperature"]][["durationChange"]])),
-                                 measure = xmlValue(step[["temperature"]][["measure"]]),
-                                 ramp = 
-                                   as.numeric(xmlValue(step[["temperature"]][["ramp"]]))
-                               ),
-                               gradient = list(
-                                 highTemperature = 
-                                   as.numeric(xmlValue(step[["gradient"]][["highTemperature"]])),
-                                 lowTemperature = 
-                                   as.numeric(xmlValue(step[["gradient"]][["lowTemperature"]])),
-                                 duration = 
-                                   as.integer(xmlValue(step[["gradient"]][["duration"]])),
-                                 temperatureChange = 
-                                   as.numeric(xmlValue(step[["gradient"]][["temperatureChange"]])),
-                                 durationChange = 
-                                   as.integer(xmlValue(step[["gradient"]][["durationChange"]])),
-                                 measure = xmlValue(step[["gradient"]][["measure"]]),
-                                 ramp = 
-                                   as.numeric(xmlValue(step[["gradient"]][["ramp"]]))
-                               ),
-                               loop = list(
-                                 goto = as.integer(xmlValue(step[["loop"]][["goto"]])),
-                                 # should be called "repeat" but this is reserved word
-                                 repeatN = as.integer(xmlValue(step[["loop"]][["repeat"]])) 
-                               ),
-                               pause = list(
-                                 temperature = 
-                                   as.numeric(xmlValue(step[["pause"]][["temperature"]]))
-                               ),
-                               lidOpen = xmlValue(step[["lidOpen"]][["lidOpenType"]])                           
+                               temperature = {
+                                 if(is.null(step[["temperature"]][["temperature"]]))
+                                   NULL
+                                 else
+                                   temperatureType$new(
+                                     temperature = 
+                                       as.numeric(xmlValue(step[["temperature"]][["temperature"]])),
+                                     duration = 
+                                       as.integer(xmlValue(step[["temperature"]][["duration"]])),
+                                     temperatureChange = 
+                                       as.numeric(xmlValue(step[["temperature"]][["temperatureChange"]])),
+                                     durationChange = 
+                                       as.integer(xmlValue(step[["temperature"]][["durationChange"]])),
+                                     measure = measureType$new(
+                                       xmlValue(step[["temperature"]][["measure"]])),
+                                     ramp = 
+                                       as.numeric(xmlValue(step[["temperature"]][["ramp"]]))
+                                   )},
+                               gradient = NULL,
+                               #                                  gradientType$new(
+                               #                                  highTemperature = 
+                               #                                    as.numeric(xmlValue(step[["gradient"]][["highTemperature"]])),
+                               #                                  lowTemperature = 
+                               #                                    as.numeric(xmlValue(step[["gradient"]][["lowTemperature"]])),
+                               #                                  duration = 
+                               #                                    as.integer(xmlValue(step[["gradient"]][["duration"]])),
+                               #                                  temperatureChange = 
+                               #                                    as.numeric(xmlValue(step[["gradient"]][["temperatureChange"]])),
+                               #                                  durationChange = 
+                               #                                    as.integer(xmlValue(step[["gradient"]][["durationChange"]])),
+                               #                                  measure = measureType$new(
+                               #                                    xmlValue(step[["gradient"]][["measure"]])),
+                               #                                  ramp = 
+                               #                                    as.numeric(xmlValue(step[["gradient"]][["ramp"]]))
+                               # ),
+                               loop = NULL
+                               #                                  {
+                               #                                  if(is.null(xmlValue(step[["loop"]][["goto"]])))
+                               #                                              NULL
+                               #                                else
+                               #                                              loopType$new(
+                               #                                                goto = as.integer(xmlValue(step[["loop"]][["goto"]])),
+                               #                                                # should be called "repeat" but this is reserved word
+                               #                                                repeat.n = as.integer(xmlValue(step[["loop"]][["repeat"]])) 
+                               #                                              )}
+                               ,
+                               pause = 
+                               {
+                                 if(is.null(xmlValue(step[["pause"]][["temperature"]])))
+                                   NULL
+                                 else
+                                   pauseType$new(
+                                     temperature = 
+                                       as.numeric(xmlValue(step[["pause"]][["temperature"]]))
+                                   )},
+                               lidOpen = lidOpenType$new(xmlValue(step[["lidOpen"]][["lidOpenType"]]))
                              )
-                )
               )
-            attr(tlist, "id") <- xmlAttrs(tcc, "id")
-            tlist
-          })
-    #     names(tcc.list) <- GetIds(tcc.list)
-    #     tcc.list
-  }
+            )
+          }) %>% 
+    with.names(quote(.$id$id))
+  #     names(tcc.list) <- GetIds(tcc.list)
+  #     tcc.list
+  
   
   GetData <- function(data, experiment.id, run.id, react.id) {    
     tar.id <- xmlAttrs(data[["tar"]], "id")
@@ -565,53 +607,65 @@ RDML$set("public", "initialize", function(input,
                tar.id)), 
       cq = as.numeric(xmlValue(data[["cq"]])),
       excl = xmlValue(data[["excl"]]),
-      adp = {
-        data.frame(
-          cyc = 
-            as.numeric(
-              xpathSApply(rdml.doc,
-                          paste0(data.req,
-                                 "/rdml:adp/rdml:cyc"),
-                          xmlValue,
-                          namespaces = c(rdml = "http://www.rdml.org"))),
-          tmp = 
-            as.numeric(
-              xpathSApply(rdml.doc,
-                          paste0(data.req,
-                                 "/rdml:adp/rdml:tmp"),
-                          xmlValue,
-                          namespaces = c(rdml = "http://www.rdml.org"))),                                                                       
-          fluor = 
-            as.numeric(
-              xpathSApply(rdml.doc,
-                          paste0(data.req,
-                                 "/rdml:adp/rdml:fluor"),
-                          xmlValue,
-                          namespaces = c(rdml = "http://www.rdml.org")))) %>% 
-          dlply(.(cyc),
-                function(df) dpAmpCurveType$new(cyc = df$cyc,
-                                                tmp = df$tmp,
-                                                fluor = df$fluor))
+      adp = {                                                                                    
+        cyc <- as.numeric(xpathSApply(rdml.doc,
+                                      paste0(data.req,
+                                             "/rdml:adp/rdml:cyc"),
+                                      xmlValue,
+                                      namespaces = c(rdml = "http://www.rdml.org")))
+        tmp <- as.numeric(xpathSApply(rdml.doc,
+                                      paste0(data.req,
+                                             "/rdml:adp/rdml:tmp"),
+                                      xmlValue,
+                                      namespaces = c(rdml = "http://www.rdml.org")))                                                                        
+        fluor <- as.numeric(xpathSApply(rdml.doc,
+                                        paste0(data.req,
+                                               "/rdml:adp/rdml:fluor"),
+                                        xmlValue,
+                                        namespaces = c(rdml = "http://www.rdml.org")))
+        if(!is.null(fluor)) {
+          if(length(tmp) != 0) {
+            matrix(c(cyc, tmp, fluor), 
+                   byrow = FALSE,
+                   ncol = 3,
+                   dimnames = list(NULL,
+                                   c("cyc", "tmp", "fluor")))
+          }
+          else {
+            matrix(c(cyc, fluor), 
+                   byrow = FALSE,
+                   ncol = 2,
+                   dimnames = list(NULL,
+                                   c("cyc", "fluor")))
+          }
+        } else {
+          matrix(ncol = 2,
+                 dimnames = list(NULL,
+                                 c("cyc", "tmp", "fluor")))
+        }
       },
-      mdp = {
-        data.frame(
-          tmp = 
-            as.numeric(
-              xpathSApply(rdml.doc,
-                          paste0(data.req,
-                                 "/rdml:mdp/rdml:tmp"),
-                          xmlValue,
-                          namespaces = c(rdml = "http://www.rdml.org"))),
-          fluor = 
-            as.numeric(
-              xpathSApply(rdml.doc,
-                          paste0(data.req,
-                                 "/rdml:mdp/rdml:fluor"),
-                          xmlValue,
-                          namespaces = c(rdml = "http://www.rdml.org")))) %>% 
-          dlply(.(tmp),
-                function(df) dpMeltingCurveType$new(tmp = df$tmp,
-                                                    fluor = df$fluor))
+      mdp = {                                                             
+        tmp <- as.numeric(xpathSApply(rdml.doc,
+                                      paste0(data.req,
+                                             "/rdml:mdp/rdml:tmp"),
+                                      xmlValue,
+                                      namespaces = c(rdml = "http://www.rdml.org")))
+        fluor <- as.numeric(xpathSApply(rdml.doc,
+                                        paste0(data.req,
+                                               "/rdml:mdp/rdml:fluor"),
+                                        xmlValue,
+                                        namespaces = c(rdml = "http://www.rdml.org")))
+        
+        if(length(fluor) != 0 && !is.null(fluor))
+          matrix(c(tmp, fluor), 
+                 byrow = FALSE,
+                 ncol = 2,
+                 dimnames = list(NULL,
+                                 c("tmp", "fluor")))
+        else
+          matrix(ncol = 2,
+                 dimnames = list(NULL,
+                                 c("tmp", "fluor")))
       },
       endPt = as.numeric(xmlValue(data[["endPt"]])),
       bgFluor = as.numeric(xmlValue(data[["bgFluor"]])),
@@ -648,13 +702,13 @@ RDML$set("public", "initialize", function(input,
       #       position = NA,
       sample = idReferencesType$new(sample),
       data = {
-                                                 
-          llply(react["data"],
-                function(data) GetData(data,
-                                       experiment.id,
-                                       run.id,
-                                       react.id)
-          ) %>% 
+        
+        llply(react["data"],
+              function(data) GetData(data,
+                                     experiment.id,
+                                     run.id,
+                                     react.id)
+        ) %>% 
           with.names(quote(.$tar$id))
       }
     )
@@ -684,8 +738,10 @@ RDML$set("public", "initialize", function(input,
       cqDetectionMethod = 
         cqDetectionMethodType$new(xmlValue(run[["cqDetectionMethod"]])),
       thermalCyclingConditions = 
-                idReferencesType$new(
-                  xmlAttrs(run[["thermalCyclingConditions"]], "id")),
+        tryCatch(
+          idReferencesType$new(
+            xmlAttrs(run[["thermalCyclingConditions"]], "id")),
+          error = function(e) NULL),
       pcrFormat = 
       {
         rows <- as.integer(xmlValue(run[["pcrFormat"]][["rows"]]))
@@ -712,14 +768,14 @@ RDML$set("public", "initialize", function(input,
       runDate = xmlValue(run[["runDate"]]),
       react =
         llply(run["react"],
-                function(react) GetReact(react, 
-                                         experiment.id,
-                                         run.id),
-                .parallel = FALSE,
-                              .progress = ifelse(interactive(),
-                                                 "text",
-                                                 "none")
-          ) %>% 
+              function(react) GetReact(react, 
+                                       experiment.id,
+                                       run.id),
+              .parallel = FALSE,
+              .progress = ifelse(interactive(),
+                                 "text",
+                                 "none")
+        ) %>% 
         compact %>% 
         with.names(quote(.$id)) 
     )
@@ -737,9 +793,9 @@ RDML$set("public", "initialize", function(input,
               function(doc)
                 idReferencesType$new(xmlAttrs(doc, "id"))),
       run = 
-          llply(experiment["run"],
-                function(run) GetRun(run, experiment.id)
-          ) %>% 
+        llply(experiment["run"],
+              function(run) GetRun(run, experiment.id)
+        ) %>% 
         with.names(quote(.$id$id))
     )
     
@@ -747,19 +803,20 @@ RDML$set("public", "initialize", function(input,
   
   
   private$.experiment <- 
-      llply(rdml.root["experiment"],
-            function(experiment) GetExperiment(experiment)
-      ) %>% 
+    llply(rdml.root["experiment"],
+          function(experiment) GetExperiment(experiment)
+    ) %>% 
     with.names(quote(.$id$id))
   
-  return()
-  private$.recalcPositions()
+  # return()
+  # private$.recalcPositions()
   
   if(length(private$.id) != 0 && private$.id[[1]]$publisher == "Roche Diagnostics") {    
     for(i in 1:length(private$.sample)) {
-      private$.sample[[i]]$id <- private$.sample[[i]]$description
+      private$.sample[[i]]$id <- idType$new(private$.sample[[i]]$description)
     }
-    names(private$.sample) <- GetIds(private$.sample)
+    private$.sample <- with.names(private$.sample,
+                                  quote(.$id$id))
     
     cat("Adding Roche ref genes\n")
     if(!is.null(ref.genes.r) && length(ref.genes.r) != 0) {
@@ -774,24 +831,24 @@ RDML$set("public", "initialize", function(input,
                  "toi")
       }
     }
-    
+    # return()
     tbl <- self$AsTable()
     cat("Adding Roche quantities\n")
     for(target in dilutions.r %>% names) {
       for(r.id in dilutions.r[[target]] %>% names) {
         sample.name <- filter(tbl, react.id == r.id)$sample[1]
-        private$.sample[[sample.name]]$quantity <- list(
+        private$.sample[[sample.name]]$quantity <- 
+          quantityType$new(
           value = unname(dilutions.r[[1]][r.id]),
-          unit = "other"
+          unit = quantityUnitType$new("other")
         )
         private$.sample[[sample.name]]$annotation <- 
-          rbind(private$.sample[[sample.name]]$annotation,
-                data.frame(
+          c(private$.sample[[sample.name]]$annotation,
+          annotationType$new(
                   property = sprintf("Roche_quantity_at_%s_%s",
                                      target,
                                      r.id),
-                  value = dilutions.r[[target]][r.id],
-                  stringsAsFactors = FALSE))
+                  value = as.character(dilutions.r[[target]][r.id])))
       }
     }
     
@@ -799,11 +856,10 @@ RDML$set("public", "initialize", function(input,
     for(r.id in conditions.r %>% names) {
       sample.name <- filter(tbl, react.id == r.id)$sample[1]
       private$.sample[[sample.name]]$annotation <- 
-        rbind(private$.sample[[sample.name]]$annotation,
-              data.frame(
+        c(private$.sample[[sample.name]]$annotation,
+          annotationType$new(
                 property = sprintf("Roche_condition_at_%s",r.id),
-                value = conditions.r[r.id],
-                stringsAsFactors = FALSE))
+                value = conditions.r[r.id]))
     }
     
   }

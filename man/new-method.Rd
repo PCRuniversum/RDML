@@ -6,7 +6,7 @@
 \alias{new}
 \title{Creates new instance of \code{RDML} class object}
 \arguments{
-\item{input}{\code{string} -- path to RDML file}
+\item{filename}{\code{string} -- path to RDML file}
 
 \item{conditions.sep}{separator for condition defined at sample name}
 }

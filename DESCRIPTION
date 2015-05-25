@@ -27,6 +27,7 @@ Imports:
     plyr (>= 1.8.1),
     dplyr (>= 0.4.1)
 Collate:
+    'RDML.types.R'
     'RDML.asserts.R'
     'RDML.R'
     'RDML.AsDendrogram.R'
@@ -37,5 +38,4 @@ Collate:
     'RDML.SetFData.R'
     'RDML.Write.R'
     'RDML.init.R'
-    'RDML.types.R'
     'names.RDML.R'

@@ -59,11 +59,12 @@
 #' @aliases RDML.class RDML
 #' @docType class
 #' @export
-#' @import assertthat 
+#' @import assertthat rlist
 #' @importFrom R6 R6Class
 #' @importFrom plyr llply ldply laply ddply compact
 #' @import dplyr
 #' @include RDML.asserts.R
+#' @include RDML.types.R
 #' @examples 
 #' ## EXAMPLE 1:
 #' ## internal dataset lc96_bACTXY.rdml (in 'data' directory)
@@ -169,6 +170,7 @@
 #'           temps = rep(1, ncol(cols) - 1)))
 #' }
 RDML <- R6Class("RDML",
+                inherit = rdmlBaseType,
                 public = list(
                   ###               WARNING
                   ### All RDML functions are store at separate files!!!
@@ -190,28 +192,28 @@ RDML <- R6Class("RDML",
                   .sample = NULL,
                   .target = NULL,
                   .thermalCyclingConditions = NULL,
-                  .experiment = NULL,
-                  .recalcPositions = function() {
-                    for(exp.id in names(private$.experiment)) {
-                      for(run.id in names(
-                        private$.experiment[[exp.id]]$run)) {
-                        for(react.id in names(
-                          private$.experiment[[exp.id]]$
-                          run[[run.id]]$react)) {
-                          private$.experiment[[exp.id]]$
-                            run[[run.id]]$
-                            react[[react.id]]$position <- {
-                              id <- as.integer(react.id)
-                              cols <- private$.experiment[[exp.id]]$
-                                run[[run.id]]$pcrFormat$columns
-                              sprintf("%s%02i",
-                                      LETTERS[(id - 1) %/% cols + 1],
-                                      as.integer((id - 1) %% cols + 1))
-                            }
-                        }
-                      }
-                    }
-                  }
+                  .experiment = NULL#,
+                  #                   .recalcPositions = function() {
+                  #                     for(exp.id in names(private$.experiment)) {
+                  #                       for(run.id in names(
+                  #                         private$.experiment[[exp.id]]$run)) {
+                  #                         for(react.id in names(
+                  #                           private$.experiment[[exp.id]]$
+                  #                           run[[run.id]]$react)) {
+                  #                           private$.experiment[[exp.id]]$
+                  #                             run[[run.id]]$
+                  #                             react[[react.id]]$position <- {
+                  #                               id <- as.integer(react.id)
+                  #                               cols <- private$.experiment[[exp.id]]$
+                  #                                 run[[run.id]]$pcrFormat$columns
+                  #                               sprintf("%s%02i",
+                  #                                       LETTERS[(id - 1) %/% cols + 1],
+                  #                                       as.integer((id - 1) %% cols + 1))
+                  #                             }
+                  #                         }
+                  #                       }
+                  #                     }
+                  #                   }
                 ),
                 active = list(
                   dateMade = function(date.made) {
@@ -228,434 +230,67 @@ RDML <- R6Class("RDML",
                     private$.dateUpdated <- date.updated
                   },
                   
-                  id = function(new.ids) {
-                    if(missing(new.ids))
+                  id = function(id) {
+                    if(missing(id))
                       return(private$.id)                    
-                    assert_that(is.list(new.ids))                                  
-                    for(id in new.ids) {
-                      assert_that(is.list(id))
-                      assert_that(
-                        has.only.names(id,
-                                       c("id",
-                                         "publisher",
-                                         "serialNumber",
-                                         "MD5Hash")))
-                      assert_that(is.string(id$publisher))
-                      assert_that(is.string(id$serialNumber))
-                      assert_that(is.opt.string(id$MD5Hash))
-                    }
-                    private$.id <- new.ids
+                    assert_that(is.list.type(id,
+                                             rdmlIdType))
+                    private$.id <- id
                   },
                   
-                  experimenter = function(new.experimenters) {
-                    if(missing(new.experimenters))
+                  experimenter = function(experimenter) {
+                    if(missing(experimenter))
                       return(private$.experimenter)
-                    
-                    experimenter.fields <- c("id",
-                                             "firstName",
-                                             "lastName",
-                                             "email",
-                                             "labName",
-                                             "labAddress")
-                    assert_that(is.list(new.experimenters))
-                    for(experimenter in new.experimenters) {
-                      assert_that(is.list(experimenter))
-                      assert_that(has.only.names(experimenter,
-                                                 experimenter.fields))
-                      assert_that(is.string(experimenter$id))
-                      assert_that(is.string(experimenter$firstName))
-                      assert_that(is.string(experimenter$lastName))
-                      assert_that(is.opt.string(experimenter$email))
-                      assert_that(is.opt.string(experimenter$labName))
-                      assert_that(is.opt.string(experimenter$labAddress))                      
-                    }
-                    names(new.experimenters) <- GetIds(new.experimenters)
-                    private$.experimenter <- new.experimenters
+                    assert_that(is.list.type(experimenter,
+                                             experimenterType))
+                    private$.experimenter <- experimenter
                   },
                   
-                  documentation = function(new.docs) {
-                    if(missing(new.docs))
+                  documentation = function(documentation) {
+                    if(missing(documentation))
                       return(private$.documentation)
-                    assert_that(is.list(new.docs))                    
-                    for(doc in new.docs) {
-                      assert_that(is.list(doc))
-                      assert_that(has.only.names(doc,
-                                                 c("id",
-                                                   "text")))
-                      assert_that(is.string(doc$id))
-                      assert_that(is.string(doc$text))
-                    }
-                    names(new.docs) <- GetIds(new.docs)
-                    private$.documentation <- new.docs
+                    assert_that(is.list.type(documentation,
+                                             documentationType))                    
+                    private$.documentation <- documentation
                   },
                   
-                  dye = function(new.dyes) {
-                    if(missing(new.dyes))
+                  dye = function(dye) {
+                    if(missing(dye))
                       return(private$.dye)
-                    assert_that(is.list(new.dyes))
-                    for(dye in new.dyes) {
-                      assert_that(is.list(dye))
-                      assert_that(has.only.names(dye,
-                                                 c("id",
-                                                   "description")))
-                      assert_that(is.string(dye$id))
-                      assert_that(is.opt.string(dye$description))
-                    }
-                    names(new.dyes) < GetIds(new.dyes)
-                    private$.dye <- new.dyes
+                    assert_that(is.list.type(dye,
+                                             dyeType))
+                    private$.dye <- dye
                   },
                   
-                  sample = function(new.samples) {
-                    if(missing(new.samples))
+                  sample = function(sample) {
+                    if(missing(sample))
                       return(private$.sample)
-                    assert_that(is.list(new.samples))
-                    for(sample in new.samples) {
-                      assert_that(is.list(sample))
-                      assert_that(has.only.names(sample,
-                                                 c("id",
-                                                   "description",
-                                                   "documentation",
-                                                   "xRef",
-                                                   "annotation",
-                                                   "type",
-                                                   "interRunCalibrator",
-                                                   "quantity",
-                                                   "calibratorSample",
-                                                   "cdnaSynthesisMethod",
-                                                   "templateQuantity")))
-                      assert_that(is.string(sample$id))
-                      assert_that(is.opt.string(sample$description))
-                      assert_that(is.opt.list(sample$documentation))
-                      for(doc in sample$documentation) {
-                        assert_that(has.only.names(doc,
-                                                   c("id")))
-                        assert_that(is.string(doc$id))
-                      }
-                      assert_that(is.opt.list(sample$xRef))
-                      for(xRef in sample$xRef) {
-                        assert_that(has.only.names(xRef,
-                                                   c("name",
-                                                     "id")))
-                        assert_that(is.opt.string(xRef$name))
-                        assert_that(is.opt.string(xRef$id))
-                      }
-                      assert_that(is.opt.list(sample$annotation))
-                      for(annotation in sample$annotation) {
-                        assert_that(has.only.names(annotation,
-                                                   c("property",
-                                                     "value")))
-                        assert_that(is.string(annotation$property))
-                        assert_that(is.string(annotation$value))
-                      }
-                      assert_that(is.string(sample$type))
-                      assert_that(is.opt.logical(sample$interRunCalibrator))
-                      assert_that(is.opt.list.one.el(sample$quantity))
-                      for(quantity in sample$quantity) {
-                        assert_that(has.only.names(quantity,
-                                                   c("value",
-                                                     "unit")))
-                        if(!is.na(quantity$value) &&
-                           !is.na(quantity$unit)) {
-                          assert_that(is.double(quantity$value))
-                          assert_that(is.string(quantity$unit))
-                        }
-                      }
-                      assert_that(is.opt.logical(sample$calibrationSample))
-                      assert_that(is.opt.list(sample$cdnaSynthesisMethod))                      
-                      assert_that(has.only.names(sample$cdnaSynthesisMethod,
-                                                 c("enzyme",
-                                                   "primingMethod",
-                                                   "dnaseTreatment",
-                                                   "thermalCyclingConditions")))
-                      assert_that(is.opt.string(sample$cdnaSynthesisMethod$enzyme))
-                      assert_that(is.opt.string(sample$cdnaSynthesisMethod$primingMethod))
-                      assert_that(is.opt.logical(sample$cdnaSynthesisMethod$dnaseTreatment))
-                      assert_that(is.opt.string(sample$cdnaSynthesisMethod$thermalCyclingConditions))
-                      
-                      assert_that(is.opt.list(sample$templateQuantity))
-                      
-                      assert_that(has.only.names(sample$templateQuantity,
-                                                 c("conc",
-                                                   "nucleotide")))
-                      assert_that(is.opt.double(sample$templateQuantity$conc))
-                      assert_that(is.opt.string(sample$templateQuantity$nucleotide))
-                      
-                    }
-                    names(new.samples) < GetIds(new.samples)
-                    private$.sample <- new.samples
+                    assert_that(is.list.type(sample,
+                                             sampleType))
+                    private$.sample <- sample
                   },
                   
-                  target = function(new.targets) {
-                    if(missing(new.targets))
+                  target = function(target) {
+                    if(missing(target))
                       return(private$.target)
-                    assert_that(is.list(new.targets))
-                    for(target in new.targets) {
-                      assert_that(is.list(target))
-                      assert_that(has.only.names(target,
-                                                 c("id",
-                                                   "description",
-                                                   "documentation",
-                                                   "xRef",                                                   
-                                                   "type",
-                                                   "amplificationEfficiencyMethod",
-                                                   "amplificationEfficiency",
-                                                   "amplificationEfficiencySE",
-                                                   "detectionLimit",
-                                                   "dyeId",
-                                                   "sequences",
-                                                   "commercialAssay")))
-                      assert_that(is.string(target$id))
-                      assert_that(is.opt.string(target$description))
-                      assert_that(is.opt.list(target$documentation))
-                      for(doc in target$documentation) {
-                        assert_that(has.only.names(doc,
-                                                   c("id")))
-                        assert_that(is.string(doc$id))
-                      }
-                      assert_that(is.opt.list(target$xRef))
-                      for(xRef in target$xRef) {
-                        assert_that(has.only.names(xRef,
-                                                   c("name",
-                                                     "id")))
-                        assert_that(is.opt.string(xRef$name))
-                        assert_that(is.opt.string(xRef$id))
-                      }                      
-                      assert_that(is.string(target$type))
-                      assert_that(is.opt.string(target$amplificationEfficiencyMethod))
-                      assert_that(is.opt.double(target$amplificationEfficiency))
-                      assert_that(is.opt.double(target$amplificationEfficiencySE))
-                      assert_that(is.opt.double(target$detectionLimit))
-                      assert_that(is.string(target$dyeId))
-                      
-                      assert_that(is.opt.list.one.el(target$sequences))
-                      for(sequences in target$sequences) {
-                        assert_that(has.only.names(sequences,
-                                                   c("forwardPrimer",
-                                                     "reversePrimer",
-                                                     "probe1",
-                                                     "probe2",
-                                                     "amplicon")))
-                        for(el in sequences) {
-                          assert_that(is.opt.list.one.el(el))
-                          assert_that(has.only.names(sequences,
-                                                     c("threePrimeTag",
-                                                       "fivePrimeTag",
-                                                       "sequence")))
-                          assert_that(is.opt.string(el$threePrimeTag))
-                          assert_that(is.opt.string(el$fivePrimeTag))
-                          assert_that(is.string(el$sequence))
-                        }
-                      }                      
-                      assert_that(is.opt.list.one.el(target$commercialAssay))
-                      for(commercialAssay in target$commercialAssay) {
-                        assert_that(has.only.names(commercialAssay,
-                                                   c("company",
-                                                     "orderNumber")))
-                        assert_that(is.string(commercialAssay$company))
-                        assert_that(is.string(commercialAssay$orderNumber))
-                      }
-                    }
-                    names(new.targets) < GetIds(new.targets)
-                    private$.target <- new.targets
+                    assert_that(is.list.type(target))
+                    private$.target <- target
                   },
                   
-                  thermalCyclingConditions = function(new.tccs) {
-                    if(missing(new.tccs))
+                  thermalCyclingConditions = function(thermalCyclingConditions) {
+                    if(missing(thermalCyclingConditions))
                       return(private$.thermalCyclingConditions)
-                    assert_that(is.list(new.tccs))
-                    for(tcc in new.tccs) {
-                      assert_that(is.list(tcc))
-                      assert_that(has.only.names(tcc,
-                                                 c("id",
-                                                   "description",
-                                                   "documentation",
-                                                   "lidTemperature",                                                   
-                                                   "experimenter",
-                                                   "step")))
-                      assert_that(is.string(tcc$id))
-                      assert_that(is.opt.string(tcc$description))
-                      assert_that(is.opt.list(tcc$documentation))
-                      for(doc in tcc$documentation) {
-                        assert_that(has.only.names(doc,
-                                                   c("id")))
-                        assert_that(is.string(doc$id))
-                      }
-                      assert_that(is.opt.double(tcc$lidTemperature))
-                      assert_that(is.opt.list(tcc$experimenter))
-                      for(experimenter in tcc$experimenter) {
-                        assert_that(has.only.names(experimenter,
-                                                   c("id")))
-                        assert_that(is.string(experimenter$id))
-                      }
-                      assert_that(is.list(tcc$step))
-                      for(step in tcc$step) {
-                        assert_that(has.only.names(step,
-                                                   c("nr",
-                                                     "description",
-                                                     "temperature",
-                                                     "gradient",
-                                                     "loop",
-                                                     "pause",
-                                                     "lidOpen")))
-                        assert_that(is.count(step$nr))
-                        assert_that(is.opt.string(step$description))
-                        assert_that(is.opt.list(step$temperature))
-                        
-                        assert_that(has.only.names(step$temperature,
-                                                   c("temperature",
-                                                     "duration",
-                                                     "temperatureChange",
-                                                     "durationChange",
-                                                     "measure",
-                                                     "ramp")))
-                        assert_that(is.opt.double(step$temperature$temperature))
-                        assert_that(is.opt.count(step$temperature$duration))
-                        assert_that(is.opt.double(step$temperature$temperatureChange))
-                        assert_that(is.opt.integer(step$temperature$durationChange))
-                        assert_that(is.opt.string(step$temperature$measure))
-                        assert_that(is.opt.double(step$temperature$ramp))
-                        
-                        assert_that(is.opt.list(step$gradient))
-                        assert_that(has.only.names(step$gradient,
-                                                   c("highTemperature",
-                                                     "lowTemperature",
-                                                     "duration",
-                                                     "temperatureChange",
-                                                     "durationChange",
-                                                     "measure",
-                                                     "ramp")))
-                        assert_that(is.opt.double(step$gradient$highTemperature))
-                        assert_that(is.opt.double(step$gradient$lowTemperature))
-                        assert_that(is.opt.count(step$gradient$duration))
-                        assert_that(is.opt.double(step$gradient$temperatureChange))
-                        assert_that(is.opt.integer(step$gradient$durationChange))
-                        assert_that(is.opt.string(step$gradient$measure))
-                        assert_that(is.opt.double(step$gradient$ramp))
-                        
-                        assert_that(is.opt.list(step$loop))                        
-                        assert_that(has.only.names(step$loop,
-                                                   c("goto",
-                                                     "repeatN")))                          
-                        assert_that(is.opt.count(step$loop$goto))
-                        assert_that(is.opt.count(step$loop$repeatN))
-                        
-                        assert_that(is.opt.list(step$pause))
-                        assert_that(has.only.names(step$pause,
-                                                   c("temperature")))                          
-                        assert_that(is.opt.double(step$pause$temperature))
-                        
-                        assert_that(is.opt.string(step$lidOpen))
-                      }
-                      
-                    }
-                    names(new.tccs) < GetIds(new.tccs)
-                    private$.thermalCyclingConditions <- new.tccs
+                    assert_that(is.list.type(thermalCyclingConditions,
+                                             thermalCyclingConditionsType))
+                    private$.thermalCyclingConditions <- thermalCyclingConditions
                   },
                   
-                  experiment = function(new.experiments) {
-                    if(missing(new.experiments))
+                  experiment = function(experiment) {
+                    if(missing(experiment))
                       return(private$.experiment)
-                    assert_that(is.list(new.experiments))
-                    for(exp in new.experiments) {
-                      assert_that(is.list(exp))
-                      assert_that(has.only.names(exp,
-                                                 c("id",
-                                                   "description",
-                                                   "documentation",
-                                                   "run")))
-                      assert_that(is.string(exp$id))
-                      assert_that(is.opt.string(exp$description))
-                      assert_that(is.opt.list(exp$documentation))
-                      for(doc in exp$documentation) {
-                        assert_that(has.only.names(doc,
-                                                   c("id")))
-                        assert_that(is.string(doc$id))
-                      }
-                      assert_that(is.list(exp$run))
-                      for(run in exp$run) {
-                        assert_that(is.list(run))
-                        assert_that(has.only.names(run,
-                                                   c("id",
-                                                     "description",
-                                                     "documentation",
-                                                     "experimenter",
-                                                     "instrument",
-                                                     "dataCollectionSoftware",
-                                                     "backgroundDeterminationMethod",
-                                                     "cqDetectionMethod",
-                                                     "thermalCyclingConditions",
-                                                     "pcrFormat",
-                                                     "runDate",                                                     
-                                                     "react")))
-                        assert_that(is.string(run$id))
-                        assert_that(is.opt.string(run$description))
-                        assert_that(is.opt.list(run$documentation))
-                        for(doc in run$documentation) {
-                          assert_that(has.only.names(doc,
-                                                     c("id")))
-                          assert_that(is.string(doc$id))
-                        }
-                        assert_that(is.opt.list(run$experimenter))
-                        for(expm in run$experimenter) {
-                          assert_that(has.only.names(expm,
-                                                     c("id")))
-                          assert_that(is.string(expm$id))
-                        }
-                        assert_that(is.opt.string(run$instrument))
-                        assert_that(is.opt.list(run$dataCollectionSoftware))
-                        assert_that(is.opt.string(run$dataCollectionSoftware$name))
-                        assert_that(is.opt.string(run$dataCollectionSoftware$version))
-                        assert_that(is.opt.string(run$backgroundDeterminationMethod))
-                        assert_that(is.opt.string(run$cqDetectionMethod))
-                        assert_that(is.opt.string(run$thermalCyclingConditions))
-                        assert_that(is.list(run$pcrFormat))
-                        assert_that(is.count(run$pcrFormat$rows))
-                        assert_that(is.count(run$pcrFormat$columns))
-                        assert_that(is.string(run$pcrFormat$rowLabel))
-                        assert_that(is.string(run$pcrFormat$columnLabel))
-                        assert_that(is.opt.string(run$runDate))
-                        assert_that(is.list(run$react))
-                        for(react in run$react) {
-                          assert_that(is.list(react))
-                          assert_that(has.only.names(react,
-                                                     c("id",
-                                                       "position",
-                                                       "sample",
-                                                       "data")))
-                          assert_that(is.count(react$id))
-                          assert_that(is.list(react$data))
-                          for(data in react$data) {
-                            assert_that(has.only.names(data,
-                                                       c("id", #id = tar
-                                                         "cq",
-                                                         "excl",
-                                                         "adp",
-                                                         "mdp",
-                                                         "endPt",
-                                                         "bgFluor",
-                                                         "bgFluorSlp",
-                                                         "quantFluor")))
-                            assert_that(is.string(data$id))
-                            assert_that(is.opt.double(data$cq))
-                            assert_that(is.opt.string(data$excl))
-                            assert_that(is.opt.double.matrix(data$adp))                            
-                            # add colnames assert
-                            assert_that(is.opt.double.matrix(data$mdp))                            
-                            
-                            assert_that(is.opt.double(data$endPt))
-                            assert_that(is.opt.double(data$bgFluor))                            
-                            assert_that(is.opt.double(data$bgFluorSlp))
-                            assert_that(is.opt.double(data$quantFluor))
-                          }
-                          names(react$data) <- GetIds(react$data)
-                        }
-                        names(run$react) <- GetIds(run$react)
-                      }
-                      names(exp$run) < GetIds(exp$run)                      
-                    }
-                    names(new.experiments) < GetIds(new.experiments)                    
-                    private$.experiment <- new.experiments
-                    private$.recalcPositions()
+                    assert_that(is.list.type(experiment,
+                                             experimentType))
+                    private$.experiment <- experiment
                   }
                   
                 )

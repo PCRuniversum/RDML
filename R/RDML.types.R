@@ -1,5 +1,3 @@
-# "%>%" <- function(...) "%>>%"(...)
-
 with.names <- function(l, id) {
   if (is.null(l))
     return(NULL)
@@ -46,6 +44,7 @@ rdmlBaseType <-
           ))
 
 # rdmlIdType ------------------------------------------------------------
+#' @export
 rdmlIdType <- 
   R6Class("rdmlIdType",
           # class = FALSE,
@@ -95,6 +94,7 @@ rdmlIdType <-
           ))
 
 # idType ------------------------------------------------------------
+#' @export
 idType <- 
   R6Class("idType",
           # class = FALSE,
@@ -103,6 +103,9 @@ idType <-
             initialize = function(id) {
               assert_that(is.string(id))
               private$.id <- id
+            },
+            print = function(...) {
+              private$.id
             }
           ),
           private = list(
@@ -570,7 +573,8 @@ sampleType <-
               private$.description <- description
               private$.documentation <- with.names(documentation, id)
               private$.xRef <- with.names(xRef, name)
-              private$.annotation <- with.names(annotation, property)
+              private$.annotation <- with.names(annotation,
+                                                quote(.$property))
               private$.type <- type
               private$.interRunCalibrator <- interRunCalibrator
               private$.quantity <- quantity
@@ -624,7 +628,8 @@ sampleType <-
                 return(private$.annotation)
               assert_that(is.opt.list.type(annotation,
                                            annotationType))
-              private$.annotation <- with.names(annotation, property)
+              private$.annotation <- with.names(annotation,
+                                                quote(.$property))
             },
             type = function(type) {
               if (missing(type))
@@ -977,94 +982,94 @@ targetType <-
             }
           ))
 
-# dpAmpCurveType ------------------------------------------------------------
-dpAmpCurveType <- 
-  R6Class("dpAmpCurveType",
-          # class = FALSE,
-          inherit = rdmlBaseType,
-          public = list(
-            initialize = function(cyc,
-                                  tmp = NULL,
-                                  fluor) {
-              assert_that(is.float(cyc))
-              assert_that(is.opt.double(tmp))
-              assert_that(is.float(fluor))
-              private$.cyc <- cyc
-              private$.tmp <- tmp
-              private$.fluor <- fluor
-            },
-            AsVector = function() {
-              c(cyc = private$.cyc,
-                {
-                  if (!is.null(private$.tmp))
-                    c(tmp = private$.tmp)
-                  },
-                fluor = private$.fluor)
-            }
-          ),
-          private = list(
-            .cyc = NULL,
-            .tmp = NULL,
-            .fluor = NULL
-          ),
-          active = list(
-            cyc = function(cyc) {
-              if (missing(cyc))
-                return(private$.cyc)
-              assert_that(is.float(cyc))
-              private$.cyc <- cyc
-            },
-            tmp = function(tmp) {
-              if (missing(tmp))
-                return(private$.tmp)
-              assert_that(is.opt.double(tmp))
-              private$.tmp <- tmp
-            },
-            fluor = function(fluor) {
-              if (missing(fluor))
-                return(private$.fluor)
-              assert_that(is.float(fluor))
-              private$.fluor <- fluor
-            }
-          ))
-
-# dpMeltingCurveType ------------------------------------------------------------
-dpMeltingCurveType <- 
-  R6Class("dpMeltingCurveType",
-          # class = FALSE,
-          inherit = rdmlBaseType,
-          public = list(
-            initialize = function(tmp,
-                                  fluor) {
-              assert_that(is.float(tmp))
-              assert_that(is.float(fluor))
-              private$.tmp <- tmp
-              private$.fluor <- fluor
-            },
-            AsVector = function() {
-              c(cyc = private$.tmp,
-                fluor = private$.fluor)
-            }
-          ),
-          private = list(
-            .cyc = NULL,
-            .tmp = NULL,
-            .fluor = NULL
-          ),
-          active = list(
-            tmp = function(tmp) {
-              if (missing(tmp))
-                return(private$.tmp)
-              assert_that(is.float(tmp))
-              private$.tmp <- tmp
-            },
-            fluor = function(fluor) {
-              if (missing(fluor))
-                return(private$.fluor)
-              assert_that(is.float(fluor))
-              private$.fluor <- fluor
-            }
-          ))
+# # dpAmpCurveType ------------------------------------------------------------
+# dpAmpCurveType <- 
+#   R6Class("dpAmpCurveType",
+#           # class = FALSE,
+#           inherit = rdmlBaseType,
+#           public = list(
+#             initialize = function(cyc,
+#                                   tmp = NULL,
+#                                   fluor) {
+#               assert_that(is.float(cyc))
+#               assert_that(is.opt.double(tmp))
+#               assert_that(is.float(fluor))
+#               private$.cyc <- cyc
+#               private$.tmp <- tmp
+#               private$.fluor <- fluor
+#             },
+#             AsVector = function() {
+#               c(cyc = private$.cyc,
+#                 {
+#                   if (!is.null(private$.tmp))
+#                     c(tmp = private$.tmp)
+#                   },
+#                 fluor = private$.fluor)
+#             }
+#           ),
+#           private = list(
+#             .cyc = NULL,
+#             .tmp = NULL,
+#             .fluor = NULL
+#           ),
+#           active = list(
+#             cyc = function(cyc) {
+#               if (missing(cyc))
+#                 return(private$.cyc)
+#               assert_that(is.float(cyc))
+#               private$.cyc <- cyc
+#             },
+#             tmp = function(tmp) {
+#               if (missing(tmp))
+#                 return(private$.tmp)
+#               assert_that(is.opt.double(tmp))
+#               private$.tmp <- tmp
+#             },
+#             fluor = function(fluor) {
+#               if (missing(fluor))
+#                 return(private$.fluor)
+#               assert_that(is.float(fluor))
+#               private$.fluor <- fluor
+#             }
+#           ))
+# 
+# # dpMeltingCurveType ------------------------------------------------------------
+# dpMeltingCurveType <- 
+#   R6Class("dpMeltingCurveType",
+#           # class = FALSE,
+#           inherit = rdmlBaseType,
+#           public = list(
+#             initialize = function(tmp,
+#                                   fluor) {
+#               assert_that(is.float(tmp))
+#               assert_that(is.float(fluor))
+#               private$.tmp <- tmp
+#               private$.fluor <- fluor
+#             },
+#             AsVector = function() {
+#               c(cyc = private$.tmp,
+#                 fluor = private$.fluor)
+#             }
+#           ),
+#           private = list(
+#             .cyc = NULL,
+#             .tmp = NULL,
+#             .fluor = NULL
+#           ),
+#           active = list(
+#             tmp = function(tmp) {
+#               if (missing(tmp))
+#                 return(private$.tmp)
+#               assert_that(is.float(tmp))
+#               private$.tmp <- tmp
+#             },
+#             fluor = function(fluor) {
+#               if (missing(fluor))
+#                 return(private$.fluor)
+#               assert_that(is.float(fluor))
+#               private$.fluor <- fluor
+#             }
+#           ))
 
 # dataType ------------------------------------------------------------
 dataType <- 
@@ -1085,10 +1090,12 @@ dataType <-
                                   idReferencesType))
               assert_that(is.opt.double(cq))
               assert_that(is.opt.string(excl))
-              assert_that(is.opt.list.type(adp,
-                                           dpAmpCurveType))
-              assert_that(is.opt.list.type(mdp,
-                                           dpMeltingCurveType))
+              #               assert_that(is.opt.list.type(adp,
+              #                                            dpAmpCurveType))
+              #               assert_that(is.opt.list.type(mdp,
+              #                                            dpMeltingCurveType))
+              assert_that(is.opt.double.matrix(adp))
+              assert_that(is.opt.double.matrix(mdp))
               assert_that(is.opt.double(endPt))
               assert_that(is.opt.double(bgFluor))
               assert_that(is.opt.double(bgFluorSlp))
@@ -1103,12 +1110,12 @@ dataType <-
               private$.bgFluor <- bgFluor
               private$.bgFluorSlp <- bgFluorSlp
               private$.quantFluor <- quantFluor
-            },
-            AsDataFrame = function(dp.type = "adp") {
-              assert_that(is.string(dp.type))
-              ldply(private[[paste0(".", dp.type)]],
-                    function(dp) dp$AsVector())
-            }
+            }#,
+            #             AsDataFrame = function(dp.type = "adp") {
+            #               assert_that(is.string(dp.type))
+            #               ldply(private[[paste0(".", dp.type)]],
+            #                     function(dp) dp$AsVector())
+            #             }
           ),
           private = list(
             .tar = NULL,
@@ -1144,15 +1151,17 @@ dataType <-
             adp = function(adp) {
               if (missing(adp))
                 return(private$.adp)
-              assert_that(is.opt.list.type(adp,
-                                           dpAmpCurveType))
+              #               assert_that(is.opt.list.type(adp,
+              #                                            dpAmpCurveType))
+              assert_that(is.opt.double.matrix(mdp))
               private$.adp <- adp
             },
             mdp = function(mdp) {
               if (missing(mdp))
                 return(private$.mdp)
-              assert_that(is.opt.list.type(mdp,
-                                           dpMeltingCurveType))
+              #               assert_that(is.opt.list.type(mdp,
+              #                                            dpMeltingCurveType))
+              assert_that(is.opt.double.matrix(mdp))
               private$.mdp <- mdp
             },
             endPt = function(endPt) {
@@ -1202,18 +1211,28 @@ reactType <-
             AsDataFrame = function(dp.type = "adp",
                                    long.table = FALSE) {
               assert_that(is.string(dp.type))
-              out <- pipeline({
-                private$.data
+              out <-
+                private$.data %>% 
                 ldply(function(data)
-                  pipeline({
-                    data$AsDataFrame()
-                    cbind(.,
-                          tar = rep(data$tar$id, ncol(.)))
-                  }))
-              })
+                  data[[dp.type]] %>% 
+                    as.data.frame %>% 
+                    select(ifelse(dp.type == "adp",
+                                  cyc,
+                                  tmp),
+                           fluor) %>% 
+                    cbind(tar = data$tar$id),
+                  .id = ifelse(dp.type == "adp",
+                               "cyc",
+                               "tmp"))
+              
               if (long.table == FALSE) out <- out %>% tidyr::spread(tar,
                                                                     fluor) 
               out
+            },
+            Position = function(pcrFormat) {
+              sprintf("%s%02i",
+                      LETTERS[(private$.id - 1) %/% pcrFormat$columns + 1],
+                      as.integer((private$.id - 1) %% pcrFormat$columns + 1))
             }
           ),
           private = list(
@@ -1417,21 +1436,29 @@ runType <-
             AsDataFrame = function(dp.type = "adp",
                                    long.table = FALSE) {
               assert_that(is.string(dp.type))
-              out <- pipeline({
-                private$.react
+              out <- 
+                private$.react %>% 
                 ldply(function(react)
-                  pipeline({
-                    react$AsDataFrame(long.table = TRUE)
+                  
+                  react$AsDataFrame(
+                    dp.type = dp.type,
+                    long.table = TRUE) %>% 
                     cbind(.,
-                          sname = rep(
+                          sname = 
                             sprintf("%s_%s",
-                                    react$id$id,
-                                    react$sample$id),
-                            ncol(.)))
-                  }))
-              })
-              if (long.table == FALSE) out <- out %>% tidyr::spread(tar,
-                                                                    fluor) 
+                                    react$id,
+                                    react$sample$id)
+                    ),
+                  .id = ifelse(dp.type == "adp",
+                               "cyc",
+                               "tmp"))
+              
+              if (long.table == FALSE) out <- out %>% 
+                  tidyr::unite(sname_tar, sname, tar, sep = "_") %>% 
+                  tidyr::spread(sname_tar, fluor) #%>% 
+              #                   arrange(ifelse(dp.type == "adp",
+              #                                  cyc,
+              #                                  tmp))
               out
             }
           ),
@@ -1558,16 +1585,21 @@ experimentType <-
             AsDataFrame = function(dp.type = "adp",
                                    long.table = FALSE) {
               assert_that(is.string(dp.type))
-              out <- pipeline({
-                private$.run
+              assert_that(is.flag(long.table))
+              out <-
+                private$.run %>% 
                 ldply(function(run)
-                  pipeline({
-                    run$AsDataFrame(long.table = TRUE)
-                    cbind(., sname = rep(run$id$id, ncol(.)))
-                  }))
-              })
-              if (long.table == FALSE) out <- out %>% tidyr::spread(tar,
-                                                                    fluor) 
+                  run$AsDataFrame(
+                    dp.type = dp.type,
+                    long.table = TRUE) %>% 
+                    cbind(.,  run = run$id$id,
+                          row.names = NULL),
+                  .id = ifelse(dp.type == "adp",
+                               "cyc",
+                               "tmp"))
+              if (long.table == FALSE) out <- out %>%
+                  tidyr::unite(run_sname_tar, run, sname, tar, sep = "_") %>% 
+                  tidyr::spread(run_sname_tar, fluor)
               out
             }
           ),
@@ -1612,11 +1644,11 @@ lidOpenType <-
           # class = FALSE,
           inherit = rdmlBaseType,
           public = list(
-            initialize = function() {
+            initialize = function(lidOpen) {
             }
           ),
           private = list(
-            .lidOpen = ""
+            .lidOpen = NA
           ))
 
 # pauseType ------------------------------------------------------------
@@ -1758,9 +1790,10 @@ temperatureType <-
           # class = FALSE,
           inherit = baseTemperatureType,
           public = list(
-            initialize = function(temperature) {
+            initialize = function(temperature, ...) {
               assert_that(is.float(temperature))
               private$.temperature <- temperature
+              super$initialize(...)
             }
           ),
           private = list(
@@ -1782,11 +1815,13 @@ gradientType <-
           inherit = baseTemperatureType,
           public = list(
             initialize = function(highTemperature,
-                                  lowTemperature) {
+                                  lowTemperature,
+                                  ...) {
               assert_that(is.float(highTemperature))
               assert_that(is.float(lowTemperature))
               private$.highTemperature <- highTemperature
               private$.lowTemperature <- lowTemperature
+              super$initialize(...)
             }
           ),
           private = list(
@@ -1932,7 +1967,7 @@ thermalCyclingConditionsType <-
               private$.lidTemperature <- lidTemperature
               private$.experimenter <- with.names(experimenter, id)
               private$.step <- with.names(step, id)
-                
+              
             }
           ),
           private = list(

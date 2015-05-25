@@ -69,19 +69,19 @@
 RDML$set("public", "AsTable",
          function(
            .default = list(
-             exp.id = experiment$id,
-             run.id = run$id,
+             exp.id = experiment$id$id,
+             run.id = run$id$id,
              react.id = react$id,
-             position = react$position,
-             sample = react$sample,
-             target = data$id,
-             target.dyeId = target[[data$id]]$dyeId,
-             sample.type = sample[[react$sample]]$type),
+             position = react$Position(run$pcrFormat),
+             sample = react$sample$id,
+             target = data$tar$id,
+             target.dyeId = target[[data$tar$id]]$dyeId$id,
+             sample.type = sample[[react$sample$id]]$type$value),
            name.pattern = paste(
-             react$position,
-             react$sample,
-             private$.sample[[react$sample]]$type,
-             data$id,
+             react$Position(run$pcrFormat),
+             react$sample$id,
+             private$.sample[[react$sample$id]]$type$value,
+             data$tar$id,
              sep = "_"),                    
            ...) {
            # create short names
