@@ -45,91 +45,100 @@
 RDML$set("public", "GetFData",
          function(request,
                   limits = NULL,
-                  data.type = "adp",
+                  dp.type = "adp",
                   first.col.name = NULL,
                   long.table = FALSE) {
-           
-           first.col.req <- unlist(request[1,])
-           if(is.null(first.col.name))
-             first.col.name <- colnames(private$.experiment[[first.col.req["exp.id"]]]$
-                                          run[[first.col.req["run.id"]]]$
-                                          react[[first.col.req["react.id"]]]$
-                                          data[[first.col.req["target"]]][[data.type]])[1]
-           out.fdata.names <- request$fdata.name
-           out <- private$.experiment[[first.col.req["exp.id"]]]$
-             run[[first.col.req["run.id"]]]$
-             react[[first.col.req["react.id"]]]$
-             data[[first.col.req["target"]]][[data.type]][, first.col.name]
-           if(is.null(limits))
-             limits <- c(out[1], tail(out, n = 1))
-           
-           from <- which(out == limits[1])
-           if(length(from) == 0)
-             out <- c(limits[1]:(out[1] - 1), out)
-           else
-             out <- out[from:length(out)]
-           
-           to <- which(out == limits[2])
-           if(length(to) == 0) 
-             out <- c(out, (tail(out, 1) + 1) : limits[2])
-           else
-             out <- head(out, to)
-           
            out <- 
-             cbind(out,
-                   apply(request, 1,
-                         function(fdata) {
-                           cycles <- private$.experiment[[fdata["exp.id"]]]$
-                             run[[fdata["run.id"]]]$
-                             react[[fdata["react.id"]]]$
-                             data[[fdata["target"]]][[data.type]][, first.col.name]                           
-                           data <- private$.experiment[[fdata["exp.id"]]]$
-                             run[[fdata["run.id"]]]$
-                             react[[fdata["react.id"]]]$
-                             data[[fdata["target"]]][[data.type]][, "fluor"]                           
-                           
-                           from <- which(cycles == limits[1])
-                           if(length(from) == 0) {
-                             data <- c(
-                               rep(data[1], cycles[1] - limits[1]), data)
-                             cycles <- c(limits[1]:(cycles[1] - 1), cycles)
-                           }
-                           else {
-                             data <- data[from:length(data)]
-                             cycles <- cycles[from:length(cycles)]
-                           }
-                           
-                           to <- which(cycles == limits[2])
-                           if(length(to) == 0) 
-                             data <- c(data, 
-                                       rep(tail(data, 1),
-                                           limits[2] - tail(cycles, 1)))
-                           
-                           else
-                             data <- head(data, to)
-                           data
-                         })
-             )
-           
-           colnames(out) <- c(first.col.name,
-                              out.fdata.names) 
-           if(long.table) {
-             out2 <- data.frame(
-               fdata.name = rep(out.fdata.names, 
-                                each = nrow(out)))
-             request <- filter(request, fdata.name %in% out.fdata.names)
-             for(col.id in names(request)[-1]) {
-               out2 <- cbind(
-                 out2,
-                 rep(request[, col.id], each = nrow(out)))
-             }             
-             out2 <- cbind(out2, out[, first.col.name])
-             out2 <- cbind(out2, c(out[, -1]))             
-             colnames(out2) <- c(names(request),
-                                 first.col.name,
-                                 "fluo")
-             return(out2)               
-           }           
+             ddply(request, .(fdata.name), function(el) {
+               print(el)
+               private$.experiment[[el$exp.id]]$run[[el$run.id]]$react[[as.character(
+                 el$react.id)]]$data[[el$target]]$AsDataFrame(dp.type = dp.type) %>% 
+                 cbind(fdata.name = el$fdata.name)
+             },
+             .id = "fdata.name"
+           )
            out
+#            first.col.req <- unlist(request[1,])
+#            if(is.null(first.col.name))
+#              first.col.name <- colnames(private$.experiment[[first.col.req["exp.id"]]]$
+#                                           run[[first.col.req["run.id"]]]$
+#                                           react[[first.col.req["react.id"]]]$
+#                                           data[[first.col.req["target"]]][[data.type]])[1]
+#            out.fdata.names <- request$fdata.name
+#            out <- private$.experiment[[first.col.req["exp.id"]]]$
+#              run[[first.col.req["run.id"]]]$
+#              react[[first.col.req["react.id"]]]$
+#              data[[first.col.req["target"]]][[data.type]][, first.col.name]
+#            if(is.null(limits))
+#              limits <- c(out[1], tail(out, n = 1))
+#            
+#            from <- which(out == limits[1])
+#            if(length(from) == 0)
+#              out <- c(limits[1]:(out[1] - 1), out)
+#            else
+#              out <- out[from:length(out)]
+#            
+#            to <- which(out == limits[2])
+#            if(length(to) == 0) 
+#              out <- c(out, (tail(out, 1) + 1) : limits[2])
+#            else
+#              out <- head(out, to)
+#            
+#            out <- 
+#              cbind(out,
+#                    apply(request, 1,
+#                          function(fdata) {
+#                            cycles <- private$.experiment[[fdata["exp.id"]]]$
+#                              run[[fdata["run.id"]]]$
+#                              react[[fdata["react.id"]]]$
+#                              data[[fdata["target"]]][[data.type]][, first.col.name]                           
+#                            data <- private$.experiment[[fdata["exp.id"]]]$
+#                              run[[fdata["run.id"]]]$
+#                              react[[fdata["react.id"]]]$
+#                              data[[fdata["target"]]][[data.type]][, "fluor"]                           
+#                            
+#                            from <- which(cycles == limits[1])
+#                            if(length(from) == 0) {
+#                              data <- c(
+#                                rep(data[1], cycles[1] - limits[1]), data)
+#                              cycles <- c(limits[1]:(cycles[1] - 1), cycles)
+#                            }
+#                            else {
+#                              data <- data[from:length(data)]
+#                              cycles <- cycles[from:length(cycles)]
+#                            }
+#                            
+#                            to <- which(cycles == limits[2])
+#                            if(length(to) == 0) 
+#                              data <- c(data, 
+#                                        rep(tail(data, 1),
+#                                            limits[2] - tail(cycles, 1)))
+#                            
+#                            else
+#                              data <- head(data, to)
+#                            data
+#                          })
+#              )
+#            
+#            colnames(out) <- c(first.col.name,
+#                               out.fdata.names) 
+#            if(long.table) {
+#              out2 <- data.frame(
+#                fdata.name = rep(out.fdata.names, 
+#                                 each = nrow(out)))
+#              request <- filter(request, fdata.name %in% out.fdata.names)
+#              for(col.id in names(request)[-1]) {
+#                out2 <- cbind(
+#                  out2,
+#                  rep(request[, col.id], each = nrow(out)))
+#              }             
+#              out2 <- cbind(out2, out[, first.col.name])
+#              out2 <- cbind(out2, c(out[, -1]))             
+#              colnames(out2) <- c(names(request),
+#                                  first.col.name,
+#                                  "fluo")
+#              return(out2)               
+#            }           
+#            out
          }, 
          overwrite = TRUE)

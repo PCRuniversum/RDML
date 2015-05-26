@@ -1110,85 +1110,88 @@ dataType <-
               private$.bgFluor <- bgFluor
               private$.bgFluorSlp <- bgFluorSlp
               private$.quantFluor <- quantFluor
-            }#,
-            #             AsDataFrame = function(dp.type = "adp") {
-            #               assert_that(is.string(dp.type))
-            #               ldply(private[[paste0(".", dp.type)]],
-            #                     function(dp) dp$AsVector())
-            #             }
-          ),
-          private = list(
-            .tar = NULL,
-            .cq = NULL,
-            .excl = NULL,
-            .adp = NULL,
-            .mdp = NULL,
-            .endPt = NULL,
-            .bgFluor = NULL,
-            .bgFluorSlp = NULL,
-            .quantFluor = NULL
-          ),
-          active = list(
-            tar = function(tar) {
-              if (missing(tar))
-                return(private$.tar)
-              assert_that(is.type(tar,
-                                  idReferencesType))
-              private$.tar <- tar
             },
-            cq = function(cq) {
-              if (missing(cq))
-                return(private$.cq)
-              assert_that(is.opt.double(cq))
-              private$.cq <- cq
-            },
-            excl = function(excl) {
-              if (missing(excl))
-                return(private$.excl)
-              assert_that(is.opt.string(excl))
-              private$.excl <- excl
-            },
-            adp = function(adp) {
-              if (missing(adp))
-                return(private$.adp)
-              #               assert_that(is.opt.list.type(adp,
-              #                                            dpAmpCurveType))
-              assert_that(is.opt.double.matrix(mdp))
-              private$.adp <- adp
-            },
-            mdp = function(mdp) {
-              if (missing(mdp))
-                return(private$.mdp)
-              #               assert_that(is.opt.list.type(mdp,
-              #                                            dpMeltingCurveType))
-              assert_that(is.opt.double.matrix(mdp))
-              private$.mdp <- mdp
-            },
-            endPt = function(endPt) {
-              if (missing(endPt))
-                return(private$.endPt)
-              assert_that(is.opt.double(endPt))
-              private$.endPt <- endPt
-            },
-            bgFluor = function(bgFluor) {
-              if (missing(bgFluor))
-                return(private$.bgFluor)
-              assert_that(is.opt.double(bgFluor))
-              private$.bgFluor <- bgFluor
-            },
-            bgFluorSlp = function(bgFluorSlp) {
-              if (missing(bgFluorSlp))
-                return(private$.bgFluorSlp)
-              assert_that(is.opt.double(bgFluorSlp))
-              private$.bgFluorSlp <- bgFluorSlp
-            },
-            quantFluor = function(quantFluor) {
-              if (missing(quantFluor))
-                return(private$.quantFluor)
-              assert_that(is.opt.double(quantFluor))
-              private$.quantFluor <- quantFluor
+            AsDataFrame = function(dp.type = "adp") {
+              self[[dp.type]] %>% 
+                as.data.frame %>% 
+                select(ifelse(dp.type == "adp",
+                              cyc,
+                              tmp),
+                       fluor)
             }
-          ))
+  ),
+private = list(
+  .tar = NULL,
+  .cq = NULL,
+  .excl = NULL,
+  .adp = NULL,
+  .mdp = NULL,
+  .endPt = NULL,
+  .bgFluor = NULL,
+  .bgFluorSlp = NULL,
+  .quantFluor = NULL
+),
+active = list(
+  tar = function(tar) {
+    if (missing(tar))
+      return(private$.tar)
+    assert_that(is.type(tar,
+                        idReferencesType))
+    private$.tar <- tar
+  },
+  cq = function(cq) {
+    if (missing(cq))
+      return(private$.cq)
+    assert_that(is.opt.double(cq))
+    private$.cq <- cq
+  },
+  excl = function(excl) {
+    if (missing(excl))
+      return(private$.excl)
+    assert_that(is.opt.string(excl))
+    private$.excl <- excl
+  },
+  adp = function(adp) {
+    if (missing(adp))
+      return(private$.adp)
+    #               assert_that(is.opt.list.type(adp,
+    #                                            dpAmpCurveType))
+    assert_that(is.opt.double.matrix(mdp))
+    private$.adp <- adp
+  },
+  mdp = function(mdp) {
+    if (missing(mdp))
+      return(private$.mdp)
+    #               assert_that(is.opt.list.type(mdp,
+    #                                            dpMeltingCurveType))
+    assert_that(is.opt.double.matrix(mdp))
+    private$.mdp <- mdp
+  },
+  endPt = function(endPt) {
+    if (missing(endPt))
+      return(private$.endPt)
+    assert_that(is.opt.double(endPt))
+    private$.endPt <- endPt
+  },
+  bgFluor = function(bgFluor) {
+    if (missing(bgFluor))
+      return(private$.bgFluor)
+    assert_that(is.opt.double(bgFluor))
+    private$.bgFluor <- bgFluor
+  },
+  bgFluorSlp = function(bgFluorSlp) {
+    if (missing(bgFluorSlp))
+      return(private$.bgFluorSlp)
+    assert_that(is.opt.double(bgFluorSlp))
+    private$.bgFluorSlp <- bgFluorSlp
+  },
+  quantFluor = function(quantFluor) {
+    if (missing(quantFluor))
+      return(private$.quantFluor)
+    assert_that(is.opt.double(quantFluor))
+    private$.quantFluor <- quantFluor
+  }
+))
 
 # reactType ------------------------------------------------------------
 reactType <- 
@@ -1214,16 +1217,9 @@ reactType <-
               out <-
                 private$.data %>% 
                 ldply(function(data)
-                  data[[dp.type]] %>% 
-                    as.data.frame %>% 
-                    select(ifelse(dp.type == "adp",
-                                  cyc,
-                                  tmp),
-                           fluor) %>% 
+                  data$AsDataFrame(dp.type) %>% 
                     cbind(tar = data$tar$id),
-                  .id = ifelse(dp.type == "adp",
-                               "cyc",
-                               "tmp"))
+                  .id = "tar")
               
               if (long.table == FALSE) out <- out %>% tidyr::spread(tar,
                                                                     fluor) 

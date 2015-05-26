@@ -191,8 +191,8 @@ GetRefGenesRoche <- function(uniq.folder)
 #' lc96$AsDendrogram()
 #' }
 RDML$set("public", "initialize", function(filename,
-                                          date.made = NULL,
-                                          date.updated = NULL,
+                                          dateMade = NULL,
+                                          dateUpdated = NULL,
                                           id = NULL,
                                           experimenter = NULL,
                                           documentation = NULL,
@@ -203,10 +203,10 @@ RDML$set("public", "initialize", function(filename,
                                           experiment = NULL,
                                           conditions.sep = NULL) {  
   if(missing(filename)) {
-    assert_that(is.opt.string(date.made))
-    private$.dateMade <- date.made
-    assert_that(is.opt.string(date.updated))
-    private$.dateUpdated <- date.updated
+    assert_that(is.opt.string(dateMade))
+    private$.dateMade <- dateMade
+    assert_that(is.opt.string(dateUpdated))
+    private$.dateUpdated <- dateUpdated
     assert_that(is.opt.list.type(id,
                                  rdmlIdType))
     private$.id <- id
@@ -222,7 +222,8 @@ RDML$set("public", "initialize", function(filename,
     assert_that(is.opt.list.type(sample,
                                  sampleType))
     private$.sample <- sample
-    assert_that(is.opt.list.type(target))
+    assert_that(is.opt.list.type(target,
+                                 targetType))
     private$.target <- target
     assert_that(is.opt.list.type(thermalCyclingConditions,
                                  thermalCyclingConditionsType))
@@ -373,7 +374,9 @@ RDML$set("public", "initialize", function(filename,
                 quantityType$new(
                   value = as.numeric(
                     xmlValue(sample[["quantity"]][["value"]])),
-                  unit = quantityUnitType$new(sample[["quantity"]][["unit"]])),
+                  unit = quantityUnitType$new(
+                    sample[["quantity"]][["unit"]] %>% 
+                    xmlValue)),
               calibratorSample = 
                 as.logical(xmlValue(sample[["calibaratorSample"]])),
               cdnaSynthesisMethod = 
@@ -438,7 +441,13 @@ RDML$set("public", "initialize", function(filename,
                 as.numeric(xmlValue(target[["amplificationEfficiencySE"]])),
               detectionLimit = 
                 as.numeric(xmlValue(target[["detectionLimit"]])),
-              dyeId = idReferencesType$new(xmlAttrs(target[["dyeId"]],"id")),
+              dyeId =
+                tryCatch(
+                  idReferencesType$new(xmlAttrs(target[["dyeId"]],"id")),
+                  # StepOne stores dyeId as xmlValue 
+                  error = function(e)
+                    idReferencesType$new(xmlValue(target[["dyeId"]]))
+                ),
               # dyeId = NA,
               
               sequences = sequencesType$new(
@@ -811,7 +820,7 @@ RDML$set("public", "initialize", function(filename,
   # return()
   # private$.recalcPositions()
   
-  if(length(private$.id) != 0 && private$.id[[1]]$publisher == "Roche Diagnostics") {    
+  if (length(private$.id) != 0 && private$.id[[1]]$publisher == "Roche Diagnostics") {    
     for(i in 1:length(private$.sample)) {
       private$.sample[[i]]$id <- idType$new(private$.sample[[i]]$description)
     }

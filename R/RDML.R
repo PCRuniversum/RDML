@@ -61,7 +61,7 @@
 #' @export
 #' @import assertthat rlist
 #' @importFrom R6 R6Class
-#' @importFrom plyr llply ldply laply ddply compact
+#' @importFrom plyr llply ldply laply ddply compact .
 #' @import dplyr
 #' @include RDML.asserts.R
 #' @include RDML.types.R
