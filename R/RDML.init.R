@@ -648,9 +648,10 @@ RDML$set("public", "initialize", function(filename,
                                    c("cyc", "fluor")))
           }
         } else {
-          matrix(ncol = 2,
-                 dimnames = list(NULL,
-                                 c("cyc", "tmp", "fluor")))
+          #           matrix(ncol = 2,
+          #                  dimnames = list(NULL,
+          #                                  c("cyc", "tmp", "fluor")))
+          NULL
         }
       },
       mdp = {                                                             
@@ -672,9 +673,10 @@ RDML$set("public", "initialize", function(filename,
                  dimnames = list(NULL,
                                  c("tmp", "fluor")))
         else
-          matrix(ncol = 2,
-                 dimnames = list(NULL,
-                                 c("tmp", "fluor")))
+          #           matrix(ncol = 2,
+          #                  dimnames = list(NULL,
+          #                                  c("tmp", "fluor")))
+          NULL
       },
       endPt = as.numeric(xmlValue(data[["endPt"]])),
       bgFluor = as.numeric(xmlValue(data[["bgFluor"]])),

@@ -15,7 +15,7 @@ rdmlBaseType <-
   R6Class("rdmlBaseType",
           # class = FALSE,
           public = list(
-            clone = function() {
+            Clone = function() {
               content <- 
                 llply(names(private),
                       function(name) {
@@ -26,11 +26,11 @@ rdmlBaseType <-
                             tail(1) != "R6") {
                           if (is.list(private[[name]]))
                             llply(private[[name]],
-                                  function(el) el$clone())
+                                  function(el) el$Clone())
                           else
                             private[[name]]
                         } else {
-                          private[[name]]$clone()
+                          private[[name]]$Clone()
                         }
                       })
               names(content) <- gsub(".(.*)", "\\1", names(private))
@@ -1156,7 +1156,7 @@ active = list(
       return(private$.adp)
     #               assert_that(is.opt.list.type(adp,
     #                                            dpAmpCurveType))
-    assert_that(is.opt.double.matrix(mdp))
+    assert_that(is.opt.double.matrix(adp))
     private$.adp <- adp
   },
   mdp = function(mdp) {
@@ -1221,8 +1221,8 @@ reactType <-
                     cbind(tar = data$tar$id),
                   .id = "tar")
               
-              if (long.table == FALSE) out <- out %>% tidyr::spread(tar,
-                                                                    fluor) 
+              if (long.table == FALSE) out <- out %>% spread(tar,
+                                                             fluor) 
               out
             },
             Position = function(pcrFormat) {
@@ -1630,7 +1630,7 @@ experimentType <-
                 return(private$.run)
               assert_that(is.opt.list.type(run,
                                            runType))
-              private$.run <- with.names(run, name)
+              private$.run <- run #with.names(run, name)
             }
           ))
 

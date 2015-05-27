@@ -50,13 +50,14 @@ RDML$set("public", "GetFData",
                   long.table = FALSE) {
            out <- 
              ddply(request, .(fdata.name), function(el) {
-               print(el)
                private$.experiment[[el$exp.id]]$run[[el$run.id]]$react[[as.character(
                  el$react.id)]]$data[[el$target]]$AsDataFrame(dp.type = dp.type) %>% 
                  cbind(fdata.name = el$fdata.name)
              },
              .id = "fdata.name"
            )
+           if (long.table == FALSE) out <- out %>% spread(fdata.name,
+                                                          fluor) 
            out
 #            first.col.req <- unlist(request[1,])
 #            if(is.null(first.col.name))

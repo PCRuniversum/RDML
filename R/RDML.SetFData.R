@@ -45,19 +45,28 @@
 #' @rdname setfdata-method
 #' @include RDML.R
 RDML$set("public", "SetFData",
-         function(data,
+         function(fdata,
+                  fdata.type = "adp",
                   description) {
-           fdata.type <- substitute(data)
-           fdata.names <- colnames(data)
-           first.col.name <- fdata.names[1]
-           for(i in 2:ncol(data)) {
-             descr.i <- which(description$fdata.name == fdata.names[i])
-             descr.row <- unlist(description[descr.i, ])
+           first.col.name <- ifelse(fdata.type == "adp",
+                                    "cyc",
+                                    "tmp")
+           fdata.names <- colnames(fdata)[2:ncol(fdata)]
+           for(fdata.n in fdata.names) {
+             descr.row <- description %>% 
+               filter(fdata.name == fdata.n) %>% 
+               unlist
+             if (private$.experiment[[descr.row["exp.id"]]]$
+                 run[[descr.row["run.id"]]]$
+                 react[[descr.row["react.id"]]]$
+                 data[[descr.row["target"]]] %>% is.null)
+               stop(sprintf("Wrong path: %s",
+                            paste(descr.row, collapse = ", ")))
              private$.experiment[[descr.row["exp.id"]]]$
                run[[descr.row["run.id"]]]$
                react[[descr.row["react.id"]]]$
-               data[[descr.row["target"]]][[deparse(fdata.type)]] <-
-               matrix(c(data[, 1], data[, i]), 
+               data[[descr.row["target"]]][[fdata.type]] <-
+               matrix(c(fdata[, 1], fdata[, fdata.n]), 
                       byrow = FALSE,
                       ncol = 2,
                       dimnames = list(NULL,
