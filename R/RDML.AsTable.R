@@ -71,7 +71,7 @@ RDML$set("public", "AsTable",
            .default = list(
              exp.id = experiment$id$id,
              run.id = run$id$id,
-             react.id = react$id,
+             react.id = react$id$id,
              position = react$Position(run$pcrFormat),
              sample = react$sample$id,
              target = data$tar$id,
@@ -96,8 +96,8 @@ RDML$set("public", "AsTable",
            sample <- private$.sample
            target <- private$.target
            thermalCyclingConditions <- private$.thermalCyclingConditions
-           dilutions <- private$.dilutions
-           conditions <- private$.conditions
+           # dilutions <- private$.dilutions
+           # conditions <- private$.conditions
            
            out<-data.frame()
            for(experiment in private$.experiment) {                      

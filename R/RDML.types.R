@@ -37,11 +37,75 @@ rdmlBaseType <-
               do.call(
                 what = eval(parse(text = sprintf("%s$new", class(self)[1]))),
                 args = content)
-            } #,
+            },
+            .asXMLnodes = function(node.name,
+                                   namespaceDefinitions = NULL) {
+              # has.attrs <- FALSE
+              subnodes <- names(private)
+              newXMLNode(
+                name = node.name,
+                namespaceDefinitions = namespaceDefinitions,
+                attrs = {
+                  get.attrs <- function() {
+                    for(name in subnodes) {
+                      if(class(private[[name]])[1] == "idType" ||
+                         class(private[[name]])[1] == "reactIdType") {
+                        subnodes <<- subnodes[subnodes != name]
+                        # has.attrs <<- TRUE
+                        return(list(id = private[[name]]$id))
+                      }
+                    }
+                    NULL
+                  }
+                  get.attrs()
+                },
+                .children = {
+                  llply(subnodes,
+                        function(name) {
+                          subnode.name <- gsub("^\\.(.*)$",
+                                               "\\1", name)
+                          switch(
+                            typeof(private[[name]]),
+                            list = 
+                              llply(private[[name]],
+                                    function(sublist)
+                                      sublist$.asXMLnodes(subnode.name))
+                            ,
+                            environment = {
+                              switch(class(private[[name]])[2],
+                                     enumType = {
+                                       if (is.null(private[[name]]$value) ||
+                                           is.na(private[[name]]$value))
+                                         NULL
+                                       else
+                                         newXMLNode(name = subnode.name,
+                                                    text = private[[name]]$value)
+                                     },
+                                     idType = 
+                                       newXMLNode(name = subnode.name,
+                                                  attrs = 
+                                                    list(id = private[[name]]$id)),
+                                     private[[name]]$.asXMLnodes(subnode.name)
+                              )},
+                            {
+                              if (is.null(private[[name]]) ||
+                                  is.na(private[[name]]))
+                                NULL
+                              else
+                                newXMLNode(name = subnode.name,
+                                           text = private[[name]])
+                            })
+                        })
+                }
+              )
+            }
+            
+            #,
             #             print = function() {
             #               sapply(names(private), function(n) private[[n]])
             #             }
-          ))
+          )
+  )
 
 # rdmlIdType ------------------------------------------------------------
 #' @export
@@ -120,7 +184,36 @@ idType <-
             }
           ))
 
+# reactIdType ------------------------------------------------------------
+#' @export
+reactIdType <- 
+  R6Class("reactIdType",
+          # class = FALSE,
+          inherit = rdmlBaseType,
+          public = list(
+            initialize = function(id) {
+              assert_that(is.count(id))
+              private$.id <- id
+            },
+            print = function(...) {
+              private$.id
+            }
+          ),
+          private = list(
+            .id = NULL
+          ),
+          active = list(
+            id = function(id) {
+              if (missing(id))
+                return(private$.id)
+              assert_that(is.count(id))
+              private$.id <- id
+            }
+          ))
+
+
 # idReferencesType ------------------------------------------------------------
+#' @export
 idReferencesType <- 
   R6Class("idReferencesType",
           # class = FALSE,
@@ -571,8 +664,8 @@ sampleType <-
               
               private$.id <- id
               private$.description <- description
-              private$.documentation <- with.names(documentation, id)
-              private$.xRef <- with.names(xRef, name)
+              private$.documentation <- documentation
+              private$.xRef <- xRef
               private$.annotation <- with.names(annotation,
                                                 quote(.$property))
               private$.type <- type
@@ -614,14 +707,14 @@ sampleType <-
                 return(private$.documentation)
               assert_that(is.opt.list.type(documentation,
                                            idReferencesType))
-              private$.documentation <- with.names(documentation, id)
+              private$.documentation <- documentation
             },
             xRef = function(xRef) {
               if (missing(xRef))
                 return(private$.xRef)
               assert_that(is.opt.list.type(xRef,
                                            xRefType))
-              private$.xRef <- with.names(xRef, name)
+              private$.xRef <- xRef
             },
             annotation = function(annotation) {
               if (missing(annotation))
@@ -874,8 +967,8 @@ targetType <-
               
               private$.id <- id
               private$.description <- description
-              private$.documentation <- with.names(documentation, id)
-              private$.xRef <- with.names(xRef, name)
+              private$.documentation <- documentation
+              private$.xRef <- xRef
               private$.type <- type
               private$.amplificationEfficiencyMethod <- amplificationEfficiencyMethod
               private$.amplificationEfficiency <- amplificationEfficiency
@@ -918,14 +1011,14 @@ targetType <-
                 return(private$.documentation)
               assert_that(is.opt.list.type(documentation,
                                            idReferencesType))
-              private$.documentation <- with.names(documentation, id)
+              private$.documentation <- documentation
             },
             xRef = function(xRef) {
               if (missing(xRef))
                 return(private$.xRef)
               assert_that(is.opt.list.type(xRef,
                                            xRefType))
-              private$.xRef <- with.names(xRef, name)
+              private$.xRef <- xRef
             },
             type = function(type) {
               if (missing(type))
@@ -1071,6 +1164,111 @@ targetType <-
 #             }
 #           ))
 
+# adpsType ------------------------------------------------------------
+#' @export
+adpsType <- 
+  R6Class("adpsType",
+          # class = FALSE,
+          inherit = rdmlBaseType,
+          public = list(
+            initialize = function(fpoints) {
+              assert_that(is.double.matrix(fpoints))
+              assert_that(has.only.names(fpoints,
+                                         c("cyc", "tmp", "fluor")))
+              private$.fpoints <- fpoints
+            },
+            print = function(...) {
+              private$.fpoints
+            },
+            .asXMLnodes = function(node.name) {
+              #               newXMLNode(
+              #                 name = node.name,
+              #                 .children = {
+              alply(private$.fpoints,
+                    1,
+                    function(fpoints.row) {
+                      newXMLNode(name = "adp",
+                                 .children = 
+                                   list(
+                                     newXMLNode(
+                                       name = "cyc",
+                                       text = fpoints.row["cyc"]),
+                                     {
+                                       if(!is.na(fpoints.row["tmp"]))
+                                         newXMLNode(
+                                           name = "tmp",
+                                           text = fpoints.row["tmp"])
+                                     },
+                                     newXMLNode(
+                                       name = "fluor",
+                                       text = fpoints.row["fluor"])
+                                   ))
+                    })
+              # })
+            }
+          ),
+          private = list(
+            .fpoints = NULL
+          ),
+          active = list(
+            fpoints = function(fpoints) {
+              if (missing(fpoints))
+                return(private$.fpoints)
+              assert_that(is.double.matrix(fpoints))
+              assert_that(has.only.names(fpoints,
+                                         c("cyc", "tmp", "fluor")))
+              private$.fpoints <- fpoints
+            }
+          ))
+
+# mdpsType ------------------------------------------------------------
+#' @export
+mdpsType <- 
+  R6Class("mdpsType",
+          # class = FALSE,
+          inherit = rdmlBaseType,
+          public = list(
+            initialize = function(fpoints) {
+              assert_that(is.double.matrix(fpoints))
+              assert_that(has.only.names(fpoints,
+                                         c("tmp", "fluor")))
+              private$.fpoints <- fpoints
+            },
+            print = function(...) {
+              private$.fpoints
+            },
+            .asXMLnodes = function(node.name) {
+              alply(private$.fpoints,
+                    1,
+                    function(fpoints.row) {
+                      newXMLNode(name = "mdp",
+                                 .children = 
+                                   list(
+                                     newXMLNode(
+                                       name = "tmp",
+                                       text = fpoints.row["tmp"]),
+                                     newXMLNode(
+                                       name = "fluor",
+                                       text = fpoints.row["fluor"])
+                                   ))
+                    })
+            }
+          ),
+          private = list(
+            .fpoints = NULL
+          ),
+          active = list(
+            fpoints = function(fpoints) {
+              if (missing(fpoints))
+                return(private$.fpoints)
+              assert_that(is.double.matrix(fpoints))
+              assert_that(has.only.names(fpoints,
+                                         c("tmp", "fluor")))
+              private$.fpoints <- fpoints
+            }
+          ))
+
+
 # dataType ------------------------------------------------------------
 dataType <- 
   R6Class("dataType",
@@ -1094,8 +1292,10 @@ dataType <-
               #                                            dpAmpCurveType))
               #               assert_that(is.opt.list.type(mdp,
               #                                            dpMeltingCurveType))
-              assert_that(is.opt.double.matrix(adp))
-              assert_that(is.opt.double.matrix(mdp))
+              assert_that(is.opt.type(adp,
+                                      adpsType))
+              assert_that(is.opt.type(mdp,
+                                      mdpsType))
               assert_that(is.opt.double(endPt))
               assert_that(is.opt.double(bgFluor))
               assert_that(is.opt.double(bgFluorSlp))
@@ -1112,86 +1312,84 @@ dataType <-
               private$.quantFluor <- quantFluor
             },
             AsDataFrame = function(dp.type = "adp") {
-              self[[dp.type]] %>% 
+              self[[dp.type]]$fpoints %>% 
                 as.data.frame %>% 
                 select(ifelse(dp.type == "adp",
                               cyc,
                               tmp),
                        fluor)
             }
-  ),
-private = list(
-  .tar = NULL,
-  .cq = NULL,
-  .excl = NULL,
-  .adp = NULL,
-  .mdp = NULL,
-  .endPt = NULL,
-  .bgFluor = NULL,
-  .bgFluorSlp = NULL,
-  .quantFluor = NULL
-),
-active = list(
-  tar = function(tar) {
-    if (missing(tar))
-      return(private$.tar)
-    assert_that(is.type(tar,
-                        idReferencesType))
-    private$.tar <- tar
-  },
-  cq = function(cq) {
-    if (missing(cq))
-      return(private$.cq)
-    assert_that(is.opt.double(cq))
-    private$.cq <- cq
-  },
-  excl = function(excl) {
-    if (missing(excl))
-      return(private$.excl)
-    assert_that(is.opt.string(excl))
-    private$.excl <- excl
-  },
-  adp = function(adp) {
-    if (missing(adp))
-      return(private$.adp)
-    #               assert_that(is.opt.list.type(adp,
-    #                                            dpAmpCurveType))
-    assert_that(is.opt.double.matrix(adp))
-    private$.adp <- adp
-  },
-  mdp = function(mdp) {
-    if (missing(mdp))
-      return(private$.mdp)
-    #               assert_that(is.opt.list.type(mdp,
-    #                                            dpMeltingCurveType))
-    assert_that(is.opt.double.matrix(mdp))
-    private$.mdp <- mdp
-  },
-  endPt = function(endPt) {
-    if (missing(endPt))
-      return(private$.endPt)
-    assert_that(is.opt.double(endPt))
-    private$.endPt <- endPt
-  },
-  bgFluor = function(bgFluor) {
-    if (missing(bgFluor))
-      return(private$.bgFluor)
-    assert_that(is.opt.double(bgFluor))
-    private$.bgFluor <- bgFluor
-  },
-  bgFluorSlp = function(bgFluorSlp) {
-    if (missing(bgFluorSlp))
-      return(private$.bgFluorSlp)
-    assert_that(is.opt.double(bgFluorSlp))
-    private$.bgFluorSlp <- bgFluorSlp
-  },
-  quantFluor = function(quantFluor) {
-    if (missing(quantFluor))
-      return(private$.quantFluor)
-    assert_that(is.opt.double(quantFluor))
-    private$.quantFluor <- quantFluor
-  }
-))
+          ),
+          private = list(
+            .tar = NULL,
+            .cq = NULL,
+            .excl = NULL,
+            .adp = NULL,
+            .mdp = NULL,
+            .endPt = NULL,
+            .bgFluor = NULL,
+            .bgFluorSlp = NULL,
+            .quantFluor = NULL
+          ),
+          active = list(
+            tar = function(tar) {
+              if (missing(tar))
+                return(private$.tar)
+              assert_that(is.type(tar,
+                                  idReferencesType))
+              private$.tar <- tar
+            },
+            cq = function(cq) {
+              if (missing(cq))
+                return(private$.cq)
+              assert_that(is.opt.double(cq))
+              private$.cq <- cq
+            },
+            excl = function(excl) {
+              if (missing(excl))
+                return(private$.excl)
+              assert_that(is.opt.string(excl))
+              private$.excl <- excl
+            },
+            adp = function(adp) {
+              if (missing(adp))
+                return(private$.adp)
+              assert_that(is.opt.type(adp,
+                                      adpsType))
+              private$.adp <- adp
+            },
+            mdp = function(mdp) {
+              if (missing(mdp))
+                return(private$.mdp)
+              assert_that(is.opt.type(mdp,
+                                      mdpsType))
+              private$.mdp <- mdp
+            },
+            endPt = function(endPt) {
+              if (missing(endPt))
+                return(private$.endPt)
+              assert_that(is.opt.double(endPt))
+              private$.endPt <- endPt
+            },
+            bgFluor = function(bgFluor) {
+              if (missing(bgFluor))
+                return(private$.bgFluor)
+              assert_that(is.opt.double(bgFluor))
+              private$.bgFluor <- bgFluor
+            },
+            bgFluorSlp = function(bgFluorSlp) {
+              if (missing(bgFluorSlp))
+                return(private$.bgFluorSlp)
+              assert_that(is.opt.double(bgFluorSlp))
+              private$.bgFluorSlp <- bgFluorSlp
+            },
+            quantFluor = function(quantFluor) {
+              if (missing(quantFluor))
+                return(private$.quantFluor)
+              assert_that(is.opt.double(quantFluor))
+              private$.quantFluor <- quantFluor
+            }
+          ))
 
 # reactType ------------------------------------------------------------
 reactType <- 
@@ -1202,14 +1400,16 @@ reactType <-
             initialize = function(id,
                                   sample,
                                   data) {
-              assert_that(is.count(id))
+              assert_that(is.type(id,
+                                  reactIdType))
               assert_that(is.type(sample,
                                   idReferencesType))
               assert_that(is.list.type(data,
                                        dataType))
               private$.id <- id
               private$.sample <- sample
-              private$.data <- data
+              private$.data <- with.names(data,
+                                          quote(.$tar$id))
             },
             AsDataFrame = function(dp.type = "adp",
                                    long.table = FALSE) {
@@ -1227,8 +1427,8 @@ reactType <-
             },
             Position = function(pcrFormat) {
               sprintf("%s%02i",
-                      LETTERS[(private$.id - 1) %/% pcrFormat$columns + 1],
-                      as.integer((private$.id - 1) %% pcrFormat$columns + 1))
+                      LETTERS[(private$.id$id - 1) %/% pcrFormat$columns + 1],
+                      as.integer((private$.id$id - 1) %% pcrFormat$columns + 1))
             }
           ),
           private = list(
@@ -1240,7 +1440,8 @@ reactType <-
             id = function(id) {
               if (missing(id))
                 return(private$.id)
-              assert_that(is.count(id))
+              assert_that(is.type(id,
+                                  reactIdType))
               private$.id <- id
             },
             sample = function(sample) {
@@ -1255,7 +1456,8 @@ reactType <-
                 return(private$.data)
               assert_that(is.list.type(data,
                                        dataType))
-              private$.data <- data
+              private$.data <- qith.names(data,
+                                          quote(.$tar$id))
             }
           ))
 
@@ -1427,7 +1629,8 @@ runType <-
               private$.thermalCyclingConditions <- thermalCyclingConditions
               private$.pcrFormat <- pcrFormat
               private$.runDate <- runDate
-              private$.react <- react
+              private$.react <- with.names(react,
+                                           quote(.$id$id))
             },
             AsDataFrame = function(dp.type = "adp",
                                    long.table = FALSE) {
@@ -1442,7 +1645,7 @@ runType <-
                     cbind(.,
                           sname = 
                             sprintf("%s_%s",
-                                    react$id,
+                                    react$id$id,
                                     react$sample$id)
                     ),
                   .id = ifelse(dp.type == "adp",
@@ -1551,7 +1754,8 @@ runType <-
                 return(private$.react)
               assert_that(is.list.type(react,
                                        reactType))
-              private$.react <- react
+              private$.react <- with.names(react,
+                                           quote(.$id$id))
             }
           ))
 
@@ -1575,8 +1779,9 @@ experimentType <-
               
               private$.id <- id
               private$.description <- description
-              private$.documentation <- with.names(documentation, id)
-              private$.run <- run
+              private$.documentation <- documentation
+              private$.run <- with.names(run,
+                                         quote(.$id$id))
             },
             AsDataFrame = function(dp.type = "adp",
                                    long.table = FALSE) {
@@ -1623,14 +1828,15 @@ experimentType <-
                 return(private$.documentation)
               assert_that(is.opt.list.type(documentation,
                                            idReferencesType))
-              private$.documentation <- with.names(documentation, id)
+              private$.documentation <- documentation
             },
             run = function(run) {
               if (missing(run))
                 return(private$.run)
               assert_that(is.opt.list.type(run,
                                            runType))
-              private$.run <- run #with.names(run, name)
+              private$.run <- with.names(run,
+                                         quote(.$id$id))
             }
           ))
 
@@ -1959,10 +2165,10 @@ thermalCyclingConditionsType <-
               
               private$.id <- id
               private$.description <- description
-              private$.documentation <- with.names(documentation, id)
+              private$.documentation <- documentation
               private$.lidTemperature <- lidTemperature
-              private$.experimenter <- with.names(experimenter, id)
-              private$.step <- with.names(step, id)
+              private$.experimenter <- experimenter
+              private$.step <- step
               
             }
           ),
@@ -1992,7 +2198,7 @@ thermalCyclingConditionsType <-
                 return(private$.documentation)
               assert_that(is.opt.list.type(documentation,
                                            idReferencesType))
-              private$.documentation <- with.names(documentation, id)
+              private$.documentation <- documentation
             },
             lidTemperature = function(lidTemperature) {
               if (missing(lidTemperature))
@@ -2005,13 +2211,13 @@ thermalCyclingConditionsType <-
                 return(private$.experimenter)
               assert_that(is.opt.list.type(experimenter,
                                            idReferencesType))
-              private$.experimenter <- with.names(experimenter, id)
+              private$.experimenter <- experimenter
             },
             step = function(step) {
               if (missing(step))
                 return(private$.step)
               assert_that(is.opt.list.type(step,
                                            idReferencesType))
-              private$.step <- with.names(step, id)
+              private$.step <- step
             }
           ))

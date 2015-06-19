@@ -3,8 +3,12 @@
 \docType{methods}
 \name{Merge}
 \alias{Merge}
+\alias{MergeRDMLs}
 \alias{RDML.Merge}
 \title{Merges \code{RDML} objects}
+\usage{
+MergeRDMLs(to.merge)
+}
 \arguments{
 \item{to.merge}{\code{RDML} object that should be merged into current object.}
 }

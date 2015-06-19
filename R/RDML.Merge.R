@@ -9,6 +9,7 @@
 #' @aliases RDML.Merge
 #' @rdname merge-method
 #' @include RDML.R
+#' @export
 #' @examples
 #' \dontrun{
 #' PATH <- path.package("RDML")
@@ -19,26 +20,22 @@
 #' lc96$Merge(stepone)
 #' lc96$AsTable()
 #' }
-RDML$set("public", "Merge",
-         function(to.merge) {
-           private$.dateMade <- to.merge$dateMade
-           private$.dateUpdated <- to.merge$dateUpdated
-           for(element in c("id",
-                            "experimenter",
-                            "documentation",
-                            "dye",
-                            "sample",
-                            "target",
-                            "thermalCyclingConditions",
-                            "experiment"
-           )) {
-             
-             private[[paste0(".", element)]] <- 
-               c(private[[paste0(".", element)]],
-                 to.merge[[element]])
-             private[[paste0(".", element)]] <- 
-               private[[paste0(".", element)]][unique(
-                 names(private[[paste0(".", element)]]))]
-           }
-         },
-         overwrite = TRUE)
+MergeRDMLs <- function(to.merge) {
+  out <- RDML$new()
+  for(rdml in to.merge) {
+    for(element in c("id",
+                     "experimenter",
+                     "documentation",
+                     "dye",
+                     "sample",
+                     "target",
+                     "thermalCyclingConditions",
+                     "experiment"
+    )) {
+      out[[element]] <- c(out[[element]],
+                          llply(rdml[[element]],
+                                function(subelement) subelement$Clone()))
+    }
+  }
+  out
+}

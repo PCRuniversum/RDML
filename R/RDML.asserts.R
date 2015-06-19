@@ -39,12 +39,19 @@ on_failure(is.opt.double) <- function(call, env) {
   paste0(deparse(call$x), " is present but not a double or length > 1")
 }
 
+is.double.matrix <- function(x) {
+  is.double(x) && is.matrix(x) 
+}
+on_failure(is.double.matrix) <- function(call, env) {
+  paste0(deparse(call$x), " is not a 'double' matrix")
+}
+
 is.opt.double.matrix <- function(x) {
   if(is.null(x) || is.na(x)) return(TRUE)
   is.double(x) && is.matrix(x) 
 }
 on_failure(is.opt.double.matrix) <- function(call, env) {
-  paste0(deparse(call$x), " is present but not a double matrix")
+  paste0(deparse(call$x), " is present but not a 'double' matrix")
 }
 
 is.opt.integer <- function(x) {

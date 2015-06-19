@@ -61,7 +61,7 @@
 #' @export
 #' @import assertthat rlist
 #' @importFrom R6 R6Class
-#' @importFrom plyr llply ldply laply ddply compact .
+#' @importFrom plyr alply llply ldply laply ddply compact .
 #' @importFrom tidyr spread
 #' @import dplyr
 #' @include RDML.asserts.R
@@ -181,7 +181,29 @@ RDML <- R6Class("RDML",
                   GetFData = function() { },
                   SetFData = function() { },
                   Merge = function() { },
-                  AsDendrogram = function() { }
+                  AsDendrogram = function() { },
+                  AsXML = function(file.name) {
+                    tree <- self$.asXMLnodes("rdml",
+                                             "http://www.rdml.org")
+                    #rdml_data.xml
+                    if(missing(file.name))
+                      return(tree)
+                    saveXML(tree,
+                            "rdml_data.xml")
+                    zip(file.name,
+                        "rdml_data.xml")
+                    unlink("rdml_data.xml")
+                  },
+                  .asXMLnodes = function(node.name,
+                                         namespaceDefinitions = NULL) {
+                    tree <- 
+                      super$.asXMLnodes(node.name,
+                                        namespaceDefinitions)
+                    xmlAttrs(tree) <- c(version = 1.2)
+                    #                     tree$setNamespace("http://www.rdml.org")
+                    tree
+                    # super$.asXMLnodes(node.name)))
+                  }
                 ),
                 private = list(
                   .dateMade = NULL,
@@ -274,7 +296,8 @@ RDML <- R6Class("RDML",
                   target = function(target) {
                     if(missing(target))
                       return(private$.target)
-                    assert_that(is.list.type(target))
+                    assert_that(is.list.type(target,
+                                             targetType))
                     private$.target <- target
                   },
                   

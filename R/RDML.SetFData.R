@@ -46,11 +46,11 @@
 #' @include RDML.R
 RDML$set("public", "SetFData",
          function(fdata,
-                  fdata.type = "adp",
-                  description) {
-           first.col.name <- ifelse(fdata.type == "adp",
-                                    "cyc",
-                                    "tmp")
+                  description,
+                  fdata.type = "adp") {
+#            first.col.name <- ifelse(fdata.type == "adp",
+#                                     "cyc",
+#                                     "tmp")
            fdata.names <- colnames(fdata)[2:ncol(fdata)]
            for(fdata.n in fdata.names) {
              descr.row <- description %>% 
@@ -66,11 +66,20 @@ RDML$set("public", "SetFData",
                run[[descr.row["run.id"]]]$
                react[[descr.row["react.id"]]]$
                data[[descr.row["target"]]][[fdata.type]] <-
-               matrix(c(fdata[, 1], fdata[, fdata.n]), 
-                      byrow = FALSE,
-                      ncol = 2,
-                      dimnames = list(NULL,
-                                      c(first.col.name, "fluor")))
+               ifelse(fdata.type == "adp",
+                      adpsType$new(
+                        matrix(c(fdata[, 1], fdata[, fdata.n]),
+                               byrow = FALSE,
+                               ncol = 2,
+                               dimnames = list(NULL,
+                                               c("cyc", "fluor")))),
+                      mdpsType$new(
+                        matrix(c(fdata[, 1], fdata[, fdata.n]), 
+                               byrow = FALSE,
+                               ncol = 2,
+                               dimnames = list(NULL,
+                                               c("tmp", "fluor"))))
+               )
            }
          }
          , overwrite = TRUE)

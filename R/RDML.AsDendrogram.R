@@ -23,11 +23,11 @@
 RDML$set("public", "AsDendrogram",
          function(plot.dendrogram = TRUE) {
            
-           total.table <- self$AsTable(adp = !all(is.na(data$adp)),
-                                       mdp = !all(is.na(data$mdp)))
-           tree<-list()
-           attributes(tree)<-list(members = 0, height = 5)
-           class(tree)<-"dendrogram"
+           total.table <- self$AsTable()
+           
+           tree <- list()
+           attributes(tree) <- list(members = 0, height = 5)
+           class(tree) <- "dendrogram"
            for(exper.id in unique(total.table$exp.id)) {
              
              tree[[exper.id]] <- list()

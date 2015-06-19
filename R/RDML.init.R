@@ -406,7 +406,6 @@ RDML$set("public", "initialize", function(filename,
   
   cat("\nGetting target")
   private$.target <- 
-    
     llply(rdml.root["target"],
           function(target) {
             targetType$new(
@@ -634,18 +633,18 @@ RDML$set("public", "initialize", function(filename,
                                         namespaces = c(rdml = "http://www.rdml.org")))
         if(!is.null(fluor)) {
           if(length(tmp) != 0) {
-            matrix(c(cyc, tmp, fluor), 
+            adpsType$new(matrix(c(cyc, tmp, fluor), 
                    byrow = FALSE,
                    ncol = 3,
                    dimnames = list(NULL,
-                                   c("cyc", "tmp", "fluor")))
+                                   c("cyc", "tmp", "fluor"))))
           }
           else {
-            matrix(c(cyc, fluor), 
+            adpsType$new(matrix(c(cyc, fluor), 
                    byrow = FALSE,
                    ncol = 2,
                    dimnames = list(NULL,
-                                   c("cyc", "fluor")))
+                                   c("cyc", "fluor"))))
           }
         } else {
           #           matrix(ncol = 2,
@@ -666,12 +665,20 @@ RDML$set("public", "initialize", function(filename,
                                         xmlValue,
                                         namespaces = c(rdml = "http://www.rdml.org")))
         
-        if(length(fluor) != 0 && !is.null(fluor))
-          matrix(c(tmp, fluor), 
-                 byrow = FALSE,
-                 ncol = 2,
-                 dimnames = list(NULL,
-                                 c("tmp", "fluor")))
+        if(length(fluor) != 0 && !is.null(fluor)) {
+#           matrix(c(tmp, fluor), 
+#                                                byrow = FALSE,
+#                                                ncol = 2,
+#                                                dimnames = list(NULL,
+#                                                                c("tmp", "fluor"))) %>% 
+#             typeof %>% print
+#           NULL
+          mdpsType$new(matrix(c(tmp, fluor), 
+                              byrow = FALSE,
+                              ncol = 2,
+                              dimnames = list(NULL,
+                                              c("tmp", "fluor"))))
+        }
         else
           #           matrix(ncol = 2,
           #                  dimnames = list(NULL,
@@ -708,19 +715,17 @@ RDML$set("public", "initialize", function(filename,
     }
     #######    
     reactType$new(
-      id = react.id.corrected, #sample.id
+      id = reactIdType$new(react.id.corrected), #sample.id
       #       # will be calculated at the end of init
       #       position = NA,
       sample = idReferencesType$new(sample),
       data = {
-        
         llply(react["data"],
               function(data) GetData(data,
                                      experiment.id,
                                      run.id,
                                      react.id)
-        ) %>% 
-          with.names(quote(.$tar$id))
+        ) 
       }
     )
   }  
@@ -787,8 +792,7 @@ RDML$set("public", "initialize", function(filename,
                                  "text",
                                  "none")
         ) %>% 
-        compact %>% 
-        with.names(quote(.$id)) 
+        compact 
     )
     
   }                      
@@ -806,8 +810,7 @@ RDML$set("public", "initialize", function(filename,
       run = 
         llply(experiment["run"],
               function(run) GetRun(run, experiment.id)
-        ) %>% 
-        with.names(quote(.$id$id))
+        )
     )
     
   }
@@ -837,9 +840,10 @@ RDML$set("public", "initialize", function(filename,
           sprintf("^%s$", geneName),
           names(private$.target))
         private$.target[[geneI]]$type <-
-          ifelse(as.logical(xmlValue(ref.gene[["isReference"]])),
-                 "ref",
-                 "toi")
+          targetTypeType$new(
+            ifelse(as.logical(xmlValue(ref.gene[["isReference"]])),
+                   "ref",
+                   "toi"))
       }
     }
     # return()
