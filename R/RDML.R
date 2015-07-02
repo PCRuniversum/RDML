@@ -258,9 +258,9 @@ RDML <- R6Class("RDML",
                       return(private$.id)                    
                     assert_that(is.list.type(id,
                                              rdmlIdType))
-                    private$.id <- 
-                      with.names(quote(id,
-                                       .$publisher))
+                    private$.id <- id
+#                       with.names(quote(id,
+#                                        .$publisher))
                   },
                   
                   experimenter = function(experimenter) {
@@ -269,7 +269,7 @@ RDML <- R6Class("RDML",
                     assert_that(is.list.type(experimenter,
                                              experimenterType))
                     private$.experimenter <- 
-                      with.names(sample,
+                      with.names(experimenter,
                                  quote(.$id$id))
                   },
                   
@@ -279,7 +279,7 @@ RDML <- R6Class("RDML",
                     assert_that(is.list.type(documentation,
                                              documentationType))                    
                     private$.documentation <- 
-                      with.names(sample,
+                      with.names(documentation,
                                  quote(.$id$id))
                   },
                   
@@ -289,7 +289,7 @@ RDML <- R6Class("RDML",
                     assert_that(is.list.type(dye,
                                              dyeType))
                     private$.dye <- 
-                      with.names(sample,
+                      with.names(dye,
                                  quote(.$id$id))
                   },
                   
@@ -319,7 +319,7 @@ RDML <- R6Class("RDML",
                     assert_that(is.list.type(thermalCyclingConditions,
                                              thermalCyclingConditionsType))
                     private$.thermalCyclingConditions <- 
-                      with.names(thermalCyclingConditionsType,
+                      with.names(thermalCyclingConditions,
                                  quote(.$id$id))
                   },
                   
