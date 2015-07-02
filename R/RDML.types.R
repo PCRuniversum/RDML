@@ -11,6 +11,22 @@ with.names <- function(l, id) {
 }
 
 # rdmlBaseType ------------------------------------------------------------
+
+#' Base R6 class for RDML package.
+#' 
+#' Most classes of RDML package inherit this class. It can't be directly 
+#' accessed and serves only for inner package usage.
+#' 
+#' @usage rdmlBaseType$new()
+#'   
+#' @section Methods: \describe{\item{\code{Clone}}{Clones R6 object. Need 
+#'   because modification of R6 object direct copy leads to modification of its 
+#'   original.}\item{\code{.asXMLnodes(node.name)}}{Represents object as XML
+#'   nodes. Should not be called directly. \code{node.name} -- name of the root
+#'   node for the generated XML tree.}}
+#'   
+#' @docType class
+#' @format An \code{\link{R6Class}} generator object.
 rdmlBaseType <-
   R6Class("rdmlBaseType",
           # class = FALSE,
@@ -98,16 +114,56 @@ rdmlBaseType <-
                         })
                 }
               )
+            },
+            print = function(...) {
+              sapply(names(private), function(name) {
+                sprintf(
+                  "%s: %s",
+                  gsub("^\\.(.*)$",
+                       "\\1", name),
+                  switch(
+                    typeof(private[[name]]),
+                    list = names(private[[name]]) %>% 
+                      paste(collapse = ", "),
+                    environment = {
+                      sprintf("%s - %s",
+                              class(private[[name]])[1],
+                              print(private[[name]]))
+                    },
+                    {
+                      if (class(private[[name]]) == "matrix")
+                        sprintf("%s fluorescence data points",
+                                nrow(private[[name]]))
+                      else
+                        private[[name]]
+                    }))
+              }) %>% 
+                paste(collapse = "\n") %>% 
+                cat
             }
-            
-            #,
-            #             print = function() {
-            #               sapply(names(private), function(n) private[[n]])
-            #             }
           )
   )
 
 # rdmlIdType ------------------------------------------------------------
+
+#' rdmlIdType R6 class.
+#' 
+#' This element can be used to assign a publisher and id to the RDML file.\cr
+#' Inherits: \link{rdmlBaseType}.
+#' 
+#' @usage rdmlIdType$new(publisher, serialNumber, MD5Hash = NULL)
+#'   
+#' @param publisher \link[assertthat]{is.string}. RDML file publisher.
+#' @param serialNumber \link[assertthat]{is.string}. Serial number.
+#' @param MD5Hash \link[assertthat]{is.string}. An MD5Hash calculated over the
+#'   complete file after removing all rdmlIDTypes and all whitespaces between
+#'   elements.
+#'   
+#' @section Fields: Names, types and description of the fields are equal to the
+#'   class arguments.
+#'   
+#' @docType class
+#' @format An \code{\link{R6Class}} generator object.
 #' @export
 rdmlIdType <- 
   R6Class("rdmlIdType",
@@ -123,12 +179,6 @@ rdmlIdType <-
               private$.publisher <- publisher
               private$.serialNumber <- serialNumber
               private$.MD5Hash <- MD5Hash
-            },
-            print = function(...) {
-              cat("Publisher\t: ",
-                  private$.publisher,
-                  "\nS/N\t\t: ",
-                  private$.serialNumber)
             }
           ),
           private = list(
@@ -158,6 +208,20 @@ rdmlIdType <-
           ))
 
 # idType ------------------------------------------------------------
+
+#' idType R6 class.
+#' 
+#' Contains identificator for varius RDML types.\cr Inherits: \link{rdmlBaseType}.
+#' 
+#' @usage idType$new(id)
+#'   
+#' @param id \link[assertthat]{is.string}. Identificator.
+#' 
+#' @section Fields: Names, types and description of the fields are equal to the
+#'   class arguments.
+#'    
+#' @docType class
+#' @format An \code{\link{R6Class}} generator object.
 #' @export
 idType <- 
   R6Class("idType",
@@ -167,9 +231,6 @@ idType <-
             initialize = function(id) {
               assert_that(is.string(id))
               private$.id <- id
-            },
-            print = function(...) {
-              private$.id
             }
           ),
           private = list(
@@ -185,6 +246,20 @@ idType <-
           ))
 
 # reactIdType ------------------------------------------------------------
+
+#' reactIdType R6 class.
+#' 
+#' Contains identificator for reactType.\cr Inherits: \link{rdmlBaseType}.
+#' 
+#' @usage reactIdType$new(id)
+#'   
+#' @param id \link[assertthat]{is.count}. Identificator.
+#' 
+#' @section Fields: Names, types and description of the fields are equal to the
+#'   class arguments.
+#'    
+#' @docType class
+#' @format An \code{\link{R6Class}} generator object.
 #' @export
 reactIdType <- 
   R6Class("reactIdType",
@@ -211,8 +286,20 @@ reactIdType <-
             }
           ))
 
-
 # idReferencesType ------------------------------------------------------------
+
+#' idReferencesType R6 class.
+#' 
+#' Contains id of another RDML object.\cr Inherits: \link{idType}.
+#' 
+#' @usage idReferencesType$new(id)
+#' @param id \link[assertthat]{is.string}. Identificator.
+#' 
+#' @section Fields: Names, types and description of the fields are equal to the
+#'   class arguments.
+#'         
+#' @docType class
+#' @format An \code{\link{R6Class}} generator object.
 #' @export
 idReferencesType <- 
   R6Class("idReferencesType",
@@ -220,6 +307,27 @@ idReferencesType <-
           inherit = idType)
 
 # experimenterType ------------------------------------------------------------
+
+#' experimenterType R6 class.
+#' 
+#' Contact details of the experimenter.\cr Inherits: \link{rdmlBaseType}.
+#' 
+#' @usage experimenterType$new(id, firstName, lastName, email = NULL, labName =
+#'   NULL, labAddress = NULL)
+#'   
+#' @param id \link{idType}. Identificator.
+#' @param firstName \link[assertthat]{is.string}. First name.
+#' @param lastName \link[assertthat]{is.string}. Last name.
+#' @param email \link[assertthat]{is.string}. Email.
+#' @param labName \link[assertthat]{is.string}. Lab name.
+#' @param labAddress \link[assertthat]{is.string}. Lab address.
+#'
+#' @section Fields: Names, types and description of the fields are equal to the
+#'   class arguments.
+#'     
+#' @docType class
+#' @format An \code{\link{R6Class}} generator object.
+#' @export
 experimenterType <- 
   R6Class("experimenterType",
           # class = FALSE,
@@ -293,6 +401,23 @@ experimenterType <-
           ))
 
 # documentationType ------------------------------------------------------------
+
+#' documentationType R6 class.
+#' 
+#' These elements should be used if the same description applies to many
+#' samples, targets or experiments.\cr Inherits: \link{rdmlBaseType}.
+#' 
+#' @usage documentationType$new(id, text = NULL)
+#'   
+#' @param id \link{idType}. Identificator.
+#' @param text \link[assertthat]{is.string}. Text.
+#'   
+#' @section Fields: Names, types and description of the fields are equal to the 
+#'   class arguments.
+#'   
+#' @docType class
+#' @format An \code{\link{R6Class}} generator object.
+#' @export
 documentationType <- 
   R6Class("documentationType",
           # class = FALSE,
@@ -326,6 +451,22 @@ documentationType <-
           ))
 
 # dyeType ------------------------------------------------------------
+
+#' dyeType R6 class.
+#' 
+#' Information on a dye.\cr Inherits: \link{rdmlBaseType}.
+#' 
+#' @usage dyeType$new(id, description = NULL)
+#'   
+#' @param id \link{idType}. Identificator.
+#' @param text \link[assertthat]{is.string}. Description.
+#'   
+#' @section Fields: Names, types and description of the fields are equal to the 
+#'   class arguments.
+#'   
+#' @docType class
+#' @format An \code{\link{R6Class}} generator object.
+#' @export
 dyeType <- 
   R6Class("dyeType",
           # class = FALSE,
@@ -358,8 +499,25 @@ dyeType <-
             }
           ))
 
-
 # xRefType ------------------------------------------------------------
+
+#' xRefType R6 class.
+#' 
+#' \cr Inherits: \link{rdmlBaseType}.
+#' 
+#' @usage xRefType$new(name = NULL, id = NULL)
+#'   
+#' @param name \link[assertthat]{is.string}. Reference to an external database, 
+#'   for example "GenBank".
+#' @param id \link[assertthat]{is.string}. The ID of the entry within the
+#'   external database, for example "AJ832138".
+#'   
+#' @section Fields: Names, types and description of the fields are equal to the 
+#'   class arguments.
+#'   
+#' @docType class
+#' @format An \code{\link{R6Class}} generator object.
+#' @export
 xRefType <- 
   R6Class("xRefType",
           # class = FALSE,
@@ -393,6 +551,23 @@ xRefType <-
           ))
 
 # annotationType ------------------------------------------------------------
+
+#' annotationType R6 class.
+#' 
+#' These elements should be used to annotate samples by setting a property and a
+#' value. A property could be sex, the value M or F.\cr Inherits: \link{rdmlBaseType}.
+#' 
+#' @usage annotationType$new(property, value)
+#'   
+#' @param property \link[assertthat]{is.string}. Property
+#' @param value \link[assertthat]{is.string}. Value
+#'   
+#' @section Fields: Names, types and description of the fields are equal to the 
+#'   class arguments.
+#'   
+#' @docType class
+#' @format An \code{\link{R6Class}} generator object.
+#' @export
 annotationType <- 
   R6Class("annotationType",
           # class = FALSE,
@@ -426,6 +601,22 @@ annotationType <-
           ))
 
 # quantityType ------------------------------------------------------------
+
+#' quantityType R6 class.
+#' 
+#' A quantity is always defined by its value and its unit.\cr Inherits: \link{rdmlBaseType}.
+#' 
+#' @usage quantityType$new(value, unit)
+#'   
+#' @param value \link[assertthat]{is.float}. Value.
+#' @param unit \link{quantityUnitType}. Unit.
+#'   
+#' @section Fields: Names, types and description of the fields are equal to the 
+#'   class arguments.
+#'   
+#' @docType class
+#' @format An \code{\link{R6Class}} generator object.
+#' @export
 quantityType <- 
   R6Class("quantityType",
           # class = FALSE,
@@ -460,8 +651,25 @@ quantityType <-
             }
           ))
 
-
 # cdnaSynthesisMethodType ------------------------------------------------------------
+
+#' cdnaSynthesisMethodType R6 class.
+#' 
+#' Description of the cDNA synthesis method.\cr Inherits: \link{rdmlBaseType}.
+#' 
+#' @usage cdnaSynthesisMethodType$new(enzyme = NULL, primingMethod = NULL, dnaseTreatment = NULL, thermalCyclingConditions = NULL)
+#'   
+#' @param enzyme \link[assertthat]{is.float}. Enzyme used for reverse transcription.
+#' @param primingMethod \link{primingMethodType}.
+#' @param dnaseTreatment \link[assertthat]{is.flag} True if RNA was DNAse treated prior cDNA synthesis.
+#' @param thermalCyclingConditions \link{idReferencesType}.
+#'   
+#' @section Fields: Names, types and description of the fields are equal to the 
+#'   class arguments.
+#'   
+#' @docType class
+#' @format An \code{\link{R6Class}} generator object.
+#' @export
 cdnaSynthesisMethodType <- 
   R6Class("cdnaSynthesisMethodType",
           # class = FALSE,
@@ -519,6 +727,22 @@ cdnaSynthesisMethodType <-
           ))
 
 # templateQuantityType ------------------------------------------------------------
+
+#' templateQuantityType R6 class.
+#' 
+#' \cr Inherits: \link{rdmlBaseType}.
+#' 
+#' @usage templateQuantityType$new(conc, nucleotide)
+#'   
+#' @param conc \link[assertthat]{is.float}. Concentration of the template in nanogram per microliter in the final reaction mix.
+#' @param nucleotide \link{nucleotideType}.
+#'   
+#' @section Fields: Names, types and description of the fields are equal to the 
+#'   class arguments.
+#'   
+#' @docType class
+#' @format An \code{\link{R6Class}} generator object.
+#' @export
 templateQuantityType <- 
   R6Class("templateQuantityType",
           # class = FALSE,
@@ -553,8 +777,21 @@ templateQuantityType <-
             }
           ))
 
-
 # enumType ------------------------------------------------------------
+
+#' enumType R6 class.
+#' 
+#' Generic class for creating objects thet can take limited list of values.\cr Inherits: \link{rdmlBaseType}.
+#' 
+#' @usage enumType$new(value)
+#'   
+#' @param value \link[assertthat]{is.string}. Value.
+#'   
+#' @section Fields: Names, types and description of the fields are equal to the 
+#'   class arguments.
+#'   
+#' @docType class
+#' @format An \code{\link{R6Class}} generator object.
 enumType <- 
   R6Class("enumType",
           # class = FALSE,
@@ -578,6 +815,32 @@ enumType <-
           ))
 
 # sampleTypeType ------------------------------------------------------------
+
+#' sampleTypeType R6 class.
+#' 
+#' Can take values:
+#' \describe{
+#' \item{unkn}{unknown sample}
+#' \item{ntc}{non template control}
+#' \item{nac}{no amplification control}
+#' \item{std}{standard sample}
+#' \item{ntp}{no target present}
+#' \item{nrt}{minusRT}
+#' \item{pos}{positive control}
+#' \item{opt}{optical calibrator sample}}
+#' 
+#' \cr Inherits: \link{enumType}.
+#' 
+#' @usage sampleTypeType$new(value)
+#'   
+#' @param value \link[assertthat]{is.string}. Value.
+#'   
+#' @section Fields: Names, types and description of the fields are equal to the 
+#'   class arguments.
+#'   
+#' @docType class
+#' @format An \code{\link{R6Class}} generator object.
+#' @export
 sampleTypeType <- 
   R6Class("sampleTypeType",
           # class = FALSE,
@@ -590,6 +853,31 @@ sampleTypeType <-
   )
 
 # quantityUnitType ------------------------------------------------------------
+
+#' quantityUnitType R6 class.
+#' 
+#' The unit the quantity. Can take values:
+#' \describe{
+#' \item{cop}{copies per microliter  }
+#' \item{fold}{fold change  }
+#' \item{dil}{dilution (10 would mean 1:10 dilution)  }
+#' \item{nMol}{nanomol per microliter }
+#' \item{ng}{nanogram per microliter }
+#' \item{other}{other unit (must be linear, no exponents or logarithms allowed) }
+#' }
+#' 
+#' \cr Inherits: \link{enumType}.
+#' 
+#' @usage quantityUnitType$new(value)
+#'   
+#' @param value \link[assertthat]{is.string}. Value.
+#'   
+#' @section Fields: Names, types and description of the fields are equal to the 
+#'   class arguments.
+#'   
+#' @docType class
+#' @format An \code{\link{R6Class}} generator object.
+#' @export
 quantityUnitType <- 
   R6Class("quantityUnitType",
           # class = FALSE,
@@ -600,6 +888,30 @@ quantityUnitType <-
   )
 
 # primingMethodType ------------------------------------------------------------
+
+#' primingMethodType R6 class.
+#' 
+#' The primers used to reverse transcribe the RNA to cDNA. Can take values:
+#' \describe{
+#' \item{oligo-dt}{}
+#' \item{random}{}
+#' \item{target-specific}{}
+#' \item{oligo-dt and random}{}
+#' \item{other}{} 
+#' }
+#' 
+#' \cr Inherits: \link{enumType}.
+#' 
+#' @usage primingMethodType$new(value)
+#'   
+#' @param value \link[assertthat]{is.string}. Value.
+#'   
+#' @section Fields: Names, types and description of the fields are equal to the 
+#'   class arguments.
+#'   
+#' @docType class
+#' @format An \code{\link{R6Class}} generator object.
+#' @export
 primingMethodType <- 
   R6Class("primingMethodType",
           # class = FALSE,
@@ -614,6 +926,29 @@ primingMethodType <-
   )
 
 # nucleotideType ------------------------------------------------------------
+
+#' nucleotideType R6 class.
+#' 
+#' Can take values:
+#' \describe{
+#' \item{DNA}{}
+#' \item{genomic-DNA}{}
+#' \item{cDNA}{}
+#' \item{RNA}{}
+#' }
+#' 
+#' \cr Inherits: \link{enumType}.
+#' 
+#' @usage nucleotideType$new(value)
+#'   
+#' @param value \link[assertthat]{is.string}. Value.
+#'   
+#' @section Fields: Names, types and description of the fields are equal to the 
+#'   class arguments.
+#'   
+#' @docType class
+#' @format An \code{\link{R6Class}} generator object.
+#' @export
 nucleotideType <- 
   R6Class("nucleotideType",
           # class = FALSE,
@@ -627,6 +962,49 @@ nucleotideType <-
   )
 
 # sampleType ------------------------------------------------------------
+
+#'sampleType R6 class.
+#'
+#'A sample is a defined template solution. Dilutions of the same material differ
+#'in concentration and are considered different samples. A technical replicate 
+#'samples should contain the same name (reactions are performed on the same 
+#'material), and biological replicates should contain different names (the 
+#'nucleic acids derived from the different biological replicates are not the 
+#'same). Serial dilutions in a standard curve must have a different name.\cr 
+#'Inherits: \link{rdmlBaseType}.
+#'
+#'@usage sampleType$new(id, description = NULL, documentation = NULL, xRef = 
+#'  NULL, annotation = NULL, type = sampleTypeType$new("unkn"), 
+#'  interRunCalibrator = FALSE, quantity = NULL, calibratorSample = FALSE, 
+#'  cdnaSynthesisMethod = NULL, templateQuantity = NULL)
+#'  
+#'@param id \link{idType}. Concentration of the template in 
+#'  nanogram per microliter in the final reaction mix.
+#'@param description \link[assertthat]{is.string}.
+#'@param documentation \code{list} of \link{idReferencesType}.
+#'@param xRef \code{list} of \link{xRefType}.
+#'@param annotation \code{list} of \link{annotationType}.
+#'@param type \link{sampleTypeType}.
+#'@param interRunCalibrator \link[assertthat]{is.flag}. True if this sample is used 
+#'  as inter run calibrator.
+#'@param quantity \link{quantityType}. Quantity - The reference quantity of 
+#'  this sample. It should be only used if the sample is part of a standard 
+#'  curve. The provided value will be used to quantify unknown samples in 
+#'  absolute quantification assays. Only the use of true numbers is valid like 
+#'  1, 10, 100, 1000 or 1, 0.1, 0.01, 0.001. The use of exponents is not valid 
+#'  like 1, 2, 3, 4 or -1, -2, -3, -4 because it will not be interpreted as 
+#'  10E1, 10E2, 10E3, 10E4 or 10E-1, 10E-2, 10E-3, 10E-4.
+#'@param calibratorSample \link[assertthat]{is.flag}. True if this sample is used as
+#'  calibrator sample.
+#'@param cdnaSynthesisMethod \link{cdnaSynthesisMethodType}.
+#'@param templateQuantity \link{templateQuantityType}.
+#'  
+#'@section Fields: Names, types and description of the fields are equal to the 
+#'  class arguments.
+#'  
+#'@docType class
+#'@format An \code{\link{R6Class}} generator object.
+#'@export
 sampleType <- 
   R6Class("sampleType",
           # class = FALSE,
@@ -767,6 +1145,23 @@ sampleType <-
           ))
 
 # oligoType ------------------------------------------------------------
+
+#' oligoType R6 class.
+#' 
+#' \cr Inherits: \link{rdmlBaseType}.
+#' 
+#' @usage oligoType$new(threePrimeTag = NULL, fivePrimeTag = NULL, sequence)
+#'   
+#' @param threePrimeTag \link[assertthat]{is.string}. Description of three prime modification (if present).
+#' @param fivePrimeTag \link[assertthat]{is.string}. Description of five prime modification (if present).
+#' @param sequence \link[assertthat]{is.string}.
+#'   
+#' @section Fields: Names, types and description of the fields are equal to the 
+#'   class arguments.
+#'   
+#' @docType class
+#' @format An \code{\link{R6Class}} generator object.
+#' @export
 oligoType <- 
   R6Class("oligoType",
           # class = FALSE,
@@ -809,8 +1204,27 @@ oligoType <-
             }
           ))
 
-
 # sequencesType ------------------------------------------------------------
+
+#' sequencesType R6 class.
+#' 
+#' \cr Inherits: \link{rdmlBaseType}.
+#' 
+#' @usage sequencesType$new(forwardPrimer = NULL, reversePrimer = NULL, probe1 =
+#'   NULL, probe2 = NULL, amplicon = NULL)
+#'   
+#' @param forwardPrimer \link{oligoType}.
+#' @param reversePrimer \link{oligoType}.
+#' @param probe1 \link{oligoType}.
+#' @param probe2 \link{oligoType}.
+#' @param amplicon \link{oligoType}.
+#'   
+#' @section Fields: Names, types and description of the fields are equal to the 
+#'   class arguments.
+#'   
+#' @docType class
+#' @format An \code{\link{R6Class}} generator object.
+#' @export
 sequencesType <- 
   R6Class("sequencesType",
           # class = FALSE,
@@ -884,6 +1298,23 @@ sequencesType <-
           ))
 
 # commercialAssayType ------------------------------------------------------------
+
+#' commercialAssayType R6 class.
+#' 
+#' For some commercial assays, the primer sequences may be unknown. This element 
+#' allows to describe commercial assays.\cr Inherits: \link{rdmlBaseType}.
+#' 
+#' @usage commercialAssayType$new(company, orderNumber)
+#'   
+#' @param company \link[assertthat]{is.string}.
+#' @param orderNumber \link[assertthat]{is.string}.
+#'   
+#' @section Fields: Names, types and description of the fields are equal to the 
+#'   class arguments.
+#'   
+#' @docType class
+#' @format An \code{\link{R6Class}} generator object.
+#' @export
 commercialAssayType <- 
   R6Class("commercialAssayType",
           # class = FALSE,
@@ -917,6 +1348,26 @@ commercialAssayType <-
           ))
 
 # targetTypeType ------------------------------------------------------------
+
+#' targetTypeType R6 class.
+#' 
+#' Can take values:
+#' \describe{
+#' \item{ref}{reference target}
+#' \item{toi}{target of interest}
+#' } 
+#' \cr Inherits: \link{enumType}.
+#' 
+#' @usage targetTypeType$new(value)
+#'   
+#' @param value \link[assertthat]{is.string}.
+#'   
+#' @section Fields: Names, types and description of the fields are equal to the 
+#'   class arguments.
+#'   
+#' @docType class
+#' @format An \code{\link{R6Class}} generator object.
+#' @export
 targetTypeType <- 
   R6Class("targetTypeType",
           # class = FALSE,
@@ -927,8 +1378,38 @@ targetTypeType <-
           )
   )
 
-
 # targetType ------------------------------------------------------------
+
+#' targetType R6 class.
+#' 
+#' A target is a defined PCR reaction. PCR reactions for the same gene which 
+#' differ in primer sequences are considered different targets.\cr Inherits: 
+#' \link{rdmlBaseType}.
+#' 
+#' @usage targetType$new(id, description = NULL, documentation = NULL, xRef =
+#'   NULL, type, amplificationEfficiencyMethod = NULL, amplificationEfficiency =
+#'   NULL, amplificationEfficiencySE = NULL, detectionLimit = NULL, dyeId, 
+#'   sequences = NULL, commercialAssay = NULL)
+#'   
+#' @param id \link{idType}.
+#' @param description \link[assertthat]{is.string}.
+#' @param documentation \code{list} of \link{idReferencesType}.
+#' @param xRef \code{list} of \link{xRefType}.
+#' @param type \link{targetTypeType}.
+#' @param amplificationEfficiencyMethod \link[assertthat]{is.string}.
+#' @param amplificationEfficiency \link[base]{double}.
+#' @param amplificationEfficiencySE \link[base]{double}.
+#' @param detectionLimit \link[base]{double}.
+#' @param dyeId \link{idReferencesType}.
+#' @param sequences \link{sequencesType}.
+#' @param commercialAssay \link{commercialAssayType}.
+#'   
+#' @section Fields: Names, types and description of the fields are equal to the 
+#'   class arguments.
+#'   
+#' @docType class
+#' @format An \code{\link{R6Class}} generator object.
+#' @export
 targetType <- 
   R6Class("targetType",
           # class = FALSE,
@@ -1126,6 +1607,7 @@ targetType <-
 #             }
 #           ))
 # 
+
 # # dpMeltingCurveType ------------------------------------------------------------
 # dpMeltingCurveType <- 
 #   R6Class("dpMeltingCurveType",
@@ -1165,6 +1647,26 @@ targetType <-
 #           ))
 
 # adpsType ------------------------------------------------------------
+
+#' adpsType R6 class.
+#' 
+#' Contains of amplification data points \code{matrix} -- single data points 
+#' measured during amplification. \code{Matrix} columns: \describe{ 
+#' \item{cyc}{(every point must be unique) Cycle - The PCR cycle at which data point was collected.} 
+#' \item{tmp}{(optional) Temperature - The temperature in degrees Celsius at the
+#' time of measurement.} \item{fluor}{Fluorescence - The fluorescence intensity
+#' measured without any correction. The fluorescence intensity must not be
+#' baseline corrected.}} \cr Inherits: \link{rdmlBaseType}.
+#' 
+#' @usage adpsType$new(fpoints)
+#'   
+#' @param fpoints \link[base]{matrix}. Matrix with amplification data points.
+#'   
+#' @section Fields: Names, types and description of the fields are equal to the 
+#'   class arguments.
+#'   
+#' @docType class
+#' @format An \code{\link{R6Class}} generator object.
 #' @export
 adpsType <- 
   R6Class("adpsType",
@@ -1176,9 +1678,6 @@ adpsType <-
               assert_that(has.only.names(fpoints,
                                          c("cyc", "tmp", "fluor")))
               private$.fpoints <- fpoints
-            },
-            print = function(...) {
-              private$.fpoints
             },
             .asXMLnodes = function(node.name) {
               #               newXMLNode(
@@ -1222,6 +1721,25 @@ adpsType <-
           ))
 
 # mdpsType ------------------------------------------------------------
+
+#' mdpsType R6 class.
+#' 
+#' Contains of melting data points \code{matrix} -- single data points 
+#' measured during amplification. \code{Matrix} columns: \describe{ 
+#' \item{tmp}{(every point must be unique) Temperature - The temperature in degrees Celsius at the
+#' time of measurement.} \item{fluor}{Fluorescence - The fluorescence intensity
+#' measured without any correction. The fluorescence intensity must not be
+#' baseline corrected.}} \cr Inherits: \link{rdmlBaseType}.
+#' 
+#' @usage mdpsType$new(fpoints)
+#'   
+#' @param fpoints \link[base]{matrix}. Matrix with amplification data points.
+#'   
+#' @section Fields: Names, types and description of the fields are equal to the 
+#'   class arguments.
+#'   
+#' @docType class
+#' @format An \code{\link{R6Class}} generator object.
 #' @export
 mdpsType <- 
   R6Class("mdpsType",
@@ -1233,9 +1751,6 @@ mdpsType <-
               assert_that(has.only.names(fpoints,
                                          c("tmp", "fluor")))
               private$.fpoints <- fpoints
-            },
-            print = function(...) {
-              private$.fpoints
             },
             .asXMLnodes = function(node.name) {
               alply(private$.fpoints,
@@ -1268,8 +1783,47 @@ mdpsType <-
             }
           ))
 
-
 # dataType ------------------------------------------------------------
+
+#' dataType R6 class.
+#' 
+#' \cr Inherits: \link{rdmlBaseType}.
+#' 
+#' @usage dataType$new(tar, cq = NULL, excl = NULL, adp = NULL, mdp = NULL, 
+#'   endPt = NULL, bgFluor = NULL, bgFluorSlp = NULL, quantFluor = NULL)
+#'   
+#' @param tar \link{idReferencesType}. TargetID - A reference to a target.
+#' @param cq \link[base]{double}. Quantification cycle - The calculated 
+#'   fractional PCR cycle used for downstream quantification. Negative values 
+#'   are used to express following conditions: Not Available: -1.0
+#' @param excl \link[assertthat]{is.string}. Excluded - If present, this entry 
+#'   should not be evaluated. Do not set this element to false if this entry is 
+#'   valid, leave the entire element out instead. It may contain a string with 
+#'   reason for exclusion. Several reasons for exclusion should be seperated by 
+#'   semicolons ";".
+#' @param adp \link{adpsType}.
+#' @param mdp \link{mdpsType}.
+#' @param endPt \link[base]{double}. End point - Result of an endpoint 
+#'   measurement.
+#' @param bgFluor \link[base]{double}. Background fluorescence - The y-intercept
+#'   of the baseline trend based on the estimated background fluorescence.
+#' @param bgFluorSlp \link[base]{double}. Background fluorescence slope - The 
+#'   slope of the baseline trend based on the estimated background fluorescence.
+#'   The element should be absent to indicate a slope of 0.0; If this element is
+#'   present without the bgFluor element it should be ignored.
+#' @param quantFluor \link[base]{double}. Quantification flourescence - The 
+#'   fluorescence value corresponding to the treshold line.
+#'   
+#' @section Fields: Names, types and description of the fields are equal to the 
+#'   class arguments.
+#'   
+#' @section Methods: \describe{\item{\code{AsDataFrame(dp.type = 
+#'   "adp")}}{Represents amplification (\code{dp.type = "adp"}) or melting
+#'   (\code{dp.type = "mdp"}) data points as \code{data.frame}}}
+#'   
+#' @docType class
+#' @format An \code{\link{R6Class}} generator object.
+#' @export
 dataType <- 
   R6Class("dataType",
           # class = FALSE,
@@ -1392,6 +1946,52 @@ dataType <-
           ))
 
 # reactType ------------------------------------------------------------
+
+#' reactType R6 class.
+#' 
+#' A reaction is an independent chemical reaction corresponding for example to a
+#' well in a 96 well plate, a capillary in a rotor, a through-hole on an array, 
+#' etc. \cr Inherits: \link{rdmlBaseType}.
+#' 
+#' The ID of this reaction
+#' 
+#' Schemas : \itemize{ \item rotor : assign IDs according to the position of the
+#' sample on the rotor (1 for the 1st sample, 2 for the 2nd, ...) \item plate
+#' (96/384/1536 well) : the IDs are assigned in a row-first/column-second
+#' manner. For each row, the samples are numbered according to the increasing
+#' column number. At the end of a row, the numbering starts at the first column
+#' of the next row. An example for this type of plate can be found below : 
+#' \tabular{lllll}{ \tab 1  \tab 2  \tab 3 \tab ... \cr A   \tab 1  \tab 2  \tab
+#' 3 \tab     \cr B   \tab 13 \tab 14 \tab   \tab     \cr ... \tab    \tab   
+#' \tab   \tab    } or \tabular{lllll}{ \tab 1  \tab 2  \tab 3 \tab ... \cr 1  
+#' \tab 1  \tab 2  \tab 3 \tab     \cr 2   \tab 13 \tab 14 \tab   \tab     \cr 
+#' ... \tab    \tab    \tab   \tab    }
+#' 
+#' \item multi-array plate (BioTrove) : the IDs are assigned in a
+#' row-first/column-second manner, ignoring the organisation of sub-arrays. For
+#' each row, the samples are numbered according to the increasing column number.
+#' At the end of a row, the the next row. An example for this type of plate can
+#' be found below : todo... }
+#' 
+#' @usage reactType$new(id, sample, data)
+#'   
+#' @param id \link{reactIdType}. See 'Details'.
+#' @param sample \link{idReferencesType}. SampleID - A reference to a sample.
+#' @param data \code{list} of \link{dataType}.
+#'   
+#' @section Fields: Names, types and description of the fields are equal to the 
+#'   class arguments.
+#'   
+#' @section Methods: \describe{\item{\code{AsDataFrame(dp.type = 
+#'   "adp")}}{Represents amplification (\code{dp.type = "adp"}) or melting 
+#'   (\code{dp.type = "mdp"}) data points of all targets as one
+#'   \code{data.frame}} \item{\code{Position(pcrformat)}}{Converts \code{react
+#'   id} to thew human readable form (i.e. '13' -> 'B1'). \code{pcrFormat} is
+#'   \code{pcrFormatType}. Only for 'ABC' '123' format!}}
+#'   
+#' @docType class
+#' @format An \code{\link{R6Class}} generator object.
+#' @export
 reactType <- 
   R6Class("reactType",
           # class = FALSE,
@@ -1426,6 +2026,10 @@ reactType <-
               out
             },
             Position = function(pcrFormat) {
+              assert_that(is.type(pcrFormat,
+                                  pcrFormatType))
+              stopifnot(pcrFormat$rowLabel$value == "ABC",
+                        pcrFormat$columnLabel$value == "123")
               sprintf("%s%02i",
                       LETTERS[(private$.id$id - 1) %/% pcrFormat$columns + 1],
                       as.integer((private$.id$id - 1) %% pcrFormat$columns + 1))
@@ -1462,6 +2066,23 @@ reactType <-
           ))
 
 # dataCollectionSoftwareType ------------------------------------------------------------
+
+#' dataCollectionSoftwareType R6 class.
+#' 
+#' Software name and version used to collect and analyze the data.\cr Inherits: 
+#' \link{rdmlBaseType}.
+#' 
+#' @usage dataCollectionSoftwareType$new(name, version)
+#'   
+#' @param name \link[assertthat]{is.string}.
+#' @param version \link[assertthat]{is.string}.
+#'   
+#' @section Fields: Names, types and description of the fields are equal to the 
+#'   class arguments.
+#'   
+#' @docType class
+#' @format An \code{\link{R6Class}} generator object.
+#' @export
 dataCollectionSoftwareType <- 
   R6Class("dataCollectionSoftwareType",
           # class = FALSE,
@@ -1495,6 +2116,29 @@ dataCollectionSoftwareType <-
           ))
 
 # cqDetectionMethodType ------------------------------------------------------------
+
+#' cqDetectionMethodType R6 class.
+#' 
+#' The method used to determine the Cq value.
+#' Can take values:
+#' \describe{
+#' \item{automated threshold and baseline settings}{}
+#' \item{manual threshold and baseline settings}{}
+#' \item{second derivative maximum}{}
+#' \item{other}{}
+#' }  
+#' \cr Inherits: \link{enumType}.
+#' 
+#' @usage cqDetectionMethodType$new(value)
+#'   
+#' @param value \link[assertthat]{is.string}.
+#'   
+#' @section Fields: Names, types and description of the fields are equal to the 
+#'   class arguments.
+#'   
+#' @docType class
+#' @format An \code{\link{R6Class}} generator object.
+#' @export
 cqDetectionMethodType <- 
   R6Class("cqDetectionMethodType",
           # class = FALSE,
@@ -1507,9 +2151,29 @@ cqDetectionMethodType <-
           )
   )
 
-
-
 # labelFormatType ------------------------------------------------------------
+
+#' labelFormatType R6 class.
+#' 
+#' Label used for \link{pcrFormat}.
+#' Can take values:
+#' \describe{
+#' \item{ABC}{}
+#' \item{123}{}
+#' \item{A1a1}{}
+#' }  
+#' \cr Inherits: \link{enumType}.
+#' 
+#' @usage labelFormatType$new(value)
+#'   
+#' @param value \link[assertthat]{is.string}.
+#'   
+#' @section Fields: Names, types and description of the fields are equal to the 
+#'   class arguments.
+#'   
+#' @docType class
+#' @format An \code{\link{R6Class}} generator object.
+#' @export
 labelFormatType <- 
   R6Class("labelFormatType",
           # class = FALSE,
@@ -1521,8 +2185,44 @@ labelFormatType <-
           )
   )
 
-
 # pcrFormatType ------------------------------------------------------------
+
+#' pcrFormatType R6 class.
+#' 
+#' The format of the run - This allows the software to display the data 
+#' according to the qPCR instrument run format.\cr Inherits: 
+#' \link{rdmlBaseType}.
+#' 
+#' Rotor formats always have 1 column; rows correspond to the number of places 
+#' in the rotor. Values for common formats are: \tabular{lllll}{ Format \tab
+#' rows \tab columns \tab rowLabel \tab columnLabel \cr single-well \tab 1   
+#' \tab 1       \tab 123      \tab 123         \cr 48-well plate \tab 6    \tab
+#' 8       \tab ABC      \tab 123         \cr 96-well plate \tab 8    \tab 12   
+#' \tab ABC      \tab 123         \cr 384-well plate \tab 16   \tab 24      \tab
+#' ABC      \tab 123         \cr 1536-well plate \tab 32   \tab 48      \tab ABC
+#' \tab 123         \cr 3072-well array \tab 32   \tab 96      \tab A1a1    
+#' \tab A1a1        \cr 5184-well chip \tab 72   \tab 72      \tab ABC      \tab
+#' 123         \cr 32-well rotor \tab 32   \tab 1       \tab 123      \tab 123  
+#' \cr 72-well rotor \tab 72   \tab 1       \tab 123      \tab 123         \cr
+#' 100-well rotor \tab 100  \tab 1       \tab 123      \tab 123         \cr free
+#' format \tab -1   \tab 1       \tab 123      \tab 123 } If rows are -1 then
+#' the software should not try to reconstruct a plate and just display all react
+#' data in list (1 column) form. If columns is 1 then the software should not
+#' display a column label.
+#' 
+#' @usage pcrFormatType$new(rows, columns, rowLabel, columnLabel)
+#'   
+#' @param rows \link[assertthat]{is.count}.
+#' @param columns \link[assertthat]{is.count}.
+#' @param rowLabel \link{labelFormatType}.
+#' @param columnLabel \link{labelFormatType}.
+#'   
+#' @section Fields: Names, types and description of the fields are equal to the 
+#'   class arguments.
+#'   
+#' @docType class
+#' @format An \code{\link{R6Class}} generator object.
+#' @export
 pcrFormatType <- 
   R6Class("pcrFormatType",
           # class = FALSE,
@@ -1580,6 +2280,40 @@ pcrFormatType <-
           ))
 
 # runType ------------------------------------------------------------
+
+#' runType R6 class.
+#' 
+#' A run is a set of reactions performed in one "run", for example one plate,
+#' one rotor, one array, one chip.\cr Inherits: \link{rdmlBaseType}.
+#' 
+#' @usage runType$new(id, description = NULL, documentation = NULL, experimenter
+#'   = NULL, instrument = NULL, dataCollectionSoftware = NULL,
+#'   backgroundDeterminationMethod = NULL, cqDetectionMethod = NULL,
+#'   thermalCyclingConditions = NULL, pcrFormat, runDate = NULL, react = NULL)
+#'   
+#' @param id \link{idType}.
+#' @param description \link[assertthat]{is.string}.
+#' @param documentation \code{list} of \link{idReferencesType}.
+#' @param experimenter \code{list} of \link{idReferencesType}.
+#' @param instrument \link[assertthat]{is.string}. Description of the instrument used to aquire the data.
+#' @param dataCollectionSoftware \link{dataCollectionSoftwareType}. Description of the software used to analyze/collect the data.
+#' @param backgroundDeterminationMethod \link[base]{double}. Description of method used to determine the background.
+#' @param cqDetectionMethod \link[base]{double}. Description of method used to calculate the quantification cycle.
+#' @param thermalCyclingConditions \link[base]{double}. The program used to aquire the data.
+#' @param pcrFormat \link{adpsType}.
+#' @param runDate \link{adpsType}. Date and time stamp when the data was aquired.
+#' @param react \code{list} of \link{adpsType}.
+#'   
+#' @section Fields: Names, types and description of the fields are equal to the 
+#'   class arguments.
+#'   
+#' @section Methods: \describe{\item{\code{AsDataFrame(dp.type = 
+#'   "adp")}}{Represents amplification (\code{dp.type = "adp"}) or melting 
+#'   (\code{dp.type = "mdp"}) data points as \code{data.frame}}}
+#'   
+#' @docType class
+#' @format An \code{\link{R6Class}} generator object.
+#' @export
 runType <- 
   R6Class("runType",
           # class = FALSE,
@@ -1653,8 +2387,8 @@ runType <-
                                "tmp"))
               
               if (long.table == FALSE) out <- out %>% 
-                  tidyr::unite(sname_tar, sname, tar, sep = "_") %>% 
-                  tidyr::spread(sname_tar, fluor) #%>% 
+                tidyr::unite(sname_tar, sname, tar, sep = "_") %>% 
+                tidyr::spread(sname_tar, fluor) #%>% 
               #                   arrange(ifelse(dp.type == "adp",
               #                                  cyc,
               #                                  tmp))
@@ -1760,6 +2494,32 @@ runType <-
           ))
 
 # experimentType ------------------------------------------------------------
+
+#' experimentType R6 class.
+#' 
+#' An experiment can contain several runs (\link{runType}).\cr Inherits: 
+#' \link{rdmlBaseType}.
+#' 
+#' @usage experimentType$new(id, description = NULL, documentation = NULL, run =
+#'   NULL)
+#'   
+#' @param id \link{idType}.
+#' @param description \link[assertthat]{is.string}.
+#' @param documentation \code{list} of \link{idReferencesType}.
+#' @param run \code{list} of \link{runType}.
+#'   
+#' @section Fields: Names, types and description of the fields are equal to the 
+#'   class arguments.
+#'   
+#' @section Methods: \describe{\item{\code{AsDataFrame(dp.type = "adp", 
+#'   long.table = FALSE)}}{Represents amplification (\code{dp.type = "adp"}) or 
+#'   melting (\code{dp.type = "mdp"}) data points as \code{data.frame}.
+#'   \code{long.table = TRUE} means that fluorescence data for all runs and
+#'   reacts will be at one collumn.}}
+#'   
+#' @docType class
+#' @format An \code{\link{R6Class}} generator object.
+#' @export
 experimentType <- 
   R6Class("experimentType",
           # class = FALSE,
@@ -1799,8 +2559,8 @@ experimentType <-
                                "cyc",
                                "tmp"))
               if (long.table == FALSE) out <- out %>%
-                  tidyr::unite(run_sname_tar, run, sname, tar, sep = "_") %>% 
-                  tidyr::spread(run_sname_tar, fluor)
+                tidyr::unite(run_sname_tar, run, sname, tar, sep = "_") %>% 
+                tidyr::spread(run_sname_tar, fluor)
               out
             }
           ),
@@ -1841,6 +2601,22 @@ experimentType <-
           ))
 
 # lidOpenType ------------------------------------------------------------
+
+#' lidOpenType R6 class.
+#' 
+#' This step waits for the user to open the lid and continues afterwards. It 
+#' allows to stop the program and to wait for the user to add for example 
+#' enzymes and continue the program afterwards. The temperature of the previous 
+#' step is maintained.\cr Inherits: \link{rdmlBaseType}.
+#' 
+#' @usage lidOpenType$new()
+#'   
+#' @section Fields: Names, types and description of the fields are equal to the 
+#'   class arguments.
+#'   
+#' @docType class
+#' @format An \code{\link{R6Class}} generator object.
+#' @export
 lidOpenType <- 
   R6Class("lidOpenType",
           # class = FALSE,
@@ -1854,6 +2630,23 @@ lidOpenType <-
           ))
 
 # pauseType ------------------------------------------------------------
+
+#' pauseType R6 class.
+#' 
+#' This step allows to pause at a certain temperature. It is typically the last 
+#' step in an amplification protocol.\cr Inherits: \link{rdmlBaseType}.
+#' 
+#' @usage pauseType$new(temperature)
+#'   
+#' @param temperature \link[base]{numeric}. The temperature in degrees Celsius
+#'   to maintain during the pause.
+#'   
+#' @section Fields: Names, types and description of the fields are equal to the 
+#'   class arguments.
+#'   
+#' @docType class
+#' @format An \code{\link{R6Class}} generator object.
+#' @export
 pauseType <- 
   R6Class("pauseType",
           # class = FALSE,
@@ -1876,7 +2669,29 @@ pauseType <-
             }
           ))
 
+
 # loopType ------------------------------------------------------------
+
+#' loopType R6 class.
+#' 
+#' This step allows to form a loop or to exclude some steps. It allows to jump
+#' to a certain "goto" step for "repeat" times. If the "goto" step is higher
+#' than the step of the loop, "repeat" must be "0".\cr Inherits:
+#' \link{rdmlBaseType}.
+#' 
+#' @usage loopType$new(goto, repeat.n)
+#'   
+#' @param goto \link[base]{numeric}.  The step to go to to form the loop.
+#' @param repeat.n \link[base]{numeric}. Determines how often the loop is repeated. The first run through the loop is 
+#' counted as 0, the last loop is "repeat" - 1. The loop is run 
+#' through exactly "repeat" times.
+#'   
+#' @section Fields: Names, types and description of the fields are equal to the 
+#'   class arguments.
+#'   
+#' @docType class
+#' @format An \code{\link{R6Class}} generator object.
+#' @export
 loopType <- 
   R6Class("loopType",
           # class = FALSE,
@@ -1921,6 +2736,33 @@ measureType <-
   )
 
 # baseTemperatureType ------------------------------------------------------------
+
+#' baseTemperatureType R6 class.
+#' 
+#' Parent class for inner usage. Inherits: \link{rdmlBaseType}.
+#' 
+#' @usage baseTemperatureType$new(duration, temperatureChange = NULL, 
+#'   durationChange = NULL, measure = NULL, ramp = NULL)
+#'   
+#' @param duration \link[assertthat]{is.count}. The duration of this step in 
+#'   seconds.
+#' @param temperatureChange \link[base]{double}. The change of the temperature 
+#'   from one cycle to the next: actual temperature = temperature + 
+#'   (temperatureChange * cycle counter)
+#' @param durationChange \link[assertthat]{is.count}. The change of the duration
+#'   from one cycle to the next: actual duration = duration + (durationChange * 
+#'   cycle counter)
+#' @param measure \link{measureType}. Indicates to make a measurement and store 
+#'   it as meltcurve or real-time data.
+#' @param ramp \link[base]{double}. The allowed temperature change from one step
+#'   to the next in degrees Celsius per second. No value means maximal change 
+#'   rate.
+#'   
+#' @section Fields: Names, types and description of the fields are equal to the 
+#'   class arguments.
+#'   
+#' @docType class
+#' @format An \code{\link{R6Class}} generator object.
 baseTemperatureType <- 
   R6Class("baseTemperatureType",
           # class = FALSE,
@@ -1987,6 +2829,24 @@ baseTemperatureType <-
           ))
 
 # temperatureType ------------------------------------------------------------
+
+#' temperatureType R6 class.
+#' 
+#' This step keeps a constant temperature on the heat block. Inherits: 
+#' \link{baseTemperatureType}.
+#' 
+#' @usage temperatureType$new(temperature, ...)
+#'   
+#' @param temperature \link[base]{double}. The temperature of the step in
+#'   degrees Celsius.
+#' @param ... Params of parent class \link{baseTemperatureType}.
+#'   
+#' @section Fields: Names, types and description of the fields are equal to the 
+#'   class arguments.
+#'   
+#' @docType class
+#' @format An \code{\link{R6Class}} generator object.
+#' @export
 temperatureType <- 
   R6Class("temperatureType",
           # class = FALSE,
@@ -2011,6 +2871,26 @@ temperatureType <-
           ))
 
 # gradientType ------------------------------------------------------------
+
+#' gradientType R6 class.
+#' 
+#' This step forms a temperature gradient across the PCR block. Inherits: 
+#' \link{baseTemperatureType}.
+#' 
+#' @usage gradientType$new(highTemperature, lowTemperature, ...)
+#'   
+#' @param highTemperature \link[base]{double}. The high temperature of the
+#'   gradient in degrees Celsius.
+#' @param lowTemperature \link[base]{double}. The low temperature of the
+#'   gradient in degrees Celsius.
+#' @param ... Params of parent class \link{baseTemperatureType}.
+#'   
+#' @section Fields: Names, types and description of the fields are equal to the 
+#'   class arguments.
+#'   
+#' @docType class
+#' @format An \code{\link{R6Class}} generator object.
+#' @export
 gradientType <- 
   R6Class("gradientType",
           # class = FALSE,
@@ -2047,6 +2927,29 @@ gradientType <-
 
 
 # stepType ------------------------------------------------------------
+
+#' stepType R6 class.
+#' 
+#' Inherits: \link{rdmlBaseType}.
+#' 
+#' @usage stepType$new(nr, description = NULL, temperature = NULL, gradient = 
+#'   NULL, loop = NULL, pause = NULL, lidOpen = NULL)
+#'   
+#' @param nr \link[assertthat]{is.count}. The incremental number of the step.
+#'   First step should be nr = 1 and then increment each step by + 1.
+#' @param description \link[assertthat]{is.string}.
+#' @param temperature \link{temperatureType}.
+#' @param gradient \link{gradientType}.
+#' @param loop \link{loopType}.
+#' @param pause \link{pauseType}.
+#' @param lidOpen \link{lidOpenType}.
+#'   
+#' @section Fields: Names, types and description of the fields are equal to the 
+#'   class arguments.
+#'   
+#' @docType class
+#' @format An \code{\link{R6Class}} generator object.
+#' @export
 stepType <- 
   R6Class("stepType",
           # class = FALSE,
@@ -2141,6 +3044,29 @@ stepType <-
           ))
 
 # thermalCyclingConditionsType ------------------------------------------------------------
+
+#' thermalCyclingConditionsType R6 class.
+#' 
+#' A cycling program for PCR or to amplify cDNA. Inherits: \link{rdmlBaseType}.
+#' 
+#' @usage thermalCyclingConditionsType$new(id, description = NULL, documentation
+#'   = NULL, lidTemperature = NULL, experimenter = NULL, step)
+#'   
+#' @param id \link{idType}.
+#' @param description \link[assertthat]{is.string}.
+#' @param documentation \code{list} of \link{idReferencesType}.
+#' @param lidTemperature \link[base]{double}. The temperature in degrees Celsius
+#'   of the lid during cycling.
+#' @param experimenter \code{list} of \link{idReferencesType}. Reference to the person who made
+#'   or uses this protocol.
+#' @param step \code{list} of \link{stepType}. The steps a protocol runs through to amplify DNA.
+#'   
+#' @section Fields: Names, types and description of the fields are equal to the 
+#'   class arguments.
+#'   
+#' @docType class
+#' @format An \code{\link{R6Class}} generator object.
+#' @export
 thermalCyclingConditionsType <- 
   R6Class("thermalCyclingConditionsType",
           # class = FALSE,
