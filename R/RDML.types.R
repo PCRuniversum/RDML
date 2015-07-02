@@ -2725,6 +2725,26 @@ loopType <-
           ))
 
 # measureType ------------------------------------------------------------
+
+#' measureType R6 class.
+#' 
+#' Can take values:
+#' \describe{
+#' \item{real time}{}
+#' \item{meltcurve}{}
+#' }  
+#' \cr Inherits: \link{enumType}.
+#' 
+#' @usage measureType$new(value)
+#'   
+#' @param value \link[assertthat]{is.string}.
+#'   
+#' @section Fields: Names, types and description of the fields are equal to the 
+#'   class arguments.
+#'   
+#' @docType class
+#' @format An \code{\link{R6Class}} generator object.
+#' @export
 measureType <- 
   R6Class("measureType",
           # class = FALSE,

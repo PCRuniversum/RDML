@@ -52,7 +52,7 @@ be found below : todo... }
   (\code{dp.type = "mdp"}) data points of all targets as one
   \code{data.frame}} \item{\code{Position(pcrformat)}}{Converts \code{react
   id} to thew human readable form (i.e. '13' -> 'B1'). \code{pcrFormat} is
-  \code{pcrFormatType}}}
+  \code{pcrFormatType}. Only for 'ABC' '123' format!}}
 }
 \keyword{datasets}
 
