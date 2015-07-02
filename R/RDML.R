@@ -258,7 +258,9 @@ RDML <- R6Class("RDML",
                       return(private$.id)                    
                     assert_that(is.list.type(id,
                                              rdmlIdType))
-                    private$.id <- id
+                    private$.id <- 
+                      with.names(quote(id,
+                                       .$publisher))
                   },
                   
                   experimenter = function(experimenter) {
@@ -266,7 +268,9 @@ RDML <- R6Class("RDML",
                       return(private$.experimenter)
                     assert_that(is.list.type(experimenter,
                                              experimenterType))
-                    private$.experimenter <- experimenter
+                    private$.experimenter <- 
+                      with.names(sample,
+                                 quote(.$id$id))
                   },
                   
                   documentation = function(documentation) {
@@ -274,7 +278,9 @@ RDML <- R6Class("RDML",
                       return(private$.documentation)
                     assert_that(is.list.type(documentation,
                                              documentationType))                    
-                    private$.documentation <- documentation
+                    private$.documentation <- 
+                      with.names(sample,
+                                 quote(.$id$id))
                   },
                   
                   dye = function(dye) {
@@ -282,7 +288,9 @@ RDML <- R6Class("RDML",
                       return(private$.dye)
                     assert_that(is.list.type(dye,
                                              dyeType))
-                    private$.dye <- dye
+                    private$.dye <- 
+                      with.names(sample,
+                                 quote(.$id$id))
                   },
                   
                   sample = function(sample) {
@@ -290,7 +298,9 @@ RDML <- R6Class("RDML",
                       return(private$.sample)
                     assert_that(is.list.type(sample,
                                              sampleType))
-                    private$.sample <- sample
+                    private$.sample <- 
+                      with.names(sample,
+                                 quote(.$id$id))
                   },
                   
                   target = function(target) {
@@ -298,7 +308,9 @@ RDML <- R6Class("RDML",
                       return(private$.target)
                     assert_that(is.list.type(target,
                                              targetType))
-                    private$.target <- target
+                    private$.target <- 
+                      with.names(target,
+                                 quote(.$id$id))
                   },
                   
                   thermalCyclingConditions = function(thermalCyclingConditions) {
@@ -306,7 +318,9 @@ RDML <- R6Class("RDML",
                       return(private$.thermalCyclingConditions)
                     assert_that(is.list.type(thermalCyclingConditions,
                                              thermalCyclingConditionsType))
-                    private$.thermalCyclingConditions <- thermalCyclingConditions
+                    private$.thermalCyclingConditions <- 
+                      with.names(thermalCyclingConditionsType,
+                                 quote(.$id$id))
                   },
                   
                   experiment = function(experiment) {
@@ -314,7 +328,8 @@ RDML <- R6Class("RDML",
                       return(private$.experiment)
                     assert_that(is.list.type(experiment,
                                              experimentType))
-                    private$.experiment <- experiment
+                    private$.experiment <- with.names(experiment,
+                                                      quote(.$id$id))
                   }
                   
                 )
