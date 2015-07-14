@@ -10,10 +10,10 @@
 MergeRDMLs(to.merge)
 }
 \arguments{
-\item{to.merge}{\code{RDML} object that should be merged into current object.}
+\item{to.merge}{\code{RDML} objects that should be merged.}
 }
 \description{
-Merges one \code{RDML} object into another.
+Merges list of \code{RDML} objects. First object in list becomes base object.
 }
 \examples{
 \dontrun{

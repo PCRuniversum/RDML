@@ -116,30 +116,50 @@ rdmlBaseType <-
               )
             },
             print = function(...) {
-              sapply(names(private), function(name) {
-                sprintf(
-                  "%s: %s",
-                  gsub("^\\.(.*)$",
-                       "\\1", name),
-                  switch(
-                    typeof(private[[name]]),
-                    list = names(private[[name]]) %>% 
-                      paste(collapse = ", "),
-                    environment = {
-                      sprintf("%s - %s",
-                              class(private[[name]])[1],
-                              print(private[[name]]))
-                    },
-                    {
-                      if (class(private[[name]]) == "matrix")
-                        sprintf("%s fluorescence data points",
-                                nrow(private[[name]]))
-                      else
-                        private[[name]]
-                    }))
-              }) %>% 
-                paste(collapse = "\n") %>% 
+              sapply(names(private)[-which(names(private) == 
+                                             "deep_clone")],
+                     function(name) {
+                       sprintf(
+                         "$%s: %s",
+                         gsub("^\\.(.*)$",
+                              "\\1", name),
+                         switch(
+                           typeof(private[[name]]),
+                           closure = NULL,
+                           list = names(private[[name]]) %>% 
+                             paste(collapse = ", "),
+                           environment = {
+                             sprintf("%s",
+                                     class(private[[name]])[1])
+                           },
+                           {
+                             if (class(private[[name]]) == "matrix")
+                               sprintf("%s fluorescence data points",
+                                       nrow(private[[name]]))
+                             else
+                               sprintf("%s", private[[name]])
+                           }))
+                     }) %>% 
+                paste(sep = "\n", collapse = "\n") %>% 
                 cat
+            }
+          ),
+          private = list(
+            deep_clone = function(name, value) {
+              if (value %>% is.null)
+                return(NULL)
+              if (value %>%
+                  class %>% 
+                  tail(1) != "R6") {
+                if (is.list(value)) {
+                  llply(value,
+                        function(el) el$clone(deep = TRUE))
+                } else {
+                  value
+                }
+              } else {
+                value$clone(deep = TRUE)
+              }
             }
           )
   )
@@ -231,7 +251,10 @@ idType <-
             initialize = function(id) {
               assert_that(is.string(id))
               private$.id <- id
-            }
+            }#,
+            #             print = function(...) {
+            #               cat(private$.id)
+            #             }
           ),
           private = list(
             .id = NULL
@@ -269,10 +292,10 @@ reactIdType <-
             initialize = function(id) {
               assert_that(is.count(id))
               private$.id <- id
-            },
-            print = function(...) {
-              private$.id
-            }
+            }#,
+            #             print = function(...) {
+            #               cat(private$.id)
+            #             }
           ),
           private = list(
             .id = NULL
@@ -800,6 +823,9 @@ enumType <-
             initialize = function(value, ...) {
               assert_that(is.enum(value, private$.levels))
               private$.value <- value
+            },
+            print = function(...) {
+              cat(private$.value)
             }
           ),
           private = list(
@@ -2060,7 +2086,7 @@ reactType <-
                 return(private$.data)
               assert_that(is.list.type(data,
                                        dataType))
-              private$.data <- qith.names(data,
+              private$.data <- with.names(data,
                                           quote(.$tar$id))
             }
           ))

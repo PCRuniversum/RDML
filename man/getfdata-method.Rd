@@ -15,9 +15,6 @@ than min or max values at dats - NAwill be used nearest available fluorescence d
 \item{data.type}{Type of fluorescence data (i.e. 'adp' for qPCR or 'mdp' for
 melting)}
 
-\item{first.col.name}{name of the column that contains constant data for all samples
-(i.e. for 'adp' it can be 'cyc' or 'tmp' as described at RDML v1.2 standard)}
-
 \item{long.table}{Output table is ready for ggplot (See \link{RDML.AsTable}
 for example)}
 }

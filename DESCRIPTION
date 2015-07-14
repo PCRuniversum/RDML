@@ -1,9 +1,9 @@
 Package: RDML
 Type: Package
 Title: Importing Real-Time Thermo Cycler (qPCR) Data from RDML Format Files
-Version: 0.8-4
+Version: 0.9-1
 LazyData: true
-Date: 2015-04-19
+Date: 2015-07-08
 Description: Imports real-time thermo cycler (qPCR) data from Real-time PCR
     Data Markup Language (RDML) format files and transforms to the appropriate
     formats of the 'qpcR' and 'chipPCR' packages. Contains a dendrogram
@@ -18,16 +18,16 @@ Authors@R: c(
     email = "michalburdukiewicz@gmail.com", role = "aut"))
 License: GPL (>= 2)
 URL: https://github.com/kablag/RDML
-Depends:
+Depends: 
     R (> 3.0.3)
-Imports:
+Imports: 
     R6 (>= 2.0.1),
     assertthat (>= 0.1),
     XML (>= 3.98-1.1),
     plyr (>= 1.8.1),
     dplyr (>= 0.4.1),
     rlist (>= 0.4)
-Collate:
+Collate: 
     'RDML.types.R'
     'RDML.asserts.R'
     'RDML.R'
@@ -36,6 +36,7 @@ Collate:
     'RDML.GetFData.R'
     'RDML.Merge.R'
     'RDML.SetFData.R'
-    'RDML.Write.R'
     'RDML.init.R'
     'names.RDML.R'
+Suggests: knitr
+VignetteBuilder: knitr

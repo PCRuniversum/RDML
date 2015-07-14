@@ -5,9 +5,10 @@
 #' 
 #' @param data \code{matrix} that contains in the first column constant data for all fluorescence vectors (i.e. cycle numbers or temperature)
 #' and fluorescence values in the following columns. The column name is the name of constant data.
-#' Names of other column are \code{fdata.names} (links to rows at \code{description}). Name of
+#' Names of other column are \code{fdata.names} (links to rows at \code{request}). Name of
 #' matrix passed to param becomes type of data.
-#' @param description output from \code{AsTable} function that describes fluorescence data.
+#' @param request output from \code{AsTable} function that describes fluorescence data.
+#' @param fdata.type 'adp' for qPCR, 'mdp' for melting data.
 #' 
 #' @examples
 #' \dontrun{
@@ -46,14 +47,14 @@
 #' @include RDML.R
 RDML$set("public", "SetFData",
          function(fdata,
-                  description,
+                  request,
                   fdata.type = "adp") {
-#            first.col.name <- ifelse(fdata.type == "adp",
-#                                     "cyc",
-#                                     "tmp")
+           #            first.col.name <- ifelse(fdata.type == "adp",
+           #                                     "cyc",
+           #                                     "tmp")
            fdata.names <- colnames(fdata)[2:ncol(fdata)]
            for(fdata.n in fdata.names) {
-             descr.row <- description %>% 
+             descr.row <- request %>% 
                filter(fdata.name == fdata.n) %>% 
                unlist
              if (private$.experiment[[descr.row["exp.id"]]]$
@@ -65,21 +66,23 @@ RDML$set("public", "SetFData",
              private$.experiment[[descr.row["exp.id"]]]$
                run[[descr.row["run.id"]]]$
                react[[descr.row["react.id"]]]$
-               data[[descr.row["target"]]][[fdata.type]] <-
-               ifelse(fdata.type == "adp",
-                      adpsType$new(
-                        matrix(c(fdata[, 1], fdata[, fdata.n]),
-                               byrow = FALSE,
-                               ncol = 2,
-                               dimnames = list(NULL,
-                                               c("cyc", "fluor")))),
-                      mdpsType$new(
-                        matrix(c(fdata[, 1], fdata[, fdata.n]), 
-                               byrow = FALSE,
-                               ncol = 2,
-                               dimnames = list(NULL,
-                                               c("tmp", "fluor"))))
-               )
+               data[[descr.row["target"]]][[fdata.type]] <- {
+                 if(fdata.type == "adp") {
+                   adpsType$new(
+                     matrix(c(fdata[, 1], fdata[, fdata.n]),
+                            byrow = FALSE,
+                            ncol = 2,
+                            dimnames = list(NULL,
+                                            c("cyc", "fluor"))))
+                 } else {
+                   mdpsType$new(
+                     matrix(c(fdata[, 1], fdata[, fdata.n]), 
+                            byrow = FALSE,
+                            ncol = 2,
+                            dimnames = list(NULL,
+                                            c("tmp", "fluor"))))
+                 }
+               }
            }
          }
          , overwrite = TRUE)

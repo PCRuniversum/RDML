@@ -55,9 +55,8 @@
 #'   structured language and reporting guidelines for real-time quantitative PCR
 #'   data.  \emph{Nucleic Acids Res.} 37, 2065--2069. doi:10.1093/nar/gkp056
 #' @keywords Bio--Rad CFX96 file IO LightCycler qPCR RDML StepOne
-#' @name RDML.class
-#' @aliases RDML.class RDML
 #' @docType class
+#' @format An \code{\link{R6Class}} generator object.
 #' @export
 #' @import assertthat rlist
 #' @importFrom R6 R6Class
@@ -76,9 +75,9 @@
 #' filename <- paste(PATH, "/extdata/", "lc96_bACTXY.rdml", sep ="")
 #' lc96 <- RDML$new(filename)
 #' 
-#' tab <- lc96$AsTable(name.pattern = paste(sample[[react$sample]]$description,
-#'                                          react$id), 
-#'                     quantity = sample[[react$sample]]$quantity$value)
+#' tab <- lc96$AsTable(name.pattern = paste(sample[[react$sample$id]]$description,
+#'                                          react$id$id), 
+#'                     quantity = sample[[react$sample$id]]$quantity$value)
 #' ## Show dyes names
 #' unique(tab$target.dyeId)
 #' ## Show types of the samples for dye 'FAM'
@@ -115,13 +114,13 @@
 #' filename <- paste(PATH, "/extdata/", "lc96_bACTXY.rdml", sep ="")
 #' lc96 <- RDML$new(filename)
 #' 
-#' tab <- lc96$AsTable(name.pattern = paste(sample[[react$sample]]$description,
-#'                                          react$id), 
-#'                     quantity = sample[[react$sample]]$quantity$value)
+#' tab <- lc96$AsTable(name.pattern = paste(sample[[react$sample$id]]$description,
+#'                                          react$id$id), 
+#'                     quantity = sample[[react$sample$id]]$quantity$value)
 #' ## Show targets names
 #' unique(tab$target)
 #' ## Fetch cycle dependent fluorescence for HEX chanel
-#' tmp <- lc96$GetFData(filter(tab, target == "FAM@@bACT", sample.type == "std"))
+#' tmp <- lc96$GetFData(filter(tab, target == "bACT", sample.type == "std"))
 #' ## Fetch vector of dillutions 
 #' dilution <- filter(tab, target.dyeId == "FAM", sample.type == "std")$quantity
 #' 
@@ -157,14 +156,14 @@
 #' plotCurves(cfx96.qPCR[,1], cfx96.qPCR[,-1], type = "l")
 #' 
 #' ## Extract all melting data 
-#' cfx96.melt <- cfx96$GetFData(tab, data.type = "mdp")
+#' cfx96.melt <- cfx96$GetFData(tab, dp.type = "mdp")
 #' ## Show some generated names for samples.
 #' colnames(cfx96.melt)[2L:5]
 #' ## Select columns that contain
 #' ## samples with dye 'EvaGreen' and have type 'pos'
 #' ## using filtering by names.
 #' cols <- cfx96$GetFData(filter(tab, grepl("pos_EvaGreen$", fdata.name)),
-#'                        data.type = "mdp")
+#'                        dp.type = "mdp")
 #' ## Conduct melting curve analysis.
 #' library(qpcR)
 #' invisible(meltcurve(cols, fluos = 2:ncol(cols),
@@ -174,13 +173,12 @@ RDML <- R6Class("RDML",
                 inherit = rdmlBaseType,
                 public = list(
                   ###               WARNING
-                  ### All RDML functions are store at separate files!!!
+                  ### Some RDML functions are store at separate files!!!
                   ### Empty functions are added to let roxygen work.                  
                   initialize = function() { },                  
                   AsTable = function() { },
                   GetFData = function() { },
                   SetFData = function() { },
-                  Merge = function() { },
                   AsDendrogram = function() { },
                   AsXML = function(file.name) {
                     tree <- self$.asXMLnodes("rdml",

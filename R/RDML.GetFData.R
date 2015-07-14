@@ -9,8 +9,6 @@
 #' than min or max values at dats - NAwill be used nearest available fluorescence data.
 #' @param data.type Type of fluorescence data (i.e. 'adp' for qPCR or 'mdp' for
 #'   melting)
-#' @param first.col.name name of the column that contains constant data for all samples
-#' (i.e. for 'adp' it can be 'cyc' or 'tmp' as described at RDML v1.2 standard)
 #' @param long.table Output table is ready for ggplot (See \link{RDML.AsTable}
 #'   for example)
 #' @return \code{matrix} which contains selected fluorescence data and 
@@ -46,7 +44,6 @@ RDML$set("public", "GetFData",
          function(request,
                   limits = NULL,
                   dp.type = "adp",
-                  first.col.name = NULL,
                   long.table = FALSE) {
            out <- 
              ddply(request, .(fdata.name), function(el) {
@@ -65,9 +62,11 @@ RDML$set("public", "GetFData",
                spread(fdata.name,
                       fluor)
            } else {
+             rownames(request) <- request$fdata.name
              for(param in colnames(request)[-1]) {
                for(fn in request$fdata.name) {
-                 out[out$fdata.name == fn, param] <- request[fn, param]
+                 out[out$fdata.name == fn,
+                     param] <- request[fn, param]
                }
              }
            }

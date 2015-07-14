@@ -46,9 +46,9 @@
 #' ## Names for fluorescense data will contain sample name and react 
 #' ## positions
 #' tab <- stepone$AsTable(
-#'          name.pattern = paste(react$sample, react$position),
+#'          name.pattern = paste(react$sample$id, react$position),
 #'          cq30 = if(data$cq >= 30) ">=30" else "<30",
-#'          quantity = as.factor(sample[[react$sample]]$quantity$value)
+#'          quantity = as.factor(sample[[react$sample$id]]$quantity$value)
 #'          )
 #' ## Show cq30 and quantities
 #' tab[c("cq30", "quantity")]
@@ -60,7 +60,7 @@
 #'            long.table = TRUE)
 #' ## Plot fdata with colour by cq30 and shape by quantity
 #' library(ggplot2)
-#' ggplot(fdata, aes(x = cyc, y = fluo,
+#' ggplot(fdata, aes(x = cyc, y = fluor,
 #'                   group = fdata.name,
 #'                   colour = cq30,
 #'                   shape = quantity)) +
