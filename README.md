@@ -17,7 +17,7 @@ Installation
 
 You can install the latest development version of the code using the `devtools` R package.
 
-```
+```r
 # Install devtools, if you haven't already.
 install.packages("devtools")
 
