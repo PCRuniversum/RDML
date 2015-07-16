@@ -19,11 +19,9 @@ with.names <- function(l, id) {
 #' 
 #' @usage rdmlBaseType$new()
 #'   
-#' @section Methods: \describe{\item{\code{Clone}}{Clones R6 object. Need 
-#'   because modification of R6 object direct copy leads to modification of its 
-#'   original.}\item{\code{.asXMLnodes(node.name)}}{Represents object as XML
+#' @section Methods: \describe{\item{\code{.asXMLnodes(node.name)}}{Represents object as XML
 #'   nodes. Should not be called directly. \code{node.name} -- name of the root
-#'   node for the generated XML tree.}}
+#'   node for the generated XML tree.}\item{\code{print(...)}}{prints object}}
 #'   
 #' @docType class
 #' @format An \code{\link{R6Class}} generator object.
@@ -31,29 +29,6 @@ rdmlBaseType <-
   R6Class("rdmlBaseType",
           # class = FALSE,
           public = list(
-            Clone = function() {
-              content <- 
-                llply(names(private),
-                      function(name) {
-                        if (private[[name]] %>% is.null)
-                          return(NULL)
-                        if (private[[name]] %>%
-                            class %>% 
-                            tail(1) != "R6") {
-                          if (is.list(private[[name]]))
-                            llply(private[[name]],
-                                  function(el) el$Clone())
-                          else
-                            private[[name]]
-                        } else {
-                          private[[name]]$Clone()
-                        }
-                      })
-              names(content) <- gsub(".(.*)", "\\1", names(private))
-              do.call(
-                what = eval(parse(text = sprintf("%s$new", class(self)[1]))),
-                args = content)
-            },
             .asXMLnodes = function(node.name,
                                    namespaceDefinitions = NULL) {
               # has.attrs <- FALSE
@@ -82,6 +57,7 @@ rdmlBaseType <-
                                                "\\1", name)
                           switch(
                             typeof(private[[name]]),
+                            closure = NULL,
                             list = 
                               llply(private[[name]],
                                     function(sublist)
@@ -111,7 +87,8 @@ rdmlBaseType <-
                                 newXMLNode(name = subnode.name,
                                            text = private[[name]])
                             })
-                        })
+                        }) %>% 
+                    compact
                 }
               )
             },
@@ -120,18 +97,20 @@ rdmlBaseType <-
                                              "deep_clone")],
                      function(name) {
                        sprintf(
-                         "$%s: %s",
+                         "\t%s: %s",
                          gsub("^\\.(.*)$",
                               "\\1", name),
                          switch(
                            typeof(private[[name]]),
                            closure = NULL,
-                           list = names(private[[name]]) %>% 
-                             paste(collapse = ", "),
+                           list = sprintf("[%s]",
+                                          names(private[[name]]) %>% 
+                                            paste(collapse = ", ")),
                            environment = {
-                             sprintf("%s",
+                             sprintf("~ %s",
                                      class(private[[name]])[1])
                            },
+                           NULL = "",
                            {
                              if (class(private[[name]]) == "matrix")
                                sprintf("%s fluorescence data points",
@@ -1999,7 +1978,7 @@ dataType <-
 #' At the end of a row, the the next row. An example for this type of plate can
 #' be found below : todo... }
 #' 
-#' @usage reactType$new(id, sample, data)
+#' @usage reactType$new(id, sample, data = NULL)
 #'   
 #' @param id \link{reactIdType}. See 'Details'.
 #' @param sample \link{idReferencesType}. SampleID - A reference to a sample.
@@ -2025,13 +2004,13 @@ reactType <-
           public = list(
             initialize = function(id,
                                   sample,
-                                  data) {
+                                  data = NULL) {
               assert_that(is.type(id,
                                   reactIdType))
               assert_that(is.type(sample,
                                   idReferencesType))
-              assert_that(is.list.type(data,
-                                       dataType))
+              assert_that(is.opt.list.type(data,
+                                           dataType))
               private$.id <- id
               private$.sample <- sample
               private$.data <- with.names(data,
@@ -2084,8 +2063,8 @@ reactType <-
             data = function(data) {
               if (missing(data))
                 return(private$.data)
-              assert_that(is.list.type(data,
-                                       dataType))
+              assert_that(is.opt.list.type(data,
+                                           dataType))
               private$.data <- with.names(data,
                                           quote(.$tar$id))
             }
@@ -2359,23 +2338,23 @@ runType <-
                                   react = NULL) {
               assert_that(is.type(id,
                                   idType))
-              assert_that(is.string(description))
-              assert_that(is.list.type(documentation,
+              assert_that(is.opt.string(description))
+              assert_that(is.opt.list.type(documentation,
                                        idReferencesType))
-              assert_that(is.list.type(experimenter,
+              assert_that(is.opt.list.type(experimenter,
                                        idReferencesType))
-              assert_that(is.string(instrument))
+              assert_that(is.opt.string(instrument))
               assert_that(is.opt.type(dataCollectionSoftware,
                                       dataCollectionSoftwareType))
-              assert_that(is.string(backgroundDeterminationMethod))
+              assert_that(is.opt.string(backgroundDeterminationMethod))
               assert_that(is.opt.type(cqDetectionMethod,
                                       cqDetectionMethodType))
               assert_that(is.opt.type(thermalCyclingConditions,
                                       idReferencesType))
               assert_that(is.type(pcrFormat,
                                   pcrFormatType))
-              assert_that(is.string(runDate)) # date time
-              assert_that(is.list.type(react,
+              assert_that(is.opt.string(runDate)) # date time
+              assert_that(is.opt.list.type(react,
                                        reactType))
               
               private$.id <- id
@@ -2446,27 +2425,27 @@ runType <-
             description = function(description) {
               if (missing(description))
                 return(private$.description)
-              assert_that(is.string(description))
+              assert_that(is.opt.string(description))
               private$.description <- description
             },
             documentation = function(documentation) {
               if (missing(documentation))
                 return(private$.documentation)
-              assert_that(is.list.type(documentation,
+              assert_that(is.opt.list.type(documentation,
                                        idReferencesType))
               private$.documentation <- documentation
             },
             experimenter = function(experimenter) {
               if (missing(experimenter))
                 return(private$.experimenter)
-              assert_that(is.list.type(experimenter,
+              assert_that(is.opt.list.type(experimenter,
                                        idReferencesType))
               private$.experimenter <- experimenter
             },
             instrument = function(instrument) {
               if (missing(instrument))
                 return(private$.instrument)
-              assert_that(is.string(instrument))
+              assert_that(is.opt.string(instrument))
               private$.instrument <- instrument
             },
             dataCollectionSoftware = function(dataCollectionSoftware) {
@@ -2479,7 +2458,7 @@ runType <-
             backgroundDeterminationMethod = function(backgroundDeterminationMethod) {
               if (missing(backgroundDeterminationMethod))
                 return(private$.backgroundDeterminationMethod)
-              assert_that(is.string(backgroundDeterminationMethod))
+              assert_that(is.opt.string(backgroundDeterminationMethod))
               private$.backgroundDeterminationMethod <- backgroundDeterminationMethod
             },
             cqDetectionMethod = function(cqDetectionMethod) {
@@ -2506,13 +2485,13 @@ runType <-
             runDate = function(runDate) {
               if (missing(runDate))
                 return(private$.runDate)
-              assert_that(is.string(runDate)) # date time
+              assert_that(is.opt.string(runDate)) # date time
               private$.runDate <- runDate
             },
             react = function(react) {
               if (missing(react))
                 return(private$.react)
-              assert_that(is.list.type(react,
+              assert_that(is.opt.list.type(react,
                                        reactType))
               private$.react <- with.names(react,
                                            quote(.$id$id))

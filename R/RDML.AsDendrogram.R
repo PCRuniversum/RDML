@@ -9,8 +9,7 @@
 #'   <michalburdukiewicz@@gmail.com>
 #' @keywords manip
 #' @docType methods
-#' @name AsDendrogram
-#' @aliases RDML.AsDendrogram
+#' @name RDML.AsDendrogram
 #' @rdname asdendrogram-method
 #' @include RDML.R
 #' @examples
@@ -120,7 +119,7 @@ RDML$set("public", "AsDendrogram",
                   labels = FALSE)
              text(seq(0, 5, by=0.5),
                   par("usr")[3] - 0.2,
-                  labels = c("Number\nof samples",
+                  labels = c("Number\nof reacts",
                              "Data type",
                              "",
                              "Sample\ntype",

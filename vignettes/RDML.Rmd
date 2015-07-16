@@ -4,7 +4,7 @@ author: "Konstantin A. Blagodatskikh"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteIndexEntry{Using RDML package}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -13,21 +13,21 @@ knitr::opts_chunk$set(collapse = T, comment = "#>")
 library(RDML)
 ```
 
-Package `RDML` created to work with Real-time PCR Data Markup Language (RDML) -- a structured and universal data standard for exchanging quantitative PCR (qPCR) data. RDML belongs to the family of eXtensible Markup Languages (XML) and contains information,  about PCR experiment overall. Description and schema of RDML format can be found at http://rdml.org. 
+Package **RDML** is created to work with Real-time PCR Data Markup Language (RDML) -- a structured and universal data standard for exchanging quantitative PCR (qPCR) data. RDML belongs to the family of eXtensible Markup Languages (XML).  It contains fluorescence data and information about qPCR experiment overall. Description and schema of RDML format can be found at http://rdml.org. 
 
-Structure of `RDML` package mimics RDML format and provides several `R6` classes which corresponds to RDML format types. All major manipulations with RDML data can be done by class called `RDML` throught its public functions:
+Structure of **RDML** package mimics RDML format and provides several [R6](http://cran.r-project.org/web/packages/R6/vignettes/Introduction.html) classes which corresponds to [RDML v1.2](http://rdml.org/files.php?v=1.2) format types . All major manipulations with RDML data can be done by class called **RDML** throught its public methods:
 
-- `RDML$new()` -- creates new `RDML` object (empty or from specified RDML file) 
-- `RDML$AsTable()` -- represents data contained in RDML (except fluorescent points) as `data.frame`.
-- `RDML$GetFData()` -- shows fluorescent points for specified samples.
-- `RDML$SetFData()` -- writes fluorescent points for specified samples.
-- `RDML$AsDendrogram()` -- represent structure of RDML as dendrogramm.
+- `$new()` -- creates new **RDML** object (empty or from specified RDML file) 
+- `$AsTable()` -- represents data contained in **RDML** object (except fluorescent data) as data.frame.
+- `$GetFData()` -- gets fluorescent data.
+- `$SetFData()` -- sets fluorescent data to **RDML** object.
+- `$AsDendrogram()` -- represents structure of **RDML** object as dendrogramm.
 
 ## Opening and observing RDML file
 
-In this section we'll use the built in RDML file `lc96_bACTXY.rdml`. This file was obtained during measuring human DNA concentration experiment by LightCycler 96 (Roche) and XY-Detect kit (Syntol, Russia).
+In this section we'll use the built in RDML file `lc96_bACTXY.rdml`. This file was obtained during measuring human DNA concentration experiment by *LightCycler 96* (Roche) and *XY-Detect* kit (Syntol, Russia).
 
-To open this file we have to create new `RDML` object with its class initializer and file name as parameter `filename`. 
+To open this file we have to create new **RDML** object with its class initializer -- `$new()` and file name as parameter `filename`. 
 ```{r, results = "hide"}
 PATH <- path.package("RDML")
 filename <- paste(PATH, "/extdata/", "lc96_bACTXY.rdml", sep ="")
@@ -37,11 +37,17 @@ Next we can check structure of our new object -- `lc96` by printing it.
 ```{r}
 lc96
 ```
-As a result we can see fields names after `$` sign and names of the `R6` objects contained at this field or values after `:`. Fields names for all `RDML` classes corresponds to fields names of RDML types described at http://rdml.org/files.php?v=1.2.
+As a result we can see fields names and after `:` :
+
+- names of the `R6` objects contained at this field after `~`,
+- contained values after `:`,
+- names of list elements enclosed in `[]`.
+
+Fields names for all **RDML** package classes correspond to fields names of RDML types described at http://rdml.org/files.php?v=1.2.
 
 <img src="rdml_overview_1_2.png" alt="HTML5 Icon" style="width:663px;height:688px">
 
-For the base class `RDML` they are:
+For the base class **RDML** they are:
 
 - `dateMade`
 - `dateUpdated`
@@ -57,7 +63,8 @@ For the base class `RDML` they are:
 These fields can be divided by two parts:
 
 ### Experiment field
-Contains one or many experiments with fluorescence data. Fluorescence data store at the 'data' level of experiment. E.g., fluorescence data for reaction tube '45' and target 'bACT' can be accessed with the next code:
+
+Contains one or more experiments with fluorescence data. Fluorescence data store at the *data* level of experiment. E.g., fluorescence data for reaction tube *45* and target *bACT* can be accessed with the next code:
 ```{r}
 fdata <- 
   lc96$
@@ -73,10 +80,11 @@ Structure of experiments can be visualized by plotting dendrogram.
 lc96$AsDendrogram()
 ```
 
-At this dendrogram we can see that our file consists of one experiment with one run in it. Four targets, each with two sample types ('std' -- standard, 'unkn' -- unknown). There is only qPCR data -- 'adp'. Ten tubes for standard type and six tubes for unknown type. Total number of tubes can be more than number of tubes on plate because one tube can contain several targets.
+At this dendrogram we can see that our file consists of one experiment with one run in it. Four targets, each with two sample types (*std* -- standard, *unkn* -- unknown). There is only qPCR data -- *adp*. Ten reacts (tubes) for standard type and six reacts for unknown type. Total number of reacts can be more than number of reacts on plate because one tube can contain several targets.
 
 ### Additional information fields
-All fields other other than `experiment`. This additional information can be referenced in other parts of file. E.g., to access sample added to reaction tube 39 and get its quantity we can use code like this:
+
+All fields other other than **experiment**. This additional information can be referenced in other parts of file. E.g., to access sample added to react *39* and get its quantity we can use code like this:
 ```{r}
 ref <- lc96$
           experiment$`ca1eb225-ecea-4793-9804-87bfbb45f81d`$
@@ -87,68 +95,73 @@ sample <- lc96$sample[[ref]]
 sample$quantity$value
 ```
 
-## Copying `RDML` `R6` objects
+## Copying **RDML** objects
 
-`R6` objects are environments, that's why simple copying results in creating two references to one object. Then modifing of one reference leads to modifing of original object. To create 'real' copy of object we have to use method `Clone()` provided by `RDML` `R6` classes.
+**R6** objects are environments, that's why simple copying results in creating reference to existing object. Then modifing of copy leads to modification of original object. To create *real* copy of object we have to use method `$clone(deep = TRUE)` provided by **R6** class.
+
 ```{r}
 id1 <- idType$new("id_1")
 id2 <- id1
-id3 <- id1$Clone()
+id3 <- id1$clone(deep = TRUE)
 id2$id <- "id_2"
 id3$id <- "id_3"
 cat(sprintf("Original object\t: %s ('id_1' bacame 'id_2')\nSimple copy\t\t: %s\nClone\t\t\t: %s\n",
             id1$id, id2$id, id3$id))
 ```
+
 From example above we can see that modification of `id2` led to modification of original object `id1` but modification of cloned object `id3` didn't.
 
-## Modifing `RDML` `R6` objects
+## Modifing **RDML** objects
 
-To modify content of `RDML` `R6` objects we can use fields as setters. These setters provide type safe modification by input validation. In addition setting `lists` of objects generates `list` elements names.
+To modify content of **RDML** objects we can use fields as setters. These setters provide type safe modification by input validation. In addition, setting lists of objects generates names of list elements.
+
 ```{r}
-# Creating 'real' copy of object
-experiment <- lc96$experiment$`ca1eb225-ecea-4793-9804-87bfbb45f81d`$Clone()
-# Trying to set 'id' with wrong input type.
+# Create 'real' copy of object
+experiment <- lc96$experiment$`ca1eb225-ecea-4793-9804-87bfbb45f81d`$clone(deep = TRUE)
+# Try to set 'id' with wrong input type.
 # Correct type 'idType' can be seen at error message.
 tryCatch(experiment$id <- "exp1",
          error = function(e) print(e))
 
-# setting 'id' with correct input type - 'idType'
+# Set 'id' with correct input type - 'idType'
 experiment$id <- idType$new("exp1")
 
-# similar operations for 'run'
-run <- experiment$run$`65aeb1ec-b377-4ef6-b03f-92898d47488b`$Clone()
+# Similar operations for 'run'
+run <- experiment$run$`65aeb1ec-b377-4ef6-b03f-92898d47488b`$clone(deep = TRUE)
 run$id <- idType$new("run1")
 
-# replacing original elements with modified
+# Replace original elements with modified
 experiment$run <- list(run)
 lc96$experiment <- list(experiment)
 ```
-And we can see our modification with `AsDendrogram()` function.
+
+And we can see our modification with `$AsDendrogram()` method.
+
 ```{r, results = "hide", fig.width = 6, fig.height = 4}
 lc96$AsDendrogram()
 ```
 
-## `AsTable()` function
+## `AsTable()` method
 
-To get information about all fluorescence data in RDML file (type of added sample, used target, starting quantity etc.) as `data.frame` we can use `AsTable()` function. By default it provides such information as:
+To get information about all fluorescence data in RDML file (type of added sample, used target, starting quantity etc.) as data.frame we can use `$AsTable()` method. By default it provides such information as:
 
-- `fdata.name` -- aggregated name for current fluorescence data. Default pattern is `position_sample_sample.type_target` (e.g., 'D03\_Sample 39\_std\_bACT'). This pattern can be modified by `name.pattern` argument.
-- `exp.id` -- experiment id (e.g., 'exp1').
-- `run.id` -- run id (e.g., 'run1').
-- `react.id` -- react (tube) id (e.g., '39').
-- `position` -- react (tube) position (e.g., 'D03').
-- `sample` -- name of the added sample (e.g., 'Sample 39').
-- `target` -- detection target (e.g., 'bACT').
-- `target.dyeId` -- detection dye (e.g., 'FAM').
-- `sample,type` -- type of the added sample (e.g., 'std').
+- `fdata.name` -- aggregated name for current fluorescence data. Default pattern is `position_sample_sample.type_target` (e.g., *D03\_Sample 39\_std\_bACT*). This pattern can be modified by `name.pattern` argument.
+- `exp.id` -- experiment id (e.g., *exp1*).
+- `run.id` -- run id (e.g., *run1*).
+- `react.id` -- react (tube) id (e.g., *39*).
+- `position` -- react (tube) position (e.g., *D03*).
+- `sample` -- name of the added sample (e.g., *Sample 39*).
+- `target` -- detection target (e.g., *bACT*).
+- `target.dyeId` -- detection dye (e.g., *FAM*).
+- `sample,type` -- type of the added sample (e.g., *std*).
 - `adp` -- `TRUE` if contains qPCR data.
 - `mdp` -- `TRUE` if contains melting data.
 
-To add custom columns for output `data.frame` we should pass it as named function argument with generating expression. All values of default column can be used at custom name pattern and new columns referring to their names. Next example shows how to use `AsTable()` function with a custom name pattern and additional column.
+To add custom columns for output *data.frame* we should pass it as named method argument with generating expression. Values of default columns can be used at custom name pattern and new columns referring to their names. Next example shows how to use `$AsTable()` method with a custom name pattern and additional column.
 
 ```{r}
 tab <- lc96$AsTable(
-  # custom name pattern 'position~sample~sample.type~target~dye'
+  # Custom name pattern 'position~sample~sample.type~target~dye'
   name.pattern = paste(
              react$Position(run$pcrFormat),
              react$sample$id,
@@ -156,30 +169,30 @@ tab <- lc96$AsTable(
              data$tar$id,
              target[[data$tar$id]]$dyeId$id,
              sep = "~"),
-  # custom column 'quantity' - starting quantity of added sample 
+  # Custom column 'quantity' - starting quantity of added sample 
   quantity = sample[[react$sample$id]]$quantity$value
 )
-# removing row names for compact printing
+# Remove row names for compact printing
 rownames(tab) <- NULL
 head(tab)
 ```
 
-Also generated `data.frame` is used as a query in `GetFData()` and `SetFData()` functions about what will be discussed further.
+Also generated data.frame is used as a query in `$GetFData()` and `$SetFData()` methods (see further sections).
 
 ## Getting fluorescence data
 
-We can get fluorescence data by two ways:
+We can get fluorescence data two ways:
 
-- direct access to data as it was described at 'Experiment field' subsection
-- using special function `GetFData()`
+- direct access to data as it was described at *Experiment field* subsection
+- using special method `$GetFData()`
 
-Advantage of `GetFData()` is that it can combine fluorescence data from whole plate to one `data.frame`. Major argument of this function is `request` which defines fluorescence data to be got. This request is output from `AsTable()` function and can be easely filtered by `dplyr` `filter()` function. Also limits of cycles, output `data.frame` format and data type (`fdata.type = 'adp'` for qPCR, `fdata.type = 'mdp'` for melting data) can by specified (see examples below).
+Advantage of `$GetFData()` is that it can combine fluorescence data from whole plate to one data.frame. Major argument of this function is `request` which defines fluorescence data to be got. This request is output from `$AsTable()` method and can be easely filtered by **dplyr** `filter()` function. Also limits of cycles, output `data.frame` format and data type (`fdata.type = 'adp'` for qPCR, `fdata.type = 'mdp'` for melting data) can by specified (see examples below).
 
 ```{r, results = "hide", messages = FALSE, fig.width = 6, fig.height = 4}
 library(dplyr)
 library(ggplot2)
 
-# preparing request to get only 'std' sample types
+# Prepare request to get only 'std' type samples
 filtered.tab <- filter(tab,
                        sample.type == "std")
 
@@ -190,11 +203,13 @@ ggplot(fdata, aes(cyc, fluor)) +
     geom_line(aes(group = fdata.name,
                   color = target))
 ```
-As we can see from plot our curves are not background substructed. To do this we will use function `CPP()` from package `chipPCR`.
+
+As we can see from plot our curves are not background substructed. To do this we will use function `CPP()` from package [chipPCR](https://github.com/michbur/chipPCR).
+
 ```{r}
 library(chipPCR)
 tab <- lc96$AsTable(
-  # custom name pattern 'position~sample~sample.type~target~run.id'
+  # Custom name pattern 'position~sample~sample.type~target~run.id'
   name.pattern = paste(
              react$Position(run$pcrFormat),
              react$sample$id,
@@ -202,9 +217,9 @@ tab <- lc96$AsTable(
              data$tar$id,
              run$id$id, # run id added to names
              sep = "~"))
-# getting all fluorescence data
+# Get all fluorescence data
 fdata <- lc96$GetFData(tab,
-                       # we don't need long table format for CPP()
+                       # We don't need long table format for CPP()
                        long.table = FALSE)
 
 fdata.cpp <- cbind(cyc = fdata[, 1],
@@ -212,71 +227,152 @@ fdata.cpp <- cbind(cyc = fdata[, 1],
                          function(x) CPP(fdata[, 1],
                                          x)$y))
 ```
-Now we have preprocessed data which we will add to our object and use during next section.
+Now we have preprocessed data which we'll add to our object and use during next section.
 
 ## Setting fluorescence data
 
-To set fluorescence data to `RDML` object we can use `SetFData()` function. It takes three arguments: `fdata` -- fluorescence data in `long.table = FALSE` format; `request` -- output from `AsTable()` function which is used as path to set data;  data type (`fdata.type = 'adp'` for qPCR, `fdata.type = 'mdp'` for melting data). Next we will clone our 'run1' to virtual run 'run1_cpp' and set preprocessed fluorescence data to it.
+To set fluorescence data to **RDML** object we can use `$SetFData()` method. It takes three arguments: 
 
-> Note that name pattern in `fdata` and `request` have to be the same!
+- `fdata` -- fluorescence data in `long.table = FALSE` format 
+- `request` -- output from `AsTable()` function which is used as path to set data;
+- `fdata.type` -- `fdata.type = 'adp'` for qPCR, `fdata.type = 'mdp'` for melting data.
+
+Next we will set preprocessed fluorescence data to the new run -- *run1_cpp*. Such subelements of RDML as *experiment*, *run*, *react* and *data* that do not exist at **RDML** object create by SetFData automaticaly (read more at *Creating **RDML** from table* section).
+
+> Note that colnames in `fdata` and `fdata.name` in `request` have to be the same!
 
 ```{r, fig.width = 6, fig.height = 4}
-run1_cpp <- lc96$experiment$exp1$run$run1$Clone()
-run1_cpp$id <- idType$new("run1_cpp")
-lc96$experiment$exp1$run <- 
-  c(lc96$experiment$exp1$run,
-    run1_cpp)
-
-tab <- lc96$AsTable(
-  # custom name pattern 'position~sample~sample.type~target~run.id'
-  name.pattern = paste(
-             react$Position(run$pcrFormat),
-             react$sample$id,
-             private$.sample[[react$sample$id]]$type$value,
-             data$tar$id,
-             run$id$id, # run id added to names
-             sep = "~"))
-filtered.tab <- filter(tab,
-                       run.id == "run1_cpp")
-
-# modifing fdata.cpp colnames 'x~run1' to 'x~run1_cpp'
-colnames(fdata.cpp) <- c("cyc",
-                         paste0(colnames(fdata.cpp)[-1],
-                                "_cpp"))
-# setting fluorescence data from previous section
+tab$run.id <- "run.cpp"
+# Set fluorescence data from previous section
 lc96$SetFData(fdata.cpp,
-              filtered.tab)
+              tab)
 
-
-fdata <- lc96$GetFData(filtered.tab,
+# View setted data
+fdata <- lc96$GetFData(tab,
                        long.table = TRUE)
 ggplot(fdata, aes(cyc, fluor)) +
     geom_line(aes(group = fdata.name,
                   color = target))
 ```
 
-## Merging `RDML` objects
+## Merging **RDML** objects
 
-Merging `RDML` objects can be done by `MergeRDMLs()` function. It takes `list` of `RDML` objects and returns one `RDML` object.
+Merging **RDML** objects can be done by `MergeRDMLs()` function. It takes list of **RDML** objects and returns one **RDML** object.
+
 ```{r, results = "hide", fig.width = 7, fig.height = 6}
+# Load another built in RDML file
 stepone <- RDML$new(paste0(path.package("RDML"),
                            "/extdata/", "stepone_std.rdml"))
+# Merge it with our 'lc96' object
 merged <- MergeRDMLs(list(lc96, stepone))
+# View structure of new object
 merged$AsDendrogram()
 ```
 
-## Saving `RDML` object as RDML file
+## Saving **RDML** object as RDML file
 
-To save `RDML` object as RDML file v1.2 we can use `AsXML()` function where `file.name` argument is name of new RDML file. Without `file.name` function returns XML tree.
+To save **RDML** object as RDML file v1.2 we can use `$AsXML()` method where `file.name` argument is name of new RDML file. Without `file.name` function returns XML tree.
 
 > `XML` package is pretty slow and file generating can take much time
 
-```{r}
-lc96$AsXML("lc96.rdml")
-```
+`lc96$AsXML("lc96.rdml")`
 
 You can use [RDML-ninja](http://sourceforge.net/projects/qpcr-ninja/) to validate created file.
 
 ## Creating custom functions
 
-`R6` classes allow add function
+**R6** classes allow add methods to existing classes. This can be done using the `$set()` method. Suppose that we decided add method to preprocess all fluorescence data and calculate Cq:
+
+```{r, results = "hide"}
+RDML$set("public", "CalcCq",
+         function() {
+           library(chipPCR)
+           fdata <- self$GetFData(
+             self$AsTable())
+           fdata <- cbind(cyc = fdata[, 1],
+                          apply(fdata[, -1],
+                                2,
+                                function(x)
+                                  # Data preprocessing
+                                  CPP(fdata[, 1],
+                                      x)$y)
+                          )
+           
+           apply(fdata[, -1], 2,
+                 function(x) {
+                   tryCatch(
+                     # Calculate Cq
+                     th.cyc(fdata[, 1], x,
+                            auto = TRUE)@.Data[1],
+                     error = function(e) NA)
+                 })
+         }
+)
+
+# Create new object with our advanced class
+stepone <- RDML$new(paste0(path.package("RDML"),
+                           "/extdata/", "stepone_std.rdml"))
+```
+
+And then apply our new method:
+
+```{r}
+stepone$CalcCq()
+```
+
+## Creating **RDML** from table
+
+**RDML** objects can be generated not only from files but from user data contained in data.frames. To do this you have to create empty **RDML** object, create data.frame which describes data and set data by `$SetFData()` method. Minimal needed information (samples, targets, dyes) will be created from data description.
+
+```{r, fig.width = 6, fig.height = 3, results = "hide"}
+### Create simulated data with AmpSim() from chipPCR package
+# Cq for data to be generated
+Cqs <- c(15, 17, 19, 21)
+# PCR si,ulation will be 35 cycles
+fdata <- data.frame(cyc = 1:35)
+for(Cq in Cqs) {
+  fdata <- cbind(fdata,
+                 AmpSim(cyc = 1:35, Cq = Cq)[, 2])
+}
+# Set names for fluorescence curves
+colnames(fdata)[2:5] <- c("c1", "c2", "c3", "c4")
+
+# Create minimal description
+descr <- data.frame(
+  fdata.name = c("c1", "c2", "c3", "c4"),
+  exp.id = c("exp1", "exp1", "exp1", "exp1"),
+  run.id = c("run1", "run1", "run1", "run1"),
+  react.id = c(1, 1, 2, 2),
+  sample = c("s1", "s1", "s2", "s2"),
+  target = c("gene1", "gene2", "gene1", "gene2"),
+  target.dyeId = c("FAM", "ROX", "FAM", "ROX"),
+  stringsAsFactors = FALSE
+)
+
+# Create empty RDML object
+sim <- RDML$new()
+# Add fluorescence data
+sim$SetFData(fdata, descr)
+
+# Observe object
+sim$AsDendrogram()
+fdata <- sim$GetFData(sim$AsTable(),
+                      long.table = TRUE)
+ggplot(fdata, aes(cyc, fluor)) +
+  geom_line(aes(group = fdata.name,
+                color = target,
+                linetype = sample))
+```
+
+## Functional style
+
+To provide functional programming style which is more convinient in **R** **RDML** class methods have function wrappers:
+
+- `obj$AsTable(...)` -- `AsTable(obj, ...)`
+- `obj$SetFData(...)` -- `SetFData(obj, ...)`
+- `obj$GetFData(...)` -- `GetFData(obj, ...)`
+- `obj$AsDendrogram(...)` -- `AsDendrogram(obj, ...)`
+
+## Summary
+
+**RDML** package provide classes and methods to work with RDML data generated by real-time PCR devices or create RDML files from user generated data. Cause classes of **RDML**  package are build with **R6** they can be easy modified by adding custom methods and suggest type safe usage by input validation.

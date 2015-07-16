@@ -18,8 +18,7 @@
 #'   <michalburdukiewicz@@gmail.com> 
 #' @keywords manip
 #' @docType methods
-#' @name GetFData
-#' @aliases RDML.GetFData
+#' @name RDML.GetFData
 #' @rdname getfdata-method
 #' @include RDML.R
 #' @examples

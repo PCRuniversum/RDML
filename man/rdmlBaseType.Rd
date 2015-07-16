@@ -13,11 +13,9 @@ Most classes of RDML package inherit this class. It can't be directly
 accessed and serves only for inner package usage.
 }
 \section{Methods}{
- \describe{\item{\code{Clone}}{Clones R6 object. Need
-  because modification of R6 object direct copy leads to modification of its
-  original.}\item{\code{.asXMLnodes(node.name)}}{Represents object as XML
+ \describe{\item{\code{.asXMLnodes(node.name)}}{Represents object as XML
   nodes. Should not be called directly. \code{node.name} -- name of the root
-  node for the generated XML tree.}}
+  node for the generated XML tree.}\item{\code{print(...)}}{prints object}}
 }
 \keyword{datasets}
 

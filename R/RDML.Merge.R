@@ -21,7 +21,7 @@
 #' lc96$AsTable()
 #' }
 MergeRDMLs <- function(to.merge) {
-  baseRDML <- to.merge[[1]]$Clone()
+  baseRDML <- to.merge[[1]]$clone(deep = TRUE)
   for(rdml in to.merge[-1]) {
     for(element in c("id",
                      "experimenter",
@@ -35,7 +35,9 @@ MergeRDMLs <- function(to.merge) {
       if (length(rdml[[element]]) != 0)
         baseRDML[[element]] <- c(baseRDML[[element]],
                                  llply(rdml[[element]],
-                                  function(subelement) subelement$Clone()))
+                                  function(subelement) subelement$clone(
+                                    deep = TRUE
+                                  )))
     }
   }
   baseRDML

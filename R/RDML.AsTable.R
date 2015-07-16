@@ -29,8 +29,7 @@
 #'   <michalburdukiewicz@@gmail.com>
 #' @keywords manip
 #' @docType methods
-#' @name AsTable
-#' @aliases RDML.AsTable
+#' @name RDML.AsTable
 #' @rdname astable-method
 #' @include RDML.R
 #' @examples
