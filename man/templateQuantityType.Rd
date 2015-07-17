@@ -6,19 +6,21 @@
 \title{templateQuantityType R6 class.}
 \format{An \code{\link{R6Class}} generator object.}
 \usage{
-templateQuantityType$new(conc, nucleotide)
-}
-\arguments{
-\item{conc}{\link[assertthat]{is.float}. Concentration of the template in nanogram per microliter in the final reaction mix.}
-
-\item{nucleotide}{\link{nucleotideType}.}
+templateQuantityType
 }
 \description{
 \cr Inherits: \link{rdmlBaseType}.
 }
+\section{Initialization}{
+ \code{templateQuantityType$new(conc, nucleotide)}
+}
+
 \section{Fields}{
- Names, types and description of the fields are equal to the
-  class arguments.
+ \describe{
+\item{\code{conc}}{\link[base]{is.double}. Concentration of the template in nanogram}
+  per microliter in the final reaction mix.
+\item{\code{nucleotide}}{\link{nucleotideType}.}
+  }
 }
 \keyword{datasets}
 

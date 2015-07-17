@@ -6,19 +6,20 @@
 \title{dyeType R6 class.}
 \format{An \code{\link{R6Class}} generator object.}
 \usage{
-dyeType$new(id, description = NULL)
-}
-\arguments{
-\item{id}{\link{idType}. Identificator.}
-
-\item{text}{\link[assertthat]{is.string}. Description.}
+dyeType
 }
 \description{
 Information on a dye.\cr Inherits: \link{rdmlBaseType}.
 }
+\section{Initialization}{
+ \code{dyeType$new(id, description = NULL)}
+}
+
 \section{Fields}{
- Names, types and description of the fields are equal to the
-  class arguments.
+ \describe{
+\item{\code{id}}{\link{idType}. Identificator.}
+\item{\code{description}}{ \link[assertthat]{is.string}. Description.
+  }}
 }
 \keyword{datasets}
 

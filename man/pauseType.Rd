@@ -6,19 +6,20 @@
 \title{pauseType R6 class.}
 \format{An \code{\link{R6Class}} generator object.}
 \usage{
-pauseType$new(temperature)
-}
-\arguments{
-\item{temperature}{\link[base]{numeric}. The temperature in degrees Celsius
-  to maintain during the pause.}
+pauseType
 }
 \description{
 This step allows to pause at a certain temperature. It is typically the last
 step in an amplification protocol.\cr Inherits: \link{rdmlBaseType}.
 }
+\section{Initialization}{
+ \code{pauseType$new(temperature)}
+}
+
 \section{Fields}{
- Names, types and description of the fields are equal to the
-  class arguments.
+ \describe{ \item{\code{temperature}}{\link[base]{numeric}.
+  The temperature in degrees Celsius to maintain during the pause.}
+  }
 }
 \keyword{datasets}
 

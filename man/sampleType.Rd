@@ -6,42 +6,7 @@
 \title{sampleType R6 class.}
 \format{An \code{\link{R6Class}} generator object.}
 \usage{
-sampleType$new(id, description = NULL, documentation = NULL, xRef =
- NULL, annotation = NULL, type = sampleTypeType$new("unkn"),
- interRunCalibrator = FALSE, quantity = NULL, calibratorSample = FALSE,
- cdnaSynthesisMethod = NULL, templateQuantity = NULL)
-}
-\arguments{
-\item{id}{\link{idType}. Concentration of the template in
-nanogram per microliter in the final reaction mix.}
-
-\item{description}{\link[assertthat]{is.string}.}
-
-\item{documentation}{\code{list} of \link{idReferencesType}.}
-
-\item{xRef}{\code{list} of \link{xRefType}.}
-
-\item{annotation}{\code{list} of \link{annotationType}.}
-
-\item{type}{\link{sampleTypeType}.}
-
-\item{interRunCalibrator}{\link[assertthat]{is.flag}. True if this sample is used
-as inter run calibrator.}
-
-\item{quantity}{\link{quantityType}. Quantity - The reference quantity of
-this sample. It should be only used if the sample is part of a standard
-curve. The provided value will be used to quantify unknown samples in
-absolute quantification assays. Only the use of true numbers is valid like
-1, 10, 100, 1000 or 1, 0.1, 0.01, 0.001. The use of exponents is not valid
-like 1, 2, 3, 4 or -1, -2, -3, -4 because it will not be interpreted as
-10E1, 10E2, 10E3, 10E4 or 10E-1, 10E-2, 10E-3, 10E-4.}
-
-\item{calibratorSample}{\link[assertthat]{is.flag}. True if this sample is used as
-calibrator sample.}
-
-\item{cdnaSynthesisMethod}{\link{cdnaSynthesisMethodType}.}
-
-\item{templateQuantity}{\link{templateQuantityType}.}
+sampleType
 }
 \description{
 A sample is a defined template solution. Dilutions of the same material differ
@@ -52,9 +17,37 @@ nucleic acids derived from the different biological replicates are not the
 same). Serial dilutions in a standard curve must have a different name.\cr
 Inherits: \link{rdmlBaseType}.
 }
+\section{Initialization}{
+ \code{sampleType$new(id, description = NULL,
+ documentation = NULL, xRef =  NULL, annotation = NULL, type =
+ sampleTypeType$new("unkn"), interRunCalibrator = FALSE, quantity = NULL,
+ calibratorSample = FALSE, cdnaSynthesisMethod = NULL, templateQuantity =
+ NULL)}
+}
+
 \section{Fields}{
- Names, types and description of the fields are equal to the
- class arguments.
+ \describe{
+ \item{\code{id}}{\link{idType}. Concentration of the template in nanogram
+ per microliter in the final reaction mix. }
+ \item{\code{description}}{\link[assertthat]{is.string}.}
+ \item{\code{documentation}}{\code{list} of \link{idReferencesType}.}
+ \item{\code{xRef}}{\code{list} of \link{xRefType}.}
+ \item{\code{annotation}}{\code{list} of \link{annotationType}.}
+ \item{\code{type}}{\link{sampleTypeType}.}
+ \item{\code{interRunCalibrator}}{\link[assertthat]{is.flag}. True if this
+ sample is used as inter run calibrator. }
+ \item{\code{quantity}}{\link{quantityType}. Quantity - The reference
+ quantity of this sample. It should be only used if the sample is part of a
+ standard curve. The provided value will be used to quantify unknown samples
+ in absolute quantification assays. Only the use of true numbers is valid
+ like 1, 10, 100, 1000 or 1, 0.1, 0.01, 0.001. The use of exponents is not
+ valid like 1, 2, 3, 4 or -1, -2, -3, -4 because it will not be interpreted
+ as 10E1, 10E2, 10E3, 10E4 or 10E-1, 10E-2, 10E-3, 10E-4. }
+ \item{\code{calibratorSample}}{\link[assertthat]{is.flag}. True if this
+ sample is used as calibrator sample. }
+ \item{\code{cdnaSynthesisMethod}}{\link{cdnaSynthesisMethodType}.}
+ \item{\code{templateQuantity}}{\link{templateQuantityType}.}
+ }
 }
 \keyword{datasets}
 

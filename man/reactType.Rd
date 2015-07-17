@@ -6,14 +6,7 @@
 \title{reactType R6 class.}
 \format{An \code{\link{R6Class}} generator object.}
 \usage{
-reactType$new(id, sample, data)
-}
-\arguments{
-\item{id}{\link{reactIdType}. See 'Details'.}
-
-\item{sample}{\link{idReferencesType}. SampleID - A reference to a sample.}
-
-\item{data}{\code{list} of \link{dataType}.}
+reactType
 }
 \description{
 A reaction is an independent chemical reaction corresponding for example to a
@@ -30,10 +23,10 @@ manner. For each row, the samples are numbered according to the increasing
 column number. At the end of a row, the numbering starts at the first column
 of the next row. An example for this type of plate can be found below :
 \tabular{lllll}{ \tab 1  \tab 2  \tab 3 \tab ... \cr A   \tab 1  \tab 2  \tab
-3 \tab     \cr B   \tab 13 \tab 14 \tab   \tab     \cr ... \tab    \tab
-\tab   \tab    } or \tabular{lllll}{ \tab 1  \tab 2  \tab 3 \tab ... \cr 1
-\tab 1  \tab 2  \tab 3 \tab     \cr 2   \tab 13 \tab 14 \tab   \tab     \cr
-... \tab    \tab    \tab   \tab    }
+3 \tab     \cr B   \tab 13 \tab 14 \tab   \tab     \cr ... \tab    \tab \tab
+\tab    } or \tabular{lllll}{ \tab 1  \tab 2  \tab 3 \tab ... \cr 1 \tab 1
+\tab 2  \tab 3 \tab     \cr 2   \tab 13 \tab 14 \tab   \tab     \cr ... \tab
+\tab    \tab   \tab    }
 
 \item multi-array plate (BioTrove) : the IDs are assigned in a
 row-first/column-second manner, ignoring the organisation of sub-arrays. For
@@ -41,9 +34,17 @@ each row, the samples are numbered according to the increasing column number.
 At the end of a row, the the next row. An example for this type of plate can
 be found below : todo... }
 }
+\section{Initialization}{
+ \code{reactType$new(id, sample, data = NULL)}
+}
+
 \section{Fields}{
- Names, types and description of the fields are equal to the
-  class arguments.
+ \describe{
+  \item{\code{id}}{\link{reactIdType}. See 'Details'.}
+  \item{\code{sample}}{\link{idReferencesType}. SampleID - A reference to a
+  sample.}
+  \item{\code{data}}{\code{list} of \link{dataType}.}
+  }
 }
 
 \section{Methods}{

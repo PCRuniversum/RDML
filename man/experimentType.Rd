@@ -6,25 +6,24 @@
 \title{experimentType R6 class.}
 \format{An \code{\link{R6Class}} generator object.}
 \usage{
-experimentType$new(id, description = NULL, documentation = NULL, run =
-  NULL)
-}
-\arguments{
-\item{id}{\link{idType}.}
-
-\item{description}{\link[assertthat]{is.string}.}
-
-\item{documentation}{\code{list} of \link{idReferencesType}.}
-
-\item{run}{\code{list} of \link{runType}.}
+experimentType
 }
 \description{
 An experiment can contain several runs (\link{runType}).\cr Inherits:
 \link{rdmlBaseType}.
 }
+\section{Initialization}{
+ \code{experimentType$new(id, description = NULL,
+  documentation = NULL, run = NULL)}
+}
+
 \section{Fields}{
- Names, types and description of the fields are equal to the
-  class arguments.
+ \describe{
+\item{\code{id}}{\link{idType}.}
+\item{\code{description}}{\link[assertthat]{is.string}.}
+\item{\code{documentation}}{\code{list} of \link{idReferencesType}.}
+\item{\code{run}}{\code{list} of \link{runType}.}
+}
 }
 
 \section{Methods}{

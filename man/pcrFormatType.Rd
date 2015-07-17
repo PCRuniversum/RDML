@@ -6,16 +6,7 @@
 \title{pcrFormatType R6 class.}
 \format{An \code{\link{R6Class}} generator object.}
 \usage{
-pcrFormatType$new(rows, columns, rowLabel, columnLabel)
-}
-\arguments{
-\item{rows}{\link[assertthat]{is.count}.}
-
-\item{columns}{\link[assertthat]{is.count}.}
-
-\item{rowLabel}{\link{labelFormatType}.}
-
-\item{columnLabel}{\link{labelFormatType}.}
+pcrFormatType
 }
 \description{
 The format of the run - This allows the software to display the data
@@ -40,9 +31,17 @@ the software should not try to reconstruct a plate and just display all react
 data in list (1 column) form. If columns is 1 then the software should not
 display a column label.
 }
+\section{Initialization}{
+ \code{pcrFormatType$new(rows, columns, rowLabel, columnLabel)}
+}
+
 \section{Fields}{
- Names, types and description of the fields are equal to the
-  class arguments.
+ \describe{
+\item{\code{rows}}{\link[assertthat]{is.count}.}
+\item{\code{columns}}{\link[assertthat]{is.count}.}
+\item{\code{rowLabel}}{\link{labelFormatType}.}
+\item{\code{columnLabel}}{\link{labelFormatType}.}
+  }
 }
 \keyword{datasets}
 

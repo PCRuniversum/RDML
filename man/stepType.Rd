@@ -6,31 +6,27 @@
 \title{stepType R6 class.}
 \format{An \code{\link{R6Class}} generator object.}
 \usage{
-stepType$new(nr, description = NULL, temperature = NULL, gradient =
-  NULL, loop = NULL, pause = NULL, lidOpen = NULL)
-}
-\arguments{
-\item{nr}{\link[assertthat]{is.count}. The incremental number of the step.
-First step should be nr = 1 and then increment each step by + 1.}
-
-\item{description}{\link[assertthat]{is.string}.}
-
-\item{temperature}{\link{temperatureType}.}
-
-\item{gradient}{\link{gradientType}.}
-
-\item{loop}{\link{loopType}.}
-
-\item{pause}{\link{pauseType}.}
-
-\item{lidOpen}{\link{lidOpenType}.}
+stepType
 }
 \description{
 Inherits: \link{rdmlBaseType}.
 }
+\section{Initialization}{
+ \code{stepType$new(nr, description = NULL,
+  temperature = NULL, gradient = NULL, loop = NULL, pause = NULL, lidOpen =
+  NULL)}
+}
+
 \section{Fields}{
- Names, types and description of the fields are equal to the
-  class arguments.
+ \describe{ \item{\code{nr}}{\link[assertthat]{is.count}. The
+  incremental number of the step. First step should be nr = 1 and then
+  increment each step by + 1. }
+  \item{\code{description}}{\link[assertthat]{is.string}.}
+  \item{\code{temperature}}{\link{temperatureType}.}
+  \item{\code{gradient}}{\link{gradientType}.}
+  \item{\code{loop}}{\link{loopType}.} \item{\code{pause}}{\link{pauseType}.}
+  \item{\code{lidOpen}}{\link{lidOpenType}.}
+  }
 }
 \keyword{datasets}
 

@@ -6,34 +6,31 @@
 \title{baseTemperatureType R6 class.}
 \format{An \code{\link{R6Class}} generator object.}
 \usage{
-baseTemperatureType$new(duration, temperatureChange = NULL,
-  durationChange = NULL, measure = NULL, ramp = NULL)
-}
-\arguments{
-\item{duration}{\link[assertthat]{is.count}. The duration of this step in
-seconds.}
-
-\item{temperatureChange}{\link[base]{double}. The change of the temperature
-from one cycle to the next: actual temperature = temperature +
-(temperatureChange * cycle counter)}
-
-\item{durationChange}{\link[assertthat]{is.count}. The change of the duration
-from one cycle to the next: actual duration = duration + (durationChange *
-cycle counter)}
-
-\item{measure}{\link{measureType}. Indicates to make a measurement and store
-it as meltcurve or real-time data.}
-
-\item{ramp}{\link[base]{double}. The allowed temperature change from one step
-  to the next in degrees Celsius per second. No value means maximal change
-  rate.}
+baseTemperatureType
 }
 \description{
 Parent class for inner usage. Inherits: \link{rdmlBaseType}.
 }
+\section{Initialization}{
+ \code{baseTemperatureType$new(duration,
+  temperatureChange = NULL,  durationChange = NULL, measure = NULL, ramp =
+  NULL)}
+}
+
 \section{Fields}{
- Names, types and description of the fields are equal to the
-  class arguments.
+ \describe{
+  \item{\code{duration}}{\link[assertthat]{is.count}. The duration of this
+  step in } seconds. \item{\code{temperatureChange}}{\link[base]{double}. The
+  change of the temperature from one cycle to the next: actual temperature
+  = temperature + (temperatureChange * cycle counter)}
+  \item{\code{durationChange}}{\link[assertthat]{is.count}. The change of the
+  duration from one cycle to the next: actual duration = duration +
+  (durationChange * cycle counter)} \item{\code{measure}}{\link{measureType}.
+  Indicates to make a measurement and store it as meltcurve or real-time
+  data.} \item{\code{ramp}}{\link[base]{double}. The allowed temperature
+  change from one step to the next in degrees Celsius per second. No value
+  means maximal change rate.}
+  }
 }
 \keyword{datasets}
 

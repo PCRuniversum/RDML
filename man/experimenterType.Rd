@@ -6,28 +6,25 @@
 \title{experimenterType R6 class.}
 \format{An \code{\link{R6Class}} generator object.}
 \usage{
-experimenterType$new(id, firstName, lastName, email = NULL, labName =
-  NULL, labAddress = NULL)
-}
-\arguments{
-\item{id}{\link{idType}. Identificator.}
-
-\item{firstName}{\link[assertthat]{is.string}. First name.}
-
-\item{lastName}{\link[assertthat]{is.string}. Last name.}
-
-\item{email}{\link[assertthat]{is.string}. Email.}
-
-\item{labName}{\link[assertthat]{is.string}. Lab name.}
-
-\item{labAddress}{\link[assertthat]{is.string}. Lab address.}
+experimenterType
 }
 \description{
 Contact details of the experimenter.\cr Inherits: \link{rdmlBaseType}.
 }
+\section{Initialization}{
+ \code{experimenterType$new(id, firstName, lastName,
+  email = NULL, labName = NULL, labAddress = NULL)}
+}
+
 \section{Fields}{
- Names, types and description of the fields are equal to the
-  class arguments.
+ \describe{
+\item{\code{id}}{\link{idType}. Identificator.}
+\item{\code{firstName}}{\link[assertthat]{is.string}. First name.}
+\item{\code{lastName}}{\link[assertthat]{is.string}. Last name.}
+\item{\code{email}}{\link[assertthat]{is.string}. Email.}
+\item{\code{labName}}{\link[assertthat]{is.string}. Lab name.}
+\item{\code{labAddress}}{\link[assertthat]{is.string}. Lab address.}
+  }
 }
 \keyword{datasets}
 

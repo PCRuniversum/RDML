@@ -6,44 +6,33 @@
 \title{targetType R6 class.}
 \format{An \code{\link{R6Class}} generator object.}
 \usage{
-targetType$new(id, description = NULL, documentation = NULL, xRef =
-  NULL, type, amplificationEfficiencyMethod = NULL, amplificationEfficiency =
-  NULL, amplificationEfficiencySE = NULL, detectionLimit = NULL, dyeId,
-  sequences = NULL, commercialAssay = NULL)
-}
-\arguments{
-\item{id}{\link{idType}.}
-
-\item{description}{\link[assertthat]{is.string}.}
-
-\item{documentation}{\code{list} of \link{idReferencesType}.}
-
-\item{xRef}{\code{list} of \link{xRefType}.}
-
-\item{type}{\link{targetTypeType}.}
-
-\item{amplificationEfficiencyMethod}{\link[assertthat]{is.string}.}
-
-\item{amplificationEfficiency}{\link[base]{double}.}
-
-\item{amplificationEfficiencySE}{\link[base]{double}.}
-
-\item{detectionLimit}{\link[base]{double}.}
-
-\item{dyeId}{\link{idReferencesType}.}
-
-\item{sequences}{\link{sequencesType}.}
-
-\item{commercialAssay}{\link{commercialAssayType}.}
+targetType
 }
 \description{
 A target is a defined PCR reaction. PCR reactions for the same gene which
 differ in primer sequences are considered different targets.\cr Inherits:
 \link{rdmlBaseType}.
 }
+\section{Initialization}{
+ \code{targetType$new(id, description = NULL,
+  documentation = NULL, xRef = NULL, type, amplificationEfficiencyMethod =
+  NULL, amplificationEfficiency = NULL, amplificationEfficiencySE = NULL,
+  detectionLimit = NULL, dyeId, sequences = NULL, commercialAssay = NULL)}
+}
+
 \section{Fields}{
- Names, types and description of the fields are equal to the
-  class arguments.
+ \describe{ \item{\code{id}}{\link{idType}.}
+  \item{\code{description}}{\link[assertthat]{is.string}.}
+  \item{\code{documentation}}{\code{list} of \link{idReferencesType}.}
+  \item{\code{xRef}}{\code{list} of \link{xRefType}.}
+  \item{\code{type}}{\link{targetTypeType}.}
+  \item{\code{amplificationEfficiencyMethod}}{\link[assertthat]{is.string}.}
+  \item{\code{amplificationEfficiency}}{\link[base]{double}.}
+  \item{\code{amplificationEfficiencySE}}{\link[base]{double}.}
+  \item{\code{detectionLimit}}{\link[base]{double}.}
+  \item{\code{dyeId}}{\link{idReferencesType}.}
+  \item{\code{sequences}}{\link{sequencesType}.}
+  \item{\code{commercialAssay}}{\link{commercialAssayType}.} }
 }
 \keyword{datasets}
 

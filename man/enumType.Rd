@@ -6,17 +6,20 @@
 \title{enumType R6 class.}
 \format{An \code{\link{R6Class}} generator object.}
 \usage{
-enumType$new(value)
-}
-\arguments{
-\item{value}{\link[assertthat]{is.string}. Value.}
+enumType
 }
 \description{
-Generic class for creating objects thet can take limited list of values.\cr Inherits: \link{rdmlBaseType}.
+Generic class for creating objects thet can take limited list of values.\cr
+Inherits: \link{rdmlBaseType}.
 }
+\section{Initialization}{
+ \code{enumType$new(value)}
+}
+
 \section{Fields}{
- Names, types and description of the fields are equal to the
-  class arguments.
+ \describe{
+\item{\code{value}}{\link[assertthat]{is.string}. Value.}
+  }
 }
 \keyword{datasets}
 

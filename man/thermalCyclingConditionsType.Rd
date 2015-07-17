@@ -6,30 +6,28 @@
 \title{thermalCyclingConditionsType R6 class.}
 \format{An \code{\link{R6Class}} generator object.}
 \usage{
-thermalCyclingConditionsType$new(id, description = NULL, documentation
-  = NULL, lidTemperature = NULL, experimenter = NULL, step)
-}
-\arguments{
-\item{id}{\link{idType}.}
-
-\item{description}{\link[assertthat]{is.string}.}
-
-\item{documentation}{\code{list} of \link{idReferencesType}.}
-
-\item{lidTemperature}{\link[base]{double}. The temperature in degrees Celsius
-of the lid during cycling.}
-
-\item{experimenter}{\code{list} of \link{idReferencesType}. Reference to the person who made
-or uses this protocol.}
-
-\item{step}{\code{list} of \link{stepType}. The steps a protocol runs through to amplify DNA.}
+thermalCyclingConditionsType
 }
 \description{
 A cycling program for PCR or to amplify cDNA. Inherits: \link{rdmlBaseType}.
 }
+\section{Initialization}{
+ \code{thermalCyclingConditionsType$new(id,
+  description = NULL, documentation = NULL, lidTemperature = NULL,
+  experimenter = NULL, step)}
+}
+
 \section{Fields}{
- Names, types and description of the fields are equal to the
-  class arguments.
+ \describe{ \item{\code{id}}{\link{idType}.}
+  \item{\code{description}}{\link[assertthat]{is.string}.}
+  \item{\code{documentation}}{\code{list} of \link{idReferencesType}.}
+  \item{\code{lidTemperature}}{\link[base]{double}. The temperature in
+  degrees Celsius of the lid during cycling. }
+  \item{\code{experimenter}}{\code{list} of \link{idReferencesType}.
+  Reference to the person who made or uses this protocol. }
+  \item{\code{step}}{\code{list} of \link{stepType}. The steps a protocol
+  runs through to amplify DNA.}
+  }
 }
 \keyword{datasets}
 

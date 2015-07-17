@@ -6,24 +6,24 @@
 \title{gradientType R6 class.}
 \format{An \code{\link{R6Class}} generator object.}
 \usage{
-gradientType$new(highTemperature, lowTemperature, ...)
-}
-\arguments{
-\item{highTemperature}{\link[base]{double}. The high temperature of the
-gradient in degrees Celsius.}
-
-\item{lowTemperature}{\link[base]{double}. The low temperature of the
-gradient in degrees Celsius.}
-
-\item{...}{Params of parent class \link{baseTemperatureType}.}
+gradientType
 }
 \description{
 This step forms a temperature gradient across the PCR block. Inherits:
 \link{baseTemperatureType}.
 }
+\section{Initialization}{
+ \code{gradientType$new(highTemperature,
+  lowTemperature, ...)}
+}
+
 \section{Fields}{
- Names, types and description of the fields are equal to the
-  class arguments.
+ \describe{
+  \item{\code{highTemperature}}{\link[base]{double}. The high temperature of
+  thegradient in degrees Celsius.}
+  \item{\code{lowTemperature}}{\link[base]{double}. The low temperature of
+  the gradient in degrees Celsius.}
+\item{\code{...}}{ Params of parent class \link{baseTemperatureType}. }}
 }
 \keyword{datasets}
 

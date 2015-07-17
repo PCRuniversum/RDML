@@ -6,19 +6,21 @@
 \title{quantityType R6 class.}
 \format{An \code{\link{R6Class}} generator object.}
 \usage{
-quantityType$new(value, unit)
-}
-\arguments{
-\item{value}{\link[assertthat]{is.float}. Value.}
-
-\item{unit}{\link{quantityUnitType}. Unit.}
+quantityType
 }
 \description{
-A quantity is always defined by its value and its unit.\cr Inherits: \link{rdmlBaseType}.
+A quantity is always defined by its value and its unit.\cr Inherits:
+\link{rdmlBaseType}.
 }
+\section{Initialization}{
+ \code{quantityType$new(value, unit)}
+}
+
 \section{Fields}{
- Names, types and description of the fields are equal to the
-  class arguments.
+ \describe{
+\item{\code{value}}{\link[base]{is.double}. Value.}
+\item{\code{unit}}{\link{quantityUnitType}. Unit.}
+  }
 }
 \keyword{datasets}
 

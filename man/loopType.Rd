@@ -6,14 +6,7 @@
 \title{loopType R6 class.}
 \format{An \code{\link{R6Class}} generator object.}
 \usage{
-loopType$new(goto, repeat.n)
-}
-\arguments{
-\item{goto}{\link[base]{numeric}.  The step to go to to form the loop.}
-
-\item{repeat.n}{\link[base]{numeric}. Determines how often the loop is repeated. The first run through the loop is
-counted as 0, the last loop is "repeat" - 1. The loop is run
-through exactly "repeat" times.}
+loopType
 }
 \description{
 This step allows to form a loop or to exclude some steps. It allows to jump
@@ -21,9 +14,16 @@ to a certain "goto" step for "repeat" times. If the "goto" step is higher
 than the step of the loop, "repeat" must be "0".\cr Inherits:
 \link{rdmlBaseType}.
 }
+\section{Initialization}{
+ \code{loopType$new(goto, repeat.n)}
+}
+
 \section{Fields}{
- Names, types and description of the fields are equal to the
-  class arguments.
+ \describe{ \item{\code{goto}}{\link[base]{numeric}.  The
+  step to go to to form the loop.}
+\item{\code{repeat.n}}{\link[base]{numeric}. Determines how often the loop is
+  repeated. The first run through the loop is counted as 0, the last loop is
+  "repeat" - 1. The loop is run through exactly "repeat" times.}}
 }
 \keyword{datasets}
 

@@ -6,21 +6,21 @@
 \title{temperatureType R6 class.}
 \format{An \code{\link{R6Class}} generator object.}
 \usage{
-temperatureType$new(temperature, ...)
-}
-\arguments{
-\item{temperature}{\link[base]{double}. The temperature of the step in
-degrees Celsius.}
-
-\item{...}{Params of parent class \link{baseTemperatureType}.}
+temperatureType
 }
 \description{
 This step keeps a constant temperature on the heat block. Inherits:
 \link{baseTemperatureType}.
 }
+\section{Initialization}{
+ \code{temperatureType$new(temperature, ...)}
+}
+
 \section{Fields}{
- Names, types and description of the fields are equal to the
-  class arguments.
+ \describe{ \item{\code{temperature}}{\link[base]{double}.
+  The temperature of the step in  degrees Celsius.}
+\item{\code{...}}{ Params of parent class \link{baseTemperatureType}.}
+}
 }
 \keyword{datasets}
 

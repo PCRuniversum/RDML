@@ -6,20 +6,21 @@
 \title{dataCollectionSoftwareType R6 class.}
 \format{An \code{\link{R6Class}} generator object.}
 \usage{
-dataCollectionSoftwareType$new(name, version)
-}
-\arguments{
-\item{name}{\link[assertthat]{is.string}.}
-
-\item{version}{\link[assertthat]{is.string}.}
+dataCollectionSoftwareType
 }
 \description{
 Software name and version used to collect and analyze the data.\cr Inherits:
 \link{rdmlBaseType}.
 }
+\section{Initialization}{
+ \code{dataCollectionSoftwareType$new(name, version)}
+}
+
 \section{Fields}{
- Names, types and description of the fields are equal to the
-  class arguments.
+ \describe{
+\item{\code{name}}{\link[assertthat]{is.string}.}
+\item{\code{version}}{\link[assertthat]{is.string}.}
+  }
 }
 \keyword{datasets}
 

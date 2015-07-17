@@ -6,43 +6,37 @@
 \title{runType R6 class.}
 \format{An \code{\link{R6Class}} generator object.}
 \usage{
-runType$new(id, description = NULL, documentation = NULL, experimenter
-  = NULL, instrument = NULL, dataCollectionSoftware = NULL,
-  backgroundDeterminationMethod = NULL, cqDetectionMethod = NULL,
-  thermalCyclingConditions = NULL, pcrFormat, runDate = NULL, react = NULL)
-}
-\arguments{
-\item{id}{\link{idType}.}
-
-\item{description}{\link[assertthat]{is.string}.}
-
-\item{documentation}{\code{list} of \link{idReferencesType}.}
-
-\item{experimenter}{\code{list} of \link{idReferencesType}.}
-
-\item{instrument}{\link[assertthat]{is.string}. Description of the instrument used to aquire the data.}
-
-\item{dataCollectionSoftware}{\link{dataCollectionSoftwareType}. Description of the software used to analyze/collect the data.}
-
-\item{backgroundDeterminationMethod}{\link[base]{double}. Description of method used to determine the background.}
-
-\item{cqDetectionMethod}{\link[base]{double}. Description of method used to calculate the quantification cycle.}
-
-\item{thermalCyclingConditions}{\link[base]{double}. The program used to aquire the data.}
-
-\item{pcrFormat}{\link{adpsType}.}
-
-\item{runDate}{\link{adpsType}. Date and time stamp when the data was aquired.}
-
-\item{react}{\code{list} of \link{adpsType}.}
+runType
 }
 \description{
 A run is a set of reactions performed in one "run", for example one plate,
 one rotor, one array, one chip.\cr Inherits: \link{rdmlBaseType}.
 }
+\section{Initialization}{
+ \code{runType$new(id, description = NULL,
+  documentation = NULL, experimenter = NULL, instrument = NULL,
+  dataCollectionSoftware = NULL, backgroundDeterminationMethod = NULL,
+  cqDetectionMethod = NULL, thermalCyclingConditions = NULL, pcrFormat,
+  runDate = NULL, react = NULL)}
+}
+
 \section{Fields}{
- Names, types and description of the fields are equal to the
-  class arguments.
+ \describe{ \item{\code{id}}{\link{idType}.}
+  \item{\code{description}}{\link[assertthat]{is.string}.}
+  \item{\code{documentation}}{\code{list} of \link{idReferencesType}.}
+  \item{\code{experimenter}}{\code{list} of \link{idReferencesType}.}
+  \item{\code{instrument}}{\link[assertthat]{is.string}. Description of the
+  instrument used to aquire the data.}
+  \item{\code{dataCollectionSoftware}}{\link{dataCollectionSoftwareType}.
+  Description of the software used to analyze/collect the data.}
+  \item{\code{backgroundDeterminationMethod}}{\link[base]{double}.
+  Description of method used to determine the background. }
+  \item{\code{cqDetectionMethod}}{\link[base]{double}. Description of method
+  used to calculate the quantification cycle. }
+  \item{\code{thermalCyclingConditions}}{\link[base]{double}. The program
+  used to aquire the data.} \item{\code{pcrFormat}}{\link{adpsType}.}
+  \item{\code{runDate}}{\link{adpsType}. Date and time stamp when the data
+  was aquired.} \item{\code{react}}{\code{list} of \link{adpsType}.} }
 }
 
 \section{Methods}{

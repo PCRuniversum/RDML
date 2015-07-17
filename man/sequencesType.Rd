@@ -6,26 +6,23 @@
 \title{sequencesType R6 class.}
 \format{An \code{\link{R6Class}} generator object.}
 \usage{
-sequencesType$new(forwardPrimer = NULL, reversePrimer = NULL, probe1 =
-  NULL, probe2 = NULL, amplicon = NULL)
-}
-\arguments{
-\item{forwardPrimer}{\link{oligoType}.}
-
-\item{reversePrimer}{\link{oligoType}.}
-
-\item{probe1}{\link{oligoType}.}
-
-\item{probe2}{\link{oligoType}.}
-
-\item{amplicon}{\link{oligoType}.}
+sequencesType
 }
 \description{
 \cr Inherits: \link{rdmlBaseType}.
 }
+\section{Initialization}{
+ \code{sequencesType$new(forwardPrimer = NULL, reversePrimer = NULL, probe1 = NULL, probe2 = NULL, amplicon = NULL)}
+}
+
 \section{Fields}{
- Names, types and description of the fields are equal to the
-  class arguments.
+ \describe{
+\item{\code{forwardPrimer}}{\link{oligoType}.}
+\item{\code{reversePrimer}}{\link{oligoType}.}
+\item{\code{probe1}}{\link{oligoType}.}
+\item{\code{probe2}}{\link{oligoType}.}
+\item{\code{amplicon}}{\link{oligoType}.}
+  }
 }
 \keyword{datasets}
 

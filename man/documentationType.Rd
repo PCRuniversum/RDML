@@ -6,20 +6,21 @@
 \title{documentationType R6 class.}
 \format{An \code{\link{R6Class}} generator object.}
 \usage{
-documentationType$new(id, text = NULL)
-}
-\arguments{
-\item{id}{\link{idType}. Identificator.}
-
-\item{text}{\link[assertthat]{is.string}. Text.}
+documentationType
 }
 \description{
 These elements should be used if the same description applies to many
 samples, targets or experiments.\cr Inherits: \link{rdmlBaseType}.
 }
+\section{Initialization}{
+ \code{documentationType$new(id, text = NULL)}
+}
+
 \section{Fields}{
- Names, types and description of the fields are equal to the
-  class arguments.
+ \describe{
+\item{\code{id}}{\link{idType}. Identificator.}
+\item{\code{text}}{\link[assertthat]{is.string}. Text.}
+  }
 }
 \keyword{datasets}
 

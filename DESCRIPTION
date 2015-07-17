@@ -26,6 +26,7 @@ Imports:
     XML (>= 3.98-1.1),
     plyr (>= 1.8.1),
     dplyr (>= 0.4.1),
+    tidyr (>= 0.2.0),
     rlist (>= 0.4)
 Collate:
     'RDML.types.R'
@@ -40,5 +41,7 @@ Collate:
     'functional_wrappers.R'
     'names.RDML.R'
 Suggests:
-    knitr
+    knitr,
+    chipPCR,
+    ggplot2
 VignetteBuilder: knitr

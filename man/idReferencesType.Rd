@@ -6,17 +6,19 @@
 \title{idReferencesType R6 class.}
 \format{An \code{\link{R6Class}} generator object.}
 \usage{
-idReferencesType$new(id)
-}
-\arguments{
-\item{id}{\link[assertthat]{is.string}. Identificator.}
+idReferencesType
 }
 \description{
 Contains id of another RDML object.\cr Inherits: \link{idType}.
 }
+\section{Initialization}{
+ \code{idReferencesType$new(id)}
+}
+
 \section{Fields}{
- Names, types and description of the fields are equal to the
-  class arguments.
+ \describe{
+\item{\code{id}}{\link[assertthat]{is.string}. Identificator.}
+}
 }
 \keyword{datasets}
 

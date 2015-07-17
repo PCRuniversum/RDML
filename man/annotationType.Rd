@@ -6,20 +6,16 @@
 \title{annotationType R6 class.}
 \format{An \code{\link{R6Class}} generator object.}
 \usage{
-annotationType$new(property, value)
-}
-\arguments{
-\item{property}{\link[assertthat]{is.string}. Property}
-
-\item{value}{\link[assertthat]{is.string}. Value}
+annotationType
 }
 \description{
 These elements should be used to annotate samples by setting a property and a
-value. A property could be sex, the value M or F.\cr Inherits: \link{rdmlBaseType}.
+value. A property could be sex, the value M or F.\cr Inherits:
+\link{rdmlBaseType}.
 }
 \section{Fields}{
- Names, types and description of the fields are equal to the
-  class arguments.
+ \describe{ \item{property}{\link[assertthat]{is.string}.
+  Property} \item{value}{\link[assertthat]{is.string}. Value} }
 }
 \keyword{datasets}
 

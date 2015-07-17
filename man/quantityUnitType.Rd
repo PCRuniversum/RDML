@@ -6,10 +6,7 @@
 \title{quantityUnitType R6 class.}
 \format{An \code{\link{R6Class}} generator object.}
 \usage{
-quantityUnitType$new(value)
-}
-\arguments{
-\item{value}{\link[assertthat]{is.string}. Value.}
+quantityUnitType
 }
 \description{
 The unit the quantity. Can take values:
@@ -25,9 +22,14 @@ The unit the quantity. Can take values:
 \details{
 \cr Inherits: \link{enumType}.
 }
+\section{Initialization}{
+ \code{quantityUnitType$new(value)}
+}
+
 \section{Fields}{
- Names, types and description of the fields are equal to the
-  class arguments.
+ \describe{
+\item{\code{value}}{\link[assertthat]{is.string}. Value.}
+  }
 }
 \keyword{datasets}
 

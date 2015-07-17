@@ -6,22 +6,24 @@
 \title{mdpsType R6 class.}
 \format{An \code{\link{R6Class}} generator object.}
 \usage{
-mdpsType$new(fpoints)
-}
-\arguments{
-\item{fpoints}{\link[base]{matrix}. Matrix with amplification data points.}
+mdpsType
 }
 \description{
-Contains of melting data points \code{matrix} -- single data points
-measured during amplification. \code{Matrix} columns: \describe{
-\item{tmp}{(every point must be unique) Temperature - The temperature in degrees Celsius at the
+Contains of melting data points \code{matrix} -- single data points measured
+during amplification. \code{Matrix} columns: \describe{ \item{tmp}{(every
+point must be unique) Temperature - The temperature in degrees Celsius at the
 time of measurement.} \item{fluor}{Fluorescence - The fluorescence intensity
 measured without any correction. The fluorescence intensity must not be
 baseline corrected.}} \cr Inherits: \link{rdmlBaseType}.
 }
+\section{Initialization}{
+ \code{mdpsType$new(fpoints)}
+}
+
 \section{Fields}{
- Names, types and description of the fields are equal to the
-  class arguments.
+ \describe{
+\item{\code{fpoints}}{\link[base]{matrix}. Matrix with amplification data points.}
+  }
 }
 \keyword{datasets}
 

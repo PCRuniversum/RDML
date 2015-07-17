@@ -6,7 +6,7 @@
 \title{lidOpenType R6 class.}
 \format{An \code{\link{R6Class}} generator object.}
 \usage{
-lidOpenType$new()
+lidOpenType
 }
 \description{
 This step waits for the user to open the lid and continues afterwards. It
@@ -14,9 +14,8 @@ allows to stop the program and to wait for the user to add for example
 enzymes and continue the program afterwards. The temperature of the previous
 step is maintained.\cr Inherits: \link{rdmlBaseType}.
 }
-\section{Fields}{
- Names, types and description of the fields are equal to the
-  class arguments.
+\section{Initialization}{
+ \code{lidOpenType$new()}
 }
 \keyword{datasets}
 

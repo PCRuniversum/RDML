@@ -6,21 +6,22 @@
 \title{xRefType R6 class.}
 \format{An \code{\link{R6Class}} generator object.}
 \usage{
-xRefType$new(name = NULL, id = NULL)
-}
-\arguments{
-\item{name}{\link[assertthat]{is.string}. Reference to an external database,
-for example "GenBank".}
-
-\item{id}{\link[assertthat]{is.string}. The ID of the entry within the
-  external database, for example "AJ832138".}
+xRefType
 }
 \description{
 \cr Inherits: \link{rdmlBaseType}.
 }
+\section{Initialization}{
+ \code{xRefType$new(name = NULL, id = NULL)}
+}
+
 \section{Fields}{
- Names, types and description of the fields are equal to the
-  class arguments.
+ \describe{
+  \item{\code{name}}{\link[assertthat]{is.string}. Reference to an external
+  database, } for example "GenBank".
+  \item{\code{id}}{\link[assertthat]{is.string}. The ID of the entry within
+  the external database, for example "AJ832138".}
+  }
 }
 \keyword{datasets}
 

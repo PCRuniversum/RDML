@@ -6,10 +6,7 @@
 \title{nucleotideType R6 class.}
 \format{An \code{\link{R6Class}} generator object.}
 \usage{
-nucleotideType$new(value)
-}
-\arguments{
-\item{value}{\link[assertthat]{is.string}. Value.}
+nucleotideType
 }
 \description{
 Can take values:
@@ -23,9 +20,14 @@ Can take values:
 \details{
 \cr Inherits: \link{enumType}.
 }
+\section{Initialization}{
+ \code{nucleotideType$new(value)}
+}
+
 \section{Fields}{
- Names, types and description of the fields are equal to the
-  class arguments.
+ \describe{
+\item{\code{value}}{\link[assertthat]{is.string}. Value.}
+  }
 }
 \keyword{datasets}
 

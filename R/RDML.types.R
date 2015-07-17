@@ -17,11 +17,12 @@ with.names <- function(l, id) {
 #' Most classes of RDML package inherit this class. It can't be directly 
 #' accessed and serves only for inner package usage.
 #' 
-#' @usage rdmlBaseType$new()
+#' @section Initialization: \code{rdmlBaseType$new()}
 #'   
-#' @section Methods: \describe{\item{\code{.asXMLnodes(node.name)}}{Represents object as XML
-#'   nodes. Should not be called directly. \code{node.name} -- name of the root
-#'   node for the generated XML tree.}\item{\code{print(...)}}{prints object}}
+#' @section Methods: \describe{\item{\code{.asXMLnodes(node.name)}}{Represents
+#'   object as XML nodes. Should not be called directly. \code{node.name} --
+#'   name of the root node for the generated XML
+#'   tree.}\item{\code{print(...)}}{prints object}}
 #'   
 #' @docType class
 #' @format An \code{\link{R6Class}} generator object.
@@ -147,19 +148,19 @@ rdmlBaseType <-
 
 #' rdmlIdType R6 class.
 #' 
-#' This element can be used to assign a publisher and id to the RDML file.\cr
+#' This element can be used to assign a publisher and id to the RDML file.\cr 
 #' Inherits: \link{rdmlBaseType}.
 #' 
-#' @usage rdmlIdType$new(publisher, serialNumber, MD5Hash = NULL)
+#' @section Initialization: \code{rdmlIdType$new(publisher, serialNumber,
+#'   MD5Hash = NULL)}
 #'   
-#' @param publisher \link[assertthat]{is.string}. RDML file publisher.
-#' @param serialNumber \link[assertthat]{is.string}. Serial number.
-#' @param MD5Hash \link[assertthat]{is.string}. An MD5Hash calculated over the
-#'   complete file after removing all rdmlIDTypes and all whitespaces between
-#'   elements.
-#'   
-#' @section Fields: Names, types and description of the fields are equal to the
-#'   class arguments.
+#' @section Fields: \describe{  
+#'   \item{\code{publisher}}{\link[assertthat]{is.string}. RDML file publisher.}
+#'   \item{\code{serialNumber}}{\link[assertthat]{is.string}. Serial number.} 
+#'   \item{\code{MD5Hash}}{\link[assertthat]{is.string}. An MD5Hash calculated
+#'   over the complete file after removing all rdmlIDTypes and all whitespaces
+#'   between elements.}
+#'   }
 #'   
 #' @docType class
 #' @format An \code{\link{R6Class}} generator object.
@@ -212,13 +213,12 @@ rdmlIdType <-
 #' 
 #' Contains identificator for varius RDML types.\cr Inherits: \link{rdmlBaseType}.
 #' 
-#' @usage idType$new(id)
+#' @section Initialization: \code{idType$new(id)}
+#'
+#'   @section Fields: \describe{     
+#' \item{\code{id}}{\link[assertthat]{is.string}. Identificator.}
+#' }
 #'   
-#' @param id \link[assertthat]{is.string}. Identificator.
-#' 
-#' @section Fields: Names, types and description of the fields are equal to the
-#'   class arguments.
-#'    
 #' @docType class
 #' @format An \code{\link{R6Class}} generator object.
 #' @export
@@ -253,13 +253,12 @@ idType <-
 #' 
 #' Contains identificator for reactType.\cr Inherits: \link{rdmlBaseType}.
 #' 
-#' @usage reactIdType$new(id)
-#'   
-#' @param id \link[assertthat]{is.count}. Identificator.
+#' @section Initialization: \code{reactIdType$new(id)}
+#'
+#'   @section Fields: \describe{     
+#' \item{\code{id}}{\link[assertthat]{is.count}. Identificator.}
+#' }
 #' 
-#' @section Fields: Names, types and description of the fields are equal to the
-#'   class arguments.
-#'    
 #' @docType class
 #' @format An \code{\link{R6Class}} generator object.
 #' @export
@@ -294,11 +293,11 @@ reactIdType <-
 #' 
 #' Contains id of another RDML object.\cr Inherits: \link{idType}.
 #' 
-#' @usage idReferencesType$new(id)
-#' @param id \link[assertthat]{is.string}. Identificator.
+#' @section Initialization: \code{idReferencesType$new(id)}
 #' 
-#' @section Fields: Names, types and description of the fields are equal to the
-#'   class arguments.
+#' @section Fields: \describe{  
+#' \item{\code{id}}{\link[assertthat]{is.string}. Identificator.}
+#' }
 #'         
 #' @docType class
 #' @format An \code{\link{R6Class}} generator object.
@@ -314,19 +313,18 @@ idReferencesType <-
 #' 
 #' Contact details of the experimenter.\cr Inherits: \link{rdmlBaseType}.
 #' 
-#' @usage experimenterType$new(id, firstName, lastName, email = NULL, labName =
-#'   NULL, labAddress = NULL)
+#' @section Initialization: \code{experimenterType$new(id, firstName, lastName,
+#'   email = NULL, labName = NULL, labAddress = NULL)}
+#'  
+#'   @section Fields: \describe{   
+#' \item{\code{id}}{\link{idType}. Identificator.}
+#' \item{\code{firstName}}{\link[assertthat]{is.string}. First name.}
+#' \item{\code{lastName}}{\link[assertthat]{is.string}. Last name.}
+#' \item{\code{email}}{\link[assertthat]{is.string}. Email.}
+#' \item{\code{labName}}{\link[assertthat]{is.string}. Lab name.}
+#' \item{\code{labAddress}}{\link[assertthat]{is.string}. Lab address.}
+#'   }
 #'   
-#' @param id \link{idType}. Identificator.
-#' @param firstName \link[assertthat]{is.string}. First name.
-#' @param lastName \link[assertthat]{is.string}. Last name.
-#' @param email \link[assertthat]{is.string}. Email.
-#' @param labName \link[assertthat]{is.string}. Lab name.
-#' @param labAddress \link[assertthat]{is.string}. Lab address.
-#'
-#' @section Fields: Names, types and description of the fields are equal to the
-#'   class arguments.
-#'     
 #' @docType class
 #' @format An \code{\link{R6Class}} generator object.
 #' @export
@@ -409,13 +407,12 @@ experimenterType <-
 #' These elements should be used if the same description applies to many
 #' samples, targets or experiments.\cr Inherits: \link{rdmlBaseType}.
 #' 
-#' @usage documentationType$new(id, text = NULL)
+#' @section Initialization: \code{documentationType$new(id, text = NULL)}
 #'   
-#' @param id \link{idType}. Identificator.
-#' @param text \link[assertthat]{is.string}. Text.
-#'   
-#' @section Fields: Names, types and description of the fields are equal to the 
-#'   class arguments.
+#'   @section Fields: \describe{  
+#' \item{\code{id}}{\link{idType}. Identificator.}
+#' \item{\code{text}}{\link[assertthat]{is.string}. Text.}
+#'   }
 #'   
 #' @docType class
 #' @format An \code{\link{R6Class}} generator object.
@@ -458,13 +455,12 @@ documentationType <-
 #' 
 #' Information on a dye.\cr Inherits: \link{rdmlBaseType}.
 #' 
-#' @usage dyeType$new(id, description = NULL)
+#' @section Initialization: \code{dyeType$new(id, description = NULL)}
 #'   
-#' @param id \link{idType}. Identificator.
-#' @param text \link[assertthat]{is.string}. Description.
-#'   
-#' @section Fields: Names, types and description of the fields are equal to the 
-#'   class arguments.
+#'   @section Fields: \describe{  
+#' \item{\code{id}}{\link{idType}. Identificator.}
+#' \item{\code{description}}{ \link[assertthat]{is.string}. Description.
+#'   }}
 #'   
 #' @docType class
 #' @format An \code{\link{R6Class}} generator object.
@@ -507,15 +503,14 @@ dyeType <-
 #' 
 #' \cr Inherits: \link{rdmlBaseType}.
 #' 
-#' @usage xRefType$new(name = NULL, id = NULL)
+#' @section Initialization: \code{xRefType$new(name = NULL, id = NULL)}
 #'   
-#' @param name \link[assertthat]{is.string}. Reference to an external database, 
-#'   for example "GenBank".
-#' @param id \link[assertthat]{is.string}. The ID of the entry within the
-#'   external database, for example "AJ832138".
-#'   
-#' @section Fields: Names, types and description of the fields are equal to the 
-#'   class arguments.
+#'   @section Fields: \describe{  
+#'   \item{\code{name}}{\link[assertthat]{is.string}. Reference to an external
+#'   database, } for example "GenBank". 
+#'   \item{\code{id}}{\link[assertthat]{is.string}. The ID of the entry within
+#'   the external database, for example "AJ832138".}
+#'   }
 #'   
 #' @docType class
 #' @format An \code{\link{R6Class}} generator object.
@@ -557,15 +552,11 @@ xRefType <-
 #' annotationType R6 class.
 #' 
 #' These elements should be used to annotate samples by setting a property and a
-#' value. A property could be sex, the value M or F.\cr Inherits: \link{rdmlBaseType}.
+#' value. A property could be sex, the value M or F.\cr Inherits:
+#' \link{rdmlBaseType}.
 #' 
-#' @usage annotationType$new(property, value)
-#'   
-#' @param property \link[assertthat]{is.string}. Property
-#' @param value \link[assertthat]{is.string}. Value
-#'   
-#' @section Fields: Names, types and description of the fields are equal to the 
-#'   class arguments.
+#' @section Fields: \describe{ \item{property}{\link[assertthat]{is.string}.
+#'   Property} \item{value}{\link[assertthat]{is.string}. Value} }
 #'   
 #' @docType class
 #' @format An \code{\link{R6Class}} generator object.
@@ -606,15 +597,15 @@ annotationType <-
 
 #' quantityType R6 class.
 #' 
-#' A quantity is always defined by its value and its unit.\cr Inherits: \link{rdmlBaseType}.
+#' A quantity is always defined by its value and its unit.\cr Inherits:
+#' \link{rdmlBaseType}.
 #' 
-#' @usage quantityType$new(value, unit)
-#'   
-#' @param value \link[assertthat]{is.float}. Value.
-#' @param unit \link{quantityUnitType}. Unit.
-#'   
-#' @section Fields: Names, types and description of the fields are equal to the 
-#'   class arguments.
+#' @section Initialization: \code{quantityType$new(value, unit)}
+#' 
+#'   @section Fields: \describe{    
+#' \item{\code{value}}{\link[base]{is.double}. Value.}
+#' \item{\code{unit}}{\link{quantityUnitType}. Unit.}
+#'   }
 #'   
 #' @docType class
 #' @format An \code{\link{R6Class}} generator object.
@@ -659,15 +650,17 @@ quantityType <-
 #' 
 #' Description of the cDNA synthesis method.\cr Inherits: \link{rdmlBaseType}.
 #' 
-#' @usage cdnaSynthesisMethodType$new(enzyme = NULL, primingMethod = NULL, dnaseTreatment = NULL, thermalCyclingConditions = NULL)
+#' @section Initialization: \code{cdnaSynthesisMethodType$new(enzyme = NULL, 
+#'   primingMethod = NULL, dnaseTreatment = NULL, thermalCyclingConditions = 
+#'   NULL)}
 #'   
-#' @param enzyme \link[assertthat]{is.float}. Enzyme used for reverse transcription.
-#' @param primingMethod \link{primingMethodType}.
-#' @param dnaseTreatment \link[assertthat]{is.flag} True if RNA was DNAse treated prior cDNA synthesis.
-#' @param thermalCyclingConditions \link{idReferencesType}.
-#'   
-#' @section Fields: Names, types and description of the fields are equal to the 
-#'   class arguments.
+#'   @section Fields: \describe{  
+#'   \item{\code{enzyme}}{\link[base]{is.double}. Enzyme used for reverse
+#'   transcription.} \item{\code{primingMethod}}{\link{primingMethodType}.} 
+#'   \item{\code{dnaseTreatment}}{\link[assertthat]{is.flag} True if RNA was
+#'   DNAse treated prior cDNA synthesis.}
+#'   \item{\code{thermalCyclingConditions}}{\link{idReferencesType}.}
+#'   }
 #'   
 #' @docType class
 #' @format An \code{\link{R6Class}} generator object.
@@ -734,14 +727,14 @@ cdnaSynthesisMethodType <-
 #' 
 #' \cr Inherits: \link{rdmlBaseType}.
 #' 
-#' @usage templateQuantityType$new(conc, nucleotide)
+#' @section Initialization: \code{templateQuantityType$new(conc, nucleotide)}
 #'   
-#' @param conc \link[assertthat]{is.float}. Concentration of the template in nanogram per microliter in the final reaction mix.
-#' @param nucleotide \link{nucleotideType}.
-#'   
-#' @section Fields: Names, types and description of the fields are equal to the 
-#'   class arguments.
-#'   
+#'   @section Fields: \describe{  
+#' \item{\code{conc}}{\link[base]{is.double}. Concentration of the template in nanogram}
+#'   per microliter in the final reaction mix.
+#' \item{\code{nucleotide}}{\link{nucleotideType}.}
+#'   }
+#'
 #' @docType class
 #' @format An \code{\link{R6Class}} generator object.
 #' @export
@@ -783,14 +776,13 @@ templateQuantityType <-
 
 #' enumType R6 class.
 #' 
-#' Generic class for creating objects thet can take limited list of values.\cr Inherits: \link{rdmlBaseType}.
+#' Generic class for creating objects thet can take limited list of values.\cr
+#' Inherits: \link{rdmlBaseType}.
 #' 
-#' @usage enumType$new(value)
-#'   
-#' @param value \link[assertthat]{is.string}. Value.
-#'   
-#' @section Fields: Names, types and description of the fields are equal to the 
-#'   class arguments.
+#' @section Initialization: \code{enumType$new(value)}
+#'   @section Fields: \describe{  
+#' \item{\code{value}}{\link[assertthat]{is.string}. Value.}
+#'   }
 #'   
 #' @docType class
 #' @format An \code{\link{R6Class}} generator object.
@@ -836,12 +828,11 @@ enumType <-
 #' 
 #' \cr Inherits: \link{enumType}.
 #' 
-#' @usage sampleTypeType$new(value)
-#'   
-#' @param value \link[assertthat]{is.string}. Value.
-#'   
-#' @section Fields: Names, types and description of the fields are equal to the 
-#'   class arguments.
+#' @section Initialization: \code{sampleTypeType$new(value)}
+#'  
+#'   @section Fields: \describe{   
+#' \item{\code{value}}{\link[assertthat]{is.string}. Value.}
+#'   }
 #'   
 #' @docType class
 #' @format An \code{\link{R6Class}} generator object.
@@ -873,12 +864,11 @@ sampleTypeType <-
 #' 
 #' \cr Inherits: \link{enumType}.
 #' 
-#' @usage quantityUnitType$new(value)
+#' @section Initialization: \code{quantityUnitType$new(value)}
 #'   
-#' @param value \link[assertthat]{is.string}. Value.
-#'   
-#' @section Fields: Names, types and description of the fields are equal to the 
-#'   class arguments.
+#'   @section Fields: \describe{  
+#' \item{\code{value}}{\link[assertthat]{is.string}. Value.}
+#'   }
 #'   
 #' @docType class
 #' @format An \code{\link{R6Class}} generator object.
@@ -907,12 +897,11 @@ quantityUnitType <-
 #' 
 #' \cr Inherits: \link{enumType}.
 #' 
-#' @usage primingMethodType$new(value)
+#' @section Initialization: \code{primingMethodType$new(value)}
 #'   
-#' @param value \link[assertthat]{is.string}. Value.
-#'   
-#' @section Fields: Names, types and description of the fields are equal to the 
-#'   class arguments.
+#'   @section Fields: \describe{  
+#' \item{\code{value}}{\link[assertthat]{is.string}. Value.}
+#'   }
 #'   
 #' @docType class
 #' @format An \code{\link{R6Class}} generator object.
@@ -944,12 +933,11 @@ primingMethodType <-
 #' 
 #' \cr Inherits: \link{enumType}.
 #' 
-#' @usage nucleotideType$new(value)
+#' @section Initialization: \code{nucleotideType$new(value)}
 #'   
-#' @param value \link[assertthat]{is.string}. Value.
-#'   
-#' @section Fields: Names, types and description of the fields are equal to the 
-#'   class arguments.
+#'   @section Fields: \describe{  
+#' \item{\code{value}}{\link[assertthat]{is.string}. Value.}
+#'   }
 #'   
 #' @docType class
 #' @format An \code{\link{R6Class}} generator object.
@@ -978,34 +966,34 @@ nucleotideType <-
 #'same). Serial dilutions in a standard curve must have a different name.\cr 
 #'Inherits: \link{rdmlBaseType}.
 #'
-#'@usage sampleType$new(id, description = NULL, documentation = NULL, xRef = 
-#'  NULL, annotation = NULL, type = sampleTypeType$new("unkn"), 
-#'  interRunCalibrator = FALSE, quantity = NULL, calibratorSample = FALSE, 
-#'  cdnaSynthesisMethod = NULL, templateQuantity = NULL)
+#'@section Initialization: \code{sampleType$new(id, description = NULL, 
+#'  documentation = NULL, xRef =  NULL, annotation = NULL, type = 
+#'  sampleTypeType$new("unkn"), interRunCalibrator = FALSE, quantity = NULL, 
+#'  calibratorSample = FALSE, cdnaSynthesisMethod = NULL, templateQuantity = 
+#'  NULL)}
 #'  
-#'@param id \link{idType}. Concentration of the template in 
-#'  nanogram per microliter in the final reaction mix.
-#'@param description \link[assertthat]{is.string}.
-#'@param documentation \code{list} of \link{idReferencesType}.
-#'@param xRef \code{list} of \link{xRefType}.
-#'@param annotation \code{list} of \link{annotationType}.
-#'@param type \link{sampleTypeType}.
-#'@param interRunCalibrator \link[assertthat]{is.flag}. True if this sample is used 
-#'  as inter run calibrator.
-#'@param quantity \link{quantityType}. Quantity - The reference quantity of 
-#'  this sample. It should be only used if the sample is part of a standard 
-#'  curve. The provided value will be used to quantify unknown samples in 
-#'  absolute quantification assays. Only the use of true numbers is valid like 
-#'  1, 10, 100, 1000 or 1, 0.1, 0.01, 0.001. The use of exponents is not valid 
-#'  like 1, 2, 3, 4 or -1, -2, -3, -4 because it will not be interpreted as 
-#'  10E1, 10E2, 10E3, 10E4 or 10E-1, 10E-2, 10E-3, 10E-4.
-#'@param calibratorSample \link[assertthat]{is.flag}. True if this sample is used as
-#'  calibrator sample.
-#'@param cdnaSynthesisMethod \link{cdnaSynthesisMethodType}.
-#'@param templateQuantity \link{templateQuantityType}.
-#'  
-#'@section Fields: Names, types and description of the fields are equal to the 
-#'  class arguments.
+#'  @section Fields: \describe{  
+#'  \item{\code{id}}{\link{idType}. Concentration of the template in nanogram
+#'  per microliter in the final reaction mix. }
+#'  \item{\code{description}}{\link[assertthat]{is.string}.} 
+#'  \item{\code{documentation}}{\code{list} of \link{idReferencesType}.} 
+#'  \item{\code{xRef}}{\code{list} of \link{xRefType}.} 
+#'  \item{\code{annotation}}{\code{list} of \link{annotationType}.} 
+#'  \item{\code{type}}{\link{sampleTypeType}.} 
+#'  \item{\code{interRunCalibrator}}{\link[assertthat]{is.flag}. True if this
+#'  sample is used as inter run calibrator. }
+#'  \item{\code{quantity}}{\link{quantityType}. Quantity - The reference
+#'  quantity of this sample. It should be only used if the sample is part of a
+#'  standard curve. The provided value will be used to quantify unknown samples
+#'  in absolute quantification assays. Only the use of true numbers is valid
+#'  like 1, 10, 100, 1000 or 1, 0.1, 0.01, 0.001. The use of exponents is not
+#'  valid like 1, 2, 3, 4 or -1, -2, -3, -4 because it will not be interpreted
+#'  as 10E1, 10E2, 10E3, 10E4 or 10E-1, 10E-2, 10E-3, 10E-4. }
+#'  \item{\code{calibratorSample}}{\link[assertthat]{is.flag}. True if this
+#'  sample is used as calibrator sample. }
+#'  \item{\code{cdnaSynthesisMethod}}{\link{cdnaSynthesisMethodType}.} 
+#'  \item{\code{templateQuantity}}{\link{templateQuantityType}.}
+#'  }
 #'  
 #'@docType class
 #'@format An \code{\link{R6Class}} generator object.
@@ -1155,14 +1143,16 @@ sampleType <-
 #' 
 #' \cr Inherits: \link{rdmlBaseType}.
 #' 
-#' @usage oligoType$new(threePrimeTag = NULL, fivePrimeTag = NULL, sequence)
+#' @section Initialization: \code{oligoType$new(threePrimeTag = NULL, 
+#'   fivePrimeTag = NULL, sequence)}
 #'   
-#' @param threePrimeTag \link[assertthat]{is.string}. Description of three prime modification (if present).
-#' @param fivePrimeTag \link[assertthat]{is.string}. Description of five prime modification (if present).
-#' @param sequence \link[assertthat]{is.string}.
-#'   
-#' @section Fields: Names, types and description of the fields are equal to the 
-#'   class arguments.
+#'   @section Fields: \describe{  
+#'   \item{\code{threePrimeTag}}{\link[assertthat]{is.string}. Description of
+#'   three prime modification (if present). }
+#'   \item{\code{fivePrimeTag}}{\link[assertthat]{is.string}. Description of
+#'   five prime modification (if present).}
+#'   \item{\code{sequence}}{\link[assertthat]{is.string}.}
+#'   }
 #'   
 #' @docType class
 #' @format An \code{\link{R6Class}} generator object.
@@ -1215,17 +1205,15 @@ oligoType <-
 #' 
 #' \cr Inherits: \link{rdmlBaseType}.
 #' 
-#' @usage sequencesType$new(forwardPrimer = NULL, reversePrimer = NULL, probe1 =
-#'   NULL, probe2 = NULL, amplicon = NULL)
+#' @section Initialization: \code{sequencesType$new(forwardPrimer = NULL, reversePrimer = NULL, probe1 = NULL, probe2 = NULL, amplicon = NULL)}
 #'   
-#' @param forwardPrimer \link{oligoType}.
-#' @param reversePrimer \link{oligoType}.
-#' @param probe1 \link{oligoType}.
-#' @param probe2 \link{oligoType}.
-#' @param amplicon \link{oligoType}.
-#'   
-#' @section Fields: Names, types and description of the fields are equal to the 
-#'   class arguments.
+#'   @section Fields: \describe{  
+#' \item{\code{forwardPrimer}}{\link{oligoType}.}
+#' \item{\code{reversePrimer}}{\link{oligoType}.}
+#' \item{\code{probe1}}{\link{oligoType}.}
+#' \item{\code{probe2}}{\link{oligoType}.}
+#' \item{\code{amplicon}}{\link{oligoType}.}
+#'   }
 #'   
 #' @docType class
 #' @format An \code{\link{R6Class}} generator object.
@@ -1309,13 +1297,12 @@ sequencesType <-
 #' For some commercial assays, the primer sequences may be unknown. This element 
 #' allows to describe commercial assays.\cr Inherits: \link{rdmlBaseType}.
 #' 
-#' @usage commercialAssayType$new(company, orderNumber)
+#' @section Initialization: \code{commercialAssayType$new(company, orderNumber)}
 #'   
-#' @param company \link[assertthat]{is.string}.
-#' @param orderNumber \link[assertthat]{is.string}.
-#'   
-#' @section Fields: Names, types and description of the fields are equal to the 
-#'   class arguments.
+#'   @section Fields: \describe{  
+#' \item{\code{company}}{\link[assertthat]{is.string}.}
+#' \item{\code{orderNumber}}{\link[assertthat]{is.string}.}
+#'   }
 #'   
 #' @docType class
 #' @format An \code{\link{R6Class}} generator object.
@@ -1363,13 +1350,12 @@ commercialAssayType <-
 #' } 
 #' \cr Inherits: \link{enumType}.
 #' 
-#' @usage targetTypeType$new(value)
-#'   
-#' @param value \link[assertthat]{is.string}.
-#'   
-#' @section Fields: Names, types and description of the fields are equal to the 
-#'   class arguments.
-#'   
+#' @section Initialization: \code{targetTypeType$new(value)}
+#' 
+#'   @section Fields: \describe{  
+#' \item{\code{value}}{\link[assertthat]{is.string}.}
+#' }
+#'  
 #' @docType class
 #' @format An \code{\link{R6Class}} generator object.
 #' @export
@@ -1391,26 +1377,23 @@ targetTypeType <-
 #' differ in primer sequences are considered different targets.\cr Inherits: 
 #' \link{rdmlBaseType}.
 #' 
-#' @usage targetType$new(id, description = NULL, documentation = NULL, xRef =
-#'   NULL, type, amplificationEfficiencyMethod = NULL, amplificationEfficiency =
-#'   NULL, amplificationEfficiencySE = NULL, detectionLimit = NULL, dyeId, 
-#'   sequences = NULL, commercialAssay = NULL)
+#' @section Initialization: \code{targetType$new(id, description = NULL, 
+#'   documentation = NULL, xRef = NULL, type, amplificationEfficiencyMethod = 
+#'   NULL, amplificationEfficiency = NULL, amplificationEfficiencySE = NULL, 
+#'   detectionLimit = NULL, dyeId, sequences = NULL, commercialAssay = NULL)}
 #'   
-#' @param id \link{idType}.
-#' @param description \link[assertthat]{is.string}.
-#' @param documentation \code{list} of \link{idReferencesType}.
-#' @param xRef \code{list} of \link{xRefType}.
-#' @param type \link{targetTypeType}.
-#' @param amplificationEfficiencyMethod \link[assertthat]{is.string}.
-#' @param amplificationEfficiency \link[base]{double}.
-#' @param amplificationEfficiencySE \link[base]{double}.
-#' @param detectionLimit \link[base]{double}.
-#' @param dyeId \link{idReferencesType}.
-#' @param sequences \link{sequencesType}.
-#' @param commercialAssay \link{commercialAssayType}.
-#'   
-#' @section Fields: Names, types and description of the fields are equal to the 
-#'   class arguments.
+#' @section Fields: \describe{ \item{\code{id}}{\link{idType}.} 
+#'   \item{\code{description}}{\link[assertthat]{is.string}.} 
+#'   \item{\code{documentation}}{\code{list} of \link{idReferencesType}.} 
+#'   \item{\code{xRef}}{\code{list} of \link{xRefType}.} 
+#'   \item{\code{type}}{\link{targetTypeType}.} 
+#'   \item{\code{amplificationEfficiencyMethod}}{\link[assertthat]{is.string}.} 
+#'   \item{\code{amplificationEfficiency}}{\link[base]{double}.} 
+#'   \item{\code{amplificationEfficiencySE}}{\link[base]{double}.} 
+#'   \item{\code{detectionLimit}}{\link[base]{double}.} 
+#'   \item{\code{dyeId}}{\link{idReferencesType}.} 
+#'   \item{\code{sequences}}{\link{sequencesType}.} 
+#'   \item{\code{commercialAssay}}{\link{commercialAssayType}.} }
 #'   
 #' @docType class
 #' @format An \code{\link{R6Class}} generator object.
@@ -1657,18 +1640,19 @@ targetType <-
 #' 
 #' Contains of amplification data points \code{matrix} -- single data points 
 #' measured during amplification. \code{Matrix} columns: \describe{ 
-#' \item{cyc}{(every point must be unique) Cycle - The PCR cycle at which data point was collected.} 
-#' \item{tmp}{(optional) Temperature - The temperature in degrees Celsius at the
-#' time of measurement.} \item{fluor}{Fluorescence - The fluorescence intensity
-#' measured without any correction. The fluorescence intensity must not be
-#' baseline corrected.}} \cr Inherits: \link{rdmlBaseType}.
+#' \item{cyc}{(every point must be unique) Cycle - The PCR cycle at which data 
+#' point was collected.} \item{tmp}{(optional) Temperature - The temperature in 
+#' degrees Celsius at the time of measurement.} \item{fluor}{Fluorescence - The 
+#' fluorescence intensity measured without any correction. The fluorescence 
+#' intensity must not be baseline corrected.}} \cr Inherits: 
+#' \link{rdmlBaseType}.
 #' 
-#' @usage adpsType$new(fpoints)
-#'   
-#' @param fpoints \link[base]{matrix}. Matrix with amplification data points.
-#'   
-#' @section Fields: Names, types and description of the fields are equal to the 
-#'   class arguments.
+#' @section Initialization: \code{adpsType$new(fpoints)}
+#' 
+#' @section Fields: \describe{    
+#'   \item{\code{fpoints}}{\link[base]{matrix}. Matrix with amplification data
+#'   points.}
+#'   }
 #'   
 #' @docType class
 #' @format An \code{\link{R6Class}} generator object.
@@ -1729,19 +1713,18 @@ adpsType <-
 
 #' mdpsType R6 class.
 #' 
-#' Contains of melting data points \code{matrix} -- single data points 
-#' measured during amplification. \code{Matrix} columns: \describe{ 
-#' \item{tmp}{(every point must be unique) Temperature - The temperature in degrees Celsius at the
-#' time of measurement.} \item{fluor}{Fluorescence - The fluorescence intensity
-#' measured without any correction. The fluorescence intensity must not be
+#' Contains of melting data points \code{matrix} -- single data points measured
+#' during amplification. \code{Matrix} columns: \describe{ \item{tmp}{(every
+#' point must be unique) Temperature - The temperature in degrees Celsius at the
+#' time of measurement.} \item{fluor}{Fluorescence - The fluorescence intensity 
+#' measured without any correction. The fluorescence intensity must not be 
 #' baseline corrected.}} \cr Inherits: \link{rdmlBaseType}.
 #' 
-#' @usage mdpsType$new(fpoints)
+#' @section Initialization: \code{mdpsType$new(fpoints)}
 #'   
-#' @param fpoints \link[base]{matrix}. Matrix with amplification data points.
-#'   
-#' @section Fields: Names, types and description of the fields are equal to the 
-#'   class arguments.
+#'   @section Fields: \describe{  
+#' \item{\code{fpoints}}{\link[base]{matrix}. Matrix with amplification data points.}
+#'   }
 #'   
 #' @docType class
 #' @format An \code{\link{R6Class}} generator object.
@@ -1794,36 +1777,34 @@ mdpsType <-
 #' 
 #' \cr Inherits: \link{rdmlBaseType}.
 #' 
-#' @usage dataType$new(tar, cq = NULL, excl = NULL, adp = NULL, mdp = NULL, 
-#'   endPt = NULL, bgFluor = NULL, bgFluorSlp = NULL, quantFluor = NULL)
+#' @section Initialization: \code{dataType$new(tar, cq = NULL, excl = NULL, adp 
+#'   = NULL, mdp = NULL, endPt = NULL, bgFluor = NULL, bgFluorSlp = NULL, 
+#'   quantFluor = NULL)}
 #'   
-#' @param tar \link{idReferencesType}. TargetID - A reference to a target.
-#' @param cq \link[base]{double}. Quantification cycle - The calculated 
-#'   fractional PCR cycle used for downstream quantification. Negative values 
-#'   are used to express following conditions: Not Available: -1.0
-#' @param excl \link[assertthat]{is.string}. Excluded - If present, this entry 
-#'   should not be evaluated. Do not set this element to false if this entry is 
-#'   valid, leave the entire element out instead. It may contain a string with 
-#'   reason for exclusion. Several reasons for exclusion should be seperated by 
-#'   semicolons ";".
-#' @param adp \link{adpsType}.
-#' @param mdp \link{mdpsType}.
-#' @param endPt \link[base]{double}. End point - Result of an endpoint 
-#'   measurement.
-#' @param bgFluor \link[base]{double}. Background fluorescence - The y-intercept
-#'   of the baseline trend based on the estimated background fluorescence.
-#' @param bgFluorSlp \link[base]{double}. Background fluorescence slope - The 
-#'   slope of the baseline trend based on the estimated background fluorescence.
-#'   The element should be absent to indicate a slope of 0.0; If this element is
-#'   present without the bgFluor element it should be ignored.
-#' @param quantFluor \link[base]{double}. Quantification flourescence - The 
-#'   fluorescence value corresponding to the treshold line.
-#'   
-#' @section Fields: Names, types and description of the fields are equal to the 
-#'   class arguments.
+#' @section Fields: \describe{ \item{\code{tar}}{\link{idReferencesType}. 
+#'   TargetID - A reference to a target.} \item{\code{cq}}{\link[base]{double}. 
+#'   Quantification cycle - The calculated fractional PCR cycle used for 
+#'   downstream quantification. Negative values are used to express following 
+#'   conditions: Not Available: -1.0 } 
+#'   \item{\code{excl}}{\link[assertthat]{is.string}. Excluded - If present, 
+#'   this entry should not be evaluated. Do not set this element to false if 
+#'   this entry is valid, leave the entire element out instead. It may contain a
+#'   string with reason for exclusion. Several reasons for exclusion should be 
+#'   seperated by semicolons ";".} \item{\code{adp}}{\link{adpsType}.} 
+#'   \item{\code{mdp}}{\link{mdpsType}.} 
+#'   \item{\code{endPt}}{\link[base]{double}. End point - Result of an endpoint 
+#'   } measurement. \item{\code{bgFluor}}{\link[base]{double}. Background 
+#'   fluorescence - The y-intercept of the baseline trend based on the estimated
+#'   background fluorescence. } \item{\code{bgFluorSlp}}{\link[base]{double}. 
+#'   Background fluorescence slope - The slope of the baseline trend based on 
+#'   the estimated background fluorescence. The element should be absent to 
+#'   indicate a slope of 0.0; If this element is present without the bgFluor 
+#'   element it should be ignored. } 
+#'   \item{\code{quantFluor}}{\link[base]{double}. Quantification flourescence -
+#'   The fluorescence value corresponding to the treshold line.} }
 #'   
 #' @section Methods: \describe{\item{\code{AsDataFrame(dp.type = 
-#'   "adp")}}{Represents amplification (\code{dp.type = "adp"}) or melting
+#'   "adp")}}{Represents amplification (\code{dp.type = "adp"}) or melting 
 #'   (\code{dp.type = "mdp"}) data points as \code{data.frame}}}
 #'   
 #' @docType class
@@ -1961,37 +1942,37 @@ dataType <-
 #' The ID of this reaction
 #' 
 #' Schemas : \itemize{ \item rotor : assign IDs according to the position of the
-#' sample on the rotor (1 for the 1st sample, 2 for the 2nd, ...) \item plate
-#' (96/384/1536 well) : the IDs are assigned in a row-first/column-second
-#' manner. For each row, the samples are numbered according to the increasing
-#' column number. At the end of a row, the numbering starts at the first column
+#' sample on the rotor (1 for the 1st sample, 2 for the 2nd, ...) \item plate 
+#' (96/384/1536 well) : the IDs are assigned in a row-first/column-second 
+#' manner. For each row, the samples are numbered according to the increasing 
+#' column number. At the end of a row, the numbering starts at the first column 
 #' of the next row. An example for this type of plate can be found below : 
 #' \tabular{lllll}{ \tab 1  \tab 2  \tab 3 \tab ... \cr A   \tab 1  \tab 2  \tab
-#' 3 \tab     \cr B   \tab 13 \tab 14 \tab   \tab     \cr ... \tab    \tab   
-#' \tab   \tab    } or \tabular{lllll}{ \tab 1  \tab 2  \tab 3 \tab ... \cr 1  
-#' \tab 1  \tab 2  \tab 3 \tab     \cr 2   \tab 13 \tab 14 \tab   \tab     \cr 
-#' ... \tab    \tab    \tab   \tab    }
+#' 3 \tab     \cr B   \tab 13 \tab 14 \tab   \tab     \cr ... \tab    \tab \tab 
+#' \tab    } or \tabular{lllll}{ \tab 1  \tab 2  \tab 3 \tab ... \cr 1 \tab 1 
+#' \tab 2  \tab 3 \tab     \cr 2   \tab 13 \tab 14 \tab   \tab     \cr ... \tab 
+#' \tab    \tab   \tab    }
 #' 
-#' \item multi-array plate (BioTrove) : the IDs are assigned in a
-#' row-first/column-second manner, ignoring the organisation of sub-arrays. For
+#' \item multi-array plate (BioTrove) : the IDs are assigned in a 
+#' row-first/column-second manner, ignoring the organisation of sub-arrays. For 
 #' each row, the samples are numbered according to the increasing column number.
-#' At the end of a row, the the next row. An example for this type of plate can
+#' At the end of a row, the the next row. An example for this type of plate can 
 #' be found below : todo... }
 #' 
-#' @usage reactType$new(id, sample, data = NULL)
+#' @section Initialization: \code{reactType$new(id, sample, data = NULL)}
 #'   
-#' @param id \link{reactIdType}. See 'Details'.
-#' @param sample \link{idReferencesType}. SampleID - A reference to a sample.
-#' @param data \code{list} of \link{dataType}.
-#'   
-#' @section Fields: Names, types and description of the fields are equal to the 
-#'   class arguments.
+#'   @section Fields: \describe{
+#'   \item{\code{id}}{\link{reactIdType}. See 'Details'.} 
+#'   \item{\code{sample}}{\link{idReferencesType}. SampleID - A reference to a
+#'   sample.} 
+#'   \item{\code{data}}{\code{list} of \link{dataType}.}
+#'   }
 #'   
 #' @section Methods: \describe{\item{\code{AsDataFrame(dp.type = 
 #'   "adp")}}{Represents amplification (\code{dp.type = "adp"}) or melting 
-#'   (\code{dp.type = "mdp"}) data points of all targets as one
-#'   \code{data.frame}} \item{\code{Position(pcrformat)}}{Converts \code{react
-#'   id} to thew human readable form (i.e. '13' -> 'B1'). \code{pcrFormat} is
+#'   (\code{dp.type = "mdp"}) data points of all targets as one 
+#'   \code{data.frame}} \item{\code{Position(pcrformat)}}{Converts \code{react 
+#'   id} to thew human readable form (i.e. '13' -> 'B1'). \code{pcrFormat} is 
 #'   \code{pcrFormatType}. Only for 'ABC' '123' format!}}
 #'   
 #' @docType class
@@ -2077,13 +2058,12 @@ reactType <-
 #' Software name and version used to collect and analyze the data.\cr Inherits: 
 #' \link{rdmlBaseType}.
 #' 
-#' @usage dataCollectionSoftwareType$new(name, version)
-#'   
-#' @param name \link[assertthat]{is.string}.
-#' @param version \link[assertthat]{is.string}.
-#'   
-#' @section Fields: Names, types and description of the fields are equal to the 
-#'   class arguments.
+#' @section Initialization: \code{dataCollectionSoftwareType$new(name, version)}
+#'
+#'   @section Fields: \describe{   
+#' \item{\code{name}}{\link[assertthat]{is.string}.}
+#' \item{\code{version}}{\link[assertthat]{is.string}.}
+#'   }
 #'   
 #' @docType class
 #' @format An \code{\link{R6Class}} generator object.
@@ -2134,12 +2114,11 @@ dataCollectionSoftwareType <-
 #' }  
 #' \cr Inherits: \link{enumType}.
 #' 
-#' @usage cqDetectionMethodType$new(value)
+#' @section Initialization: \code{cqDetectionMethodType$new(value)}
 #'   
-#' @param value \link[assertthat]{is.string}.
-#'   
-#' @section Fields: Names, types and description of the fields are equal to the 
-#'   class arguments.
+#'   @section Fields: \describe{
+#' \item{\code{value}}{\link[assertthat]{is.string}.}
+#'   }
 #'   
 #' @docType class
 #' @format An \code{\link{R6Class}} generator object.
@@ -2160,7 +2139,7 @@ cqDetectionMethodType <-
 
 #' labelFormatType R6 class.
 #' 
-#' Label used for \link{pcrFormat}.
+#' Label used for \link{pcrFormatType}.
 #' Can take values:
 #' \describe{
 #' \item{ABC}{}
@@ -2169,12 +2148,11 @@ cqDetectionMethodType <-
 #' }  
 #' \cr Inherits: \link{enumType}.
 #' 
-#' @usage labelFormatType$new(value)
+#' @section Initialization: \code{labelFormatType$new(value)}
 #'   
-#' @param value \link[assertthat]{is.string}.
-#'   
-#' @section Fields: Names, types and description of the fields are equal to the 
-#'   class arguments.
+#'   @section Fields: \describe{
+#' \item{\code{value}}{\link[assertthat]{is.string}.}
+#'   }
 #'   
 #' @docType class
 #' @format An \code{\link{R6Class}} generator object.
@@ -2215,15 +2193,14 @@ labelFormatType <-
 #' data in list (1 column) form. If columns is 1 then the software should not
 #' display a column label.
 #' 
-#' @usage pcrFormatType$new(rows, columns, rowLabel, columnLabel)
+#' @section Initialization: \code{pcrFormatType$new(rows, columns, rowLabel, columnLabel)}
 #'   
-#' @param rows \link[assertthat]{is.count}.
-#' @param columns \link[assertthat]{is.count}.
-#' @param rowLabel \link{labelFormatType}.
-#' @param columnLabel \link{labelFormatType}.
-#'   
-#' @section Fields: Names, types and description of the fields are equal to the 
-#'   class arguments.
+#'   @section Fields: \describe{
+#' \item{\code{rows}}{\link[assertthat]{is.count}.}
+#' \item{\code{columns}}{\link[assertthat]{is.count}.}
+#' \item{\code{rowLabel}}{\link{labelFormatType}.}
+#' \item{\code{columnLabel}}{\link{labelFormatType}.}
+#'   }
 #'   
 #' @docType class
 #' @format An \code{\link{R6Class}} generator object.
@@ -2288,29 +2265,31 @@ pcrFormatType <-
 
 #' runType R6 class.
 #' 
-#' A run is a set of reactions performed in one "run", for example one plate,
+#' A run is a set of reactions performed in one "run", for example one plate, 
 #' one rotor, one array, one chip.\cr Inherits: \link{rdmlBaseType}.
 #' 
-#' @usage runType$new(id, description = NULL, documentation = NULL, experimenter
-#'   = NULL, instrument = NULL, dataCollectionSoftware = NULL,
-#'   backgroundDeterminationMethod = NULL, cqDetectionMethod = NULL,
-#'   thermalCyclingConditions = NULL, pcrFormat, runDate = NULL, react = NULL)
+#' @section Initialization: \code{runType$new(id, description = NULL, 
+#'   documentation = NULL, experimenter = NULL, instrument = NULL, 
+#'   dataCollectionSoftware = NULL, backgroundDeterminationMethod = NULL, 
+#'   cqDetectionMethod = NULL, thermalCyclingConditions = NULL, pcrFormat, 
+#'   runDate = NULL, react = NULL)}
 #'   
-#' @param id \link{idType}.
-#' @param description \link[assertthat]{is.string}.
-#' @param documentation \code{list} of \link{idReferencesType}.
-#' @param experimenter \code{list} of \link{idReferencesType}.
-#' @param instrument \link[assertthat]{is.string}. Description of the instrument used to aquire the data.
-#' @param dataCollectionSoftware \link{dataCollectionSoftwareType}. Description of the software used to analyze/collect the data.
-#' @param backgroundDeterminationMethod \link[base]{double}. Description of method used to determine the background.
-#' @param cqDetectionMethod \link[base]{double}. Description of method used to calculate the quantification cycle.
-#' @param thermalCyclingConditions \link[base]{double}. The program used to aquire the data.
-#' @param pcrFormat \link{adpsType}.
-#' @param runDate \link{adpsType}. Date and time stamp when the data was aquired.
-#' @param react \code{list} of \link{adpsType}.
-#'   
-#' @section Fields: Names, types and description of the fields are equal to the 
-#'   class arguments.
+#' @section Fields: \describe{ \item{\code{id}}{\link{idType}.} 
+#'   \item{\code{description}}{\link[assertthat]{is.string}.} 
+#'   \item{\code{documentation}}{\code{list} of \link{idReferencesType}.} 
+#'   \item{\code{experimenter}}{\code{list} of \link{idReferencesType}.} 
+#'   \item{\code{instrument}}{\link[assertthat]{is.string}. Description of the 
+#'   instrument used to aquire the data.} 
+#'   \item{\code{dataCollectionSoftware}}{\link{dataCollectionSoftwareType}. 
+#'   Description of the software used to analyze/collect the data.} 
+#'   \item{\code{backgroundDeterminationMethod}}{\link[base]{double}. 
+#'   Description of method used to determine the background. } 
+#'   \item{\code{cqDetectionMethod}}{\link[base]{double}. Description of method 
+#'   used to calculate the quantification cycle. } 
+#'   \item{\code{thermalCyclingConditions}}{\link[base]{double}. The program 
+#'   used to aquire the data.} \item{\code{pcrFormat}}{\link{adpsType}.} 
+#'   \item{\code{runDate}}{\link{adpsType}. Date and time stamp when the data 
+#'   was aquired.} \item{\code{react}}{\code{list} of \link{adpsType}.} }
 #'   
 #' @section Methods: \describe{\item{\code{AsDataFrame(dp.type = 
 #'   "adp")}}{Represents amplification (\code{dp.type = "adp"}) or melting 
@@ -2505,21 +2484,20 @@ runType <-
 #' An experiment can contain several runs (\link{runType}).\cr Inherits: 
 #' \link{rdmlBaseType}.
 #' 
-#' @usage experimentType$new(id, description = NULL, documentation = NULL, run =
-#'   NULL)
-#'   
-#' @param id \link{idType}.
-#' @param description \link[assertthat]{is.string}.
-#' @param documentation \code{list} of \link{idReferencesType}.
-#' @param run \code{list} of \link{runType}.
-#'   
-#' @section Fields: Names, types and description of the fields are equal to the 
-#'   class arguments.
+#' @section Initialization: \code{experimentType$new(id, description = NULL,
+#'   documentation = NULL, run = NULL)}
+#'
+#'   @section Fields: \describe{   
+#' \item{\code{id}}{\link{idType}.}
+#' \item{\code{description}}{\link[assertthat]{is.string}.}
+#' \item{\code{documentation}}{\code{list} of \link{idReferencesType}.}
+#' \item{\code{run}}{\code{list} of \link{runType}.}
+#' }
 #'   
 #' @section Methods: \describe{\item{\code{AsDataFrame(dp.type = "adp", 
 #'   long.table = FALSE)}}{Represents amplification (\code{dp.type = "adp"}) or 
-#'   melting (\code{dp.type = "mdp"}) data points as \code{data.frame}.
-#'   \code{long.table = TRUE} means that fluorescence data for all runs and
+#'   melting (\code{dp.type = "mdp"}) data points as \code{data.frame}. 
+#'   \code{long.table = TRUE} means that fluorescence data for all runs and 
 #'   reacts will be at one collumn.}}
 #'   
 #' @docType class
@@ -2614,10 +2592,8 @@ experimentType <-
 #' enzymes and continue the program afterwards. The temperature of the previous 
 #' step is maintained.\cr Inherits: \link{rdmlBaseType}.
 #' 
-#' @usage lidOpenType$new()
+#' @section Initialization: \code{lidOpenType$new()}
 #'   
-#' @section Fields: Names, types and description of the fields are equal to the 
-#'   class arguments.
 #'   
 #' @docType class
 #' @format An \code{\link{R6Class}} generator object.
@@ -2641,13 +2617,11 @@ lidOpenType <-
 #' This step allows to pause at a certain temperature. It is typically the last 
 #' step in an amplification protocol.\cr Inherits: \link{rdmlBaseType}.
 #' 
-#' @usage pauseType$new(temperature)
+#' @section Initialization: \code{pauseType$new(temperature)}
 #'   
-#' @param temperature \link[base]{numeric}. The temperature in degrees Celsius
-#'   to maintain during the pause.
-#'   
-#' @section Fields: Names, types and description of the fields are equal to the 
-#'   class arguments.
+#' @section Fields: \describe{ \item{\code{temperature}}{\link[base]{numeric}.
+#'   The temperature in degrees Celsius to maintain during the pause.}
+#'   }
 #'   
 #' @docType class
 #' @format An \code{\link{R6Class}} generator object.
@@ -2679,20 +2653,18 @@ pauseType <-
 
 #' loopType R6 class.
 #' 
-#' This step allows to form a loop or to exclude some steps. It allows to jump
-#' to a certain "goto" step for "repeat" times. If the "goto" step is higher
-#' than the step of the loop, "repeat" must be "0".\cr Inherits:
+#' This step allows to form a loop or to exclude some steps. It allows to jump 
+#' to a certain "goto" step for "repeat" times. If the "goto" step is higher 
+#' than the step of the loop, "repeat" must be "0".\cr Inherits: 
 #' \link{rdmlBaseType}.
 #' 
-#' @usage loopType$new(goto, repeat.n)
+#' @section Initialization: \code{loopType$new(goto, repeat.n)}
 #'   
-#' @param goto \link[base]{numeric}.  The step to go to to form the loop.
-#' @param repeat.n \link[base]{numeric}. Determines how often the loop is repeated. The first run through the loop is 
-#' counted as 0, the last loop is "repeat" - 1. The loop is run 
-#' through exactly "repeat" times.
-#'   
-#' @section Fields: Names, types and description of the fields are equal to the 
-#'   class arguments.
+#' @section Fields: \describe{ \item{\code{goto}}{\link[base]{numeric}.  The
+#'   step to go to to form the loop.}
+#' \item{\code{repeat.n}}{\link[base]{numeric}. Determines how often the loop is 
+#'   repeated. The first run through the loop is counted as 0, the last loop is 
+#'   "repeat" - 1. The loop is run through exactly "repeat" times.}}
 #'   
 #' @docType class
 #' @format An \code{\link{R6Class}} generator object.
@@ -2740,12 +2712,11 @@ loopType <-
 #' }  
 #' \cr Inherits: \link{enumType}.
 #' 
-#' @usage measureType$new(value)
-#'   
-#' @param value \link[assertthat]{is.string}.
-#'   
-#' @section Fields: Names, types and description of the fields are equal to the 
-#'   class arguments.
+#' @section Initialization: \code{measureType$new(value)}
+#' 
+#'   @section Fields: \describe{ 
+#' \item{\code{value}}{\link[assertthat]{is.string}.}
+#' }
 #'   
 #' @docType class
 #' @format An \code{\link{R6Class}} generator object.
@@ -2766,25 +2737,23 @@ measureType <-
 #' 
 #' Parent class for inner usage. Inherits: \link{rdmlBaseType}.
 #' 
-#' @usage baseTemperatureType$new(duration, temperatureChange = NULL, 
-#'   durationChange = NULL, measure = NULL, ramp = NULL)
+#' @section Initialization: \code{baseTemperatureType$new(duration, 
+#'   temperatureChange = NULL,  durationChange = NULL, measure = NULL, ramp = 
+#'   NULL)}
 #'   
-#' @param duration \link[assertthat]{is.count}. The duration of this step in 
-#'   seconds.
-#' @param temperatureChange \link[base]{double}. The change of the temperature 
-#'   from one cycle to the next: actual temperature = temperature + 
-#'   (temperatureChange * cycle counter)
-#' @param durationChange \link[assertthat]{is.count}. The change of the duration
-#'   from one cycle to the next: actual duration = duration + (durationChange * 
-#'   cycle counter)
-#' @param measure \link{measureType}. Indicates to make a measurement and store 
-#'   it as meltcurve or real-time data.
-#' @param ramp \link[base]{double}. The allowed temperature change from one step
-#'   to the next in degrees Celsius per second. No value means maximal change 
-#'   rate.
-#'   
-#' @section Fields: Names, types and description of the fields are equal to the 
-#'   class arguments.
+#' @section Fields: \describe{ 
+#'   \item{\code{duration}}{\link[assertthat]{is.count}. The duration of this
+#'   step in } seconds. \item{\code{temperatureChange}}{\link[base]{double}. The
+#'   change of the temperature from one cycle to the next: actual temperature
+#'   = temperature + (temperatureChange * cycle counter)}
+#'   \item{\code{durationChange}}{\link[assertthat]{is.count}. The change of the
+#'   duration from one cycle to the next: actual duration = duration +
+#'   (durationChange * cycle counter)} \item{\code{measure}}{\link{measureType}.
+#'   Indicates to make a measurement and store it as meltcurve or real-time
+#'   data.} \item{\code{ramp}}{\link[base]{double}. The allowed temperature
+#'   change from one step to the next in degrees Celsius per second. No value
+#'   means maximal change rate.}
+#'   }
 #'   
 #' @docType class
 #' @format An \code{\link{R6Class}} generator object.
@@ -2860,14 +2829,12 @@ baseTemperatureType <-
 #' This step keeps a constant temperature on the heat block. Inherits: 
 #' \link{baseTemperatureType}.
 #' 
-#' @usage temperatureType$new(temperature, ...)
+#' @section Initialization: \code{temperatureType$new(temperature, ...)}
 #'   
-#' @param temperature \link[base]{double}. The temperature of the step in
-#'   degrees Celsius.
-#' @param ... Params of parent class \link{baseTemperatureType}.
-#'   
-#' @section Fields: Names, types and description of the fields are equal to the 
-#'   class arguments.
+#' @section Fields: \describe{ \item{\code{temperature}}{\link[base]{double}.
+#'   The temperature of the step in  degrees Celsius.}
+#' \item{\code{...}}{ Params of parent class \link{baseTemperatureType}.}
+#' } 
 #'   
 #' @docType class
 #' @format An \code{\link{R6Class}} generator object.
@@ -2902,16 +2869,15 @@ temperatureType <-
 #' This step forms a temperature gradient across the PCR block. Inherits: 
 #' \link{baseTemperatureType}.
 #' 
-#' @usage gradientType$new(highTemperature, lowTemperature, ...)
+#' @section Initialization: \code{gradientType$new(highTemperature, 
+#'   lowTemperature, ...)}
 #'   
-#' @param highTemperature \link[base]{double}. The high temperature of the
-#'   gradient in degrees Celsius.
-#' @param lowTemperature \link[base]{double}. The low temperature of the
-#'   gradient in degrees Celsius.
-#' @param ... Params of parent class \link{baseTemperatureType}.
-#'   
-#' @section Fields: Names, types and description of the fields are equal to the 
-#'   class arguments.
+#' @section Fields: \describe{ 
+#'   \item{\code{highTemperature}}{\link[base]{double}. The high temperature of
+#'   thegradient in degrees Celsius.}
+#'   \item{\code{lowTemperature}}{\link[base]{double}. The low temperature of
+#'   the gradient in degrees Celsius.}
+#' \item{\code{...}}{ Params of parent class \link{baseTemperatureType}. }}
 #'   
 #' @docType class
 #' @format An \code{\link{R6Class}} generator object.
@@ -2957,20 +2923,19 @@ gradientType <-
 #' 
 #' Inherits: \link{rdmlBaseType}.
 #' 
-#' @usage stepType$new(nr, description = NULL, temperature = NULL, gradient = 
-#'   NULL, loop = NULL, pause = NULL, lidOpen = NULL)
+#' @section Initialization: \code{stepType$new(nr, description = NULL, 
+#'   temperature = NULL, gradient = NULL, loop = NULL, pause = NULL, lidOpen = 
+#'   NULL)}
 #'   
-#' @param nr \link[assertthat]{is.count}. The incremental number of the step.
-#'   First step should be nr = 1 and then increment each step by + 1.
-#' @param description \link[assertthat]{is.string}.
-#' @param temperature \link{temperatureType}.
-#' @param gradient \link{gradientType}.
-#' @param loop \link{loopType}.
-#' @param pause \link{pauseType}.
-#' @param lidOpen \link{lidOpenType}.
-#'   
-#' @section Fields: Names, types and description of the fields are equal to the 
-#'   class arguments.
+#' @section Fields: \describe{ \item{\code{nr}}{\link[assertthat]{is.count}. The
+#'   incremental number of the step. First step should be nr = 1 and then
+#'   increment each step by + 1. }
+#'   \item{\code{description}}{\link[assertthat]{is.string}.} 
+#'   \item{\code{temperature}}{\link{temperatureType}.} 
+#'   \item{\code{gradient}}{\link{gradientType}.} 
+#'   \item{\code{loop}}{\link{loopType}.} \item{\code{pause}}{\link{pauseType}.}
+#'   \item{\code{lidOpen}}{\link{lidOpenType}.}
+#'   }
 #'   
 #' @docType class
 #' @format An \code{\link{R6Class}} generator object.
@@ -3074,20 +3039,20 @@ stepType <-
 #' 
 #' A cycling program for PCR or to amplify cDNA. Inherits: \link{rdmlBaseType}.
 #' 
-#' @usage thermalCyclingConditionsType$new(id, description = NULL, documentation
-#'   = NULL, lidTemperature = NULL, experimenter = NULL, step)
+#' @section Initialization: \code{thermalCyclingConditionsType$new(id, 
+#'   description = NULL, documentation = NULL, lidTemperature = NULL, 
+#'   experimenter = NULL, step)}
 #'   
-#' @param id \link{idType}.
-#' @param description \link[assertthat]{is.string}.
-#' @param documentation \code{list} of \link{idReferencesType}.
-#' @param lidTemperature \link[base]{double}. The temperature in degrees Celsius
-#'   of the lid during cycling.
-#' @param experimenter \code{list} of \link{idReferencesType}. Reference to the person who made
-#'   or uses this protocol.
-#' @param step \code{list} of \link{stepType}. The steps a protocol runs through to amplify DNA.
-#'   
-#' @section Fields: Names, types and description of the fields are equal to the 
-#'   class arguments.
+#' @section Fields: \describe{ \item{\code{id}}{\link{idType}.} 
+#'   \item{\code{description}}{\link[assertthat]{is.string}.} 
+#'   \item{\code{documentation}}{\code{list} of \link{idReferencesType}.} 
+#'   \item{\code{lidTemperature}}{\link[base]{double}. The temperature in
+#'   degrees Celsius of the lid during cycling. }
+#'   \item{\code{experimenter}}{\code{list} of \link{idReferencesType}.
+#'   Reference to the person who made or uses this protocol. }
+#'   \item{\code{step}}{\code{list} of \link{stepType}. The steps a protocol
+#'   runs through to amplify DNA.}
+#'   }
 #'   
 #' @docType class
 #' @format An \code{\link{R6Class}} generator object.

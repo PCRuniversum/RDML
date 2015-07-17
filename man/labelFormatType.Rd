@@ -6,13 +6,10 @@
 \title{labelFormatType R6 class.}
 \format{An \code{\link{R6Class}} generator object.}
 \usage{
-labelFormatType$new(value)
-}
-\arguments{
-\item{value}{\link[assertthat]{is.string}.}
+labelFormatType
 }
 \description{
-Label used for \link{pcrFormat}.
+Label used for \link{pcrFormatType}.
 Can take values:
 \describe{
 \item{ABC}{}
@@ -21,9 +18,14 @@ Can take values:
 }
 \cr Inherits: \link{enumType}.
 }
+\section{Initialization}{
+ \code{labelFormatType$new(value)}
+}
+
 \section{Fields}{
- Names, types and description of the fields are equal to the
-  class arguments.
+ \describe{
+\item{\code{value}}{\link[assertthat]{is.string}.}
+  }
 }
 \keyword{datasets}
 

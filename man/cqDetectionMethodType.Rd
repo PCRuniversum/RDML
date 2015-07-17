@@ -6,10 +6,7 @@
 \title{cqDetectionMethodType R6 class.}
 \format{An \code{\link{R6Class}} generator object.}
 \usage{
-cqDetectionMethodType$new(value)
-}
-\arguments{
-\item{value}{\link[assertthat]{is.string}.}
+cqDetectionMethodType
 }
 \description{
 The method used to determine the Cq value.
@@ -22,9 +19,14 @@ Can take values:
 }
 \cr Inherits: \link{enumType}.
 }
+\section{Initialization}{
+ \code{cqDetectionMethodType$new(value)}
+}
+
 \section{Fields}{
- Names, types and description of the fields are equal to the
-  class arguments.
+ \describe{
+\item{\code{value}}{\link[assertthat]{is.string}.}
+  }
 }
 \keyword{datasets}
 

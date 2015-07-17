@@ -6,20 +6,21 @@
 \title{commercialAssayType R6 class.}
 \format{An \code{\link{R6Class}} generator object.}
 \usage{
-commercialAssayType$new(company, orderNumber)
-}
-\arguments{
-\item{company}{\link[assertthat]{is.string}.}
-
-\item{orderNumber}{\link[assertthat]{is.string}.}
+commercialAssayType
 }
 \description{
 For some commercial assays, the primer sequences may be unknown. This element
 allows to describe commercial assays.\cr Inherits: \link{rdmlBaseType}.
 }
+\section{Initialization}{
+ \code{commercialAssayType$new(company, orderNumber)}
+}
+
 \section{Fields}{
- Names, types and description of the fields are equal to the
-  class arguments.
+ \describe{
+\item{\code{company}}{\link[assertthat]{is.string}.}
+\item{\code{orderNumber}}{\link[assertthat]{is.string}.}
+  }
 }
 \keyword{datasets}
 

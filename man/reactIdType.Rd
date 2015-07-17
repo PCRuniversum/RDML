@@ -6,17 +6,19 @@
 \title{reactIdType R6 class.}
 \format{An \code{\link{R6Class}} generator object.}
 \usage{
-reactIdType$new(id)
-}
-\arguments{
-\item{id}{\link[assertthat]{is.count}. Identificator.}
+reactIdType
 }
 \description{
 Contains identificator for reactType.\cr Inherits: \link{rdmlBaseType}.
 }
+\section{Initialization}{
+ \code{reactIdType$new(id)}
+}
+
 \section{Fields}{
- Names, types and description of the fields are equal to the
-  class arguments.
+ \describe{
+\item{\code{id}}{\link[assertthat]{is.count}. Identificator.}
+}
 }
 \keyword{datasets}
 

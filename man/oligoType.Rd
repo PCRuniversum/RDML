@@ -6,21 +6,24 @@
 \title{oligoType R6 class.}
 \format{An \code{\link{R6Class}} generator object.}
 \usage{
-oligoType$new(threePrimeTag = NULL, fivePrimeTag = NULL, sequence)
-}
-\arguments{
-\item{threePrimeTag}{\link[assertthat]{is.string}. Description of three prime modification (if present).}
-
-\item{fivePrimeTag}{\link[assertthat]{is.string}. Description of five prime modification (if present).}
-
-\item{sequence}{\link[assertthat]{is.string}.}
+oligoType
 }
 \description{
 \cr Inherits: \link{rdmlBaseType}.
 }
+\section{Initialization}{
+ \code{oligoType$new(threePrimeTag = NULL,
+  fivePrimeTag = NULL, sequence)}
+}
+
 \section{Fields}{
- Names, types and description of the fields are equal to the
-  class arguments.
+ \describe{
+  \item{\code{threePrimeTag}}{\link[assertthat]{is.string}. Description of
+  three prime modification (if present). }
+  \item{\code{fivePrimeTag}}{\link[assertthat]{is.string}. Description of
+  five prime modification (if present).}
+  \item{\code{sequence}}{\link[assertthat]{is.string}.}
+  }
 }
 \keyword{datasets}
 

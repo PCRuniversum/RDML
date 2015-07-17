@@ -6,23 +6,25 @@
 \title{cdnaSynthesisMethodType R6 class.}
 \format{An \code{\link{R6Class}} generator object.}
 \usage{
-cdnaSynthesisMethodType$new(enzyme = NULL, primingMethod = NULL, dnaseTreatment = NULL, thermalCyclingConditions = NULL)
-}
-\arguments{
-\item{enzyme}{\link[assertthat]{is.float}. Enzyme used for reverse transcription.}
-
-\item{primingMethod}{\link{primingMethodType}.}
-
-\item{dnaseTreatment}{\link[assertthat]{is.flag} True if RNA was DNAse treated prior cDNA synthesis.}
-
-\item{thermalCyclingConditions}{\link{idReferencesType}.}
+cdnaSynthesisMethodType
 }
 \description{
 Description of the cDNA synthesis method.\cr Inherits: \link{rdmlBaseType}.
 }
+\section{Initialization}{
+ \code{cdnaSynthesisMethodType$new(enzyme = NULL,
+  primingMethod = NULL, dnaseTreatment = NULL, thermalCyclingConditions =
+  NULL)}
+}
+
 \section{Fields}{
- Names, types and description of the fields are equal to the
-  class arguments.
+ \describe{
+  \item{\code{enzyme}}{\link[base]{is.double}. Enzyme used for reverse
+  transcription.} \item{\code{primingMethod}}{\link{primingMethodType}.}
+  \item{\code{dnaseTreatment}}{\link[assertthat]{is.flag} True if RNA was
+  DNAse treated prior cDNA synthesis.}
+  \item{\code{thermalCyclingConditions}}{\link{idReferencesType}.}
+  }
 }
 \keyword{datasets}
 

@@ -6,10 +6,7 @@
 \title{primingMethodType R6 class.}
 \format{An \code{\link{R6Class}} generator object.}
 \usage{
-primingMethodType$new(value)
-}
-\arguments{
-\item{value}{\link[assertthat]{is.string}. Value.}
+primingMethodType
 }
 \description{
 The primers used to reverse transcribe the RNA to cDNA. Can take values:
@@ -24,9 +21,14 @@ The primers used to reverse transcribe the RNA to cDNA. Can take values:
 \details{
 \cr Inherits: \link{enumType}.
 }
+\section{Initialization}{
+ \code{primingMethodType$new(value)}
+}
+
 \section{Fields}{
- Names, types and description of the fields are equal to the
-  class arguments.
+ \describe{
+\item{\code{value}}{\link[assertthat]{is.string}. Value.}
+  }
 }
 \keyword{datasets}
 

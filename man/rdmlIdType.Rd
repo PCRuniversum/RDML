@@ -6,24 +6,25 @@
 \title{rdmlIdType R6 class.}
 \format{An \code{\link{R6Class}} generator object.}
 \usage{
-rdmlIdType$new(publisher, serialNumber, MD5Hash = NULL)
-}
-\arguments{
-\item{publisher}{\link[assertthat]{is.string}. RDML file publisher.}
-
-\item{serialNumber}{\link[assertthat]{is.string}. Serial number.}
-
-\item{MD5Hash}{\link[assertthat]{is.string}. An MD5Hash calculated over the
-  complete file after removing all rdmlIDTypes and all whitespaces between
-  elements.}
+rdmlIdType
 }
 \description{
 This element can be used to assign a publisher and id to the RDML file.\cr
 Inherits: \link{rdmlBaseType}.
 }
+\section{Initialization}{
+ \code{rdmlIdType$new(publisher, serialNumber,
+  MD5Hash = NULL)}
+}
+
 \section{Fields}{
- Names, types and description of the fields are equal to the
-  class arguments.
+ \describe{
+  \item{\code{publisher}}{\link[assertthat]{is.string}. RDML file publisher.}
+  \item{\code{serialNumber}}{\link[assertthat]{is.string}. Serial number.}
+  \item{\code{MD5Hash}}{\link[assertthat]{is.string}. An MD5Hash calculated
+  over the complete file after removing all rdmlIDTypes and all whitespaces
+  between elements.}
+  }
 }
 \keyword{datasets}
 
