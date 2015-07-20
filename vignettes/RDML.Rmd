@@ -1,6 +1,6 @@
 ---
 title: "Using RDML package"
-author: "Konstantin A. Blagodatskikh"
+author: "Konstantin A. Blagodatskikh, Stefan Rodiger"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
