@@ -5,9 +5,7 @@
 #' @param to.merge \code{RDML} objects that should be merged.
 #' 
 #' @docType methods
-#' @name Merge
-#' @aliases RDML.Merge
-#' @rdname merge-method
+#' @name MergeRDMLs
 #' @include RDML.R
 #' @export
 #' @examples
@@ -17,8 +15,8 @@
 #' lc96 <- RDML$new(filename)
 #' filename <- paste(PATH, "/extdata/", "stepone_std.rdml", sep ="")
 #' stepone <- RDML$new(filename)
-#' lc96$Merge(stepone)
-#' lc96$AsTable()
+#' merged <- MergeRDMLs(list(lc96,stepone))
+#' merged$AsDendrogram()
 #' }
 MergeRDMLs <- function(to.merge) {
   baseRDML <- to.merge[[1]]$clone(deep = TRUE)
