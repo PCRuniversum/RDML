@@ -14,7 +14,7 @@ Can take values:
 \item{real time}{}
 \item{meltcurve}{}
 }
-\cr Inherits: \link{enumType}.
+Inherits: \link{enumType}.
 }
 \section{Initialization}{
  \code{measureType$new(value)}

@@ -11,7 +11,7 @@ loopType
 \description{
 This step allows to form a loop or to exclude some steps. It allows to jump
 to a certain "goto" step for "repeat" times. If the "goto" step is higher
-than the step of the loop, "repeat" must be "0".\cr Inherits:
+than the step of the loop, "repeat" must be "0".Inherits:
 \link{rdmlBaseType}.
 }
 \section{Initialization}{

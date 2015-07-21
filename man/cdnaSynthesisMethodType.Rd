@@ -9,7 +9,7 @@
 cdnaSynthesisMethodType
 }
 \description{
-Description of the cDNA synthesis method.\cr Inherits: \link{rdmlBaseType}.
+Description of the cDNA synthesis method.Inherits: \link{rdmlBaseType}.
 }
 \section{Initialization}{
  \code{cdnaSynthesisMethodType$new(enzyme = NULL,

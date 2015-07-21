@@ -19,7 +19,7 @@ The primers used to reverse transcribe the RNA to cDNA. Can take values:
 }
 }
 \details{
-\cr Inherits: \link{enumType}.
+Inherits: \link{enumType}.
 }
 \section{Initialization}{
  \code{primingMethodType$new(value)}

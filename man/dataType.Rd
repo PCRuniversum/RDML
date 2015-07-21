@@ -9,7 +9,7 @@
 dataType
 }
 \description{
-\cr Inherits: \link{rdmlBaseType}.
+Inherits: \link{rdmlBaseType}.
 }
 \section{Initialization}{
  \code{dataType$new(tar, cq = NULL, excl = NULL, adp

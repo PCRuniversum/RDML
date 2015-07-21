@@ -10,7 +10,7 @@ annotationType
 }
 \description{
 These elements should be used to annotate samples by setting a property and a
-value. A property could be sex, the value M or F.\cr Inherits:
+value. A property could be sex, the value M or F.Inherits:
 \link{rdmlBaseType}.
 }
 \section{Fields}{

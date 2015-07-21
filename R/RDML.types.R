@@ -211,7 +211,7 @@ rdmlIdType <-
 
 #' idType R6 class.
 #' 
-#' Contains identificator for varius RDML types.\cr Inherits: \link{rdmlBaseType}.
+#' Contains identificator for varius RDML types.Inherits: \link{rdmlBaseType}.
 #' 
 #' @section Initialization: \code{idType$new(id)}
 #'
@@ -251,7 +251,7 @@ idType <-
 
 #' reactIdType R6 class.
 #' 
-#' Contains identificator for reactType.\cr Inherits: \link{rdmlBaseType}.
+#' Contains identificator for reactType.Inherits: \link{rdmlBaseType}.
 #' 
 #' @section Initialization: \code{reactIdType$new(id)}
 #'
@@ -291,7 +291,7 @@ reactIdType <-
 
 #' idReferencesType R6 class.
 #' 
-#' Contains id of another RDML object.\cr Inherits: \link{idType}.
+#' Contains id of another RDML object.Inherits: \link{idType}.
 #' 
 #' @section Initialization: \code{idReferencesType$new(id)}
 #' 
@@ -311,7 +311,7 @@ idReferencesType <-
 
 #' experimenterType R6 class.
 #' 
-#' Contact details of the experimenter.\cr Inherits: \link{rdmlBaseType}.
+#' Contact details of the experimenter.Inherits: \link{rdmlBaseType}.
 #' 
 #' @section Initialization: \code{experimenterType$new(id, firstName, lastName,
 #'   email = NULL, labName = NULL, labAddress = NULL)}
@@ -405,7 +405,7 @@ experimenterType <-
 #' documentationType R6 class.
 #' 
 #' These elements should be used if the same description applies to many
-#' samples, targets or experiments.\cr Inherits: \link{rdmlBaseType}.
+#' samples, targets or experiments.Inherits: \link{rdmlBaseType}.
 #' 
 #' @section Initialization: \code{documentationType$new(id, text = NULL)}
 #'   
@@ -453,7 +453,7 @@ documentationType <-
 
 #' dyeType R6 class.
 #' 
-#' Information on a dye.\cr Inherits: \link{rdmlBaseType}.
+#' Information on a dye.Inherits: \link{rdmlBaseType}.
 #' 
 #' @section Initialization: \code{dyeType$new(id, description = NULL)}
 #'   
@@ -501,7 +501,7 @@ dyeType <-
 
 #' xRefType R6 class.
 #' 
-#' \cr Inherits: \link{rdmlBaseType}.
+#' Inherits: \link{rdmlBaseType}.
 #' 
 #' @section Initialization: \code{xRefType$new(name = NULL, id = NULL)}
 #'   
@@ -552,7 +552,7 @@ xRefType <-
 #' annotationType R6 class.
 #' 
 #' These elements should be used to annotate samples by setting a property and a
-#' value. A property could be sex, the value M or F.\cr Inherits:
+#' value. A property could be sex, the value M or F.Inherits:
 #' \link{rdmlBaseType}.
 #' 
 #' @section Fields: \describe{ \item{property}{\link[assertthat]{is.string}.
@@ -597,7 +597,7 @@ annotationType <-
 
 #' quantityType R6 class.
 #' 
-#' A quantity is always defined by its value and its unit.\cr Inherits:
+#' A quantity is always defined by its value and its unit.Inherits:
 #' \link{rdmlBaseType}.
 #' 
 #' @section Initialization: \code{quantityType$new(value, unit)}
@@ -648,7 +648,7 @@ quantityType <-
 
 #' cdnaSynthesisMethodType R6 class.
 #' 
-#' Description of the cDNA synthesis method.\cr Inherits: \link{rdmlBaseType}.
+#' Description of the cDNA synthesis method.Inherits: \link{rdmlBaseType}.
 #' 
 #' @section Initialization: \code{cdnaSynthesisMethodType$new(enzyme = NULL, 
 #'   primingMethod = NULL, dnaseTreatment = NULL, thermalCyclingConditions = 
@@ -725,7 +725,7 @@ cdnaSynthesisMethodType <-
 
 #' templateQuantityType R6 class.
 #' 
-#' \cr Inherits: \link{rdmlBaseType}.
+#' Inherits: \link{rdmlBaseType}.
 #' 
 #' @section Initialization: \code{templateQuantityType$new(conc, nucleotide)}
 #'   
@@ -826,7 +826,7 @@ enumType <-
 #' \item{pos}{positive control}
 #' \item{opt}{optical calibrator sample}}
 #' 
-#' \cr Inherits: \link{enumType}.
+#' Inherits: \link{enumType}.
 #' 
 #' @section Initialization: \code{sampleTypeType$new(value)}
 #'  
@@ -862,7 +862,7 @@ sampleTypeType <-
 #' \item{other}{other unit (must be linear, no exponents or logarithms allowed) }
 #' }
 #' 
-#' \cr Inherits: \link{enumType}.
+#' Inherits: \link{enumType}.
 #' 
 #' @section Initialization: \code{quantityUnitType$new(value)}
 #'   
@@ -895,7 +895,7 @@ quantityUnitType <-
 #' \item{other}{} 
 #' }
 #' 
-#' \cr Inherits: \link{enumType}.
+#' Inherits: \link{enumType}.
 #' 
 #' @section Initialization: \code{primingMethodType$new(value)}
 #'   
@@ -931,7 +931,7 @@ primingMethodType <-
 #' \item{RNA}{}
 #' }
 #' 
-#' \cr Inherits: \link{enumType}.
+#' Inherits: \link{enumType}.
 #' 
 #' @section Initialization: \code{nucleotideType$new(value)}
 #'   
@@ -1141,7 +1141,7 @@ sampleType <-
 
 #' oligoType R6 class.
 #' 
-#' \cr Inherits: \link{rdmlBaseType}.
+#' Inherits: \link{rdmlBaseType}.
 #' 
 #' @section Initialization: \code{oligoType$new(threePrimeTag = NULL, 
 #'   fivePrimeTag = NULL, sequence)}
@@ -1203,7 +1203,7 @@ oligoType <-
 
 #' sequencesType R6 class.
 #' 
-#' \cr Inherits: \link{rdmlBaseType}.
+#' Inherits: \link{rdmlBaseType}.
 #' 
 #' @section Initialization: \code{sequencesType$new(forwardPrimer = NULL, reversePrimer = NULL, probe1 = NULL, probe2 = NULL, amplicon = NULL)}
 #'   
@@ -1295,7 +1295,7 @@ sequencesType <-
 #' commercialAssayType R6 class.
 #' 
 #' For some commercial assays, the primer sequences may be unknown. This element 
-#' allows to describe commercial assays.\cr Inherits: \link{rdmlBaseType}.
+#' allows to describe commercial assays.Inherits: \link{rdmlBaseType}.
 #' 
 #' @section Initialization: \code{commercialAssayType$new(company, orderNumber)}
 #'   
@@ -1348,7 +1348,7 @@ commercialAssayType <-
 #' \item{ref}{reference target}
 #' \item{toi}{target of interest}
 #' } 
-#' \cr Inherits: \link{enumType}.
+#' Inherits: \link{enumType}.
 #' 
 #' @section Initialization: \code{targetTypeType$new(value)}
 #' 
@@ -1374,7 +1374,7 @@ targetTypeType <-
 #' targetType R6 class.
 #' 
 #' A target is a defined PCR reaction. PCR reactions for the same gene which 
-#' differ in primer sequences are considered different targets.\cr Inherits: 
+#' differ in primer sequences are considered different targets.Inherits: 
 #' \link{rdmlBaseType}.
 #' 
 #' @section Initialization: \code{targetType$new(id, description = NULL, 
@@ -1644,7 +1644,7 @@ targetType <-
 #' point was collected.} \item{tmp}{(optional) Temperature - The temperature in 
 #' degrees Celsius at the time of measurement.} \item{fluor}{Fluorescence - The 
 #' fluorescence intensity measured without any correction. The fluorescence 
-#' intensity must not be baseline corrected.}} \cr Inherits: 
+#' intensity must not be baseline corrected.}} Inherits: 
 #' \link{rdmlBaseType}.
 #' 
 #' @section Initialization: \code{adpsType$new(fpoints)}
@@ -1718,7 +1718,7 @@ adpsType <-
 #' point must be unique) Temperature - The temperature in degrees Celsius at the
 #' time of measurement.} \item{fluor}{Fluorescence - The fluorescence intensity 
 #' measured without any correction. The fluorescence intensity must not be 
-#' baseline corrected.}} \cr Inherits: \link{rdmlBaseType}.
+#' baseline corrected.}} Inherits: \link{rdmlBaseType}.
 #' 
 #' @section Initialization: \code{mdpsType$new(fpoints)}
 #'   
@@ -1775,7 +1775,7 @@ mdpsType <-
 
 #' dataType R6 class.
 #' 
-#' \cr Inherits: \link{rdmlBaseType}.
+#' Inherits: \link{rdmlBaseType}.
 #' 
 #' @section Initialization: \code{dataType$new(tar, cq = NULL, excl = NULL, adp 
 #'   = NULL, mdp = NULL, endPt = NULL, bgFluor = NULL, bgFluorSlp = NULL, 
@@ -1937,7 +1937,7 @@ dataType <-
 #' 
 #' A reaction is an independent chemical reaction corresponding for example to a
 #' well in a 96 well plate, a capillary in a rotor, a through-hole on an array, 
-#' etc. \cr Inherits: \link{rdmlBaseType}.
+#' etc. Inherits: \link{rdmlBaseType}.
 #' 
 #' The ID of this reaction
 #' 
@@ -2055,7 +2055,7 @@ reactType <-
 
 #' dataCollectionSoftwareType R6 class.
 #' 
-#' Software name and version used to collect and analyze the data.\cr Inherits: 
+#' Software name and version used to collect and analyze the data.Inherits: 
 #' \link{rdmlBaseType}.
 #' 
 #' @section Initialization: \code{dataCollectionSoftwareType$new(name, version)}
@@ -2112,7 +2112,7 @@ dataCollectionSoftwareType <-
 #' \item{second derivative maximum}{}
 #' \item{other}{}
 #' }  
-#' \cr Inherits: \link{enumType}.
+#' Inherits: \link{enumType}.
 #' 
 #' @section Initialization: \code{cqDetectionMethodType$new(value)}
 #'   
@@ -2146,7 +2146,7 @@ cqDetectionMethodType <-
 #' \item{123}{}
 #' \item{A1a1}{}
 #' }  
-#' \cr Inherits: \link{enumType}.
+#' Inherits: \link{enumType}.
 #' 
 #' @section Initialization: \code{labelFormatType$new(value)}
 #'   
@@ -2173,7 +2173,7 @@ labelFormatType <-
 #' pcrFormatType R6 class.
 #' 
 #' The format of the run - This allows the software to display the data 
-#' according to the qPCR instrument run format.\cr Inherits: 
+#' according to the qPCR instrument run format.Inherits: 
 #' \link{rdmlBaseType}.
 #' 
 #' Rotor formats always have 1 column; rows correspond to the number of places 
@@ -2266,7 +2266,7 @@ pcrFormatType <-
 #' runType R6 class.
 #' 
 #' A run is a set of reactions performed in one "run", for example one plate, 
-#' one rotor, one array, one chip.\cr Inherits: \link{rdmlBaseType}.
+#' one rotor, one array, one chip.Inherits: \link{rdmlBaseType}.
 #' 
 #' @section Initialization: \code{runType$new(id, description = NULL, 
 #'   documentation = NULL, experimenter = NULL, instrument = NULL, 
@@ -2481,7 +2481,7 @@ runType <-
 
 #' experimentType R6 class.
 #' 
-#' An experiment can contain several runs (\link{runType}).\cr Inherits: 
+#' An experiment can contain several runs (\link{runType}).Inherits: 
 #' \link{rdmlBaseType}.
 #' 
 #' @section Initialization: \code{experimentType$new(id, description = NULL,
@@ -2590,7 +2590,7 @@ experimentType <-
 #' This step waits for the user to open the lid and continues afterwards. It 
 #' allows to stop the program and to wait for the user to add for example 
 #' enzymes and continue the program afterwards. The temperature of the previous 
-#' step is maintained.\cr Inherits: \link{rdmlBaseType}.
+#' step is maintained.Inherits: \link{rdmlBaseType}.
 #' 
 #' @section Initialization: \code{lidOpenType$new()}
 #'   
@@ -2615,7 +2615,7 @@ lidOpenType <-
 #' pauseType R6 class.
 #' 
 #' This step allows to pause at a certain temperature. It is typically the last 
-#' step in an amplification protocol.\cr Inherits: \link{rdmlBaseType}.
+#' step in an amplification protocol.Inherits: \link{rdmlBaseType}.
 #' 
 #' @section Initialization: \code{pauseType$new(temperature)}
 #'   
@@ -2655,7 +2655,7 @@ pauseType <-
 #' 
 #' This step allows to form a loop or to exclude some steps. It allows to jump 
 #' to a certain "goto" step for "repeat" times. If the "goto" step is higher 
-#' than the step of the loop, "repeat" must be "0".\cr Inherits: 
+#' than the step of the loop, "repeat" must be "0".Inherits: 
 #' \link{rdmlBaseType}.
 #' 
 #' @section Initialization: \code{loopType$new(goto, repeat.n)}
@@ -2710,7 +2710,7 @@ loopType <-
 #' \item{real time}{}
 #' \item{meltcurve}{}
 #' }  
-#' \cr Inherits: \link{enumType}.
+#' Inherits: \link{enumType}.
 #' 
 #' @section Initialization: \code{measureType$new(value)}
 #' 

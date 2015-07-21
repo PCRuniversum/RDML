@@ -16,7 +16,7 @@ Can take values:
 \item{123}{}
 \item{A1a1}{}
 }
-\cr Inherits: \link{enumType}.
+Inherits: \link{enumType}.
 }
 \section{Initialization}{
  \code{labelFormatType$new(value)}

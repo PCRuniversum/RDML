@@ -17,7 +17,7 @@ Can take values:
 \item{second derivative maximum}{}
 \item{other}{}
 }
-\cr Inherits: \link{enumType}.
+Inherits: \link{enumType}.
 }
 \section{Initialization}{
  \code{cqDetectionMethodType$new(value)}

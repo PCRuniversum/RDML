@@ -9,7 +9,7 @@
 experimentType
 }
 \description{
-An experiment can contain several runs (\link{runType}).\cr Inherits:
+An experiment can contain several runs (\link{runType}).Inherits:
 \link{rdmlBaseType}.
 }
 \section{Initialization}{

@@ -10,7 +10,7 @@ pauseType
 }
 \description{
 This step allows to pause at a certain temperature. It is typically the last
-step in an amplification protocol.\cr Inherits: \link{rdmlBaseType}.
+step in an amplification protocol.Inherits: \link{rdmlBaseType}.
 }
 \section{Initialization}{
  \code{pauseType$new(temperature)}

@@ -9,7 +9,7 @@
 dataCollectionSoftwareType
 }
 \description{
-Software name and version used to collect and analyze the data.\cr Inherits:
+Software name and version used to collect and analyze the data.Inherits:
 \link{rdmlBaseType}.
 }
 \section{Initialization}{

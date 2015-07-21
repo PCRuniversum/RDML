@@ -9,7 +9,7 @@
 experimenterType
 }
 \description{
-Contact details of the experimenter.\cr Inherits: \link{rdmlBaseType}.
+Contact details of the experimenter.Inherits: \link{rdmlBaseType}.
 }
 \section{Initialization}{
  \code{experimenterType$new(id, firstName, lastName,

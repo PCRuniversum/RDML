@@ -9,7 +9,7 @@
 sequencesType
 }
 \description{
-\cr Inherits: \link{rdmlBaseType}.
+Inherits: \link{rdmlBaseType}.
 }
 \section{Initialization}{
  \code{sequencesType$new(forwardPrimer = NULL, reversePrimer = NULL, probe1 = NULL, probe2 = NULL, amplicon = NULL)}

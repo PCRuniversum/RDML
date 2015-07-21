@@ -9,7 +9,7 @@
 xRefType
 }
 \description{
-\cr Inherits: \link{rdmlBaseType}.
+Inherits: \link{rdmlBaseType}.
 }
 \section{Initialization}{
  \code{xRefType$new(name = NULL, id = NULL)}

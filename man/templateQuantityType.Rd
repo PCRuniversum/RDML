@@ -9,7 +9,7 @@
 templateQuantityType
 }
 \description{
-\cr Inherits: \link{rdmlBaseType}.
+Inherits: \link{rdmlBaseType}.
 }
 \section{Initialization}{
  \code{templateQuantityType$new(conc, nucleotide)}

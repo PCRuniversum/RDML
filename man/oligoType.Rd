@@ -9,7 +9,7 @@
 oligoType
 }
 \description{
-\cr Inherits: \link{rdmlBaseType}.
+Inherits: \link{rdmlBaseType}.
 }
 \section{Initialization}{
  \code{oligoType$new(threePrimeTag = NULL,

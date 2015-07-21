@@ -18,7 +18,7 @@ Can take values:
 }
 }
 \details{
-\cr Inherits: \link{enumType}.
+Inherits: \link{enumType}.
 }
 \section{Initialization}{
  \code{nucleotideType$new(value)}

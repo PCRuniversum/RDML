@@ -15,7 +15,7 @@ measured during amplification. \code{Matrix} columns: \describe{
 point was collected.} \item{tmp}{(optional) Temperature - The temperature in
 degrees Celsius at the time of measurement.} \item{fluor}{Fluorescence - The
 fluorescence intensity measured without any correction. The fluorescence
-intensity must not be baseline corrected.}} \cr Inherits:
+intensity must not be baseline corrected.}} Inherits:
 \link{rdmlBaseType}.
 }
 \section{Initialization}{

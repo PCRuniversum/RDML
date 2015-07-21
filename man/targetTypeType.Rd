@@ -14,7 +14,7 @@ Can take values:
 \item{ref}{reference target}
 \item{toi}{target of interest}
 }
-\cr Inherits: \link{enumType}.
+Inherits: \link{enumType}.
 }
 \section{Initialization}{
  \code{targetTypeType$new(value)}

@@ -10,7 +10,7 @@ pcrFormatType
 }
 \description{
 The format of the run - This allows the software to display the data
-according to the qPCR instrument run format.\cr Inherits:
+according to the qPCR instrument run format.Inherits:
 \link{rdmlBaseType}.
 }
 \details{

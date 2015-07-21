@@ -21,7 +21,7 @@ Can take values:
 \item{opt}{optical calibrator sample}}
 }
 \details{
-\cr Inherits: \link{enumType}.
+Inherits: \link{enumType}.
 }
 \section{Initialization}{
  \code{sampleTypeType$new(value)}

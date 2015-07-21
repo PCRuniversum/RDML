@@ -14,7 +14,7 @@ during amplification. \code{Matrix} columns: \describe{ \item{tmp}{(every
 point must be unique) Temperature - The temperature in degrees Celsius at the
 time of measurement.} \item{fluor}{Fluorescence - The fluorescence intensity
 measured without any correction. The fluorescence intensity must not be
-baseline corrected.}} \cr Inherits: \link{rdmlBaseType}.
+baseline corrected.}} Inherits: \link{rdmlBaseType}.
 }
 \section{Initialization}{
  \code{mdpsType$new(fpoints)}

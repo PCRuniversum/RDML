@@ -11,7 +11,7 @@ reactType
 \description{
 A reaction is an independent chemical reaction corresponding for example to a
 well in a 96 well plate, a capillary in a rotor, a through-hole on an array,
-etc. \cr Inherits: \link{rdmlBaseType}.
+etc. Inherits: \link{rdmlBaseType}.
 }
 \details{
 The ID of this reaction

@@ -20,7 +20,7 @@ The unit the quantity. Can take values:
 }
 }
 \details{
-\cr Inherits: \link{enumType}.
+Inherits: \link{enumType}.
 }
 \section{Initialization}{
  \code{quantityUnitType$new(value)}

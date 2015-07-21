@@ -9,7 +9,7 @@
 dyeType
 }
 \description{
-Information on a dye.\cr Inherits: \link{rdmlBaseType}.
+Information on a dye.Inherits: \link{rdmlBaseType}.
 }
 \section{Initialization}{
  \code{dyeType$new(id, description = NULL)}

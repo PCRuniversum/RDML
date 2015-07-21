@@ -9,7 +9,7 @@
 idType
 }
 \description{
-Contains identificator for varius RDML types.\cr Inherits: \link{rdmlBaseType}.
+Contains identificator for varius RDML types.Inherits: \link{rdmlBaseType}.
 }
 \section{Initialization}{
  \code{idType$new(id)}

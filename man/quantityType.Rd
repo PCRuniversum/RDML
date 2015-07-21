@@ -9,7 +9,7 @@
 quantityType
 }
 \description{
-A quantity is always defined by its value and its unit.\cr Inherits:
+A quantity is always defined by its value and its unit.Inherits:
 \link{rdmlBaseType}.
 }
 \section{Initialization}{

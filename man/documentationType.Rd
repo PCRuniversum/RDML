@@ -10,7 +10,7 @@ documentationType
 }
 \description{
 These elements should be used if the same description applies to many
-samples, targets or experiments.\cr Inherits: \link{rdmlBaseType}.
+samples, targets or experiments.Inherits: \link{rdmlBaseType}.
 }
 \section{Initialization}{
  \code{documentationType$new(id, text = NULL)}
