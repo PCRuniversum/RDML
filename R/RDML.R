@@ -22,7 +22,7 @@
 #'   \code{data.frame} (see \link{RDML.AsTable})}\item{GetFData}{gets
 #'   fluorescence data (see \link{RDML.GetFData})}\item{SetFData}{sets
 #'   fluorescence data (see \link{RDML.SetFData})}\item{Merge}{merges two 
-#'   \code{RDML} to one (see \link{RDML.Merge})}
+#'   \code{RDML} to one (see \link{MergeRDMLs})}
 #'   \item{AsDendrogram}{represents structure of \code{RDML} object as dendrogram(see \link{RDML.AsDendrogram})}}
 #'   
 #' @author Konstantin A. Blagodatskikh <k.blag@@yandex.ru>, Stefan Roediger 
