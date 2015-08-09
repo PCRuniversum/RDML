@@ -15,7 +15,7 @@ than the step of the loop, "repeat" must be "0".Inherits:
 \link{rdmlBaseType}.
 }
 \section{Initialization}{
- \code{loopType$new(goto, repeat.n)}
+ \preformatted{loopType$new(goto, repeat.n)}
 }
 
 \section{Fields}{

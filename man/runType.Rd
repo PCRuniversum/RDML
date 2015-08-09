@@ -13,7 +13,7 @@ A run is a set of reactions performed in one "run", for example one plate,
 one rotor, one array, one chip.Inherits: \link{rdmlBaseType}.
 }
 \section{Initialization}{
- \code{runType$new(id, description = NULL,
+ \preformatted{runType$new(id, description = NULL,
   documentation = NULL, experimenter = NULL, instrument = NULL,
   dataCollectionSoftware = NULL, backgroundDeterminationMethod = NULL,
   cqDetectionMethod = NULL, thermalCyclingConditions = NULL, pcrFormat,

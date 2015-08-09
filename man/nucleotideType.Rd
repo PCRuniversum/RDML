@@ -21,7 +21,7 @@ Can take values:
 Inherits: \link{enumType}.
 }
 \section{Initialization}{
- \code{nucleotideType$new(value)}
+ \preformatted{nucleotideType$new(value)}
 }
 
 \section{Fields}{

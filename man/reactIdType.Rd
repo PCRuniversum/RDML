@@ -12,7 +12,7 @@ reactIdType
 Contains identificator for reactType.Inherits: \link{rdmlBaseType}.
 }
 \section{Initialization}{
- \code{reactIdType$new(id)}
+ \preformatted{reactIdType$new(id)}
 }
 
 \section{Fields}{

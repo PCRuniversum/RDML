@@ -13,7 +13,7 @@ Software name and version used to collect and analyze the data.Inherits:
 \link{rdmlBaseType}.
 }
 \section{Initialization}{
- \code{dataCollectionSoftwareType$new(name, version)}
+ \preformatted{dataCollectionSoftwareType$new(name, version)}
 }
 
 \section{Fields}{

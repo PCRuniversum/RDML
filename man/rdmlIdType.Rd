@@ -13,7 +13,7 @@ This element can be used to assign a publisher and id to the RDML file.\cr
 Inherits: \link{rdmlBaseType}.
 }
 \section{Initialization}{
- \code{rdmlIdType$new(publisher, serialNumber,
+ \preformatted{rdmlIdType$new(publisher, serialNumber,
   MD5Hash = NULL)}
 }
 

@@ -12,7 +12,7 @@ experimenterType
 Contact details of the experimenter.Inherits: \link{rdmlBaseType}.
 }
 \section{Initialization}{
- \code{experimenterType$new(id, firstName, lastName,
+ \preformatted{experimenterType$new(id, firstName, lastName,
   email = NULL, labName = NULL, labAddress = NULL)}
 }
 

@@ -19,7 +19,7 @@ intensity must not be baseline corrected.}} Inherits:
 \link{rdmlBaseType}.
 }
 \section{Initialization}{
- \code{adpsType$new(fpoints)}
+ \preformatted{adpsType$new(fpoints)}
 }
 
 \section{Fields}{

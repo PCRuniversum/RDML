@@ -12,7 +12,8 @@ sequencesType
 Inherits: \link{rdmlBaseType}.
 }
 \section{Initialization}{
- \code{sequencesType$new(forwardPrimer = NULL, reversePrimer = NULL, probe1 = NULL, probe2 = NULL, amplicon = NULL)}
+ \preformatted{sequencesType$new(forwardPrimer = NULL,
+reversePrimer = NULL, probe1 = NULL, probe2 = NULL, amplicon = NULL)}
 }
 
 \section{Fields}{

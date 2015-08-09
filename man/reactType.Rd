@@ -35,7 +35,7 @@ At the end of a row, the the next row. An example for this type of plate can
 be found below : todo... }
 }
 \section{Initialization}{
- \code{reactType$new(id, sample, data = NULL)}
+ \preformatted{reactType$new(id, sample, data = NULL)}
 }
 
 \section{Fields}{

@@ -12,7 +12,7 @@ templateQuantityType
 Inherits: \link{rdmlBaseType}.
 }
 \section{Initialization}{
- \code{templateQuantityType$new(conc, nucleotide)}
+ \preformatted{templateQuantityType$new(conc, nucleotide)}
 }
 
 \section{Fields}{

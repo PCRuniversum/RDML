@@ -24,12 +24,12 @@ By default input this function forms \code{data.frame} with such columns:
 \item{sample}{react$sample}
 \item{target}{data$id} \item{target.dyeId}{target[[data$id]]$dyeId}
 \item{sample.type}{sample[[react$sample]]$type} } You can overload default
-columns list by parameter \code{.default} but note that columns \code{exp.id,
-run.id, react.id, target} are necessary for usage \code{AsTable} output as
+columns list by parameter \code{.default} but note that columns
+\preformatted{exp.id, run.id, react.id, target} are necessary for usage
+\code{AsTable} output as
 input for \code{GetFData} and \code{SetFData}. \cr Additional columns can be
 introduced by specifying them at input parameter \code{...} (see Examples).
-All default and additional columns accession expressions have to be
-named!!!\cr
+All default and additional columns accession expressions must be named.
 
 Experiment, run, react and data to which belongs each fluorescence data vector
 can be accessed by \code{experiment, run, react, data} (see Examples).

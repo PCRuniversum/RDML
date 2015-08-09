@@ -22,7 +22,7 @@ The primers used to reverse transcribe the RNA to cDNA. Can take values:
 Inherits: \link{enumType}.
 }
 \section{Initialization}{
- \code{primingMethodType$new(value)}
+ \preformatted{primingMethodType$new(value)}
 }
 
 \section{Fields}{

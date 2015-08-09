@@ -12,14 +12,16 @@ dataType
 Inherits: \link{rdmlBaseType}.
 }
 \section{Initialization}{
- \code{dataType$new(tar, cq = NULL, excl = NULL, adp
+ \preformatted{dataType$new(tar, cq = NULL, excl = NULL, adp
   = NULL, mdp = NULL, endPt = NULL, bgFluor = NULL, bgFluorSlp = NULL,
   quantFluor = NULL)}
 }
 
 \section{Fields}{
- \describe{ \item{\code{tar}}{\link{idReferencesType}.
-  TargetID - A reference to a target.} \item{\code{cq}}{\link[base]{double}.
+ \describe{
+\item{\code{tar}}{\link{idReferencesType}.
+  TargetID - A reference to a target.}
+  \item{\code{cq}}{\link[base]{double}.
   Quantification cycle - The calculated fractional PCR cycle used for
   downstream quantification. Negative values are used to express following
   conditions: Not Available: -1.0 }
@@ -30,9 +32,11 @@ Inherits: \link{rdmlBaseType}.
   seperated by semicolons ";".} \item{\code{adp}}{\link{adpsType}.}
   \item{\code{mdp}}{\link{mdpsType}.}
   \item{\code{endPt}}{\link[base]{double}. End point - Result of an endpoint
-  } measurement. \item{\code{bgFluor}}{\link[base]{double}. Background
+  } measurement.
+  \item{\code{bgFluor}}{\link[base]{double}. Background
   fluorescence - The y-intercept of the baseline trend based on the estimated
-  background fluorescence. } \item{\code{bgFluorSlp}}{\link[base]{double}.
+  background fluorescence. }
+  \item{\code{bgFluorSlp}}{\link[base]{double}.
   Background fluorescence slope - The slope of the baseline trend based on
   the estimated background fluorescence. The element should be absent to
   indicate a slope of 0.0; If this element is present without the bgFluor
@@ -42,9 +46,11 @@ Inherits: \link{rdmlBaseType}.
 }
 
 \section{Methods}{
- \describe{\item{\code{AsDataFrame(dp.type =
-  "adp")}}{Represents amplification (\code{dp.type = "adp"}) or melting
-  (\code{dp.type = "mdp"}) data points as \code{data.frame}}}
+ \describe{
+\item{\code{AsDataFrame(dp.type = "adp")}}{Represents amplification
+(\preformatted{dp.type = "adp"}) or melting (\code{dp.type = "mdp"}) data
+points as \code{data.frame}}
+}
 }
 \keyword{datasets}
 

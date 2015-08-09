@@ -13,7 +13,7 @@ An experiment can contain several runs (\link{runType}).Inherits:
 \link{rdmlBaseType}.
 }
 \section{Initialization}{
- \code{experimentType$new(id, description = NULL,
+ \preformatted{experimentType$new(id, description = NULL,
   documentation = NULL, run = NULL)}
 }
 

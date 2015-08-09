@@ -20,7 +20,7 @@ Can take values:
 Inherits: \link{enumType}.
 }
 \section{Initialization}{
- \code{cqDetectionMethodType$new(value)}
+ \preformatted{cqDetectionMethodType$new(value)}
 }
 
 \section{Fields}{

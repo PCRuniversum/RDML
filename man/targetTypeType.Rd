@@ -17,7 +17,7 @@ Can take values:
 Inherits: \link{enumType}.
 }
 \section{Initialization}{
- \code{targetTypeType$new(value)}
+ \preformatted{targetTypeType$new(value)}
 }
 
 \section{Fields}{

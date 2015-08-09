@@ -15,7 +15,7 @@ enzymes and continue the program afterwards. The temperature of the previous
 step is maintained.Inherits: \link{rdmlBaseType}.
 }
 \section{Initialization}{
- \code{lidOpenType$new()}
+ \preformatted{lidOpenType$new()}
 }
 \keyword{datasets}
 

@@ -17,7 +17,7 @@ measured without any correction. The fluorescence intensity must not be
 baseline corrected.}} Inherits: \link{rdmlBaseType}.
 }
 \section{Initialization}{
- \code{mdpsType$new(fpoints)}
+ \preformatted{mdpsType$new(fpoints)}
 }
 
 \section{Fields}{

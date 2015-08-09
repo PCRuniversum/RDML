@@ -18,7 +18,7 @@ same). Serial dilutions in a standard curve must have a different name.\cr
 Inherits: \link{rdmlBaseType}.
 }
 \section{Initialization}{
- \code{sampleType$new(id, description = NULL,
+ \preformatted{sampleType$new(id, description = NULL,
  documentation = NULL, xRef =  NULL, annotation = NULL, type =
  sampleTypeType$new("unkn"), interRunCalibrator = FALSE, quantity = NULL,
  calibratorSample = FALSE, cdnaSynthesisMethod = NULL, templateQuantity =

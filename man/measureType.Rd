@@ -17,7 +17,7 @@ Can take values:
 Inherits: \link{enumType}.
 }
 \section{Initialization}{
- \code{measureType$new(value)}
+ \preformatted{measureType$new(value)}
 }
 
 \section{Fields}{

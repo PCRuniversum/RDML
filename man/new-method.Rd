@@ -28,7 +28,7 @@ filename <- paste(PATH, "/extdata/", "lc96_bACTXY.rdml", sep ="")
 lc96 <- RDML$new(filename)
 
 ## Some kind of overview for lc96
-lc96$AsTable(name.pattern = sample[[react$sample&id]]$description)
+lc96$AsTable(name.pattern = sample[[react$sample$id]]$description)
 lc96$AsDendrogram()
 }
 }
