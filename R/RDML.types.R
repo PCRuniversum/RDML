@@ -36,6 +36,19 @@ rdmlBaseType <-
               newXMLNode(
                 name = node.name,
                 namespaceDefinitions = namespaceDefinitions,
+                attrs = {
+                  get.attrs <- function() {
+                    for(name in subnodes) {
+                      if(class(private[[name]])[1] == "idType" ||
+                         class(private[[name]])[1] == "reactIdType") {
+                        subnodes <<- subnodes[subnodes != name]
+                        return(list(id = private[[name]]$id))
+                      }
+                    }
+                    NULL
+                  }
+                  get.attrs()
+                },
                 .children = {
                   llply(subnodes,
                         function(name) {
@@ -50,7 +63,7 @@ rdmlBaseType <-
                                       sublist$.asXMLnodes(subnode.name))
                             ,
                             environment = {
-                                     private[[name]]$.asXMLnodes(subnode.name)
+                              private[[name]]$.asXMLnodes(subnode.name)
                             },
                             {
                               if (is.null(private[[name]]) ||
@@ -58,7 +71,18 @@ rdmlBaseType <-
                                 NULL
                               else
                                 newXMLNode(name = subnode.name,
-                                           text = private[[name]])
+                                           text = {
+                                             switch(
+                                               typeof(private[[name]]),
+                                               logical = 
+                                                 ifelse(private[[name]],
+                                                        "true",
+                                                        "false"
+                                                 ),
+                                               private[[name]]
+                                             )
+                                           }
+                                )
                             })
                         }) %>% 
                     compact
@@ -787,7 +811,7 @@ enumType <-
                 newXMLNode(name = node.name,
                            namespaceDefinitions = namespaceDefinitions,
                            text = private$.value)
-              }
+            }
           ),
           private = list(
             .value = NULL
@@ -1680,7 +1704,8 @@ adpsType <-
                                      },
                                      newXMLNode(
                                        name = "fluor",
-                                       text = fpoints.row["fluor"])
+                                       text = fpoints.row["fluor"]
+                                       )
                                    ))
                     })
               # })
@@ -2316,9 +2341,9 @@ runType <-
                                   idType))
               assert_that(is.opt.string(description))
               assert_that(is.opt.list.type(documentation,
-                                       idReferencesType))
+                                           idReferencesType))
               assert_that(is.opt.list.type(experimenter,
-                                       idReferencesType))
+                                           idReferencesType))
               assert_that(is.opt.string(instrument))
               assert_that(is.opt.type(dataCollectionSoftware,
                                       dataCollectionSoftwareType))
@@ -2331,7 +2356,7 @@ runType <-
                                   pcrFormatType))
               assert_that(is.opt.string(runDate)) # date time
               assert_that(is.opt.list.type(react,
-                                       reactType))
+                                           reactType))
               
               private$.id <- id
               private$.description <- description
@@ -2408,14 +2433,14 @@ runType <-
               if (missing(documentation))
                 return(private$.documentation)
               assert_that(is.opt.list.type(documentation,
-                                       idReferencesType))
+                                           idReferencesType))
               private$.documentation <- documentation
             },
             experimenter = function(experimenter) {
               if (missing(experimenter))
                 return(private$.experimenter)
               assert_that(is.opt.list.type(experimenter,
-                                       idReferencesType))
+                                           idReferencesType))
               private$.experimenter <- experimenter
             },
             instrument = function(instrument) {
@@ -2468,7 +2493,7 @@ runType <-
               if (missing(react))
                 return(private$.react)
               assert_that(is.opt.list.type(react,
-                                       reactType))
+                                           reactType))
               private$.react <- with.names(react,
                                            quote(.$id$id))
             }
