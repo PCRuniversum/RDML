@@ -32,25 +32,10 @@ rdmlBaseType <-
           public = list(
             .asXMLnodes = function(node.name,
                                    namespaceDefinitions = NULL) {
-              # has.attrs <- FALSE
-              subnodes <- names(private)
+              subnodes <- names(private) %>% rev
               newXMLNode(
                 name = node.name,
                 namespaceDefinitions = namespaceDefinitions,
-                attrs = {
-                  get.attrs <- function() {
-                    for(name in subnodes) {
-                      if(class(private[[name]])[1] == "idType" ||
-                         class(private[[name]])[1] == "reactIdType") {
-                        subnodes <<- subnodes[subnodes != name]
-                        # has.attrs <<- TRUE
-                        return(list(id = private[[name]]$id))
-                      }
-                    }
-                    NULL
-                  }
-                  get.attrs()
-                },
                 .children = {
                   llply(subnodes,
                         function(name) {
@@ -65,21 +50,8 @@ rdmlBaseType <-
                                       sublist$.asXMLnodes(subnode.name))
                             ,
                             environment = {
-                              switch(class(private[[name]])[2],
-                                     enumType = {
-                                       if (is.null(private[[name]]$value) ||
-                                           is.na(private[[name]]$value))
-                                         NULL
-                                       else
-                                         newXMLNode(name = subnode.name,
-                                                    text = private[[name]]$value)
-                                     },
-                                     idType = 
-                                       newXMLNode(name = subnode.name,
-                                                  attrs = 
-                                                    list(id = private[[name]]$id)),
                                      private[[name]]$.asXMLnodes(subnode.name)
-                              )},
+                            },
                             {
                               if (is.null(private[[name]]) ||
                                   is.na(private[[name]]))
@@ -94,8 +66,9 @@ rdmlBaseType <-
               )
             },
             print = function(...) {
-              sapply(names(private)[-which(names(private) == 
-                                             "deep_clone")],
+              elements <- names(private)[-which(names(private) == 
+                                                  "deep_clone")] %>% rev
+              sapply(elements,
                      function(name) {
                        sprintf(
                          "\t%s: %s",
@@ -230,7 +203,14 @@ idType <-
             initialize = function(id) {
               assert_that(is.string(id))
               private$.id <- id
-            }#,
+            },
+            .asXMLnodes = function(node.name,
+                                   namespaceDefinitions = NULL) {
+              newXMLNode(
+                name = node.name,
+                namespaceDefinitions = namespaceDefinitions,
+                attrs = list(id = private$.id)
+              )}
             #             print = function(...) {
             #               cat(private$.id)
             #             }
@@ -265,7 +245,7 @@ idType <-
 reactIdType <- 
   R6Class("reactIdType",
           # class = FALSE,
-          inherit = rdmlBaseType,
+          inherit = idType,
           public = list(
             initialize = function(id) {
               assert_that(is.count(id))
@@ -797,7 +777,17 @@ enumType <-
             },
             print = function(...) {
               cat(private$.value)
-            }
+            },
+            .asXMLnodes = function(node.name,
+                                   namespaceDefinitions = NULL) {
+              if (is.null(private$.value) ||
+                  is.na(private$.value))
+                NULL
+              else
+                newXMLNode(name = node.name,
+                           namespaceDefinitions = namespaceDefinitions,
+                           text = private$.value)
+              }
           ),
           private = list(
             .value = NULL

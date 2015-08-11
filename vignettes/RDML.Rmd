@@ -21,7 +21,7 @@ The structure of the **RDML** package mimics the RDML format and provides severa
 - `$AsTable()` -- represents data contained in **RDML** object (except fluorescent data) as data.frame.
 - `$GetFData()` -- gets fluorescent data.
 - `$SetFData()` -- sets fluorescent data to **RDML** object.
-- `$AsDendrogram()` -- represents structure of **RDML** object as dendrogramm.
+- `$AsDendrogram()` -- represents structure of **RDML** object as dendrogram.
 
 ## Opening and observing RDML file
 
