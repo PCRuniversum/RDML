@@ -283,7 +283,7 @@ To save **RDML** object as RDML file v1.2 we can use `$AsXML()` method where `fi
 
 `lc96$AsXML("lc96.rdml")`
 
-You can use [RDML-ninja](http://sourceforge.net/projects/qpcr-ninja/) to validate a created file.
+You can use [RDML-ninja](http://sourceforge.net/projects/qpcr-ninja/) or the [RDML validator](http://rdml.org/tools.php?validator) from the RMDL consortiun to validate a RDML file created by the **RDML** package file.
 
 ## Creating custom functions
 
