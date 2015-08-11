@@ -311,7 +311,7 @@ RDML$set("public", "initialize", function(filename,
     llply(rdml.root["documentation"],
           function(el) 
             documentationType$new(
-              id = xmlAttrs(el, "id"),
+              id = idType$new(xmlAttrs(el, "id")),
               text = xmlValue(el[["text"]])
             )) %>% 
       with.names(quote(.$id$id))
@@ -376,22 +376,22 @@ RDML$set("public", "initialize", function(filename,
                     xmlValue(sample[["quantity"]][["value"]])),
                   unit = quantityUnitType$new(
                     sample[["quantity"]][["unit"]] %>% 
-                    xmlValue)),
+                      xmlValue)),
               calibratorSample = 
                 as.logical(xmlValue(sample[["calibaratorSample"]])),
               cdnaSynthesisMethod = 
                 cdnaSynthesisMethodType$new(
                   enzyme = xmlValue(sample[["cdnaSynthesisMethod"]][["enzyme"]]),
                   primingMethod =
-                    primingMethodType$new(sample[["cdnaSynthesisMethod"]][["primingMethod"]],
-                                          dnaseTreatment = as.logical(xmlValue(sample[["cdnaSynthesisMethod"]][["dnaseTreatment"]])),
-                                          thermalCyclingConditions = 
-                                            tryCatch(
-                                              idReferencesType$new(
-                                                xmlAttrs(sample[["cdnaSynthesisMethod"]][["thermalCyclingConditions"]],
-                                                         "id")),
-                                              error = function(e) NULL)
-                    )),
+                    primingMethodType$new(xmlValue(sample[["cdnaSynthesisMethod"]][["primingMethod"]])),
+                  dnaseTreatment = as.logical(xmlValue(sample[["cdnaSynthesisMethod"]][["dnaseTreatment"]])),
+                  thermalCyclingConditions = 
+                    tryCatch(
+                      idReferencesType$new(
+                        xmlAttrs(sample[["cdnaSynthesisMethod"]][["thermalCyclingConditions"]],
+                                 "id")),
+                      error = function(e) NULL)
+                ),
               templateQuantity = 
                 templateQuantityType$new(
                   conc = as.numeric(xmlValue(sample[["templateQuantity"]][["conc"]])),
@@ -634,17 +634,17 @@ RDML$set("public", "initialize", function(filename,
         if(!is.null(fluor)) {
           if(length(tmp) != 0) {
             adpsType$new(matrix(c(cyc, tmp, fluor), 
-                   byrow = FALSE,
-                   ncol = 3,
-                   dimnames = list(NULL,
-                                   c("cyc", "tmp", "fluor"))))
+                                byrow = FALSE,
+                                ncol = 3,
+                                dimnames = list(NULL,
+                                                c("cyc", "tmp", "fluor"))))
           }
           else {
             adpsType$new(matrix(c(cyc, fluor), 
-                   byrow = FALSE,
-                   ncol = 2,
-                   dimnames = list(NULL,
-                                   c("cyc", "fluor"))))
+                                byrow = FALSE,
+                                ncol = 2,
+                                dimnames = list(NULL,
+                                                c("cyc", "fluor"))))
           }
         } else {
           #           matrix(ncol = 2,
@@ -666,13 +666,13 @@ RDML$set("public", "initialize", function(filename,
                                         namespaces = c(rdml = "http://www.rdml.org")))
         
         if(length(fluor) != 0 && !is.null(fluor)) {
-#           matrix(c(tmp, fluor), 
-#                                                byrow = FALSE,
-#                                                ncol = 2,
-#                                                dimnames = list(NULL,
-#                                                                c("tmp", "fluor"))) %>% 
-#             typeof %>% print
-#           NULL
+          #           matrix(c(tmp, fluor), 
+          #                                                byrow = FALSE,
+          #                                                ncol = 2,
+          #                                                dimnames = list(NULL,
+          #                                                                c("tmp", "fluor"))) %>% 
+          #             typeof %>% print
+          #           NULL
           mdpsType$new(matrix(c(tmp, fluor), 
                               byrow = FALSE,
                               ncol = 2,
@@ -854,16 +854,16 @@ RDML$set("public", "initialize", function(filename,
         sample.name <- filter(tbl, react.id == r.id)$sample[1]
         private$.sample[[sample.name]]$quantity <- 
           quantityType$new(
-          value = unname(dilutions.r[[1]][r.id]),
-          unit = quantityUnitType$new("other")
-        )
+            value = unname(dilutions.r[[1]][r.id]),
+            unit = quantityUnitType$new("other")
+          )
         private$.sample[[sample.name]]$annotation <- 
           c(private$.sample[[sample.name]]$annotation,
-          annotationType$new(
-                  property = sprintf("Roche_quantity_at_%s_%s",
-                                     target,
-                                     r.id),
-                  value = as.character(dilutions.r[[target]][r.id])))
+            annotationType$new(
+              property = sprintf("Roche_quantity_at_%s_%s",
+                                 target,
+                                 r.id),
+              value = as.character(dilutions.r[[target]][r.id])))
       }
     }
     
@@ -873,8 +873,8 @@ RDML$set("public", "initialize", function(filename,
       private$.sample[[sample.name]]$annotation <- 
         c(private$.sample[[sample.name]]$annotation,
           annotationType$new(
-                property = sprintf("Roche_condition_at_%s",r.id),
-                value = conditions.r[r.id]))
+            property = sprintf("Roche_condition_at_%s",r.id),
+            value = conditions.r[r.id]))
     }
     
   }

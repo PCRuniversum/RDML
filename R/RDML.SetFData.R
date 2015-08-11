@@ -66,7 +66,7 @@ RDML$set("public", "SetFData",
                if (private$.experiment[[descr.row["exp.id"]]] %>% 
                    is.null) {
                  self$experiment <- 
-                   c(self$experiment,
+                   c(private$.experiment,
                      experimentType$new(idType$new(descr.row["exp.id"])))
                }
                if (private$.experiment[[descr.row["exp.id"]]]$
@@ -92,7 +92,7 @@ RDML$set("public", "SetFData",
                      reactType$new(
                        reactIdType$new(descr.row["react.id"] %>% as.integer),
                        sample = idReferencesType$new(descr.row["sample"])))
-                 if (private$.experiment[[descr.row["sample"]]] %>% 
+                 if (private$.sample[[descr.row["sample"]]] %>% 
                      is.null) {
                    self$sample <- c(
                      self$sample,
