@@ -12,7 +12,7 @@ oligoType
 Inherits: \link{rdmlBaseType}.
 }
 \section{Initialization}{
- \code{oligoType$new(threePrimeTag = NULL,
+ \preformatted{oligoType$new(threePrimeTag = NULL,
   fivePrimeTag = NULL, sequence)}
 }
 

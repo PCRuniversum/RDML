@@ -13,7 +13,7 @@ Most classes of RDML package inherit this class. It can't be directly
 accessed and serves only for inner package usage.
 }
 \section{Initialization}{
- \code{rdmlBaseType$new()}
+ \preformatted{rdmlBaseType$new()}
 }
 
 \section{Methods}{

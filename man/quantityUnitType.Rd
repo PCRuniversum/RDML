@@ -23,7 +23,7 @@ The unit the quantity. Can take values:
 Inherits: \link{enumType}.
 }
 \section{Initialization}{
- \code{quantityUnitType$new(value)}
+ \preformatted{quantityUnitType$new(value)}
 }
 
 \section{Fields}{

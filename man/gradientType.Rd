@@ -13,7 +13,7 @@ This step forms a temperature gradient across the PCR block. Inherits:
 \link{baseTemperatureType}.
 }
 \section{Initialization}{
- \code{gradientType$new(highTemperature,
+ \preformatted{gradientType$new(highTemperature,
   lowTemperature, ...)}
 }
 

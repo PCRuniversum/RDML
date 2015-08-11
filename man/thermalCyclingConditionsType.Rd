@@ -12,7 +12,7 @@ thermalCyclingConditionsType
 A cycling program for PCR or to amplify cDNA. Inherits: \link{rdmlBaseType}.
 }
 \section{Initialization}{
- \code{thermalCyclingConditionsType$new(id,
+ \preformatted{thermalCyclingConditionsType$new(id,
   description = NULL, documentation = NULL, lidTemperature = NULL,
   experimenter = NULL, step)}
 }

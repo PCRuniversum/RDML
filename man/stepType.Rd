@@ -12,7 +12,7 @@ stepType
 Inherits: \link{rdmlBaseType}.
 }
 \section{Initialization}{
- \code{stepType$new(nr, description = NULL,
+ \preformatted{stepType$new(nr, description = NULL,
   temperature = NULL, gradient = NULL, loop = NULL, pause = NULL, lidOpen =
   NULL)}
 }

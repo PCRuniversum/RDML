@@ -17,7 +17,7 @@ with.names <- function(l, id) {
 #' Most classes of RDML package inherit this class. It can't be directly 
 #' accessed and serves only for inner package usage.
 #' 
-#' @section Initialization: \code{rdmlBaseType$new()}
+#' @section Initialization: \preformatted{rdmlBaseType$new()}
 #'   
 #' @section Methods: \describe{\item{\code{.asXMLnodes(node.name)}}{Represents
 #'   object as XML nodes. Should not be called directly. \code{node.name} --
@@ -124,7 +124,7 @@ rdmlBaseType <-
 #' This element can be used to assign a publisher and id to the RDML file.\cr 
 #' Inherits: \link{rdmlBaseType}.
 #' 
-#' @section Initialization: \code{rdmlIdType$new(publisher, serialNumber,
+#' @section Initialization: \preformatted{rdmlIdType$new(publisher, serialNumber,
 #'   MD5Hash = NULL)}
 #'   
 #' @section Fields: \describe{  
@@ -186,7 +186,7 @@ rdmlIdType <-
 #' 
 #' Contains identificator for varius RDML types.Inherits: \link{rdmlBaseType}.
 #' 
-#' @section Initialization: \code{idType$new(id)}
+#' @section Initialization: \preformatted{idType$new(id)}
 #'
 #'   @section Fields: \describe{     
 #' \item{\code{id}}{\link[assertthat]{is.string}. Identificator.}
@@ -233,7 +233,7 @@ idType <-
 #' 
 #' Contains identificator for reactType.Inherits: \link{rdmlBaseType}.
 #' 
-#' @section Initialization: \code{reactIdType$new(id)}
+#' @section Initialization: \preformatted{reactIdType$new(id)}
 #'
 #'   @section Fields: \describe{     
 #' \item{\code{id}}{\link[assertthat]{is.count}. Identificator.}
@@ -273,7 +273,7 @@ reactIdType <-
 #' 
 #' Contains id of another RDML object.Inherits: \link{idType}.
 #' 
-#' @section Initialization: \code{idReferencesType$new(id)}
+#' @section Initialization: \preformatted{idReferencesType$new(id)}
 #' 
 #' @section Fields: \describe{  
 #' \item{\code{id}}{\link[assertthat]{is.string}. Identificator.}
@@ -293,7 +293,7 @@ idReferencesType <-
 #' 
 #' Contact details of the experimenter.Inherits: \link{rdmlBaseType}.
 #' 
-#' @section Initialization: \code{experimenterType$new(id, firstName, lastName,
+#' @section Initialization: \preformatted{experimenterType$new(id, firstName, lastName,
 #'   email = NULL, labName = NULL, labAddress = NULL)}
 #'  
 #'   @section Fields: \describe{   
@@ -387,7 +387,7 @@ experimenterType <-
 #' These elements should be used if the same description applies to many
 #' samples, targets or experiments.Inherits: \link{rdmlBaseType}.
 #' 
-#' @section Initialization: \code{documentationType$new(id, text = NULL)}
+#' @section Initialization: \preformatted{documentationType$new(id, text = NULL)}
 #'   
 #'   @section Fields: \describe{  
 #' \item{\code{id}}{\link{idType}. Identificator.}
@@ -435,7 +435,7 @@ documentationType <-
 #' 
 #' Information on a dye.Inherits: \link{rdmlBaseType}.
 #' 
-#' @section Initialization: \code{dyeType$new(id, description = NULL)}
+#' @section Initialization: \preformatted{dyeType$new(id, description = NULL)}
 #'   
 #'   @section Fields: \describe{  
 #' \item{\code{id}}{\link{idType}. Identificator.}
@@ -483,7 +483,7 @@ dyeType <-
 #' 
 #' Inherits: \link{rdmlBaseType}.
 #' 
-#' @section Initialization: \code{xRefType$new(name = NULL, id = NULL)}
+#' @section Initialization: \preformatted{xRefType$new(name = NULL, id = NULL)}
 #'   
 #'   @section Fields: \describe{  
 #'   \item{\code{name}}{\link[assertthat]{is.string}. Reference to an external
@@ -580,7 +580,7 @@ annotationType <-
 #' A quantity is always defined by its value and its unit.Inherits:
 #' \link{rdmlBaseType}.
 #' 
-#' @section Initialization: \code{quantityType$new(value, unit)}
+#' @section Initialization: \preformatted{quantityType$new(value, unit)}
 #' 
 #'   @section Fields: \describe{    
 #' \item{\code{value}}{\link[base]{is.double}. Value.}
@@ -630,7 +630,7 @@ quantityType <-
 #' 
 #' Description of the cDNA synthesis method.Inherits: \link{rdmlBaseType}.
 #' 
-#' @section Initialization: \code{cdnaSynthesisMethodType$new(enzyme = NULL, 
+#' @section Initialization: \preformatted{cdnaSynthesisMethodType$new(enzyme = NULL, 
 #'   primingMethod = NULL, dnaseTreatment = NULL, thermalCyclingConditions = 
 #'   NULL)}
 #'   
@@ -707,7 +707,7 @@ cdnaSynthesisMethodType <-
 #' 
 #' Inherits: \link{rdmlBaseType}.
 #' 
-#' @section Initialization: \code{templateQuantityType$new(conc, nucleotide)}
+#' @section Initialization: \preformatted{templateQuantityType$new(conc, nucleotide)}
 #'   
 #'   @section Fields: \describe{  
 #' \item{\code{conc}}{\link[base]{is.double}. Concentration of the template in nanogram}
@@ -759,7 +759,7 @@ templateQuantityType <-
 #' Generic class for creating objects thet can take limited list of values.\cr
 #' Inherits: \link{rdmlBaseType}.
 #' 
-#' @section Initialization: \code{enumType$new(value)}
+#' @section Initialization: \preformatted{enumType$new(value)}
 #'   @section Fields: \describe{  
 #' \item{\code{value}}{\link[assertthat]{is.string}. Value.}
 #'   }
@@ -818,7 +818,7 @@ enumType <-
 #' 
 #' Inherits: \link{enumType}.
 #' 
-#' @section Initialization: \code{sampleTypeType$new(value)}
+#' @section Initialization: \preformatted{sampleTypeType$new(value)}
 #'  
 #'   @section Fields: \describe{   
 #' \item{\code{value}}{\link[assertthat]{is.string}. Value.}
@@ -854,7 +854,7 @@ sampleTypeType <-
 #' 
 #' Inherits: \link{enumType}.
 #' 
-#' @section Initialization: \code{quantityUnitType$new(value)}
+#' @section Initialization: \preformatted{quantityUnitType$new(value)}
 #'   
 #'   @section Fields: \describe{  
 #' \item{\code{value}}{\link[assertthat]{is.string}. Value.}
@@ -887,7 +887,7 @@ quantityUnitType <-
 #' 
 #' Inherits: \link{enumType}.
 #' 
-#' @section Initialization: \code{primingMethodType$new(value)}
+#' @section Initialization: \preformatted{primingMethodType$new(value)}
 #'   
 #'   @section Fields: \describe{  
 #' \item{\code{value}}{\link[assertthat]{is.string}. Value.}
@@ -923,7 +923,7 @@ primingMethodType <-
 #' 
 #' Inherits: \link{enumType}.
 #' 
-#' @section Initialization: \code{nucleotideType$new(value)}
+#' @section Initialization: \preformatted{nucleotideType$new(value)}
 #'   
 #'   @section Fields: \describe{  
 #' \item{\code{value}}{\link[assertthat]{is.string}. Value.}
@@ -956,7 +956,7 @@ nucleotideType <-
 #'same). Serial dilutions in a standard curve must have a different name.\cr 
 #'Inherits: \link{rdmlBaseType}.
 #'
-#'@section Initialization: \code{sampleType$new(id, description = NULL, 
+#'@section Initialization: \preformatted{sampleType$new(id, description = NULL, 
 #'  documentation = NULL, xRef =  NULL, annotation = NULL, type = 
 #'  sampleTypeType$new("unkn"), interRunCalibrator = FALSE, quantity = NULL, 
 #'  calibratorSample = FALSE, cdnaSynthesisMethod = NULL, templateQuantity = 
@@ -1133,7 +1133,7 @@ sampleType <-
 #' 
 #' Inherits: \link{rdmlBaseType}.
 #' 
-#' @section Initialization: \code{oligoType$new(threePrimeTag = NULL, 
+#' @section Initialization: \preformatted{oligoType$new(threePrimeTag = NULL, 
 #'   fivePrimeTag = NULL, sequence)}
 #'   
 #'   @section Fields: \describe{  
@@ -1195,7 +1195,8 @@ oligoType <-
 #' 
 #' Inherits: \link{rdmlBaseType}.
 #' 
-#' @section Initialization: \code{sequencesType$new(forwardPrimer = NULL, reversePrimer = NULL, probe1 = NULL, probe2 = NULL, amplicon = NULL)}
+#' @section Initialization: \preformatted{sequencesType$new(forwardPrimer = NULL, 
+#' reversePrimer = NULL, probe1 = NULL, probe2 = NULL, amplicon = NULL)}
 #'   
 #'   @section Fields: \describe{  
 #' \item{\code{forwardPrimer}}{\link{oligoType}.}
@@ -1287,7 +1288,7 @@ sequencesType <-
 #' For some commercial assays, the primer sequences may be unknown. This element 
 #' allows to describe commercial assays.Inherits: \link{rdmlBaseType}.
 #' 
-#' @section Initialization: \code{commercialAssayType$new(company, orderNumber)}
+#' @section Initialization: \preformatted{commercialAssayType$new(company, orderNumber)}
 #'   
 #'   @section Fields: \describe{  
 #' \item{\code{company}}{\link[assertthat]{is.string}.}
@@ -1340,7 +1341,7 @@ commercialAssayType <-
 #' } 
 #' Inherits: \link{enumType}.
 #' 
-#' @section Initialization: \code{targetTypeType$new(value)}
+#' @section Initialization: \preformatted{targetTypeType$new(value)}
 #' 
 #'   @section Fields: \describe{  
 #' \item{\code{value}}{\link[assertthat]{is.string}.}
@@ -1367,7 +1368,7 @@ targetTypeType <-
 #' differ in primer sequences are considered different targets.Inherits: 
 #' \link{rdmlBaseType}.
 #' 
-#' @section Initialization: \code{targetType$new(id, description = NULL, 
+#' @section Initialization: \preformatted{targetType$new(id, description = NULL, 
 #'   documentation = NULL, xRef = NULL, type, amplificationEfficiencyMethod = 
 #'   NULL, amplificationEfficiency = NULL, amplificationEfficiencySE = NULL, 
 #'   detectionLimit = NULL, dyeId, sequences = NULL, commercialAssay = NULL)}
@@ -1637,7 +1638,7 @@ targetType <-
 #' intensity must not be baseline corrected.}} Inherits: 
 #' \link{rdmlBaseType}.
 #' 
-#' @section Initialization: \code{adpsType$new(fpoints)}
+#' @section Initialization: \preformatted{adpsType$new(fpoints)}
 #' 
 #' @section Fields: \describe{    
 #'   \item{\code{fpoints}}{\link[base]{matrix}. Matrix with amplification data
@@ -1710,7 +1711,7 @@ adpsType <-
 #' measured without any correction. The fluorescence intensity must not be 
 #' baseline corrected.}} Inherits: \link{rdmlBaseType}.
 #' 
-#' @section Initialization: \code{mdpsType$new(fpoints)}
+#' @section Initialization: \preformatted{mdpsType$new(fpoints)}
 #'   
 #'   @section Fields: \describe{  
 #' \item{\code{fpoints}}{\link[base]{matrix}. Matrix with amplification data points.}
@@ -1767,12 +1768,14 @@ mdpsType <-
 #' 
 #' Inherits: \link{rdmlBaseType}.
 #' 
-#' @section Initialization: \code{dataType$new(tar, cq = NULL, excl = NULL, adp 
+#' @section Initialization: \preformatted{dataType$new(tar, cq = NULL, excl = NULL, adp 
 #'   = NULL, mdp = NULL, endPt = NULL, bgFluor = NULL, bgFluorSlp = NULL, 
 #'   quantFluor = NULL)}
 #'   
-#' @section Fields: \describe{ \item{\code{tar}}{\link{idReferencesType}. 
-#'   TargetID - A reference to a target.} \item{\code{cq}}{\link[base]{double}. 
+#' @section Fields: \describe{ 
+#' \item{\code{tar}}{\link{idReferencesType}. 
+#'   TargetID - A reference to a target.} 
+#'   \item{\code{cq}}{\link[base]{double}. 
 #'   Quantification cycle - The calculated fractional PCR cycle used for 
 #'   downstream quantification. Negative values are used to express following 
 #'   conditions: Not Available: -1.0 } 
@@ -1783,9 +1786,11 @@ mdpsType <-
 #'   seperated by semicolons ";".} \item{\code{adp}}{\link{adpsType}.} 
 #'   \item{\code{mdp}}{\link{mdpsType}.} 
 #'   \item{\code{endPt}}{\link[base]{double}. End point - Result of an endpoint 
-#'   } measurement. \item{\code{bgFluor}}{\link[base]{double}. Background 
+#'   } measurement. 
+#'   \item{\code{bgFluor}}{\link[base]{double}. Background 
 #'   fluorescence - The y-intercept of the baseline trend based on the estimated
-#'   background fluorescence. } \item{\code{bgFluorSlp}}{\link[base]{double}. 
+#'   background fluorescence. } 
+#'   \item{\code{bgFluorSlp}}{\link[base]{double}. 
 #'   Background fluorescence slope - The slope of the baseline trend based on 
 #'   the estimated background fluorescence. The element should be absent to 
 #'   indicate a slope of 0.0; If this element is present without the bgFluor 
@@ -1793,9 +1798,11 @@ mdpsType <-
 #'   \item{\code{quantFluor}}{\link[base]{double}. Quantification flourescence -
 #'   The fluorescence value corresponding to the treshold line.} }
 #'   
-#' @section Methods: \describe{\item{\code{AsDataFrame(dp.type = 
-#'   "adp")}}{Represents amplification (\code{dp.type = "adp"}) or melting 
-#'   (\code{dp.type = "mdp"}) data points as \code{data.frame}}}
+#' @section Methods: \describe{
+#' \item{\code{AsDataFrame(dp.type = "adp")}}{Represents amplification 
+#' (\preformatted{dp.type = "adp"}) or melting (\code{dp.type = "mdp"}) data 
+#' points as \code{data.frame}}
+#' }
 #'   
 #' @docType class
 #' @format An \code{\link{R6Class}} generator object.
@@ -1949,7 +1956,7 @@ dataType <-
 #' At the end of a row, the the next row. An example for this type of plate can 
 #' be found below : todo... }
 #' 
-#' @section Initialization: \code{reactType$new(id, sample, data = NULL)}
+#' @section Initialization: \preformatted{reactType$new(id, sample, data = NULL)}
 #'   
 #'   @section Fields: \describe{
 #'   \item{\code{id}}{\link{reactIdType}. See 'Details'.} 
@@ -2048,7 +2055,7 @@ reactType <-
 #' Software name and version used to collect and analyze the data.Inherits: 
 #' \link{rdmlBaseType}.
 #' 
-#' @section Initialization: \code{dataCollectionSoftwareType$new(name, version)}
+#' @section Initialization: \preformatted{dataCollectionSoftwareType$new(name, version)}
 #'
 #'   @section Fields: \describe{   
 #' \item{\code{name}}{\link[assertthat]{is.string}.}
@@ -2104,7 +2111,7 @@ dataCollectionSoftwareType <-
 #' }  
 #' Inherits: \link{enumType}.
 #' 
-#' @section Initialization: \code{cqDetectionMethodType$new(value)}
+#' @section Initialization: \preformatted{cqDetectionMethodType$new(value)}
 #'   
 #'   @section Fields: \describe{
 #' \item{\code{value}}{\link[assertthat]{is.string}.}
@@ -2138,7 +2145,7 @@ cqDetectionMethodType <-
 #' }  
 #' Inherits: \link{enumType}.
 #' 
-#' @section Initialization: \code{labelFormatType$new(value)}
+#' @section Initialization: \preformatted{labelFormatType$new(value)}
 #'   
 #'   @section Fields: \describe{
 #' \item{\code{value}}{\link[assertthat]{is.string}.}
@@ -2183,7 +2190,7 @@ labelFormatType <-
 #' data in list (1 column) form. If columns is 1 then the software should not
 #' display a column label.
 #' 
-#' @section Initialization: \code{pcrFormatType$new(rows, columns, rowLabel, columnLabel)}
+#' @section Initialization: \preformatted{pcrFormatType$new(rows, columns, rowLabel, columnLabel)}
 #'   
 #'   @section Fields: \describe{
 #' \item{\code{rows}}{\link[assertthat]{is.count}.}
@@ -2258,7 +2265,7 @@ pcrFormatType <-
 #' A run is a set of reactions performed in one "run", for example one plate, 
 #' one rotor, one array, one chip.Inherits: \link{rdmlBaseType}.
 #' 
-#' @section Initialization: \code{runType$new(id, description = NULL, 
+#' @section Initialization: \preformatted{runType$new(id, description = NULL, 
 #'   documentation = NULL, experimenter = NULL, instrument = NULL, 
 #'   dataCollectionSoftware = NULL, backgroundDeterminationMethod = NULL, 
 #'   cqDetectionMethod = NULL, thermalCyclingConditions = NULL, pcrFormat, 
@@ -2474,7 +2481,7 @@ runType <-
 #' An experiment can contain several runs (\link{runType}).Inherits: 
 #' \link{rdmlBaseType}.
 #' 
-#' @section Initialization: \code{experimentType$new(id, description = NULL,
+#' @section Initialization: \preformatted{experimentType$new(id, description = NULL,
 #'   documentation = NULL, run = NULL)}
 #'
 #'   @section Fields: \describe{   
@@ -2582,7 +2589,7 @@ experimentType <-
 #' enzymes and continue the program afterwards. The temperature of the previous 
 #' step is maintained.Inherits: \link{rdmlBaseType}.
 #' 
-#' @section Initialization: \code{lidOpenType$new()}
+#' @section Initialization: \preformatted{lidOpenType$new()}
 #'   
 #'   
 #' @docType class
@@ -2607,7 +2614,7 @@ lidOpenType <-
 #' This step allows to pause at a certain temperature. It is typically the last 
 #' step in an amplification protocol.Inherits: \link{rdmlBaseType}.
 #' 
-#' @section Initialization: \code{pauseType$new(temperature)}
+#' @section Initialization: \preformatted{pauseType$new(temperature)}
 #'   
 #' @section Fields: \describe{ \item{\code{temperature}}{\link[base]{numeric}.
 #'   The temperature in degrees Celsius to maintain during the pause.}
@@ -2648,7 +2655,7 @@ pauseType <-
 #' than the step of the loop, "repeat" must be "0".Inherits: 
 #' \link{rdmlBaseType}.
 #' 
-#' @section Initialization: \code{loopType$new(goto, repeat.n)}
+#' @section Initialization: \preformatted{loopType$new(goto, repeat.n)}
 #'   
 #' @section Fields: \describe{ \item{\code{goto}}{\link[base]{numeric}.  The
 #'   step to go to to form the loop.}
@@ -2702,7 +2709,7 @@ loopType <-
 #' }  
 #' Inherits: \link{enumType}.
 #' 
-#' @section Initialization: \code{measureType$new(value)}
+#' @section Initialization: \preformatted{measureType$new(value)}
 #' 
 #'   @section Fields: \describe{ 
 #' \item{\code{value}}{\link[assertthat]{is.string}.}
@@ -2727,7 +2734,7 @@ measureType <-
 #' 
 #' Parent class for inner usage. Inherits: \link{rdmlBaseType}.
 #' 
-#' @section Initialization: \code{baseTemperatureType$new(duration, 
+#' @section Initialization: \preformatted{baseTemperatureType$new(duration, 
 #'   temperatureChange = NULL,  durationChange = NULL, measure = NULL, ramp = 
 #'   NULL)}
 #'   
@@ -2819,7 +2826,7 @@ baseTemperatureType <-
 #' This step keeps a constant temperature on the heat block. Inherits: 
 #' \link{baseTemperatureType}.
 #' 
-#' @section Initialization: \code{temperatureType$new(temperature, ...)}
+#' @section Initialization: \preformatted{temperatureType$new(temperature, ...)}
 #'   
 #' @section Fields: \describe{ \item{\code{temperature}}{\link[base]{double}.
 #'   The temperature of the step in  degrees Celsius.}
@@ -2859,7 +2866,7 @@ temperatureType <-
 #' This step forms a temperature gradient across the PCR block. Inherits: 
 #' \link{baseTemperatureType}.
 #' 
-#' @section Initialization: \code{gradientType$new(highTemperature, 
+#' @section Initialization: \preformatted{gradientType$new(highTemperature, 
 #'   lowTemperature, ...)}
 #'   
 #' @section Fields: \describe{ 
@@ -2913,7 +2920,7 @@ gradientType <-
 #' 
 #' Inherits: \link{rdmlBaseType}.
 #' 
-#' @section Initialization: \code{stepType$new(nr, description = NULL, 
+#' @section Initialization: \preformatted{stepType$new(nr, description = NULL, 
 #'   temperature = NULL, gradient = NULL, loop = NULL, pause = NULL, lidOpen = 
 #'   NULL)}
 #'   
@@ -3029,7 +3036,7 @@ stepType <-
 #' 
 #' A cycling program for PCR or to amplify cDNA. Inherits: \link{rdmlBaseType}.
 #' 
-#' @section Initialization: \code{thermalCyclingConditionsType$new(id, 
+#' @section Initialization: \preformatted{thermalCyclingConditionsType$new(id, 
 #'   description = NULL, documentation = NULL, lidTemperature = NULL, 
 #'   experimenter = NULL, step)}
 #'   

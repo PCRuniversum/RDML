@@ -12,7 +12,7 @@ cdnaSynthesisMethodType
 Description of the cDNA synthesis method.Inherits: \link{rdmlBaseType}.
 }
 \section{Initialization}{
- \code{cdnaSynthesisMethodType$new(enzyme = NULL,
+ \preformatted{cdnaSynthesisMethodType$new(enzyme = NULL,
   primingMethod = NULL, dnaseTreatment = NULL, thermalCyclingConditions =
   NULL)}
 }

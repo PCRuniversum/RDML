@@ -13,7 +13,7 @@ A quantity is always defined by its value and its unit.Inherits:
 \link{rdmlBaseType}.
 }
 \section{Initialization}{
- \code{quantityType$new(value, unit)}
+ \preformatted{quantityType$new(value, unit)}
 }
 
 \section{Fields}{

@@ -158,7 +158,8 @@ RDML format http://www.rdml.org/ \code{R6} package
 
   Ritz, C., Spiess, A.-N., 2008. qpcR: an R package for sigmoidal model
   selection in quantitative real-time polymerase chain reaction analysis.
-  \emph{Bioinformatics} 24, 1549--1551. doi:10.1093/bioinformatics/btn227
+  \emph{Bioinformatics} 24, 1549--1551.
+  doi:10.1093/bioinformatics/btn227
 
   Spiess, A.-N., Feig, C., Ritz, C., 2008. Highly accurate sigmoidal fitting
   of real-time PCR data by introducing a parameter for asymmetry. \emph{BMC

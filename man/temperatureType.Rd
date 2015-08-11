@@ -13,7 +13,7 @@ This step keeps a constant temperature on the heat block. Inherits:
 \link{baseTemperatureType}.
 }
 \section{Initialization}{
- \code{temperatureType$new(temperature, ...)}
+ \preformatted{temperatureType$new(temperature, ...)}
 }
 
 \section{Fields}{

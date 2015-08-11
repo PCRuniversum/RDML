@@ -19,7 +19,7 @@ Can take values:
 Inherits: \link{enumType}.
 }
 \section{Initialization}{
- \code{labelFormatType$new(value)}
+ \preformatted{labelFormatType$new(value)}
 }
 
 \section{Fields}{

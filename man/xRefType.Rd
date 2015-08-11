@@ -12,7 +12,7 @@ xRefType
 Inherits: \link{rdmlBaseType}.
 }
 \section{Initialization}{
- \code{xRefType$new(name = NULL, id = NULL)}
+ \preformatted{xRefType$new(name = NULL, id = NULL)}
 }
 
 \section{Fields}{

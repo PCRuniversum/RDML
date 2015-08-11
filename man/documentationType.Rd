@@ -13,7 +13,7 @@ These elements should be used if the same description applies to many
 samples, targets or experiments.Inherits: \link{rdmlBaseType}.
 }
 \section{Initialization}{
- \code{documentationType$new(id, text = NULL)}
+ \preformatted{documentationType$new(id, text = NULL)}
 }
 
 \section{Fields}{

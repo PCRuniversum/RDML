@@ -32,7 +32,7 @@ data in list (1 column) form. If columns is 1 then the software should not
 display a column label.
 }
 \section{Initialization}{
- \code{pcrFormatType$new(rows, columns, rowLabel, columnLabel)}
+ \preformatted{pcrFormatType$new(rows, columns, rowLabel, columnLabel)}
 }
 
 \section{Fields}{

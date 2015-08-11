@@ -1,3 +1,6 @@
+[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/RDML)](http://cran.r-project.org/web/packages/RDML)
+[![Downloads](http://cranlogs.r-pkg.org/badges/RDML)](http://cran.rstudio.com/package=RDML)
+
 ![RDML](https://github.com/kablag/RDML/blob/master/vignettes/RDML_logo.png)
 
 

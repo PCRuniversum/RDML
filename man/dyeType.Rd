@@ -12,7 +12,7 @@ dyeType
 Information on a dye.Inherits: \link{rdmlBaseType}.
 }
 \section{Initialization}{
- \code{dyeType$new(id, description = NULL)}
+ \preformatted{dyeType$new(id, description = NULL)}
 }
 
 \section{Fields}{

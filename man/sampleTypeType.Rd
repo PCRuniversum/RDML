@@ -24,7 +24,7 @@ Can take values:
 Inherits: \link{enumType}.
 }
 \section{Initialization}{
- \code{sampleTypeType$new(value)}
+ \preformatted{sampleTypeType$new(value)}
 }
 
 \section{Fields}{

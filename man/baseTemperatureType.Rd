@@ -12,7 +12,7 @@ baseTemperatureType
 Parent class for inner usage. Inherits: \link{rdmlBaseType}.
 }
 \section{Initialization}{
- \code{baseTemperatureType$new(duration,
+ \preformatted{baseTemperatureType$new(duration,
   temperatureChange = NULL,  durationChange = NULL, measure = NULL, ramp =
   NULL)}
 }

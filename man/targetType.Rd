@@ -14,7 +14,7 @@ differ in primer sequences are considered different targets.Inherits:
 \link{rdmlBaseType}.
 }
 \section{Initialization}{
- \code{targetType$new(id, description = NULL,
+ \preformatted{targetType$new(id, description = NULL,
   documentation = NULL, xRef = NULL, type, amplificationEfficiencyMethod =
   NULL, amplificationEfficiency = NULL, amplificationEfficiencySE = NULL,
   detectionLimit = NULL, dyeId, sequences = NULL, commercialAssay = NULL)}

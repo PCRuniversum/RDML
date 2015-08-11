@@ -13,7 +13,7 @@ This step allows to pause at a certain temperature. It is typically the last
 step in an amplification protocol.Inherits: \link{rdmlBaseType}.
 }
 \section{Initialization}{
- \code{pauseType$new(temperature)}
+ \preformatted{pauseType$new(temperature)}
 }
 
 \section{Fields}{

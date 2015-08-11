@@ -12,7 +12,7 @@ idType
 Contains identificator for varius RDML types.Inherits: \link{rdmlBaseType}.
 }
 \section{Initialization}{
- \code{idType$new(id)}
+ \preformatted{idType$new(id)}
 }
 
 \section{Fields}{
