@@ -15,6 +15,8 @@ library(RDML)
 
 The **RDML** package was created to work with the Real-time PCR Data Markup Language (RDML) -- a structured and universal data standard for exchanging quantitative PCR (qPCR) data. RDML belongs to the family of eXtensible Markup Languages (XML). It contains fluorescence data and information about the qPCR experiment. A description and the RDML schema and the RDML format are available at http://rdml.org.
 
+The XML technology 
+
 # Vendors supporting RDML
 
 The RDML format is supported by Bio-Rad (CFX 96 and CFX 384), Life Technologies (StepOne, ViiA7, QuantStudio) and Roche (LightCycler~96) thermo-cycler systems.

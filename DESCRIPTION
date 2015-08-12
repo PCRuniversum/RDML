@@ -40,7 +40,8 @@ Collate:
     'RDML.init.R'
     'functional_wrappers.R'
 Suggests:
-    knitr,
     chipPCR,
-    ggplot2
+    ggplot2,
+    knitr,
+    MBmca
 VignetteBuilder: knitr
