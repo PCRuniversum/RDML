@@ -1,6 +1,6 @@
 ---
 title: "Creating RDML file from VideoScan data"
-author: "Konstantin A. Blagodatskikh, Stefan Roediger, Michal Burdukiewicz"
+author: "Konstantin A. Blagodatskikh, Micha&#322; Burdukiewicz, Stefan R&ouml;diger"
 output: html_document
 ---
 ```{r, echo = FALSE, message = FALSE}
@@ -9,7 +9,7 @@ knitr::opts_chunk$set(collapse = T, comment = "#>")
 
 This vignette descripts how to create **RDML** object from user provided data and calculate Cq values with custom **RDML** class method.
 
-We will use **C54** data from [chipPCR](https://github.com/michbur/chipPCR) package -- a qPCR experiment for the amplification of *MLC-2v* performed using the *VideoScan* heating/cooling-unit. This data contains three amplification curves collected by three runs. Amplification curves have different number of cycles and one of them contains missing value. Thus, this data should be preprocessed before Cq calculation.
+We will use **C54** data from [chipPCR](https://github.com/michbur/chipPCR) package [@roediger2015chippcr] -- a qPCR experiment for the amplification of *MLC-2v* performed using the *VideoScan* heating/cooling-unit. This data contains three amplification curves collected by three runs. Amplification curves have different number of cycles and one of them contains missing value. Thus, this data should be preprocessed before Cq calculation.
 
 # Initialization
 
@@ -26,6 +26,14 @@ We can see that our data is data.frame with cycle numbers in first column and fl
 
 ```{r}
 str(C54)
+```
+
+```{r}
+matplot(C54[, 1], C54[, -1], xlim = c(0,56), ylim = c(0, 0.7), 
+	      xlab = "Cycle", ylab = "refMFI", pch = 19, type = "b",
+	      main = "Amplification of human MLC-2v\nVideoScan HCU\nRaw data")
+legend("topleft", c("D1 - Stock cDNA", "D2 - 1/10 cDNA", "D3 - 1/100 cDNA"), 
+       col = 1:3, pch = 19)
 ```
 
 # Creating custom method for **RDML** class
@@ -48,6 +56,11 @@ RDML$set("public", "ProcessVideoScan",
            # Get fluorescent point
            dat <- self$GetFData(tab)
            # Give new names to runs
+           # Preprocess amplification curve raw data as described in 
+           # Rödiger et al. (2015) Bioinformatics. Note that the dataset
+           # has different length of cycle numbers and missing values (NAs).
+           # The CPP function from the chipPCR package prepares the data for 
+           # further analysis.
            tab[, "run.id"] <- paste0(tab[, "run.id"], "_CPP")
            
            # Curves will be used one by one
@@ -65,6 +78,11 @@ RDML$set("public", "ProcessVideoScan",
              # Set preprocessed data with new description (new run names)
              self$SetFData(dat_CPP, tab)
              # Calculate and set Cq
+             # Set Cq from second derivative maximum method as described in 
+             # Rödiger et al. (2015) Bioinformatics for preprocessed data.
+             # The diffQ2 function from the MBmca package 
+             # (Rödiger et al. (2013), The R Journal) was used to calculate the
+             # Cq values of each amplificaion curve.
              cq <- diffQ2(dat_CPP, inder = TRUE)[["xTm1.2.D2"]][1]
              video.scan$experiment[[tab[i - 1, "exp.id"]]]$
                run[[tab[i - 1, "run.id"]]]$
@@ -101,10 +119,11 @@ description <- data.frame(
   stringsAsFactors = FALSE
 )
 
-# Create empty RDML object
+# Create an empty RDML object
 video.scan <- RDML$new()
 
-# Add fluorescence data and metadata to the RDML object
+# Add fluorescence data and metadata to the RDML object from a given source
+# Fare the sake of easyness we use the C54 dataset from the chipPCR package.
 video.scan$SetFData(C54, description)
 ```
 
