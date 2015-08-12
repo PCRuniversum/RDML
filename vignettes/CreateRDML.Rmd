@@ -1,7 +1,17 @@
 ---
 title: "Creating RDML file from VideoScan data"
+<<<<<<< HEAD
 author: "Konstantin A. Blagodatskikh, Micha&#322; Burdukiewicz, Stefan R&ouml;diger"
 output: html_document
+=======
+author: "Konstantin A. Blagodatskikh, Stefan Roediger, Michal Burdukiewicz"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Using RDML package}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+>>>>>>> d0d35c529359f424ec2ece317f18abeebcbdd4bd
 ---
 ```{r, echo = FALSE, message = FALSE}
 knitr::opts_chunk$set(collapse = T, comment = "#>")
