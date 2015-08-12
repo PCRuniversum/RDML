@@ -18,7 +18,9 @@ knitr::opts_chunk$set(collapse = T, comment = "#>")
 
 This vignette descripts how to create **RDML** object from user provided data and calculate Cq values with custom **RDML** class method.
 
-We will use **C54** data from [chipPCR](https://github.com/michbur/chipPCR) package [@roediger2015chippcr] -- a qPCR experiment for the amplification of *MLC-2v* performed using the *VideoScan* heating/cooling-unit. This data contains three amplification curves collected by three runs. Amplification curves have different number of cycles and one of them contains missing value. Thus, this data should be preprocessed before Cq calculation.
+For the this purpose we used data from the VideoScan platform. The VideoScan platform is a highly versitile fluorescence microscope based imaging platform for the real-time analysis of biomoloecular interactions. VideoScan has been used for DNA meltig curve analysis [@roediger_RJ_2013], real-time quantitative PCR [@roediger_highly_2013] and quantitative isothermal amplification [@spiess_impact_2014].
+
+We will use **C54** data from the [chipPCR](http://cran.r-project.org/web/packages/chipPCR/index.html) package [@roediger2015chippcr] -- a qPCR experiment for the amplification of *MLC-2v* performed using the *VideoScan* heating/cooling-unit. This data contains three amplification curves collected by three runs. Amplification curves have different number of cycles and one of them contains missing value. Thus, this data should be preprocessed before Cq calculation.
 
 ## Initialization
 
@@ -51,7 +53,7 @@ ggplot(dat, aes(x = Cycle, y = refMFi, colour = Experiment)) + geom_point()
 
 Preprocessing and Cq calculation steps will be held inside **RDML** object. To do this we shall add custom method to **RDML** class and use this advanced class as **RDML** object initializator (data import).
 
-To preprocess data we will use **CPP** function from **chipPCR** package. After that preprocessed data will be stored in new runs inside same experiment. For Cq calculation -- **diffQ2** function from [MBmca](https://github.com/michbur/MBmca) package. 
+As described previously [@roediger2015r], we first preprocess the raw data with the **CPP** function from the [chipPCR](http://cran.r-project.org/web/packages/chipPCR/index.html) package. After that preprocessed data will be stored in new runs inside same experiment. For Cq calculation we used the **diffQ2** function from the [MBmca](http://cran.r-project.org/web/packages/MBmca/index.html) [@roediger_RJ_2013] package. 
 
 Additional our method will have two arguments:
 
@@ -68,7 +70,7 @@ RDML$set("public", "ProcessVideoScan",
            dat <- self$GetFData(tab)
            # Give new names to runs
            # Preprocess amplification curve raw data as described in 
-           # Rödiger et al. (2015) Bioinformatics. Note that the dataset
+           # R&ouml;diger et al. (2015) Bioinformatics. Note that the dataset
            # has different length of cycle numbers and missing values (NAs).
            # The CPP function from the chipPCR package prepares the data for 
            # further analysis.
@@ -90,9 +92,9 @@ RDML$set("public", "ProcessVideoScan",
              self$SetFData(dat_CPP, tab)
              # Calculate and set Cq
              # Set Cq from second derivative maximum method as described in 
-             # Rödiger et al. (2015) Bioinformatics for preprocessed data.
+             # R&ouml;diger et al. (2015) Bioinformatics for preprocessed data.
              # The diffQ2 function from the MBmca package 
-             # (Rödiger et al. (2013), The R Journal) was used to calculate the
+             # (R&ouml;diger et al. (2013), The R Journal) was used to calculate the
              # Cq values of each amplificaion curve.
              cq <- diffQ2(dat_CPP, inder = TRUE)[["xTm1.2.D2"]][1]
              video.scan$experiment[[tab[i - 1, "exp.id"]]]$
