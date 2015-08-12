@@ -1,27 +1,26 @@
 ---
 title: "Creating RDML file from VideoScan data"
-<<<<<<< HEAD
 author: "Konstantin A. Blagodatskikh, Micha&#322; Burdukiewicz, Stefan R&ouml;diger"
-output: html_document
-=======
-author: "Konstantin A. Blagodatskikh, Stefan Roediger, Michal Burdukiewicz"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Using RDML package}
+  %\VignetteIndexEntry{Creating RDML file from VideoScan data}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
->>>>>>> d0d35c529359f424ec2ece317f18abeebcbdd4bd
+
 ---
+
 ```{r, echo = FALSE, message = FALSE}
 knitr::opts_chunk$set(collapse = T, comment = "#>")
 ```
+
+# Creating RDML file from VideoScan data
 
 This vignette descripts how to create **RDML** object from user provided data and calculate Cq values with custom **RDML** class method.
 
 We will use **C54** data from [chipPCR](https://github.com/michbur/chipPCR) package [@roediger2015chippcr] -- a qPCR experiment for the amplification of *MLC-2v* performed using the *VideoScan* heating/cooling-unit. This data contains three amplification curves collected by three runs. Amplification curves have different number of cycles and one of them contains missing value. Thus, this data should be preprocessed before Cq calculation.
 
-# Initialization
+## Initialization
 
 First of all we have to load all necessary packages and fluorescence data into our R session. 
 ```{r, message = FALSE}
@@ -38,15 +37,17 @@ We can see that our data is data.frame with cycle numbers in first column and fl
 str(C54)
 ```
 
-```{r}
-matplot(C54[, 1], C54[, -1], xlim = c(0,56), ylim = c(0, 0.7), 
-	      xlab = "Cycle", ylab = "refMFI", pch = 19, type = "b",
-	      main = "Amplification of human MLC-2v\nVideoScan HCU\nRaw data")
-legend("topleft", c("D1 - Stock cDNA", "D2 - 1/10 cDNA", "D3 - 1/100 cDNA"), 
-       col = 1:3, pch = 19)
+```{r,warning=FALSE, fig.width = 6, fig.height = 4}
+
+dat <- data.frame(Cycle = rep(C54[, 1], ncol(C54) - 1),
+                  Experiment = unlist(lapply(colnames(C54)[-1], function(i) rep(i, nrow(C54)))),
+                  refMFi = unlist(C54[, -1]))
+levels(dat[["Experiment"]]) <- c("D1 - Stock cDNA", "D2 - 1/10 cDNA", "D3 - 1/100 cDNA")
+
+ggplot(dat, aes(x = Cycle, y = refMFi, colour = Experiment)) + geom_point()
 ```
 
-# Creating custom method for **RDML** class
+## Creating custom method for **RDML** class
 
 Preprocessing and Cq calculation steps will be held inside **RDML** object. To do this we shall add custom method to **RDML** class and use this advanced class as **RDML** object initializator (data import).
 
@@ -103,7 +104,7 @@ RDML$set("public", "ProcessVideoScan",
 )
 ```
 
-# **RDML** object creation
+## **RDML** object creation
 
 Now we can create empty **RDML** with our advanced class and set fluorescence data into it. But for setting data we have to create description (metadata) of curves which will contain:
 
@@ -137,7 +138,7 @@ video.scan <- RDML$new()
 video.scan$SetFData(C54, description)
 ```
 
-# Setting additional information
+## Setting additional information
 
 As optional step we can add some information about our experiment. Such as experimentators contacts, references to documentation, description of samples and targets, thermal cycling conditions, etc.
 
@@ -260,7 +261,7 @@ video.scan$experiment$exp1$run$run2$thermalCyclingConditions <- idReferencesType
 video.scan$experiment$exp1$run$run3$thermalCyclingConditions <- idReferencesType$new("Amplification")
 ```
 
-# Processing data
+## Processing data
 
 After creating **RDML** object and setting data we can use our method `$ProcessVideoScan`.
 
@@ -300,7 +301,7 @@ ggplot(dat, aes(x = cyc, y = fluor)) +
   ggtitle("Amplification of human MLC-2v\nVideoScan HCU")
 ```
 
-# Export to file
+## Export to file
 
 To save our **RDML** object as file we can use `$AsXML()` method with file name as argument:
 
