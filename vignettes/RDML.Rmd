@@ -11,6 +11,7 @@ vignette: >
 ---
 ```{r, echo = FALSE, message = FALSE}
 knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
+require(kfigr)
 library(RDML)
 ```
 # Introduction to the RDML package
@@ -42,7 +43,7 @@ To open the `lc96_bACTXY.rdml` file we have to create a new **RDML** object with
 PATH <- path.package("RDML")
 filename <- paste(PATH, "/extdata/", "lc96_bACTXY.rdml", sep ="")
 lc96 <- RDML$new(filename = filename)
-```
+``` 
 Next we can check structure of our new object -- `lc96` by printing it.
 ```{r}
 lc96
@@ -53,7 +54,7 @@ As a result we can see field names and after `:` :
 - contained values after `:`,
 - names of list elements enclosed in `[]`.
 
-Fields names for all **RDML** package classes correspond to fields names of RDML types described at http://rdml.org/files.php?v=1.2.
+The fields names for all **RDML** package classes correspond to fields names of RDML types as described at http://rdml.org/files.php?v=1.2.
 
 <img src="rdml_overview_1_2.png" alt="HTML5 Icon" style="width:663px;height:688px">
 
@@ -86,11 +87,11 @@ fdata <-
 head(fdata)
 ```
 Structure of experiments can be visualized by plotting dendrogram.
-```{r, results = "hide", fig.width = 6, fig.height = 4}
+```{r dendrogram, anchor="figure", results = "hide", fig.width = 6, fig.height = 4}
 lc96$AsDendrogram()
 ```
 
-In this dendrogram we can see that our file consists of one experiment and one run. Four targets, each with two sample types (*std* -- standard, *unkn* -- unknown), are part of the experiment. There is only qPCR data -- *adp* in this experiment. Ten reactions (tubes) for standard type (*std*) and six reaction for the unknown (*unkn*) type. The total number of reactions can be more than number of reactions on the plate because one tube can contain more than one target (e.g., multiplexing).
+In this dendrogram `r figr("dendrogram")` we can see that our file consists of one experiment and one run. Four targets, each with two sample types (*std* -- standard, *unkn* -- unknown), are part of the experiment. There is only qPCR data -- *adp* in this experiment. Ten reactions (tubes) for standard type (*std*) and six reaction for the unknown (*unkn*) type. The total number of reactions can be more than number of reactions on the plate because one tube can contain more than one target (e.g., multiplexing).
 
 ### Additional information fields
 
@@ -145,11 +146,12 @@ experiment$run <- list(run)
 lc96$experiment <- list(experiment)
 ```
 
-And we can see our modification with `$AsDendrogram()` method.
 
-```{r, results = "hide", fig.width = 6, fig.height = 4}
+```{r dendrogram_modified, anchor = "figure", results = "hide", fig.width = 6, fig.height = 4}
 lc96$AsDendrogram()
 ```
+
+And we can see in `r figr("dendrogram_modified")` our modification with `$AsDendrogram()` method.
 
 ## `AsTable()` method
 
