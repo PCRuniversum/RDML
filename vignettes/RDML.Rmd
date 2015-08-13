@@ -2,7 +2,9 @@
 title: "Using the RDML package"
 author: "Konstantin A. Blagodatskikh, Micha&#322; Burdukiewicz, Stefan R&ouml;diger"
 date: "`r Sys.Date()`"
-output: rmarkdown::html_vignette
+output: 
+  rmarkdown::html_vignette:
+    toc: true
 bibliography: "RDML.bib"
 vignette: >
   %\VignetteIndexEntry{Using RDML package}
