@@ -16,11 +16,9 @@ knitr::opts_chunk$set(collapse = T, comment = "#>")
 
 # Creating RDML file from VideoScan data
 
-This vignette descripts how to create **RDML** object from user provided data and calculate Cq values with custom **RDML** class method.
+This vignette describes how to create **RDML** object from user provided data and calculate Cq values with custom **RDML** class method.
 
-For the this purpose we used data from the VideoScan platform. The VideoScan platform is a highly versitile fluorescence microscope based imaging platform for the real-time analysis of biomoloecular interactions. VideoScan has been used for DNA meltig curve analysis [@roediger_RJ_2013], real-time quantitative PCR [@roediger_highly_2013] and quantitative isothermal amplification [@spiess_impact_2014].
-
-We will use **C54** data from the [chipPCR](http://cran.r-project.org/web/packages/chipPCR/index.html) package [@roediger2015chippcr] -- a qPCR experiment for the amplification of *MLC-2v* performed using the *VideoScan* heating/cooling-unit. This data contains three amplification curves collected by three runs. Amplification curves have different number of cycles and one of them contains missing value. Thus, this data should be preprocessed before Cq calculation.
+For the this purpose we used data from the VideoScan platform. The VideoScan platform is a highly versatile fluorescence microscope based imaging platform for the real-time analysis of biomolecular interactions. VideoScan has been used for DNA melting curve analysis [@roediger_RJ_2013], real-time quantitative PCR [@roediger_highly_2013] and quantitative isothermal amplification [@spiess_impact_2014]. In this example we focus on qPCR data obtained from the amplifification of the human gene *mlc-2v* [@sheikh_2015]. The experimental details (e.g., primer sequences, amplification conditions) are described in [@roediger_highly_2013]. The VideoScan systems has an output as *csv* file (comma separated value). After completion of the experiment all raw data were transfered to the R environment and stored as *rda* files. We will use **C54** data from the [chipPCR](http://cran.r-project.org/web/packages/chipPCR/index.html) package [@roediger2015chippcr] -- a qPCR experiment for the amplification of *MLC-2v* performed using the *VideoScan* heating/cooling-unit. Our aim is to a real-world example for the use of the **RDML** package. This dataset contains three amplification curves collected by three runs. The amplification curves have different number of cycles and one of them contains a missing value due to a sensor dropout. Thus, this data should be preprocessed before Cq calculation.
 
 ## Initialization
 
@@ -142,7 +140,7 @@ video.scan$SetFData(C54, description)
 
 ## Setting additional information
 
-As optional step we can add some information about our experiment. Such as experimentators contacts, references to documentation, description of samples and targets, thermal cycling conditions, etc.
+As optional step we can add some information about our experiment. Such as experimenter contacts, references to documentation, description of samples and targets, thermal cycling conditions, etc.
 
 ```{r}
 # Add experimentator information
