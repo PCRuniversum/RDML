@@ -18,18 +18,18 @@ knitr::opts_chunk$set(collapse = T, comment = "#>")
 
 This vignette describes how to create **RDML** object from user provided data and calculate Cq values with custom **RDML** class method. Our aim is to a real-world example for the use of the **RDML** package.
 
-For the this purpose we used data from the VideoScan platform. The VideoScan platform is a highly versatile fluorescence microscope based imaging platform for the real-time analysis of biomolecular interactions. VideoScan has been been extended by a heating/cooling-unit, which can be used for DNA melting curve analysis [@roediger_RJ_2013], real-time quantitative PCR [@roediger_highly_2013] and quantitative isothermal amplification [@spiess_impact_2014]. In this example we focus on qPCR data obtained from the amplifification of the human gene *mlc-2v* [@sheikh_2015]. The experimental details (e.g., primer sequences, amplification conditions) are described in [@roediger_highly_2013].
+For the this purpose we used data from the _VideoScan_ platform. The _VideoScan_ platform is a highly versatile fluorescence microscope based imaging platform for the real-time analysis of biomolecular interactions. _VideoScan_ has been been extended by a heating/cooling-unit, which can be used for DNA melting curve analysis [@roediger_RJ_2013], real-time quantitative PCR [@roediger_highly_2013] and quantitative isothermal amplification [@spiess_impact_2014]. In this example we focus on qPCR data obtained from the amplifification of the human gene *mlc-2v* [@sheikh_2015]. The experimental details (e.g., primer sequences, amplification conditions) are described in [@roediger_highly_2013].
 
-In detail, this dataset contains three amplification curves collected by three runs monitored with TaqMan qPCR chemistry. Similar to other experimental platforms has the VideoScan systems an output as *csv* file (comma separated value). In general, *csv* is format that is sufficient for in hous usage. However, the exchange with other scientists is demanding.
+In detail, this dataset contains three amplification curves collected by three runs monitored with TaqMan qPCR chemistry. Similar to other experimental platforms has the _VideoScan_ systems an output as *csv* file (comma separated value). In general, *csv* is format that is sufficient for in hous usage. However, the exchange with other scientists is demanding.
 
-After completion of the experiment all *csv* raw data were transfered to the R environment and stored as *rda* files in the **C54** dataset as described elsewhere [@RDCT2010c]. The R environment provieds numerous packages for the import of standard file formats, including formats from spread sheet applications (e.g., *XLS*, *XLSX*, *ODS*) [@Schutten_2014_ods, @Warnes_2015_gdata, @dragulescu_xlsx_2014], an ODBC connection [@ripley_rodbc_2015] or from the clipboard (`read.table("clipboard")`). There are several graphical user interfaces (GUIs) for R, which faciliate an easy import of raw data [@Valero_2012]. For example **RKWard** [@roediger_rkward_2012] has import functionality for *csv*, *txt*, *spss* and *stata* files.
+After completion of the experiment all *csv* raw data were transfered to the **R** environment and stored as *rda* files in the **C54** dataset as described elsewhere [@RDCT2010c]. The **R** environment provieds numerous packages for the import of standard file formats, including formats from spread sheet applications (e.g., *XLS*, *XLSX*, *ODS*) [@Schutten_2014_ods, @Warnes_2015_gdata, @dragulescu_xlsx_2014], an ODBC connection [@ripley_rodbc_2015] or from the clipboard (`read.table("clipboard")`). There are several graphical user interfaces (GUIs) for **R**, which faciliate an easy import of raw data [@Valero_2012]. For example **RKWard** [@roediger_rkward_2012] has import functionality for *csv*, *txt*, *spss* and *stata* files.
 
 Thefore, we will use the **C54** dataset directly from the [chipPCR](http://cran.r-project.org/web/packages/chipPCR/index.html) package [@roediger2015chippcr]. The amplification curves have different number of cycles and one of them contains a missing value due to a sensor dropout. Thus, this data should be preprocessed before Cq calculation.
 
 
 ## Initialization
 
-First of all we have to load all necessary packages and fluorescence data into our R session. 
+First of all we have to load all necessary packages and fluorescence data into our **R** session. 
 ```{r, message = FALSE}
 library(RDML)
 library(chipPCR)
@@ -118,9 +118,9 @@ Now we can create empty **RDML** with our advanced class and set fluorescence da
 - `fdata.name` -- curve name. Have to be as columns names in data.frame with fluorescence data.
 - `exp.id` -- experiment name.
 - `run.id` -- run name. In our case we have three runs.
-- `react.id` -- react ID. E.g. number of tube inside reaction plate.
+- `react.id` -- react ID. E.g., number of tube inside reaction plate.
 - `sample` -- sample name.
-- `target` -- target name. E.g. gene of interest name.
+- `target` -- target name. E.g., gene of interest name.
 - `target.dyeID` -- fluorescent dye used for detection.
 
 
@@ -318,4 +318,4 @@ To save our **RDML** object as file we can use `$AsXML()` method with file name 
 
 ## Conclusion
 
-In this example we used raw data from the VideoScan platform to demonstrate the creation of an *RDML* file via the **RDML** package. This procedure can be easily adapted to other experiements and gives the reasearcher a tool to create a data file for convenient data exchange. In contrast to simple *csv* files contains this file metat data in a defiened structure. This in turn makes the data available to other scientists for reproducible research.
+In this example we used raw data from the _VideoScan_ platform to demonstrate the creation of an *RDML* file via the **RDML** package. This procedure can be easily adapted to other experiements and gives the reasearcher a tool to create a data file for convenient data exchange. In contrast to simple *csv* files contains this file metat data in a defiened structure. This in turn makes the data available to other scientists for reproducible research.
