@@ -247,7 +247,7 @@ RDML <- R6Class("RDML",
                   
                   dateUpdated = function(date.updated) {
                     if(missing(date.updated))
-                      return(private$.date.updated)
+                      return(private$.dateUpdated)
                     assert_that(is.string(date.updated))
                     private$.dateUpdated <- date.updated
                   },
