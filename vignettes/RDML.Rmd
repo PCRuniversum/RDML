@@ -18,7 +18,13 @@ library(RDML)
 
 The [RDML](http://cran.r-project.org/web/packages/RDML/index.html) package was created to work with the Real-time PCR Data Markup Language (RDML) -- a structured and universal data standard for exchanging quantitative PCR (qPCR) data [@lefever_rdml_2009; @rdml-ninja_2015]. RDML belongs to the family of eXtensible Markup Languages (XML). It contains fluorescence data and information about the qPCR experiment. A description and the RDML schema and the RDML format are available at http://rdml.org.
 
-The XML technology is commonly used in the **R** environment and there are several tools to manipulate XML files [@xml_book]. When working with XML data, the workhorse package is **XML** [@Lang_XML].XML files can be compressed to save sapce. Therefore, investments development, implementation and maintenance is moderate. However, XML becomes less efficient to work with at larger file sizes and complexer structured information (e.g., matrices). In addition, we use the **R6** [@Chang_R6], **assertthat** [@Wickham_assertthat], **plyr** [@Wickham_plyr], **dplyr** [@Wickham_Francois_dplyr], **tidyr** [@Wickham_tidyr] and **rlist** [@Ren_rlist] packages.
+The XML technology is commonly used in the **R** environment and there are several tools to manipulate XML files [@xml_book]. When working with XML data, the workhorse package is **XML** [@Lang_XML].Therefore, investments development, implementation and maintenance is moderate.
+
+We use the **R6** [@Chang_R6], **assertthat** [@Wickham_assertthat], **plyr** [@Wickham_plyr], **dplyr** [@Wickham_Francois_dplyr], **tidyr** [@Wickham_tidyr] and **rlist** [@Ren_rlist] packages.
+
+XML files can be compressed to save sapce. The **RMDL** package uses the `zip()` function from the **utils** package with default values to compress the RDML file. Therefore, the compression mode depends on the operating system.
+
+XML becomes less efficient to work with at larger file sizes and complexer structured information (e.g., matrices).
 
 # Vendors and software packages supporting RDML
 
