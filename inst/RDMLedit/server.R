@@ -11,7 +11,7 @@ library(plyr)
 library(dplyr)
 
 testValue <- function(val) {
-  if(is.null(val))
+  if(is.null(val) || is.na(val) || val == "")
     return(NA)
   val
 }
@@ -88,14 +88,11 @@ shinyServer(function(input, output, session) {
     }
   })
   
-  output$downloadRDML <- downloadHandler(
-    filename = function() {
-      paste0(values$selFile, '.RDML')
-    },
-    content = function(file) {
-      values$rdml$AsXML(file)
-    }
-  )
+  output$selectedFileText <- renderText({
+    if (is.null(values$selFile))
+      return(NULL)
+    sprintf("Selected file: %s", values$selFile)
+  })
   
   # ID Table ----------------------------------------------------------------  
   
@@ -123,37 +120,36 @@ shinyServer(function(input, output, session) {
       return(NULL)
     }
     isolate({
+      values$error <- NULL
+      if (is.null(values$rdml)) {
+        return(NULL)
+      }
       df <- hot_to_r(input$idTbl)
-      print("s")
       apply(df, 1,
             function(row)
             {
               tryCatch({
-                
-                if (!is.null(values$rdml$id[[row["id"]]])) {
-                  
-                  values$rdml$id[[row["id"]]] <-
+                if (!is.null(values$rdml$id[[row["publisher"]]])) {
+                  values$rdml$id[[row["publisher"]]] <-
                     rdmlIdType$new(
-                      publisher = row["publisher"],
-                      serialNumber = row["serialNumber"],
-                      MD5Hash = row["MD5Hash"]
+                      publisher = testValue(row["publisher"]),
+                      serialNumber = testValue(row["serialNumber"]),
+                      MD5Hash = testValue(row["MD5Hash"])
                     )
                 } else {
-                  if (!is.na(row["id"]) && row["id"] != "") {
-                  values$rdml$id <- c(
-                    values$rdml$id,
-                    rdmlIdTypea$new(
-                      publisher = row["publisher"],
-                      serialNumber = row["serialNumber"],
-                      MD5Hash = row["MD5Hash"]
-                    ))
+                  if (!is.na(row["publisher"]) && row["publisher"] != "") {
+                    values$rdml$id <- c(
+                      values$rdml$id,
+                      rdmlIdType$new(
+                        publisher = row["publisher"],
+                        serialNumber = testValue(row["serialNumber"]),
+                        MD5Hash = testValue(row["MD5Hash"])
+                      ))
                   }
                 }
-                
               },
               error = function(e) {
                 values$error <- e
-                print(values$error)
               })
             })
     })
@@ -162,7 +158,7 @@ shinyServer(function(input, output, session) {
   output$errorText <- renderText({
     if(is.null(values$error))
       return(NULL)
-    values$error
+    values$error$message
   })
   
   # Experimenter Table ----------------------------------------------------------------  
@@ -190,4 +186,18 @@ shinyServer(function(input, output, session) {
     rhandsontable(df, rowHeaders = NULL) %>% 
       hot_table(allowColEdit = FALSE)
   })
+  
+  # Download ----------------------------------------------------------------
+  
+  output$downloadRDML <- downloadHandler(
+    filename = function() {
+      paste0(values$selFile, '.RDML')
+    },
+    content = function(file) {
+      values$rdml$AsXML(file)
+    }
+  )
 })
+
+
+
