@@ -12,10 +12,17 @@ library(dplyr)
 
 testValue <- function(val) {
   if(is.null(val) || is.na(val) || val == "")
-    return(NA)
+    return(NULL)
   val
 }
 
+genErrorMsg <- function(rowName, message) {
+  sprintf("<p>Row: %s<br>%s</p>",
+          rowName, 
+          message)
+}
+
+tblHeight <- 500
 
 shinyServer(function(input, output, session) {
   values <- reactiveValues()
@@ -49,6 +56,7 @@ shinyServer(function(input, output, session) {
     }
     df$merge <- as.logical(df$merge)
     rhandsontable(df, rowHeaders = NULL,
+                  height = tblHeight,
                   selectCallback = TRUE) %>% 
       hot_table(allowColEdit = FALSE,
                 highlightRow = TRUE
@@ -111,7 +119,8 @@ shinyServer(function(input, output, session) {
                   testValue(id$MD5Hash)))
       }
     }
-    rhandsontable(df, rowHeaders = NULL) %>% 
+    rhandsontable(df, rowHeaders = NULL,
+                  height = tblHeight) %>% 
       hot_table(allowColEdit = FALSE)
   })
   
@@ -120,46 +129,38 @@ shinyServer(function(input, output, session) {
       return(NULL)
     }
     isolate({
-      values$error <- NULL
       if (is.null(values$rdml)) {
         return(NULL)
       }
       df <- hot_to_r(input$idTbl)
-      apply(df, 1,
-            function(row)
-            {
-              tryCatch({
-                if (!is.null(values$rdml$id[[row["publisher"]]])) {
-                  values$rdml$id[[row["publisher"]]] <-
-                    rdmlIdType$new(
-                      publisher = testValue(row["publisher"]),
-                      serialNumber = testValue(row["serialNumber"]),
-                      MD5Hash = testValue(row["MD5Hash"])
-                    )
-                } else {
-                  if (!is.na(row["publisher"]) && row["publisher"] != "") {
-                    values$rdml$id <- c(
-                      values$rdml$id,
-                      rdmlIdType$new(
-                        publisher = row["publisher"],
-                        serialNumber = testValue(row["serialNumber"]),
-                        MD5Hash = testValue(row["MD5Hash"])
-                      ))
-                  }
-                }
-              },
-              error = function(e) {
-                values$error <- e
-              })
-            })
+      values$rdml$id <- { 
+        l <- apply(df, 1,
+               function(row)
+               {
+                 tryCatch({
+                   if (!all(is.na(row)) && !all(row == "")) {
+                     return(
+                       rdmlIdType$new(
+                         publisher = testValue(row["publisher"]),
+                         serialNumber = testValue(row["serialNumber"]),
+                         MD5Hash = testValue(row["MD5Hash"]))
+                     )}
+                   NULL
+                   },
+                   error = function(e) {
+                     values$log <- c(values$log,
+                                     genErrorMsg(row["publisher"], e$message))
+                     NULL
+                   })
+                 }) %>% compact
+        if (is.null(l))
+          list()
+        else l
+      }
     })
   })
   
-  output$errorText <- renderText({
-    if(is.null(values$error))
-      return(NULL)
-    values$error$message
-  })
+  
   
   # Experimenter Table ----------------------------------------------------------------  
   output$experimenterTbl <- renderRHandsontable({
@@ -169,7 +170,7 @@ shinyServer(function(input, output, session) {
       lastName = c("", ""),
       email = c("", ""),
       labName = c("", ""),
-      labAdress = c("", ""),
+      labAddress = c("", ""),
       stringsAsFactors = FALSE)
     if (!is.null(values$rdml)) {
       for(el in values$rdml$experimenter) {
@@ -180,13 +181,53 @@ shinyServer(function(input, output, session) {
                   testValue(el$lastName),
                   testValue(el$email),
                   testValue(el$labName),
-                  testValue(el$labAdress)))
+                  testValue(el$labAddress)))
       }
     }
-    rhandsontable(df, rowHeaders = NULL) %>% 
+    rhandsontable(df, rowHeaders = NULL,
+                  height = tblHeight) %>% 
       hot_table(allowColEdit = FALSE)
   })
   
+  
+  observe({
+    if (is.null(input$experimenterTbl)) {
+      return(NULL)
+    }
+    isolate({
+      if (is.null(values$rdml)) {
+        return(NULL)
+      }
+      df <- hot_to_r(input$experimenterTbl)
+      values$rdml$experimenter <- { 
+        l <- apply(df, 1,
+                   function(row)
+                   {
+                     tryCatch({
+                       if (!all(is.na(row)) && !all(row == "")) {
+                         return(
+                           experimenterType$new(
+                             id = idType$new(testValue(row["id"])),
+                             firstName = testValue(row["firstName"]),
+                             lastName = testValue(row["lastName"]),
+                             email = testValue(row["email"]),
+                             labName = testValue(row["labName"]),
+                             labAddress = testValue(row["labAddress"]),)
+                         )}
+                       NULL
+                     },
+                     error = function(e) {
+                       values$log <- c(values$log,
+                                       genErrorMsg(row["id"], e$message))
+                       NULL
+                     })
+                   }) %>% compact
+        if (is.null(l))
+          list()
+        else l
+      }
+    })
+  })
   # Download ----------------------------------------------------------------
   
   output$downloadRDML <- downloadHandler(
@@ -197,7 +238,16 @@ shinyServer(function(input, output, session) {
       values$rdml$AsXML(file)
     }
   )
-})
-
+  
+  # Log ---------------------------------------------------------------------
+  
+  
+  output$logText <- renderUI({
+    if (is.null(values$log))
+      return(NULL)
+    HTML(values$log)
+  })
+  
+  })
 
 
