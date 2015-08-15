@@ -4,6 +4,7 @@ library(rhandsontable)
 library(dplyr)
 
 shinyUI(
+  tags$div(
   navbarPage(
     title = "RDMLedit",
     theme = shinytheme("cerulean"),
@@ -17,8 +18,7 @@ shinyUI(
              downloadLink("downloadRDML", "Download RDML")),
     navbarMenu("Metadata",
                tabPanel("ID",
-                        rHandsontableOutput("idTbl"),
-                        textOutput("errorText")),
+                        rHandsontableOutput("idTbl")),
                tabPanel("Experimenter",
                         rHandsontableOutput("experimenterTbl")),
                tabPanel("Documentation",
@@ -32,5 +32,7 @@ shinyUI(
                tabPanel("Thermal Cycling Conditions",
                         "sfas")),
     tabPanel("Fluorescence Points")
+  ),
+  textOutput("errorText")
   )
 )
