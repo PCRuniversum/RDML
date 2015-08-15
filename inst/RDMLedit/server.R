@@ -16,11 +16,13 @@ testValue <- function(val) {
   val
 }
 
+
 genErrorMsg <- function(rowName, message) {
   sprintf("<p>Row: %s<br>%s</p>",
           rowName, 
           message)
 }
+
 
 tblHeight <- 500
 
@@ -150,6 +152,7 @@ shinyServer(function(input, output, session) {
                    error = function(e) {
                      values$log <- c(values$log,
                                      genErrorMsg(row["publisher"], e$message))
+
                      NULL
                    })
                  }) %>% compact
@@ -160,7 +163,12 @@ shinyServer(function(input, output, session) {
     })
   })
   
-  
+
+  output$logText <- renderUI({
+    if (is.null(values$log))
+      return(NULL)
+    HTML(values$log)
+  })
   
   # Experimenter Table ----------------------------------------------------------------  
   output$experimenterTbl <- renderRHandsontable({
@@ -249,5 +257,6 @@ shinyServer(function(input, output, session) {
   })
   
   })
+
 
 
