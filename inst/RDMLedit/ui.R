@@ -33,6 +33,6 @@ shinyUI(
                         "sfas")),
     tabPanel("Fluorescence Points")
   ),
-  textOutput("errorText")
+  uiOutput("logText")
   )
 )
