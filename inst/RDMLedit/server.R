@@ -10,7 +10,13 @@ library(RDML)
 library(plyr)
 library(dplyr)
 
-testValue <- function(val) {
+# testInputValue <- function(val) {
+#   if(is.null(val) || is.na(val) || val == "")
+#     return(NULL)
+#   val
+# }
+
+testInputValue <- function(val) {
   if(is.null(val) || is.na(val) || val == "")
     return(NULL)
   val
@@ -116,9 +122,9 @@ shinyServer(function(input, output, session) {
       for(id in values$rdml$id) {
         df <- 
           rbind(df,
-                c(testValue(id$publisher),
-                  testValue(id$serialNumber),
-                  testValue(id$MD5Hash)))
+                c(id$publisher,
+                  id$serialNumber,
+                  id$MD5Hash))
       }
     }
     rhandsontable(df, rowHeaders = NULL,
@@ -143,9 +149,9 @@ shinyServer(function(input, output, session) {
                    if (!all(is.na(row)) && !all(row == "")) {
                      return(
                        rdmlIdType$new(
-                         publisher = testValue(row["publisher"]),
-                         serialNumber = testValue(row["serialNumber"]),
-                         MD5Hash = testValue(row["MD5Hash"]))
+                         publisher = testInputValue(row["publisher"]),
+                         serialNumber = testInputValue(row["serialNumber"]),
+                         MD5Hash = testInputValue(row["MD5Hash"]))
                      )}
                    NULL
                    },
@@ -184,12 +190,12 @@ shinyServer(function(input, output, session) {
       for(el in values$rdml$experimenter) {
         df <- 
           rbind(df,
-                c(testValue(el$id$id),
-                  testValue(el$firstName),
-                  testValue(el$lastName),
-                  testValue(el$email),
-                  testValue(el$labName),
-                  testValue(el$labAddress)))
+                c(el$id$id,
+                  el$firstName,
+                  el$lastName,
+                  el$email,
+                  el$labName,
+                  el$labAddress))
       }
     }
     rhandsontable(df, rowHeaders = NULL,
@@ -215,12 +221,12 @@ shinyServer(function(input, output, session) {
                        if (!all(is.na(row)) && !all(row == "")) {
                          return(
                            experimenterType$new(
-                             id = idType$new(testValue(row["id"])),
-                             firstName = testValue(row["firstName"]),
-                             lastName = testValue(row["lastName"]),
-                             email = testValue(row["email"]),
-                             labName = testValue(row["labName"]),
-                             labAddress = testValue(row["labAddress"]),)
+                             id = idType$new(testInputValue(row["id"])),
+                             firstName = testInputValue(row["firstName"]),
+                             lastName = testInputValue(row["lastName"]),
+                             email = testInputValue(row["email"]),
+                             labName = testInputValue(row["labName"]),
+                             labAddress = testInputValue(row["labAddress"]))
                          )}
                        NULL
                      },
