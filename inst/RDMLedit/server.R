@@ -10,12 +10,6 @@ library(RDML)
 library(plyr)
 library(dplyr)
 
-# testInputValue <- function(val) {
-#   if(is.null(val) || is.na(val) || val == "")
-#     return(NULL)
-#   val
-# }
-
 testInputValue <- function(val) {
   if(is.null(val) || is.na(val) || val == "")
     return(NULL)
@@ -242,6 +236,119 @@ shinyServer(function(input, output, session) {
       }
     })
   })
+  
+  # Documentation Table -----------------------------------------------------  
+  
+  output$documentationTbl <- renderRHandsontable({
+    df <- data.frame(
+      id = c("", ""),
+      text = c("", ""),
+      stringsAsFactors = FALSE)
+    if (!is.null(values$rdml)) {
+      for(el in values$rdml$documentation) {
+        df <- 
+          rbind(df,
+                c(el$id$id,
+                  el$text))
+      }
+    }
+    rhandsontable(df, rowHeaders = NULL,
+                  height = tblHeight) %>% 
+      hot_table(allowColEdit = FALSE)
+  })
+  
+  
+  observe({
+    if (is.null(input$documentationTbl)) {
+      return(NULL)
+    }
+    isolate({
+      if (is.null(values$rdml)) {
+        return(NULL)
+      }
+      df <- hot_to_r(input$documentationTbl)
+      values$rdml$documentation <- { 
+        l <- apply(df, 1,
+                   function(row)
+                   {
+                     tryCatch({
+                       if (!all(is.na(row)) && !all(row == "")) {
+                         return(
+                           documentationType$new(
+                             id = idType$new(testInputValue(row["id"])),
+                             text = testInputValue(row["text"]))
+                         )}
+                       NULL
+                     },
+                     error = function(e) {
+                       values$log <- c(values$log,
+                                       genErrorMsg(row["id"], e$message))
+                       NULL
+                     })
+                   }) %>% compact
+        if (is.null(l))
+          list()
+        else l
+      }
+    })
+  })
+  
+  # Dye Table -----------------------------------------------------  
+  
+  output$dyeTbl <- renderRHandsontable({
+    df <- data.frame(
+      id = c("", ""),
+      description = c("", ""),
+      stringsAsFactors = FALSE)
+    if (!is.null(values$rdml)) {
+      for(el in values$rdml$dye) {
+        df <- 
+          rbind(df,
+                c(el$id$id,
+                  el$description))
+      }
+    }
+    rhandsontable(df, rowHeaders = NULL,
+                  height = tblHeight) %>% 
+      hot_table(allowColEdit = FALSE)
+  })
+  
+  
+  observe({
+    if (is.null(input$dyeTbl)) {
+      return(NULL)
+    }
+    isolate({
+      if (is.null(values$rdml)) {
+        return(NULL)
+      }
+      df <- hot_to_r(input$dyeTbl)
+      values$rdml$dye <- { 
+        l <- apply(df, 1,
+                   function(row)
+                   {
+                     tryCatch({
+                       if (!all(is.na(row)) && !all(row == "")) {
+                         return(
+                           dyeType$new(
+                             id = idType$new(testInputValue(row["id"])),
+                             description = testInputValue(row["description"]))
+                         )}
+                       NULL
+                     },
+                     error = function(e) {
+                       values$log <- c(values$log,
+                                       genErrorMsg(row["id"], e$message))
+                       NULL
+                     })
+                   }) %>% compact
+        if (is.null(l))
+          list()
+        else l
+      }
+    })
+  })
+  
   # Download ----------------------------------------------------------------
   
   output$downloadRDML <- downloadHandler(
@@ -263,6 +370,9 @@ shinyServer(function(input, output, session) {
   })
   
   })
+
+
+
 
 
 
