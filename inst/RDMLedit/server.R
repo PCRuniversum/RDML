@@ -10,12 +10,17 @@ library(RDML)
 library(plyr)
 library(dplyr)
 
-testInputValue <- function(val) {
+testEmptyInput <- function(val) {
   if(is.null(val) || is.na(val) || val == "")
     return(NULL)
   val
 }
 
+testNull <- function(val) {
+  if(is.null(val))
+    return(NA)
+  val
+}
 
 genErrorMsg <- function(rowName, message) {
   sprintf("<p>Row: %s<br>%s</p>",
@@ -62,9 +67,6 @@ shinyServer(function(input, output, session) {
                   selectCallback = TRUE) %>% 
       hot_table(allowColEdit = FALSE,
                 highlightRow = TRUE
-                #                 ,
-                #                 groups = list(list(cols = c(1, 2))
-                # )
       )
   })
   
@@ -143,9 +145,9 @@ shinyServer(function(input, output, session) {
                    if (!all(is.na(row)) && !all(row == "")) {
                      return(
                        rdmlIdType$new(
-                         publisher = testInputValue(row["publisher"]),
-                         serialNumber = testInputValue(row["serialNumber"]),
-                         MD5Hash = testInputValue(row["MD5Hash"]))
+                         publisher = testEmptyInput(row["publisher"]),
+                         serialNumber = testEmptyInput(row["serialNumber"]),
+                         MD5Hash = testEmptyInput(row["MD5Hash"]))
                      )}
                    NULL
                    },
@@ -215,12 +217,12 @@ shinyServer(function(input, output, session) {
                        if (!all(is.na(row)) && !all(row == "")) {
                          return(
                            experimenterType$new(
-                             id = idType$new(testInputValue(row["id"])),
-                             firstName = testInputValue(row["firstName"]),
-                             lastName = testInputValue(row["lastName"]),
-                             email = testInputValue(row["email"]),
-                             labName = testInputValue(row["labName"]),
-                             labAddress = testInputValue(row["labAddress"]))
+                             id = idType$new(testEmptyInput(row["id"])),
+                             firstName = testEmptyInput(row["firstName"]),
+                             lastName = testEmptyInput(row["lastName"]),
+                             email = testEmptyInput(row["email"]),
+                             labName = testEmptyInput(row["labName"]),
+                             labAddress = testEmptyInput(row["labAddress"]))
                          )}
                        NULL
                      },
@@ -275,8 +277,8 @@ shinyServer(function(input, output, session) {
                        if (!all(is.na(row)) && !all(row == "")) {
                          return(
                            documentationType$new(
-                             id = idType$new(testInputValue(row["id"])),
-                             text = testInputValue(row["text"]))
+                             id = idType$new(testEmptyInput(row["id"])),
+                             text = testEmptyInput(row["text"]))
                          )}
                        NULL
                      },
@@ -331,8 +333,93 @@ shinyServer(function(input, output, session) {
                        if (!all(is.na(row)) && !all(row == "")) {
                          return(
                            dyeType$new(
-                             id = idType$new(testInputValue(row["id"])),
-                             description = testInputValue(row["description"]))
+                             id = idType$new(testEmptyInput(row["id"])),
+                             description = testEmptyInput(row["description"]))
+                         )}
+                       NULL
+                     },
+                     error = function(e) {
+                       values$log <- c(values$log,
+                                       genErrorMsg(row["id"], e$message))
+                       NULL
+                     })
+                   }) %>% compact
+        if (is.null(l))
+          list()
+        else l
+      }
+    })
+  })
+  
+  # Sample Table -----------------------------------------------------  
+  
+  output$sampleTbl <- renderRHandsontable({
+    df <- data.frame(
+      id = c("", ""),
+      description = c("", ""),
+      type = c("", ""),
+      interRunCalibrator = c(FALSE, FALSE),
+      q.value = c("", ""),
+      q.unit = c("", ""),
+      calibratorSample = c(FALSE, FALSE),
+      cSM.enzyme = c("", ""),
+      cSM.primingMethod = c("", ""),
+      cSM.dnaseTreatment = c("", ""),
+      cSM.tcc = c("", ""),
+      tQ.conc = c("", ""),
+      tQ.nucleotide = c("", ""),
+      stringsAsFactors = FALSE)
+    if (!is.null(values$rdml)) {
+      for(el in values$rdml$sample) {
+        df <- 
+          rbind(df,
+                c(
+                  el$id$id,
+                  el$description,
+                  el$type$value,
+                  el$interRunCalibrator,
+                  el$quantity$value,
+                  el$quantity$unit$value,
+                  el$calibratorSample,
+                  el$cdnaSynthesisMethod$enzyme,
+                  el$cdnaSynthesisMethod$primingMethod$value,
+                  el$cdnaSynthesisMethod$dnaseTreatment,
+                  testNull(el$cdnaSynthesisMethod$
+                             thermalCyclingConditions$id),
+                  el$templateQuantity$conc,
+                  el$templateQuantity$nucleotide$value))
+                
+      }
+    }
+    rhandsontable(df, rowHeaders = NULL,
+                  height = tblHeight) %>% 
+      hot_table(allowColEdit = FALSE,
+                highlightRow = TRUE,
+                groups = list(list(cols = c(5, 6)),
+                              list(cols = 8:11),
+                              list(cols = c(12, 13))))
+  })
+  
+  # TODO
+  observe({
+    if (is.null(input$sampleTbl)) {
+      return(NULL)
+    }
+    isolate({
+      if (is.null(values$rdml)) {
+        return(NULL)
+      }
+      df <- hot_to_r(input$sampleTbl)
+      values$rdml$dye <- { 
+        l <- apply(df, 1,
+                   function(row)
+                   {
+                     tryCatch({
+                       if (!all(is.na(row)) && !all(row == "")) {
+                         return(
+                           sampleType$new(
+                             id = idType$new(testEmptyInput(row["id"])),
+                             description = testEmptyInput(row["description"]))
                          )}
                        NULL
                      },
@@ -356,6 +443,7 @@ shinyServer(function(input, output, session) {
       paste0(values$selFile, '.RDML')
     },
     content = function(file) {
+      # Do not work!!!! ?????
       values$rdml$AsXML(file)
     }
   )

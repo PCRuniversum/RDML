@@ -26,7 +26,7 @@ shinyUI(
                tabPanel("Dye",
                         rHandsontableOutput("dyeTbl")),
                tabPanel("Sample",
-                        "sfas"),
+                        rHandsontableOutput("sampleTbl")),
                tabPanel("Target",
                         "sfas"),
                tabPanel("Thermal Cycling Conditions",
