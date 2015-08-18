@@ -226,9 +226,9 @@ RDML <- R6Class("RDML",
                       return(private$.id)                    
                     assert_that(is.list.type(id,
                                              rdmlIdType))
-                    private$.id <- id
-#                       with.names(quote(id,
-#                                        .$publisher))
+                    private$.id <- 
+                      with.names(id,
+                                 quote(.$publisher))
                   },
                   
                   experimenter = function(experimenter) {
