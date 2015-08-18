@@ -184,7 +184,7 @@ RDML <- R6Class("RDML",
                   AsXML = function(file.name) {
                     tree <- self$.asXMLnodes("rdml",
                                              "http://www.rdml.org")
-                    #rdml_data.xml
+                    xmlAttrs(tree) <- c(version = 1.2)
                     if(missing(file.name))
                       return(tree)
                     saveXML(tree,
@@ -192,16 +192,6 @@ RDML <- R6Class("RDML",
                     zip(file.name,
                         "rdml_data.xml")
                     unlink("rdml_data.xml")
-                  },
-                  .asXMLnodes = function(node.name,
-                                         namespaceDefinitions = NULL) {
-                    tree <- 
-                      super$.asXMLnodes(node.name,
-                                        namespaceDefinitions)
-                    xmlAttrs(tree) <- c(version = 1.2)
-                    #                     tree$setNamespace("http://www.rdml.org")
-                    tree
-                    # super$.asXMLnodes(node.name)))
                   }
                 ),
                 private = list(
@@ -214,28 +204,7 @@ RDML <- R6Class("RDML",
                   .sample = NULL,
                   .target = NULL,
                   .thermalCyclingConditions = NULL,
-                  .experiment = NULL#,
-                  #                   .recalcPositions = function() {
-                  #                     for(exp.id in names(private$.experiment)) {
-                  #                       for(run.id in names(
-                  #                         private$.experiment[[exp.id]]$run)) {
-                  #                         for(react.id in names(
-                  #                           private$.experiment[[exp.id]]$
-                  #                           run[[run.id]]$react)) {
-                  #                           private$.experiment[[exp.id]]$
-                  #                             run[[run.id]]$
-                  #                             react[[react.id]]$position <- {
-                  #                               id <- as.integer(react.id)
-                  #                               cols <- private$.experiment[[exp.id]]$
-                  #                                 run[[run.id]]$pcrFormat$columns
-                  #                               sprintf("%s%02i",
-                  #                                       LETTERS[(id - 1) %/% cols + 1],
-                  #                                       as.integer((id - 1) %% cols + 1))
-                  #                             }
-                  #                         }
-                  #                       }
-                  #                     }
-                  #                   }
+                  .experiment = NULL
                 ),
                 active = list(
                   dateMade = function(date.made) {
@@ -257,9 +226,9 @@ RDML <- R6Class("RDML",
                       return(private$.id)                    
                     assert_that(is.list.type(id,
                                              rdmlIdType))
-                    private$.id <- id
-#                       with.names(quote(id,
-#                                        .$publisher))
+                    private$.id <- 
+                      with.names(id,
+                                 quote(.$publisher))
                   },
                   
                   experimenter = function(experimenter) {
