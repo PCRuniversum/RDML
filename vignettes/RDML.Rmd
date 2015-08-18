@@ -399,4 +399,33 @@ To provide functional programming style, which is more convenient in **R**, the 
 ```
 
 
+# Benchmark
+
+The RDML format may also store data from the high-throughput technologies as digital PCR or 384-well qPCR. To make the RDML package the most appropriate tool for such applications, we optimize the saving functionality of the package. Thanks to this, the RDML package is able to save in a reasonable time even large number of PCR experiments.
+
+We benchmarked the time needed for saving RDML object with different numbers of experiments on two desktop machines:  
+1. Windows 7 x64 (build 7601) Service Pack 1 on Intel Core i5 (2,40 GHz) with 4,00 GB RAM. 
+2. Stefan's machine.  
+
+In both cases we used R 3.2.1 (2015-06-18).
+
+To have the fairest comparison and take into account various factor like garbage collection, we repeated the procedure 100 times.
+
+```{r, fig.width = 6, fig.height = 3, echo = FALSE}
+bench_df <- read.csv("bench_df.csv")
+
+ggplot(bench_df, aes(x = nr, y = mean, colour = os)) +
+  geom_point(size = 3, alpha = 0.5) +
+  scale_x_continuous("Number of experiments") +
+  scale_y_continuous("Median time [s]") +
+  scale_color_discrete("Operating\nsystem") +
+  ggtitle("Results of benchmark")
+
+knitr::kable(bench_df[, c("nr", "median", "os")], format = "pandoc",
+             col.names = c("Number of experiments", "Median time [s]", "Operating System"),
+             caption = "Results of benchmark.")
+```
+
+The result above indicate that, thanks to the RDML package, even average laboratory workstation is able to save large RDML files in reasonable time (around 4 minutes for 1000 experiments).
+
 # References
