@@ -1,6 +1,6 @@
 #' Represents structure of \code{RDML} file as dendrogram
 #' 
-#' Plots and/or returns structure of \code{RDML} file as dendrogram (tree view)
+#' Plots and/or returns the structure of \code{RDML} file as dendrogram (tree view)
 #' 
 #' @param plot.dendrogram plots dendrogram if \code{TRUE}
 #' @return \code{dendrogram} object
