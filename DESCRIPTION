@@ -43,6 +43,7 @@ Suggests:
     chipPCR,
     ggplot2,
     knitr,
+    kfigr,
     MBmca,
     rhandsontable,
     shiny,
