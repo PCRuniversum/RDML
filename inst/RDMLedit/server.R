@@ -32,212 +32,262 @@ genErrorMsg <- function(rowName, message) {
 tblHeight <- 500
 
 shinyServer(function(input, output, session) {
-  values <- reactiveValues()
+  values <- reactiveValues(RDMLs = list())
   
-  # Files Table ------------------------------------------------------------
+  # Files Tab ------------------------------------------------------------
   
-  output$filesTbl <- renderRHandsontable({
-    df <- data.frame(
-      file = c(NA, NA),
-      dateMade = c(NA, NA),
-      dateUpdated = c(NA, NA),
-      merge = c(FALSE, FALSE),
-      stringsAsFactors = FALSE
-    )
-    if (!is.null(input$rdmlFiles)) {
+  # load files
+  observe({
+    if (is.null(input$rdmlFiles))
+      return(NULL)
+    isolate({
+      for(i in 1:length(input$rdmlFiles$name)) {
+        values$RDMLs[[input$rdmlFiles$name[i]]] <-
+          RDML$new(input$rdmlFiles$datapath[i])
+      }
+    })
+  })
+  
+  # update rdmlFileSlct values
+  observe({
+    if (is.null(values$RDMLs))
+      return(NULL)
+    isolate({
+      updateSelectizeInput(session,
+                           "rdmlFileSlct",
+                           choices = names(values$RDMLs),
+                           selected = input$rdmlFileSlct)
+    })
+  })
+  
+  # on rdmlFileSlct change
+  observe({
+    if (input$rdmlFileSlct == "") {
+      return(NULL)
+    }
+    isolate({
+      # create new empty file
+      if (!(input$rdmlFileSlct %in% names(values$RDMLs))) {
+        values$RDMLs[[input$rdmlFileSlct]] <- RDML$new()
+      }
+      # update mergeRdmlsSlct values
+      updateSelectInput(session,
+                        "mergeRdmlsSlct",
+                        choices = names(values$RDMLs)[names(values$RDMLs) != input$rdmlFileSlct],
+                        selected = NULL)
+      # clone selected too temp RDML 
+      values$rdml <- values$RDMLs[[input$rdmlFileSlct]]$clone(deep = TRUE)
+      # update fields
+      updateTextInput(session,
+                      "dateMadeText",
+                      value = testNull(values$rdml$dateMade))
+      updateTextInput(session,
+                      "dateUpdatedText",
+                      value = testNull(values$rdml$dateUpdated))
+      
+      # update selectors
+      # values$updateSlct <- TRUE
+      #       updateSelectizeInput(session,
+      #                            "idSlct",
+      #                            choices = names(values$rdml))
+    })
+  })
+  
+  # write to RDML
+  observe({
+    if (is.null(values$rdml))
+      return(NULL)
+    values$rdml$dateMade <- testEmptyInput(input$dateMadeText)
+    values$rdml$dateUpdated <- testEmptyInput(input$dateUpdatedText)
+  })
+  
+  # remove RDML
+  observe({
+    input$removeRDMLBtn
+    isolate({
+      values$rdml <- NULL
+      values$RDMLs[[input$rdmlFileSlct]] <- NULL
+    })
+  })
+  
+  # update RDML
+  observe({
+    input$updateRDMLBtn
+    isolate({
+      if (is.null(values$rdml))
+        return(NULL)
+      values$RDMLs[[input$rdmlFileSlct]] <- values$rdml$clone(deep = TRUE)
+    })
+  })
+  
+  # ID Tab ----------------------------------------------------------------  
+  
+  # init
+  observe({
+    if (is.null(values$rdml$id))
+      return(NULL)
+    isolate({
+      updateSelectizeInput(session,
+                           "idSlct",
+                           choices = names(values$rdml$id))
+    })
+  })
+  
+  # on idSlct change
+  observe({
+    if (input$idSlct == "") {
+      return(NULL)
+    }
+    isolate({
+      # update fields
+      if (!is.null(values$rdml$id[[input$idSlct]])) {
+        id <- values$rdml$id[[input$idSlct]]
+        updateTextInput(session,
+                        "idPublisherText",
+                        value = testNull(id$publisher))
+        updateTextInput(session,
+                        "idSerialNumberText",
+                        value = testNull(id$serialNumber))
+        updateTextInput(session,
+                        "idMD5HashText",
+                        value = testNull(id$MD5Hash))
+      } else {
+        updateTextInput(session,
+                        "idPublisherText",
+                        value = input$idSlct)
+      }
+    })
+  })
+  
+  # write to ID
+  observe({
+    if (is.null(testEmptyInput(input$idPublisherText))) {
+      return(NULL)
+    }
+    tryCatch({
+      id <- rdmlIdType$new(
+        publisher = testEmptyInput(input$idPublisherText),
+        serialNumber = testEmptyInput(input$idSerialNumberText),
+        MD5Hash = testEmptyInput(input$idMD5HashText))
       isolate({
-        for(i in 1:length(input$rdmlFiles$name)) {
-          values$RDMLs[[input$rdmlFiles$name[i]]] <-
-            RDML$new(input$rdmlFiles$datapath[i])
-        }
-        for(name in names(values$RDMLs)) {
-          df <- 
-            rbind(df,
-                  c(file = name,
-                    dateMade = values$RDMLs[[name]]$dateMade,
-                    dateUpdated = values$RDMLs[[name]]$dateUpdated,
-                    merge = FALSE,
-                    stringsAsFactors = FALSE))
+        values$rdml$id[[input$idSlct]] <- id
+        # rename list elements
+        if (input$idSlct != input$idPublisherText) {
+          values$rdml$id <- values$rdml$id
+          updateSelectizeInput(session,
+                               "idSlct",
+                               choices = names(values$rdml$id),
+                               selected = input$idPublisherText)
         }
       })
-    }
-    df$merge <- as.logical(df$merge)
-    rhandsontable(df, rowHeaders = NULL,
-                  height = tblHeight,
-                  selectCallback = TRUE) %>% 
-      hot_table(allowColEdit = FALSE,
-                highlightRow = TRUE
-      )
+    },
+    error = function(e) print(e$message)
+    )
   })
   
+  # remove ID
   observe({
-    if (is.null(input$filesTbl)) {
+    input$removeIDBtn
+    isolate({
+      values$rdml$id[[input$idSlct]] <- NULL
+      updateSelectizeInput(session,
+                           "idSlct",
+                           choices = names(values$rdml$id))
+    })
+  })
+  
+  # Experimenter Tab ----------------------------------------------------------------  
+  
+  # init
+  observe({
+    if (is.null(values$rdml$experimenter))
+      return(NULL)
+    isolate({
+      updateSelectizeInput(session,
+                           "experimenterSlct",
+                           choices = names(values$rdml$experimenter))
+    })
+  })
+  
+  # on experimenterSlct change
+  observe({
+    if (input$experimenterSlct == "") {
       return(NULL)
     }
-    df <- hot_to_r(input$filesTbl)
-    apply(df, 1, 
-          function(row) {
-            if (!is.null(values$RDMLs[[row["file"]]])) {
-              values$RDMLs[[row["file"]]]$dateMade <- row["dateMade"]
-              values$RDMLs[[row["file"]]]$dateUpdated <- row["dateUpdated"]
-            } else {
-              if (!is.na(row["file"]) && row["file"] != "") {
-                values$RDMLs[[row["file"]]] <- RDML$new()
-              }
-            }
-          })
-  })
-  
-  observe({
-    if (!is.null(input$filesTbl_select)) {
-      row <- input$filesTbl_select$select$r + 1
-      values$selFile <- input$filesTbl_select$data[[row]][[1]]
-      if (!is.null(values$RDMLs[[values$selFile]])) {
-        values$rdml <- values$RDMLs[[values$selFile]]$clone(deep = TRUE)
+    isolate({
+      # update fields
+      if (!is.null(values$rdml$experimenter[[input$experimenterSlct]])) {
+        experimenter <- values$rdml$experimenter[[input$experimenterSlct]]
+        updateTextInput(session,
+                        "experimenterIdText",
+                        value = testNull(experimenter$id))
+        updateTextInput(session,
+                        "experimenterFirstNameText",
+                        value = testNull(experimenter$firstName))
+        updateTextInput(session,
+                        "experimenterLastNameText",
+                        value = testNull(experimenter$lastName))
+        updateTextInput(session,
+                        "experimenterEmailText",
+                        value = testNull(experimenter$email))
+        updateTextInput(session,
+                        "experimenterLabNameText",
+                        value = testNull(experimenter$labName))
+        updateTextInput(session,
+                        "experimenterLabAddressText",
+                        value = testNull(experimenter$labAddress))
       } else {
-        values$rdml <- NULL
-      }
-    }
-  })
-  
-  output$selectedFileText <- renderText({
-    if (is.null(values$selFile))
-      return(NULL)
-    sprintf("Selected file: %s", values$selFile)
-  })
-  
-  # ID Table ----------------------------------------------------------------  
-  
-  output$idTbl <- renderRHandsontable({
-    df <- data.frame(
-      publisher = c("", ""),
-      serialNumber = c("", ""),
-      MD5Hash = c("", ""),
-      stringsAsFactors = FALSE)
-    if (!is.null(values$rdml)) {
-      for(id in values$rdml$id) {
-        df <- 
-          rbind(df,
-                c(id$publisher,
-                  id$serialNumber,
-                  id$MD5Hash))
-      }
-    }
-    rhandsontable(df, rowHeaders = NULL,
-                  height = tblHeight) %>% 
-      hot_table(allowColEdit = FALSE)
-  })
-  
-  observe({
-    if (is.null(input$idTbl)) {
-      return(NULL)
-    }
-    isolate({
-      if (is.null(values$rdml)) {
-        return(NULL)
-      }
-      df <- hot_to_r(input$idTbl)
-      values$rdml$id <- { 
-        l <- apply(df, 1,
-               function(row)
-               {
-                 tryCatch({
-                   if (!all(is.na(row)) && !all(row == "")) {
-                     return(
-                       rdmlIdType$new(
-                         publisher = testEmptyInput(row["publisher"]),
-                         serialNumber = testEmptyInput(row["serialNumber"]),
-                         MD5Hash = testEmptyInput(row["MD5Hash"]))
-                     )}
-                   NULL
-                   },
-                   error = function(e) {
-                     values$log <- c(values$log,
-                                     genErrorMsg(row["publisher"], e$message))
-
-                     NULL
-                   })
-                 }) %>% compact
-        if (is.null(l))
-          list()
-        else l
+        updateTextInput(session,
+                        "publisherText",
+                        value = input$experimenterSlct)
       }
     })
   })
   
-
-  output$logText <- renderUI({
-    if (is.null(values$log))
-      return(NULL)
-    HTML(values$log)
-  })
-  
-  # Experimenter Table ----------------------------------------------------------------  
-  output$experimenterTbl <- renderRHandsontable({
-    df <- data.frame(
-      id = c("", ""),
-      firstName = c("", ""),
-      lastName = c("", ""),
-      email = c("", ""),
-      labName = c("", ""),
-      labAddress = c("", ""),
-      stringsAsFactors = FALSE)
-    if (!is.null(values$rdml)) {
-      for(el in values$rdml$experimenter) {
-        df <- 
-          rbind(df,
-                c(el$id$id,
-                  el$firstName,
-                  el$lastName,
-                  el$email,
-                  el$labName,
-                  el$labAddress))
-      }
-    }
-    rhandsontable(df, rowHeaders = NULL,
-                  height = tblHeight) %>% 
-      hot_table(allowColEdit = FALSE)
-  })
-  
-  
+  # write to experimenter
   observe({
-    if (is.null(input$experimenterTbl)) {
+    if (is.null(testEmptyInput(input$publisherText))) {
       return(NULL)
     }
+    tryCatch({
+      isolate({
+        experimenter <- values$rdml$experimenter[[input$experimenterSlct]]
+      })
+      experimenter <- experimenterType$new(
+        testEmptyInput(input$experimenterIdText),
+        testEmptyInput(input$experimenterFirstNameText),
+        testEmptyInput(input$experimenterLastNameText),
+        testEmptyInput(input$experimenterEmailText),
+        testEmptyInput(input$experimenterLabNameText),
+        testEmptyInput(input$experimenterLabAddressText))
+      isolate({
+        values$rdml$experimenter[[input$experimenterSlct]] <- experimenter
+        # rename list elements
+        if (input$experimenterSlct != input$experimenterIdText) {
+          values$rdml$experimenter <- values$rdml$experimenter
+          updateSelectizeInput(session,
+                               "experimenterSlct",
+                               choices = names(values$rdml$experimenter),
+                               selected = input$experimenterIdText)
+        }
+      })
+    },
+    error = function(e) print(e$message)
+    )
+  })
+  
+  # remove experimenter
+  observe({
+    input$removeExperimenterBtn
     isolate({
-      if (is.null(values$rdml)) {
-        return(NULL)
-      }
-      df <- hot_to_r(input$experimenterTbl)
-      values$rdml$experimenter <- { 
-        l <- apply(df, 1,
-                   function(row)
-                   {
-                     tryCatch({
-                       if (!all(is.na(row)) && !all(row == "")) {
-                         return(
-                           experimenterType$new(
-                             id = idType$new(testEmptyInput(row["id"])),
-                             firstName = testEmptyInput(row["firstName"]),
-                             lastName = testEmptyInput(row["lastName"]),
-                             email = testEmptyInput(row["email"]),
-                             labName = testEmptyInput(row["labName"]),
-                             labAddress = testEmptyInput(row["labAddress"]))
-                         )}
-                       NULL
-                     },
-                     error = function(e) {
-                       values$log <- c(values$log,
-                                       genErrorMsg(row["id"], e$message))
-                       NULL
-                     })
-                   }) %>% compact
-        if (is.null(l))
-          list()
-        else l
-      }
+      values$rdml$experimenter[[input$experimenterSlct]] <- NULL
+      updateSelectizeInput(session,
+                           "experimenterSlct",
+                           choices = names(values$rdml$experimenter))
     })
   })
+  
+  
   
   # Documentation Table -----------------------------------------------------  
   
@@ -388,7 +438,7 @@ shinyServer(function(input, output, session) {
                              thermalCyclingConditions$id),
                   el$templateQuantity$conc,
                   el$templateQuantity$nucleotide$value))
-                
+        
       }
     }
     rhandsontable(df, rowHeaders = NULL,
@@ -457,7 +507,7 @@ shinyServer(function(input, output, session) {
     HTML(values$log)
   })
   
-  })
+})
 
 
 
