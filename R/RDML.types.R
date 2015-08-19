@@ -555,16 +555,19 @@ xRefType <-
 
 #' annotationType R6 class.
 #' 
-#' These elements should be used to annotate samples by setting a property and a
-#' value. A property could be sex, the value M or F.Inherits:
+#' Annotate samples by setting a property and its value. For example, 
+#' sex could be a property with the possible values M or F. Inherits:
 #' \link{rdmlBaseType}.
 #' 
 #' @section Fields: \describe{ \item{property}{\link[assertthat]{is.string}.
-#'   Property} \item{value}{\link[assertthat]{is.string}. Value} }
+#'   Property name} \item{value}{\link[assertthat]{is.string}. Value} }
 #'   
 #' @docType class
 #' @format An \code{\link{R6Class}} generator object.
 #' @export
+#' @examples
+#' #set sex property
+#' annotationType$new(property = "sex", value = "M")
 annotationType <- 
   R6Class("annotationType",
           # class = FALSE,
@@ -1653,13 +1656,12 @@ targetType <-
 
 #' adpsType R6 class.
 #' 
-#' Contains of amplification data points \code{matrix} -- single data points 
-#' measured during amplification. \code{Matrix} columns: \describe{ 
-#' \item{cyc}{(every point must be unique) Cycle - The PCR cycle at which data 
-#' point was collected.} \item{tmp}{(optional) Temperature - The temperature in 
-#' degrees Celsius at the time of measurement.} \item{fluor}{Fluorescence - The 
-#' fluorescence intensity measured without any correction. The fluorescence 
-#' intensity must not be baseline corrected.}} Inherits: 
+#' @details 
+#' Contains \code{matrix} of amplification data. Must have three columns: \describe{ 
+#' \item{cyc}{PCR cycle at which data 
+#' point was collected (every cycle must have unique number).} 
+#' \item{tmp}{temperature in degrees Celsius at the time of measurement (optional).} 
+#' \item{fluor}{raw fluorescence intensity measured.}} Inherits: 
 #' \link{rdmlBaseType}.
 #' 
 #' @section Initialization: \preformatted{adpsType$new(fpoints)}
@@ -1672,6 +1674,29 @@ targetType <-
 #' @docType class
 #' @format An \code{\link{R6Class}} generator object.
 #' @export
+#' @examples 
+#' #cycles
+#' cyc <- c(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 
+#' 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 
+#' 34, 35, 36, 37, 38, 39, 40)
+#' #fluorescence
+#' fluo <- c(2.0172, 2.0131, 2.0035, 2, 2.0024, 2.0056, 2.0105, 2.0179, 
+#' 2.0272, 2.0488, 2.0922, 2.1925, 2.3937, 2.7499, 3.3072, 4.0966, 
+#' 5.0637, 6.0621, 7.0239, 7.8457, 8.5449, 9.1282, 9.6022, 9.9995, 
+#' 10.2657, 10.4989, 10.6813, 10.8209, 10.9158, 10.9668, 11.0053, 
+#' 11.0318, 11.0446, 11.044, 11.0052, 10.9671, 10.9365, 10.9199, 
+#' 10.897, 10.8316)
+#' #temperature
+#' temp <- c(55, 55, 55, 55, 54, 54, 55, 55, 55, 55, 55, 55, 55, 55, 55, 
+#' 55, 55, 55, 55, 55, 55, 55, 55, 56, 55, 55, 55, 55, 55, 55, 55, 
+#' 55, 55, 55, 55, 55, 55, 55, 55, 55)
+#' 
+#' #combine all variables into a proper object
+#' data <- matrix(c(cyc, temp, fluo), ncol = 3)
+#' colnames(data) <- c("cyc", "tmp", "fluo")
+#' 
+#' #create adps object
+#' adpsType$new(data)
 adpsType <- 
   R6Class("adpsType",
           # class = FALSE,
