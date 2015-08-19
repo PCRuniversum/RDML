@@ -18,7 +18,10 @@ Plots and/or returns structure of \code{RDML} file as dendrogram (tree view)
 PATH <- path.package("RDML")
 filename <- paste(PATH, "/extdata/", "BioRad_qPCR_melt.rdml", sep ="")
 cfx96 <- RDML$new(filename)
+#plot dendrogram
 cfx96$AsDendrogram()
+#save dendrogram
+dendr <- cfx96$AsDendrogram(plot.dendrogram = FALSE)
 }
 }
 \author{
