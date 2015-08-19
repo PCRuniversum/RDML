@@ -1693,7 +1693,7 @@ targetType <-
 #' 
 #' #combine all variables into a proper object
 #' data <- matrix(c(cyc, temp, fluo), ncol = 3)
-#' colnames(data) <- c("cyc", "tmp", "fluo")
+#' colnames(data) <- c("cyc", "tmp", "fluor")
 #' 
 #' #create adps object
 #' adpsType$new(data)

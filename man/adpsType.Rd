@@ -48,12 +48,12 @@ temp <- c(55, 55, 55, 55, 54, 54, 55, 55, 55, 55, 55, 55, 55, 55, 55,
 
 #combine all variables into a proper object
 data <- matrix(c(cyc, temp, fluo), ncol = 3)
-colnames(data) <- c("cyc", "tmp", "fluo")
+colnames(data) <- c("cyc", "tmp", "fluor")
 
 #create adps object
 adpsType$new(data)
 
-#create adps object without a temperature data
+#create adps object without temperature data
 adpsType$new(data[, -2])
 }
 \keyword{datasets}
