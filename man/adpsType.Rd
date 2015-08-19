@@ -52,6 +52,9 @@ colnames(data) <- c("cyc", "tmp", "fluo")
 
 #create adps object
 adpsType$new(data)
+
+#create adps object without a temperature data
+adpsType$new(data[, -2])
 }
 \keyword{datasets}
 

@@ -1697,6 +1697,9 @@ targetType <-
 #' 
 #' #create adps object
 #' adpsType$new(data)
+#' 
+#' #create adps object without temperature data
+#' adpsType$new(data[, -2])
 adpsType <- 
   R6Class("adpsType",
           # class = FALSE,
