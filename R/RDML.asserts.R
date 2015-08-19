@@ -136,11 +136,11 @@ on_failure(is.enum) <- function(call, env) {
           paste0(eval(call$levels, envir = env), collapse = ", "))
 }
 
-has.only.names <- function(x, only.names) {
-  !(FALSE %in% (names(x) %in% only.names))
+has.col.names <- function(x, c.names) {
+  (ncol(x) == length(c.names)) && !(FALSE %in% (colnames(x) %in% c.names))
 }
-on_failure(has.only.names) <- function(call, env) {
-  paste0(deparse(call$x), " has names not in: ", paste(call$only.names, collapse = ", "))
+on_failure(has.col.names) <- function(call, env) {
+  paste0(deparse(call$x), " has col names not in: ", paste(call$c.names, collapse = ", "))
 }
 
 is.to.remove.list <- function(x) {  

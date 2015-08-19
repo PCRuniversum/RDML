@@ -1679,8 +1679,10 @@ adpsType <-
           public = list(
             initialize = function(fpoints) {
               assert_that(is.double.matrix(fpoints))
-              assert_that(has.only.names(fpoints,
-                                         c("cyc", "tmp", "fluor")))
+              assert_that(has.col.names(fpoints,
+                                         c("cyc", "tmp", "fluor")) ||
+                            has.col.names(fpoints,
+                                      c("cyc", "fluor")))
               private$.fpoints <- fpoints
             },
             .asXMLnodes = function(node.name) {
@@ -1719,8 +1721,10 @@ adpsType <-
               if (missing(fpoints))
                 return(private$.fpoints)
               assert_that(is.double.matrix(fpoints))
-              assert_that(has.only.names(fpoints,
-                                         c("cyc", "tmp", "fluor")))
+              assert_that(has.col.names(fpoints,
+                                         c("cyc", "tmp", "fluor")) ||
+                            has.col.names(fpoints,
+                                          c("cyc", "fluor")))
               private$.fpoints <- fpoints
             }
           ))
@@ -1752,7 +1756,7 @@ mdpsType <-
           public = list(
             initialize = function(fpoints) {
               assert_that(is.double.matrix(fpoints))
-              assert_that(has.only.names(fpoints,
+              assert_that(has.col.names(fpoints,
                                          c("tmp", "fluor")))
               private$.fpoints <- fpoints
             },
@@ -1781,7 +1785,7 @@ mdpsType <-
               if (missing(fpoints))
                 return(private$.fpoints)
               assert_that(is.double.matrix(fpoints))
-              assert_that(has.only.names(fpoints,
+              assert_that(has.col.names(fpoints,
                                          c("tmp", "fluor")))
               private$.fpoints <- fpoints
             }
