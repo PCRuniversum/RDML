@@ -25,10 +25,6 @@ The XML technology is commonly used in the **R** environment and there are sever
 
 We use the **R6** [@Chang_R6], **assertthat** [@Wickham_assertthat], **plyr** [@Wickham_plyr], **dplyr** [@Wickham_Francois_dplyr], **tidyr** [@Wickham_tidyr] and **rlist** [@Ren_rlist] packages.
 
-XML files can be compressed to save sapce. The **RMDL** package uses the `zip()` function from the **utils** package with default values to compress the RDML file. Therefore, the compression mode depends on the operating system.
-
-XML becomes less efficient to work with at larger file sizes and complexer structured information (e.g., matrices).
-
 # Vendors and software packages supporting RDML
 
 The RDML format is supported by Bio-Rad (CFX 96 and CFX 384), Life Technologies (StepOne, ViiA7, QuantStudio) and Roche (LightCycler~96) thermo-cycler systems. In addition, several software packages (e.g., **Primer3Plus**, **RDML-Ninja**, **qBase+**) exist, which support RDML [@untergasser_2007; @hellemans_2007; @ruijter_amplification_2009; @pabinger_2014; @rdml-ninja_2015].

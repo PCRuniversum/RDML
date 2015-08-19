@@ -174,7 +174,7 @@ RDML <- R6Class("RDML",
                 inherit = rdmlBaseType,
                 public = list(
                   ###               WARNING
-                  ### Some RDML functions are store at separate files!!!
+                  ### Some RDML functions are stored as separate files!!!
                   ### Empty functions are added to let roxygen work.                  
                   initialize = function() { },                  
                   AsTable = function() { },

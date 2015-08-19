@@ -1,10 +1,10 @@
 #' Represents fields of \code{RDML} object as \code{data.frame}
 #' 
-#' Represents specified fields of \code{RDML} object as \code{data.frame} to 
-#' overview, filter or pass them to \code{GetFData} and \code{SetFData} 
+#' Formats particular fields of \code{RDML} object as \code{data.frame}s. 
+#' filter or pass them to \code{\link{RDML.GetFData}} and \code{RDML.SetFData} 
 #' functions.
 #' 
-#' By default input this function forms \code{data.frame} with such columns: 
+#' By default input this function forms \code{data.frame} with following columns: 
 #' \describe{ \item{exp.id}{experiment$id} \item{run.id}{run$id} 
 #' \item{react.id}{react$id} 
 #' \item{position}{react$position} 

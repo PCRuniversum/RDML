@@ -1,6 +1,6 @@
 #' Represents structure of \code{RDML} file as dendrogram
 #' 
-#' Plots and/or returns structure of \code{RDML} file as dendrogram (tree view)
+#' Plots and/or returns the structure of \code{RDML} file as dendrogram (tree view)
 #' 
 #' @param plot.dendrogram plots dendrogram if \code{TRUE}
 #' @return \code{dendrogram} object
@@ -17,7 +17,10 @@
 #' PATH <- path.package("RDML")
 #' filename <- paste(PATH, "/extdata/", "BioRad_qPCR_melt.rdml", sep ="")
 #' cfx96 <- RDML$new(filename)
+#' #plot dendrogram
 #' cfx96$AsDendrogram()
+#' #save dendrogram
+#' dendr <- cfx96$AsDendrogram(plot.dendrogram = FALSE)
 #' }
 RDML$set("public", "AsDendrogram",
          function(plot.dendrogram = TRUE) {

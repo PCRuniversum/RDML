@@ -9,13 +9,17 @@
 annotationType
 }
 \description{
-These elements should be used to annotate samples by setting a property and a
-value. A property could be sex, the value M or F.Inherits:
+Annotate samples by setting a property and its value. For example,
+sex could be a property with the possible values M or F. Inherits:
 \link{rdmlBaseType}.
 }
 \section{Fields}{
  \describe{ \item{property}{\link[assertthat]{is.string}.
-  Property} \item{value}{\link[assertthat]{is.string}. Value} }
+  Property name} \item{value}{\link[assertthat]{is.string}. Value} }
+}
+\examples{
+#set sex property
+annotationType$new(property = "sex", value = "M")
 }
 \keyword{datasets}
 
