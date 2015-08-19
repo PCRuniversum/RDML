@@ -19,7 +19,7 @@ testEmptyInput <- function(val) {
 testNull <- function(val) {
   if(is.null(val))
     return(NA)
-  val
+  unname(val)
 }
 
 genErrorMsg <- function(rowName, message) {
@@ -220,7 +220,7 @@ shinyServer(function(input, output, session) {
         experimenter <- values$rdml$experimenter[[input$experimenterSlct]]
         updateTextInput(session,
                         "experimenterIdText",
-                        value = testNull(experimenter$id))
+                        value = testNull(experimenter$id$id))
         updateTextInput(session,
                         "experimenterFirstNameText",
                         value = testNull(experimenter$firstName))
@@ -254,7 +254,7 @@ shinyServer(function(input, output, session) {
         experimenter <- values$rdml$experimenter[[input$experimenterSlct]]
       })
       experimenter <- experimenterType$new(
-        testEmptyInput(input$experimenterIdText),
+        idType$new(testEmptyInput(input$experimenterIdText)),
         testEmptyInput(input$experimenterFirstNameText),
         testEmptyInput(input$experimenterLastNameText),
         testEmptyInput(input$experimenterEmailText),

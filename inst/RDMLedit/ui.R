@@ -55,7 +55,7 @@ shinyUI(
                                        options= list(
                                          create =TRUE
                                        )),
-                        textInput("experimenterIdText", "Publisher",
+                        textInput("experimenterIdText", "ID",
                                   ""),
                         textInput("experimenterFirstNameText", "Serial Number",
                                   ""),
