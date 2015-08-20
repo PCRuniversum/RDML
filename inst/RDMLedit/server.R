@@ -365,6 +365,7 @@ shinyServer(function(input, output, session) {
   
   # Dye Tab -----------------------------------------------------  
   
+  
   # init
   observe({
     if (is.null(values$rdml$dye))
@@ -375,65 +376,101 @@ shinyServer(function(input, output, session) {
                            choices = names(values$rdml$dye))
     })
   })
-  
-  # on dyeSlct change
-  observe({
-    if (input$dyeSlct == "") {
-      return(NULL)
+  #   
+  dye <- reactive({
+    if (!is.null(values$rdml$dye[[input$dyeSlct]])) {
+      print("ok")
+      values$rdml$dye[[input$dyeSlct]]
+      
+    } else {
+      updateTextInput(session,
+                      "dyeIdText",
+                      value = input$dyeSlct)
+      NULL
     }
-    isolate({
-      # update fields
-      if (!is.null(values$rdml$dye[[input$dyeSlct]])) {
-        dye <- values$rdml$dye[[input$dyeSlct]]
-        updateTextInput(session,
-                        "dyeIdText",
-                        value = testNull(dye$id$id))
-        updateTextInput(session,
-                        "dyeDescriptionText",
-                        value = testNull(dye$description))
-      } else {
-        updateTextInput(session,
-                        "dyeIdText",
-                        value = input$dyeSlct)
-      }
-    })
   })
   
-  # write to dye
-  observe({
-    if (is.null(testEmptyInput(input$dyeIdText))) {
+  output$dyeTabWell <- renderUI({
+    if (is.null(dye()))
       return(NULL)
-    }
-    tryCatch({
-      dye <- dyeType$new(
-        idType$new(testEmptyInput(input$dyeIdText)),
-        testEmptyInput(input$dyeDescriptionText))
-      isolate({
-        values$rdml$dye[[input$dyeSlct]] <- dye
-        # rename list elements
-        if (input$dyeSlct != input$dyeIdText) {
-          values$rdml$dye <- values$rdml$dye
-          updateSelectizeInput(session,
-                               "dyeSlct",
-                               choices = names(values$rdml$dye),
-                               selected = input$dyeIdText)
-        }
-      })
-    },
-    error = function(e) print(e$message)
+    wellPanel(
+      textInput("dyeIdText", "ID",
+                testNull(dye()$id$id)),
+      textInput("dyeDescriptionText", "Text",
+                testNull(dye()$description)),
+      actionButton("removeDyeBtn",
+                   "Remove Dye")
     )
   })
   
-  # remove dye
-  observe({
-    input$removeDyeBtn
-    isolate({
-      values$rdml$dye[[input$dyeSlct]] <- NULL
-      updateSelectizeInput(session,
-                           "dyeSlct",
-                           choices = names(values$rdml$dye))
-    })
-  })
+#   dye <- reactive({
+#     tryCatch({
+#     dyeType$new(
+#       idType$new(testEmptyInput(input$dyeIdText)),
+#       testEmptyInput(input$dyeDescriptionText))
+#     },
+#     error = function(e) print(e$message)
+#     )
+#   })
+  
+#   # on dyeSlct change
+#   observe({
+#     if (input$dyeSlct == "") {
+#       return(NULL)
+#     }
+#     isolate({
+#       # update fields
+#       if (!is.null(values$rdml$dye[[input$dyeSlct]])) {
+#         dye <- values$rdml$dye[[input$dyeSlct]]
+#         updateTextInput(session,
+#                         "dyeIdText",
+#                         value = testNull(dye$id$id))
+#         updateTextInput(session,
+#                         "dyeDescriptionText",
+#                         value = testNull(dye$description))
+#       } else {
+#         updateTextInput(session,
+#                         "dyeIdText",
+#                         value = input$dyeSlct)
+#       }
+#     })
+#   })
+#   
+#   # write to dye
+#   observe({
+#     if (is.null(testEmptyInput(input$dyeIdText))) {
+#       return(NULL)
+#     }
+#     tryCatch({
+#       dye <- dyeType$new(
+#         idType$new(testEmptyInput(input$dyeIdText)),
+#         testEmptyInput(input$dyeDescriptionText))
+#       isolate({
+#         values$rdml$dye[[input$dyeSlct]] <- dye
+#         # rename list elements
+#         if (input$dyeSlct != input$dyeIdText) {
+#           values$rdml$dye <- values$rdml$dye
+#           updateSelectizeInput(session,
+#                                "dyeSlct",
+#                                choices = names(values$rdml$dye),
+#                                selected = input$dyeIdText)
+#         }
+#       })
+#     },
+#     error = function(e) print(e$message)
+#     )
+#   })
+#   
+#   # remove dye
+#   observe({
+#     input$removeDyeBtn
+#     isolate({
+#       values$rdml$dye[[input$dyeSlct]] <- NULL
+#       updateSelectizeInput(session,
+#                            "dyeSlct",
+#                            choices = names(values$rdml$dye))
+#     })
+#   })
   
   # Sample Table -----------------------------------------------------  
   

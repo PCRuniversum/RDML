@@ -90,10 +90,15 @@ shinyUI(
                                          options= list(
                                            create =TRUE
                                          )),
-                          textInput("dyeDescriptionText", "Text",
-                                    ""),
-                          actionButton("removeDyeBtn",
-                                       "Remove Dye")),
+                          uiOutput("dyeTabWell")
+#                           textInput("dyeIdText", "ID",
+#                                     ""),
+#                           textInput("dyeDescriptionText", "Text",
+#                                     ""),
+#                           actionButton("removeDyeBtn",
+#                                        "Remove Dye")
+
+                          ),
                  tabPanel("Sample",
                           selectizeInput("sampleSlct",
                                          "Select Sample",
