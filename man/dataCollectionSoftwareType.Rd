@@ -9,7 +9,7 @@
 dataCollectionSoftwareType
 }
 \description{
-Software name and version used to collect and analyze the data.Inherits:
+Software name and version used to collect and analyze the data. Inherits:
 \link{rdmlBaseType}.
 }
 \section{Initialization}{
@@ -21,6 +21,10 @@ Software name and version used to collect and analyze the data.Inherits:
 \item{\code{name}}{\link[assertthat]{is.string}.}
 \item{\code{version}}{\link[assertthat]{is.string}.}
   }
+}
+\examples{
+dataCollectionSoftwareType$new(name = "ExampleSoft",
+                               version = "1.0")
 }
 \keyword{datasets}
 

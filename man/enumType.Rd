@@ -9,7 +9,7 @@
 enumType
 }
 \description{
-Generic class for creating objects thet can take limited list of values.\cr
+Generic class for creating objects thet can take limited list of values. \cr
 Inherits: \link{rdmlBaseType}.
 }
 \section{Initialization}{

@@ -12,10 +12,10 @@ cqDetectionMethodType
 The method used to determine the Cq value.
 Can take values:
 \describe{
-\item{automated threshold and baseline settings}{}
-\item{manual threshold and baseline settings}{}
-\item{second derivative maximum}{}
-\item{other}{}
+\item{"automated threshold and baseline settings"}{}
+\item{"manual threshold and baseline settings"}{}
+\item{"second derivative maximum"}{}
+\item{"other"}{}
 }
 Inherits: \link{enumType}.
 }

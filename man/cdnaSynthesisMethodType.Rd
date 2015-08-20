@@ -19,9 +19,10 @@ Description of the cDNA synthesis method. Inherits: \link{rdmlBaseType}.
 
 \section{Fields}{
  \describe{
-  \item{\code{enzyme}}{\link[base]{is.double}. Enzyme used for reverse
-  transcription.} \item{\code{primingMethod}}{\link{primingMethodType}.}
-  \item{\code{dnaseTreatment}}{\link[assertthat]{is.flag} \code{TRUE} if RNA was
+  \item{\code{enzyme}}{\link[assertthat]{is.string}. Name of the enzyme used for
+  reverse transcription.}
+  \item{\code{primingMethod}}{\link{primingMethodType}.}
+  \item{\code{dnaseTreatment}}{\link[assertthat]{is.flag} if \code{TRUE}RNA was
   DNAse treated prior cDNA synthesis.}
   \item{\code{thermalCyclingConditions}}{\link{idReferencesType}.}
   }

@@ -409,7 +409,7 @@ experimenterType <-
 #' documentationType R6 class.
 #' 
 #' These elements should be used if the same description applies to many
-#' samples, targets or experiments.Inherits: \link{rdmlBaseType}.
+#' samples, targets or experiments. Inherits: \link{rdmlBaseType}.
 #' 
 #' @section Initialization: \preformatted{documentationType$new(id, text = NULL)}
 #'   
@@ -457,7 +457,7 @@ documentationType <-
 
 #' dyeType R6 class.
 #' 
-#' Information on a dye.Inherits: \link{rdmlBaseType}.
+#' Detailed information about the dye. Inherits: \link{rdmlBaseType}.
 #' 
 #' @section Initialization: \preformatted{dyeType$new(id, description = NULL)}
 #'   
@@ -663,9 +663,10 @@ quantityType <-
 #'   NULL)}
 #'   
 #'   @section Fields: \describe{  
-#'   \item{\code{enzyme}}{\link[base]{is.double}. Enzyme used for reverse
-#'   transcription.} \item{\code{primingMethod}}{\link{primingMethodType}.} 
-#'   \item{\code{dnaseTreatment}}{\link[assertthat]{is.flag} \code{TRUE} if RNA was
+#'   \item{\code{enzyme}}{\link[assertthat]{is.string}. Name of the enzyme used for 
+#'   reverse transcription.} 
+#'   \item{\code{primingMethod}}{\link{primingMethodType}.} 
+#'   \item{\code{dnaseTreatment}}{\link[assertthat]{is.flag} if \code{TRUE}RNA was
 #'   DNAse treated prior cDNA synthesis.}
 #'   \item{\code{thermalCyclingConditions}}{\link{idReferencesType}.}
 #'   }
@@ -784,7 +785,7 @@ templateQuantityType <-
 
 #' enumType R6 class.
 #' 
-#' Generic class for creating objects thet can take limited list of values.\cr
+#' Generic class for creating objects thet can take limited list of values. \cr
 #' Inherits: \link{rdmlBaseType}.
 #' 
 #' @section Initialization: \preformatted{enumType$new(value)}
@@ -1826,32 +1827,32 @@ mdpsType <-
 #' 
 #' Inherits: \link{rdmlBaseType}.
 #' 
-#' @section Initialization: \preformatted{dataType$new(tar, cq = NULL, excl = NULL, adp 
-#'   = NULL, mdp = NULL, endPt = NULL, bgFluor = NULL, bgFluorSlp = NULL, 
-#'   quantFluor = NULL)}
+#' @section Initialization: \preformatted{dataType$new(tar, cq = NULL, excl = NULL, 
+#' adp = NULL, mdp = NULL, endPt = NULL, bgFluor = NULL, bgFluorSlp = NULL, 
+#' quantFluor = NULL)}
 #'   
 #' @section Fields: \describe{ 
 #' \item{\code{tar}}{\link{idReferencesType}. 
 #'   TargetID - A reference to a target.} 
 #'   \item{\code{cq}}{\link[base]{double}. 
-#'   Quantification cycle - The calculated fractional PCR cycle used for 
-#'   downstream quantification. Negative values are used to express following 
-#'   conditions: Not Available: -1.0 } 
-#'   \item{\code{excl}}{\link[assertthat]{is.string}. Excluded - If present, 
-#'   this entry should not be evaluated. Do not set this element to false if 
-#'   this entry is valid, leave the entire element out instead. It may contain a
-#'   string with reason for exclusion. Several reasons for exclusion should be 
-#'   seperated by semicolons ";".} \item{\code{adp}}{\link{adpsType}.} 
+#'   Calculated fractional PCR cycle used for downstream quantification. 
+#'   Negative values express following condition: Not Available: -1.0 } 
+#'   \item{\code{excl}}{\link[assertthat]{is.string}. Excluded. If \code{excl}
+#'   is present, this entry should not be evaluated. Do not set this element 
+#'   to \code{FALSE} if the entry is valid. Instead, leave the entire \code{excl} 
+#'   element out instead. It may contain a string with a reason for the exclusion. 
+#'   Several reasons for exclusion should be 
+#'   seperated by semicolons ";".} 
+#'   \item{\code{adp}}{\link{adpsType}.} 
 #'   \item{\code{mdp}}{\link{mdpsType}.} 
-#'   \item{\code{endPt}}{\link[base]{double}. End point - Result of an endpoint 
-#'   } measurement. 
+#'   \item{\code{endPt}}{\link[base]{double}}. Value of the endpoint measurement. 
 #'   \item{\code{bgFluor}}{\link[base]{double}. Background 
-#'   fluorescence - The y-intercept of the baseline trend based on the estimated
-#'   background fluorescence. } 
+#'   fluorescence (the y-intercept of the baseline trend based on the estimated
+#'   background fluorescence). } 
 #'   \item{\code{bgFluorSlp}}{\link[base]{double}. 
 #'   Background fluorescence slope - The slope of the baseline trend based on 
 #'   the estimated background fluorescence. The element should be absent to 
-#'   indicate a slope of 0.0; If this element is present without the bgFluor 
+#'   indicate a slope of 0.0; If this element is present without the \code{bgFluor} 
 #'   element it should be ignored. } 
 #'   \item{\code{quantFluor}}{\link[base]{double}. Quantification flourescence -
 #'   The fluorescence value corresponding to the treshold line.} }
@@ -2110,7 +2111,7 @@ reactType <-
 
 #' dataCollectionSoftwareType R6 class.
 #' 
-#' Software name and version used to collect and analyze the data.Inherits: 
+#' Software name and version used to collect and analyze the data. Inherits: 
 #' \link{rdmlBaseType}.
 #' 
 #' @section Initialization: \preformatted{dataCollectionSoftwareType$new(name, version)}
@@ -2123,6 +2124,9 @@ reactType <-
 #' @docType class
 #' @format An \code{\link{R6Class}} generator object.
 #' @export
+#' @examples 
+#' dataCollectionSoftwareType$new(name = "ExampleSoft", 
+#'                                version = "1.0")
 dataCollectionSoftwareType <- 
   R6Class("dataCollectionSoftwareType",
           # class = FALSE,
@@ -2162,10 +2166,10 @@ dataCollectionSoftwareType <-
 #' The method used to determine the Cq value.
 #' Can take values:
 #' \describe{
-#' \item{automated threshold and baseline settings}{}
-#' \item{manual threshold and baseline settings}{}
-#' \item{second derivative maximum}{}
-#' \item{other}{}
+#' \item{"automated threshold and baseline settings"}{}
+#' \item{"manual threshold and baseline settings"}{}
+#' \item{"second derivative maximum"}{}
+#' \item{"other"}{}
 #' }  
 #' Inherits: \link{enumType}.
 #' 
