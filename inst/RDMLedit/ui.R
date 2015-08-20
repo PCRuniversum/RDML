@@ -90,8 +90,7 @@ shinyUI(
                                          options= list(
                                            create =TRUE
                                          )),
-                          textInput("dyeIdText", "ID",
-                                    ""),
+                          renderUI("dyeIdText"),
                           textInput("dyeDescriptionText", "Text",
                                     ""),
                           actionButton("removeDyeBtn",

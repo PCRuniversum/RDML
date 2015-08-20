@@ -377,6 +377,16 @@ shinyServer(function(input, output, session) {
   })
   
   # on dyeSlct change
+  dyeSlct <- reactive(values$rdml$dye[[input$dyeSlct]])
+                  
+  output[["dyeIdText"]] <- renderUI({
+    if (is.null(dyeSlct())) {
+      textInput("dyeIdText", label = "ID", value = input$dyeSlct, width = NULL)
+    } else {
+      textInput("dyeIdText", label = "ID", value = testNull(dye$id$id))
+    }
+  })    
+  
   observe({
     if (input$dyeSlct == "") {
       return(NULL)
