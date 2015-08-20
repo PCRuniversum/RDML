@@ -104,7 +104,7 @@ shinyServer(function(input, output, session) {
     error = function(e) print(e))
   })
   
-  # remove RDML
+  # remove RDML 
   observe({
     input$removeRDMLBtn
     isolate({
