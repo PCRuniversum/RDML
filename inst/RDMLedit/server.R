@@ -97,8 +97,11 @@ shinyServer(function(input, output, session) {
   observe({
     if (is.null(values$rdml))
       return(NULL)
-    values$rdml$dateMade <- testEmptyInput(input$dateMadeText)
-    values$rdml$dateUpdated <- testEmptyInput(input$dateUpdatedText)
+    tryCatch({
+      values$rdml$dateMade <- testEmptyInput(input$dateMadeText)
+      values$rdml$dateUpdated <- testEmptyInput(input$dateUpdatedText)
+    },
+    error = function(e) print(e))
   })
   
   # remove RDML
@@ -173,6 +176,7 @@ shinyServer(function(input, output, session) {
         values$rdml$id[[input$idSlct]] <- id
         # rename list elements
         if (input$idSlct != input$idPublisherText) {
+          
           values$rdml$id <- values$rdml$id
           updateSelectizeInput(session,
                                "idSlct",
@@ -238,7 +242,7 @@ shinyServer(function(input, output, session) {
                         value = testNull(experimenter$labAddress))
       } else {
         updateTextInput(session,
-                        "publisherText",
+                        "experimenterIdText",
                         value = input$experimenterSlct)
       }
     })
@@ -246,13 +250,10 @@ shinyServer(function(input, output, session) {
   
   # write to experimenter
   observe({
-    if (is.null(testEmptyInput(input$publisherText))) {
+    if (is.null(testEmptyInput(input$experimenterIdText))) {
       return(NULL)
     }
     tryCatch({
-      isolate({
-        experimenter <- values$rdml$experimenter[[input$experimenterSlct]]
-      })
       experimenter <- experimenterType$new(
         idType$new(testEmptyInput(input$experimenterIdText)),
         testEmptyInput(input$experimenterFirstNameText),
@@ -289,115 +290,148 @@ shinyServer(function(input, output, session) {
   
   
   
-  # Documentation Table -----------------------------------------------------  
+  # Documentation Tab -----------------------------------------------------  
   
-  output$documentationTbl <- renderRHandsontable({
-    df <- data.frame(
-      id = c("", ""),
-      text = c("", ""),
-      stringsAsFactors = FALSE)
-    if (!is.null(values$rdml)) {
-      for(el in values$rdml$documentation) {
-        df <- 
-          rbind(df,
-                c(el$id$id,
-                  el$text))
-      }
-    }
-    rhandsontable(df, rowHeaders = NULL,
-                  height = tblHeight) %>% 
-      hot_table(allowColEdit = FALSE)
+  # init
+  observe({
+    if (is.null(values$rdml$documentation))
+      return(NULL)
+    isolate({
+      updateSelectizeInput(session,
+                           "documentationSlct",
+                           choices = names(values$rdml$documentation))
+    })
   })
   
-  
+  # on documentationSlct change
   observe({
-    if (is.null(input$documentationTbl)) {
+    if (input$documentationSlct == "") {
       return(NULL)
     }
     isolate({
-      if (is.null(values$rdml)) {
-        return(NULL)
-      }
-      df <- hot_to_r(input$documentationTbl)
-      values$rdml$documentation <- { 
-        l <- apply(df, 1,
-                   function(row)
-                   {
-                     tryCatch({
-                       if (!all(is.na(row)) && !all(row == "")) {
-                         return(
-                           documentationType$new(
-                             id = idType$new(testEmptyInput(row["id"])),
-                             text = testEmptyInput(row["text"]))
-                         )}
-                       NULL
-                     },
-                     error = function(e) {
-                       values$log <- c(values$log,
-                                       genErrorMsg(row["id"], e$message))
-                       NULL
-                     })
-                   }) %>% compact
-        if (is.null(l))
-          list()
-        else l
+      # update fields
+      if (!is.null(values$rdml$documentation[[input$documentationSlct]])) {
+        documentation <- values$rdml$documentation[[input$documentationSlct]]
+        updateTextInput(session,
+                        "documentationIdText",
+                        value = testNull(documentation$id$id))
+        updateTextInput(session,
+                        "documentationTextText",
+                        value = testNull(documentation$text))
+      } else {
+        updateTextInput(session,
+                        "documentationIdText",
+                        value = input$documentationSlct)
       }
     })
   })
   
-  # Dye Table -----------------------------------------------------  
-  
-  output$dyeTbl <- renderRHandsontable({
-    df <- data.frame(
-      id = c("", ""),
-      description = c("", ""),
-      stringsAsFactors = FALSE)
-    if (!is.null(values$rdml)) {
-      for(el in values$rdml$dye) {
-        df <- 
-          rbind(df,
-                c(el$id$id,
-                  el$description))
-      }
+  # write to documentation
+  observe({
+    if (is.null(testEmptyInput(input$documentaionIdText))) {
+      return(NULL)
     }
-    rhandsontable(df, rowHeaders = NULL,
-                  height = tblHeight) %>% 
-      hot_table(allowColEdit = FALSE)
+    tryCatch({
+      documentation <- 
+        documentationType$new(
+          idType$new(testEmptyInput(input$documentationIdText)),
+          testEmptyInput(input$documentationTextText))
+      isolate({
+        values$rdml$documentation[[input$documentationSlct]] <- documentation
+        # rename list elements
+        if (input$documentationSlct != input$documentationIdText) {
+          values$rdml$documentation <- values$rdml$documentation
+          updateSelectizeInput(session,
+                               "documentationSlct",
+                               choices = names(values$rdml$documentation),
+                               selected = input$documentationIdText)
+        }
+      })
+    },
+    error = function(e) print(e$message)
+    )
   })
   
-  
+  # remove documentation
   observe({
-    if (is.null(input$dyeTbl)) {
+    input$removedocumentationBtn
+    isolate({
+      values$rdml$documentation[[input$documentationSlct]] <- NULL
+      updateSelectizeInput(session,
+                           "documentationSlct",
+                           choices = names(values$rdml$documentation))
+    })
+  })
+  
+  # Dye Tab -----------------------------------------------------  
+  
+  # init
+  observe({
+    if (is.null(values$rdml$dye))
+      return(NULL)
+    isolate({
+      updateSelectizeInput(session,
+                           "dyeSlct",
+                           choices = names(values$rdml$dye))
+    })
+  })
+  
+  # on dyeSlct change
+  observe({
+    if (input$dyeSlct == "") {
       return(NULL)
     }
     isolate({
-      if (is.null(values$rdml)) {
-        return(NULL)
+      # update fields
+      if (!is.null(values$rdml$dye[[input$dyeSlct]])) {
+        dye <- values$rdml$dye[[input$dyeSlct]]
+        updateTextInput(session,
+                        "dyeIdText",
+                        value = testNull(dye$id$id))
+        updateTextInput(session,
+                        "dyeDescriptionText",
+                        value = testNull(dye$description))
+      } else {
+        updateTextInput(session,
+                        "dyeIdText",
+                        value = input$dyeSlct)
       }
-      df <- hot_to_r(input$dyeTbl)
-      values$rdml$dye <- { 
-        l <- apply(df, 1,
-                   function(row)
-                   {
-                     tryCatch({
-                       if (!all(is.na(row)) && !all(row == "")) {
-                         return(
-                           dyeType$new(
-                             id = idType$new(testEmptyInput(row["id"])),
-                             description = testEmptyInput(row["description"]))
-                         )}
-                       NULL
-                     },
-                     error = function(e) {
-                       values$log <- c(values$log,
-                                       genErrorMsg(row["id"], e$message))
-                       NULL
-                     })
-                   }) %>% compact
-        if (is.null(l))
-          list()
-        else l
-      }
+    })
+  })
+  
+  # write to dye
+  observe({
+    if (is.null(testEmptyInput(input$dyeIdText))) {
+      return(NULL)
+    }
+    tryCatch({
+      dye <- dyeType$new(
+        idType$new(testEmptyInput(input$dyeIdText)),
+        testEmptyInput(input$dyeDescriptionText))
+      isolate({
+        values$rdml$dye[[input$dyeSlct]] <- dye
+        # rename list elements
+        if (input$dyeSlct != input$dyeIdText) {
+          values$rdml$dye <- values$rdml$dye
+          updateSelectizeInput(session,
+                               "dyeSlct",
+                               choices = names(values$rdml$dye),
+                               selected = input$dyeIdText)
+        }
+      })
+    },
+    error = function(e) print(e$message)
+    )
+  })
+  
+  # remove dye
+  observe({
+    input$removeDyeBtn
+    isolate({
+      values$rdml$dye[[input$dyeSlct]] <- NULL
+      updateSelectizeInput(session,
+                           "dyeSlct",
+                           choices = names(values$rdml$dye))
     })
   })
   
