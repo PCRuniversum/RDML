@@ -655,16 +655,17 @@ quantityType <-
 
 #' cdnaSynthesisMethodType R6 class.
 #' 
-#' Description of the cDNA synthesis method.Inherits: \link{rdmlBaseType}.
+#' Description of the cDNA synthesis method. Inherits: \link{rdmlBaseType}.
 #' 
-#' @section Initialization: \preformatted{cdnaSynthesisMethodType$new(enzyme = NULL, 
+#' @section 
+#' Initialization: \preformatted{cdnaSynthesisMethodType$new(enzyme = NULL, 
 #'   primingMethod = NULL, dnaseTreatment = NULL, thermalCyclingConditions = 
 #'   NULL)}
 #'   
 #'   @section Fields: \describe{  
 #'   \item{\code{enzyme}}{\link[base]{is.double}. Enzyme used for reverse
 #'   transcription.} \item{\code{primingMethod}}{\link{primingMethodType}.} 
-#'   \item{\code{dnaseTreatment}}{\link[assertthat]{is.flag} True if RNA was
+#'   \item{\code{dnaseTreatment}}{\link[assertthat]{is.flag} \code{TRUE} if RNA was
 #'   DNAse treated prior cDNA synthesis.}
 #'   \item{\code{thermalCyclingConditions}}{\link{idReferencesType}.}
 #'   }
@@ -1708,9 +1709,9 @@ adpsType <-
             initialize = function(fpoints) {
               assert_that(is.double.matrix(fpoints))
               assert_that(has.col.names(fpoints,
-                                         c("cyc", "tmp", "fluor")) ||
+                                        c("cyc", "tmp", "fluor")) ||
                             has.col.names(fpoints,
-                                      c("cyc", "fluor")))
+                                          c("cyc", "fluor")))
               private$.fpoints <- fpoints
             },
             .asXMLnodes = function(node.name) {
@@ -1735,7 +1736,7 @@ adpsType <-
                                      newXMLNode(
                                        name = "fluor",
                                        text = fpoints.row["fluor"]
-                                       )
+                                     )
                                    ))
                     })
               # })
@@ -1750,7 +1751,7 @@ adpsType <-
                 return(private$.fpoints)
               assert_that(is.double.matrix(fpoints))
               assert_that(has.col.names(fpoints,
-                                         c("cyc", "tmp", "fluor")) ||
+                                        c("cyc", "tmp", "fluor")) ||
                             has.col.names(fpoints,
                                           c("cyc", "fluor")))
               private$.fpoints <- fpoints
@@ -1785,7 +1786,7 @@ mdpsType <-
             initialize = function(fpoints) {
               assert_that(is.double.matrix(fpoints))
               assert_that(has.col.names(fpoints,
-                                         c("tmp", "fluor")))
+                                        c("tmp", "fluor")))
               private$.fpoints <- fpoints
             },
             .asXMLnodes = function(node.name) {
@@ -1814,7 +1815,7 @@ mdpsType <-
                 return(private$.fpoints)
               assert_that(is.double.matrix(fpoints))
               assert_that(has.col.names(fpoints,
-                                         c("tmp", "fluor")))
+                                        c("tmp", "fluor")))
               private$.fpoints <- fpoints
             }
           ))
@@ -2792,21 +2793,23 @@ measureType <-
 #' Parent class for inner usage. Inherits: \link{rdmlBaseType}.
 #' 
 #' @section Initialization: \preformatted{baseTemperatureType$new(duration, 
-#'   temperatureChange = NULL,  durationChange = NULL, measure = NULL, ramp = 
+#'   temperatureChange = NULL, durationChange = NULL, measure = NULL, ramp = 
 #'   NULL)}
 #'   
 #' @section Fields: \describe{ 
-#'   \item{\code{duration}}{\link[assertthat]{is.count}. The duration of this
-#'   step in } seconds. \item{\code{temperatureChange}}{\link[base]{double}. The
-#'   change of the temperature from one cycle to the next: actual temperature
+#'   \item{\code{duration}}{\link[assertthat]{is.count}. Duration of this
+#'   step in seconds.}
+#'   \item{\code{temperatureChange}}{\link[base]{double}. Change 
+#'   of the temperature between two consecutive cycles: actual temperature
 #'   = temperature + (temperatureChange * cycle counter)}
-#'   \item{\code{durationChange}}{\link[assertthat]{is.count}. The change of the
-#'   duration from one cycle to the next: actual duration = duration +
-#'   (durationChange * cycle counter)} \item{\code{measure}}{\link{measureType}.
-#'   Indicates to make a measurement and store it as meltcurve or real-time
-#'   data.} \item{\code{ramp}}{\link[base]{double}. The allowed temperature
-#'   change from one step to the next in degrees Celsius per second. No value
-#'   means maximal change rate.}
+#'   \item{\code{durationChange}}{\link[assertthat]{is.count}. Change of the
+#'   duration between two consecutive cycles: actual duration = duration +
+#'   (durationChange * cycle counter)}
+#'   \item{\code{measure}}{\link{measureType}. Indicates to make a measurement 
+#'   and store it as meltcurve or real-time data.}
+#'   \item{\code{ramp}}{\link[base]{double}. Allowed temperature
+#'   change between two consecutive cycles in degrees Celsius per second. If unstated,
+#'   the maximal change rate is assumed.}
 #'   }
 #'   
 #' @docType class

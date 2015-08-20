@@ -9,7 +9,7 @@
 cdnaSynthesisMethodType
 }
 \description{
-Description of the cDNA synthesis method.Inherits: \link{rdmlBaseType}.
+Description of the cDNA synthesis method. Inherits: \link{rdmlBaseType}.
 }
 \section{Initialization}{
  \preformatted{cdnaSynthesisMethodType$new(enzyme = NULL,
@@ -21,7 +21,7 @@ Description of the cDNA synthesis method.Inherits: \link{rdmlBaseType}.
  \describe{
   \item{\code{enzyme}}{\link[base]{is.double}. Enzyme used for reverse
   transcription.} \item{\code{primingMethod}}{\link{primingMethodType}.}
-  \item{\code{dnaseTreatment}}{\link[assertthat]{is.flag} True if RNA was
+  \item{\code{dnaseTreatment}}{\link[assertthat]{is.flag} \code{TRUE} if RNA was
   DNAse treated prior cDNA synthesis.}
   \item{\code{thermalCyclingConditions}}{\link{idReferencesType}.}
   }

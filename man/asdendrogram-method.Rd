@@ -11,7 +11,7 @@
 \code{dendrogram} object
 }
 \description{
-Plots and/or returns structure of \code{RDML} file as dendrogram (tree view)
+Plots and/or returns the structure of \code{RDML} file as dendrogram (tree view)
 }
 \examples{
 \dontrun{
