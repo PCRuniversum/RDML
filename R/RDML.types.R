@@ -1054,7 +1054,8 @@ sampleType <-
               
               private$.id <- id
               private$.description <- description
-              private$.documentation <- documentation
+              private$.documentation <- with.names(documentation,
+                                                   quote(.$id))
               private$.xRef <- xRef
               private$.annotation <- with.names(annotation,
                                                 quote(.$property))
@@ -1097,7 +1098,8 @@ sampleType <-
                 return(private$.documentation)
               assert_that(is.opt.list.type(documentation,
                                            idReferencesType))
-              private$.documentation <- documentation
+              private$.documentation <- with.names(documentation,
+                                                   quote(.$id))
             },
             xRef = function(xRef) {
               if (missing(xRef))
