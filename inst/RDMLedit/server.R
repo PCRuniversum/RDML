@@ -831,6 +831,249 @@ shinyServer(function(input, output, session) {
     })
   })
   
+  # Target Tab -----------------------------------------------------  
+  
+  
+  # init
+  observe({
+    if (is.null(values$rdml$target))
+      return(NULL)
+    isolate({
+      updateSelectizeInput(session,
+                           "targetSlct",
+                           choices = names(values$rdml$target))
+    })
+  })
+  
+  # on targetSlct change
+  observe({
+    if (input$targetSlct == "") {
+      return(NULL)
+    }
+    isolate({
+      if (length(values$rdml$target[[input$targetSlct]]$xRef) == 0) {
+        updateSelectizeInput(
+          session,
+          "targetxRefSlct",
+          choices = "")
+      } else {
+        updateSelectizeInput(
+          session,
+          "targetxRefnSlct",
+          choices = names(values$rdml$target[[input$targetSlct]]$annotation))
+      }
+      # update fields
+      if (!is.null(values$rdml$target[[input$targetSlct]])) {
+        target <- values$rdml$target[[input$targetSlct]]
+        updateTextInput(session,
+                        "targetIdText",
+                        value = testNull(target$id$id))
+        updateTextInput(session,
+                        "targetDescriptionText",
+                        value = testNull(target$description))
+        updateSelectInput(session,
+                          "targetDocumentationSlct",
+                          selected = names(target$documentation))
+        updateSelectizeInput(session,
+                             "targetxRefSlct",
+                             choices = names(target$xRef))
+        updateSelectInput(session,
+                          "targetTypeSlct",
+                          selected = target$type$value)
+        
+        updateTextInput(session,
+                        "targetAemText",
+                        value = testNull(target$amplificationEfficiencyMethod))
+        updateTextInput(session,
+                        "targetAeText",
+                        value = testNull(target$amplificationEfficiency))
+        updateTextInput(session,
+                        "targetAeSeText",
+                        value = testNull(target$amplificationEfficiencySE))
+        updateTextInput(session,
+                        "targetDetectionLimitText",
+                        value = testNull(target$detectionLimit))
+        
+        updateSelectInput(session,
+                          "targetDyeIdSlct",
+                          selected = target$dyeId$id)
+        
+        updateSelectInput(session,
+                          "targetSequencesTypeSlct",
+                          selected = "forwardPrimer")
+        
+        updateTextInput(session,
+                        "targetCaCompanyText",
+                        value = testNull(target$commercialAssay$company))
+        updateTextInput(session,
+                        "targetCaOrderNumberText",
+                        value = testNull(target$commercialAssay$orderNumber))
+        
+      } else {
+        updateTextInput(session,
+                        "targetIdText",
+                        value = input$targetSlct)
+      }
+    })
+  })
+  
+  # write to sample
+  observe({
+    if (is.null(testEmptyInput(input$sampleIdText))) {
+      return(NULL)
+    }
+    tryCatch({
+      isolate({
+        xRef <- values$rdml$sample[[input$sampleSlct]]$xRef
+        annotation <- values$rdml$sample[[input$sampleSlct]]$annotation
+      })
+      sample <- sampleType$new(
+        idType$new(testEmptyInput(input$sampleIdText)),
+        testEmptyInput(input$sampleDescriptionText),
+        lapply(input$sampleDocumentationSlct,
+               function(doc) idReferencesType$new(doc)),
+        xRef,
+        annotation,
+        
+        sampleTypeType$new(input$sampleTypeSlct),
+        testEmptyInput(input$sampleInterRunCalibratorChk),
+        
+        tryCatch({
+          quantityType$new(as.numeric(input$sampleQuantityValueText),
+                           quantityUnitType$new(input$sampleQuantityUnitText))
+        },
+        error = function(e) {
+          print(e$message)
+          NULL}
+        ),
+        
+        testEmptyInput(input$sampleCalibrationSampleChk),
+        # NULL,
+        tryCatch({
+          cdnaSynthesisMethodType$new(
+            testEmptyInput(input$sampleCsmEnzymeText),
+            primingMethodType$new(input$sampleCsmPrimingMethodSlct),
+            testEmptyInput(input$sampleCsmDnaseTreatmentChk),
+            {
+              if (input$sampleCsmTccSlct == "")
+                NULL
+              else
+                idReferencesType$new(
+                  testEmptyInput(input$sampleCsmTccSlct))
+            })
+        },
+        error = function(e) {
+          print(e$message)
+          NULL}
+        ),
+        
+        tryCatch({
+          templateQuantityType$new(
+            testEmptyInput(as.numeric(input$sampleTemplateQuantityConcText)),
+            nucleotideType$new(testEmptyInput(input$sampleTemplateQuantityNucleotideSlct)))
+        },
+        error = function(e) {
+          print(e$message)
+          NULL}
+        )
+      )
+      isolate({
+        values$rdml$sample[[input$sampleSlct]] <- sample
+        # rename list elements
+        if (input$sampleSlct != input$sampleIdText) {
+          values$rdml$sample <- values$rdml$sample
+          updateSelectizeInput(session,
+                               "sampleSlct",
+                               choices = names(values$rdml$sample),
+                               selected = input$sampleIdText)
+        }
+      })
+    },
+    error = function(e) print(e$message)
+    )
+  })
+  
+  # remove sample
+  observe({
+    input$removeSampleBtn
+    isolate({
+      values$rdml$sample[[input$sampleSlct]] <- NULL
+      updateSelectizeInput(session,
+                           "sampleSlct",
+                           choices = names(values$rdml$sample))
+    })
+  })
+  
+  ###### xRef
+  
+  # on samplexRefSlct change
+  observe({
+    if (input$samplexRefSlct == "") {
+      return(NULL)
+    }
+    isolate({
+      # update fields
+      if (!is.null(values$rdml$sample[[input$sampleSlct]]$
+                   xRef[[input$samplexRefSlct]])) {
+        xRef <- values$rdml$sample[[input$sampleSlct]]$
+          xRef[[input$samplexRefSlct]]
+        updateTextInput(session,
+                        "samplexRefNameText",
+                        value = testNull(xRef$name))
+        updateTextInput(session,
+                        "samplexRefIdText",
+                        value = testNull(xRef$id))
+      } else {
+        updateTextInput(session,
+                        "samplexRefNameText",
+                        value = input$samplexRefSlct)
+      }
+    })
+  })
+  
+  # write to sample xRef
+  observe({
+    if (is.null(testEmptyInput(input$samplexRefNameText))) {
+      return(NULL)
+    }
+    tryCatch({
+      xRef <- xRefType$new(
+        testEmptyInput(input$samplexRefNameText),
+        testEmptyInput(input$samplexRefIdText))
+      isolate({
+        values$rdml$sample[[input$sampleSlct]]$
+          xRef[[input$samplexRefSlct]] <- xRef
+        # rename list elements
+        if (input$samplexRefSlct != 
+            input$samplexRefNameText) {
+          values$rdml$sample[[input$sampleSlct]]$
+            xRef <- values$rdml$sample[[input$sampleSlct]]$xRef
+          updateSelectizeInput(
+            session,
+            "samplexRefSlct",
+            choices = names(values$rdml$sample[[input$sampleSlct]]$xRef),
+            selected = input$samplexRefNameText)
+        }
+      })
+    },
+    error = function(e) print(e$message)
+    )
+  })
+  
+  # remove sample
+  observe({
+    input$removeSamplexRefBtn
+    isolate({
+      values$rdml$sample[[input$sampleSlct]]$
+        xRef[[input$samplexRefSlct]]<- NULL
+      updateSelectizeInput(
+        session,
+        "samplexRefSlct",
+        choices = names(values$rdml$sample[[input$sampleSlct]]$
+                          xRef))
+    })
+  })
+  
   # Download ----------------------------------------------------------------
   
   output$downloadRDML <- downloadHandler(
