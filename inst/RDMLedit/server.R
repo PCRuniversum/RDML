@@ -7,7 +7,6 @@
 
 library(shiny)
 library(RDML)
-library(plyr)
 library(dplyr)
 
 testEmptyInput <- function(val) {
@@ -22,14 +21,6 @@ testNull <- function(val) {
   unname(val)
 }
 
-genErrorMsg <- function(rowName, message) {
-  sprintf("<p>Row: %s<br>%s</p>",
-          rowName, 
-          message)
-}
-
-
-tblHeight <- 500
 
 shinyServer(function(input, output, session) {
   values <- reactiveValues(RDMLs = list())
@@ -533,6 +524,28 @@ shinyServer(function(input, output, session) {
       return(NULL)
     }
     isolate({
+      if (length(values$rdml$sample[[input$sampleSlct]]$annotation) == 0) {
+        updateSelectizeInput(
+          session,
+          "sampleAnnotationSlct",
+          choices = "")
+      } else {
+        updateSelectizeInput(
+          session,
+          "sampleAnnotationSlct",
+          choices = names(values$rdml$sample[[input$sampleSlct]]$annotation))
+      }
+      if (length(values$rdml$sample[[input$sampleSlct]]$xRef) == 0) {
+        updateSelectizeInput(
+          session,
+          "samplexRefSlct",
+          choices = "")
+      } else {
+        updateSelectizeInput(
+          session,
+          "samplexRefnSlct",
+          choices = names(values$rdml$sample[[input$sampleSlct]]$annotation))
+      }
       # update fields
       if (!is.null(values$rdml$sample[[input$sampleSlct]])) {
         sample <- values$rdml$sample[[input$sampleSlct]]
@@ -673,6 +686,148 @@ shinyServer(function(input, output, session) {
       updateSelectizeInput(session,
                            "sampleSlct",
                            choices = names(values$rdml$sample))
+    })
+  })
+  
+  
+  ###### annotation
+  
+  # on sampleAnnotationSlct change
+  observe({
+    if (input$sampleAnnotationSlct == "") {
+      return(NULL)
+    }
+    isolate({
+      # update fields
+      if (!is.null(values$rdml$sample[[input$sampleSlct]]$
+                   annotation[[input$sampleAnnotationSlct]])) {
+        annotation <- values$rdml$sample[[input$sampleSlct]]$
+          annotation[[input$sampleAnnotationSlct]]
+        updateTextInput(session,
+                        "sampleAnnotationPropertyText",
+                        value = testNull(annotation$property))
+        updateTextInput(session,
+                        "sampleAnnotationValueText",
+                        value = testNull(annotation$value))
+      } else {
+        updateTextInput(session,
+                        "sampleAnnotationPropertyText",
+                        value = input$sampleAnnotationSlct)
+      }
+    })
+  })
+  
+  # write to sample annotation
+  observe({
+    if (is.null(testEmptyInput(input$sampleAnnotationPropertyText))) {
+      return(NULL)
+    }
+    tryCatch({
+      annotation <- annotationType$new(
+        testEmptyInput(input$sampleAnnotationPropertyText),
+        testEmptyInput(input$sampleAnnotationValueText))
+      isolate({
+        values$rdml$sample[[input$sampleSlct]]$
+          annotation[[input$sampleAnnotationSlct]] <- annotation
+        # rename list elements
+        if (input$sampleAnnotationSlct != 
+            input$sampleAnnotationPropertyText) {
+          values$rdml$sample[[input$sampleSlct]]$
+            annotation <- values$rdml$sample[[input$sampleSlct]]$
+            annotation
+          updateSelectizeInput(session,
+                               "sampleAnnotationSlct",
+                               choices = names(values$rdml$sample[[input$sampleSlct]]$
+                                                 annotation),
+                               selected = input$sampleAnnotationPropertyText)
+        }
+      })
+    },
+    error = function(e) print(e$message)
+    )
+  })
+  
+  # remove sample annotation
+  observe({
+    input$removeSampleAnnotationBtn
+    isolate({
+      values$rdml$sample[[input$sampleSlct]]$
+        annotation[[input$sampleAnnotationSlct]]<- NULL
+      updateSelectizeInput(
+        session,
+        "sampleAnnotationSlct",
+        choices = names(values$rdml$sample[[input$sampleSlct]]$
+                          annotation))
+    })
+  })
+  
+  ###### xRef
+  
+  # on samplexRefSlct change
+  observe({
+    if (input$samplexRefSlct == "") {
+      return(NULL)
+    }
+    isolate({
+      # update fields
+      if (!is.null(values$rdml$sample[[input$sampleSlct]]$
+                   xRef[[input$samplexRefSlct]])) {
+        xRef <- values$rdml$sample[[input$sampleSlct]]$
+          xRef[[input$samplexRefSlct]]
+        updateTextInput(session,
+                        "samplexRefNameText",
+                        value = testNull(xRef$name))
+        updateTextInput(session,
+                        "samplexRefIdText",
+                        value = testNull(xRef$id))
+      } else {
+        updateTextInput(session,
+                        "samplexRefNameText",
+                        value = input$samplexRefSlct)
+      }
+    })
+  })
+  
+  # write to sample xRef
+  observe({
+    if (is.null(testEmptyInput(input$samplexRefNameText))) {
+      return(NULL)
+    }
+    tryCatch({
+      xRef <- xRefType$new(
+        testEmptyInput(input$samplexRefNameText),
+        testEmptyInput(input$samplexRefIdText))
+      isolate({
+        values$rdml$sample[[input$sampleSlct]]$
+          xRef[[input$samplexRefSlct]] <- xRef
+        # rename list elements
+        if (input$samplexRefSlct != 
+            input$samplexRefNameText) {
+          values$rdml$sample[[input$sampleSlct]]$
+            xRef <- values$rdml$sample[[input$sampleSlct]]$xRef
+          updateSelectizeInput(
+            session,
+            "samplexRefSlct",
+            choices = names(values$rdml$sample[[input$sampleSlct]]$xRef),
+            selected = input$samplexRefNameText)
+        }
+      })
+    },
+    error = function(e) print(e$message)
+    )
+  })
+  
+  # remove sample
+  observe({
+    input$removeSamplexRefBtn
+    isolate({
+      values$rdml$sample[[input$sampleSlct]]$
+        xRef[[input$samplexRefSlct]]<- NULL
+      updateSelectizeInput(
+        session,
+        "samplexRefSlct",
+        choices = names(values$rdml$sample[[input$sampleSlct]]$
+                          xRef))
     })
   })
   

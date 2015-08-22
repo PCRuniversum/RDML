@@ -35,7 +35,7 @@ shinyUI(
       navbarMenu("Metadata",
                  tabPanel("ID",
                           selectizeInput("idSlct",
-                                         "ID",
+                                         "Select ID",
                                          choices = "",
                                          options= list(
                                            create =TRUE
@@ -50,7 +50,7 @@ shinyUI(
                                        "Remove ID")),
                  tabPanel("Experimenter",
                           selectizeInput("experimenterSlct",
-                                         "ID",
+                                         "Select Experiment",
                                          choices = "",
                                          options= list(
                                            create =TRUE
@@ -72,7 +72,7 @@ shinyUI(
                                        "Remove Experimenter")),
                  tabPanel("Documentation",
                           selectizeInput("documentationSlct",
-                                         "ID",
+                                         "Select Documentation",
                                          choices = "",
                                          options= list(
                                            create =TRUE
