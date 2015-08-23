@@ -817,7 +817,7 @@ shinyServer(function(input, output, session) {
     )
   })
   
-  # remove sample
+  # remove sample xRef
   observe({
     input$removeSamplexRefBtn
     isolate({
@@ -919,58 +919,50 @@ shinyServer(function(input, output, session) {
   
   # write to sample
   observe({
-    if (is.null(testEmptyInput(input$sampleIdText))) {
+    if (is.null(testEmptyInput(input$targetIdText))) {
       return(NULL)
     }
     tryCatch({
       isolate({
-        xRef <- values$rdml$sample[[input$sampleSlct]]$xRef
-        annotation <- values$rdml$sample[[input$sampleSlct]]$annotation
+        xRef <- values$rdml$target[[input$targetSlct]]$xRef
       })
-      sample <- sampleType$new(
-        idType$new(testEmptyInput(input$sampleIdText)),
-        testEmptyInput(input$sampleDescriptionText),
-        lapply(input$sampleDocumentationSlct,
+      target <- targetType$new(
+        idType$new(testEmptyInput(input$targetIdText)),
+        testEmptyInput(input$targetDescriptionText),
+        lapply(input$targetDocumentationSlct,
                function(doc) idReferencesType$new(doc)),
         xRef,
-        annotation,
         
-        sampleTypeType$new(input$sampleTypeSlct),
-        testEmptyInput(input$sampleInterRunCalibratorChk),
+        targetTypeType$new(input$targetTypeSlct),
+        testEmptyInput(input$targetAemText),
+        testEmptyInput(input$targetAeText),
+        testEmptyInput(input$targetAeSeText),
+        testEmptyInput(input$targetDetectionLimitText),
         
-        tryCatch({
-          quantityType$new(as.numeric(input$sampleQuantityValueText),
-                           quantityUnitType$new(input$sampleQuantityUnitText))
+        idReferencesType$new(testEmptyInput(input$targetDyeIdSlct)),
+        
+        {
+          seq <- values$rdml$target[[input$targetSlct]]
+          seq[[input$targetSequencesTypeSlct]] <- 
+            tryCatch({
+              oligoType$new(
+                input$targetSequences3PrimeTagText,
+                input$targetSequences5PrimeTagText,
+                input$targetSequencesSequenceText
+              )
+            },
+            error = function(e) {
+              print(e$message)
+              NULL}
+            )
+          seq
         },
-        error = function(e) {
-          print(e$message)
-          NULL}
-        ),
-        
-        testEmptyInput(input$sampleCalibrationSampleChk),
-        # NULL,
-        tryCatch({
-          cdnaSynthesisMethodType$new(
-            testEmptyInput(input$sampleCsmEnzymeText),
-            primingMethodType$new(input$sampleCsmPrimingMethodSlct),
-            testEmptyInput(input$sampleCsmDnaseTreatmentChk),
-            {
-              if (input$sampleCsmTccSlct == "")
-                NULL
-              else
-                idReferencesType$new(
-                  testEmptyInput(input$sampleCsmTccSlct))
-            })
-        },
-        error = function(e) {
-          print(e$message)
-          NULL}
-        ),
         
         tryCatch({
-          templateQuantityType$new(
-            testEmptyInput(as.numeric(input$sampleTemplateQuantityConcText)),
-            nucleotideType$new(testEmptyInput(input$sampleTemplateQuantityNucleotideSlct)))
+          commercialAssayType$new(
+            input$targetCaCompanyText,
+            input$targetCaOrderNumberText
+          )
         },
         error = function(e) {
           print(e$message)
@@ -978,14 +970,14 @@ shinyServer(function(input, output, session) {
         )
       )
       isolate({
-        values$rdml$sample[[input$sampleSlct]] <- sample
+        values$rdml$target[[input$targetSlct]] <- target
         # rename list elements
-        if (input$sampleSlct != input$sampleIdText) {
-          values$rdml$sample <- values$rdml$sample
+        if (input$targetSlct != input$targetIdText) {
+          values$rdml$target <- values$rdml$target
           updateSelectizeInput(session,
-                               "sampleSlct",
-                               choices = names(values$rdml$sample),
-                               selected = input$sampleIdText)
+                               "targetSlct",
+                               choices = names(values$rdml$target),
+                               selected = input$targetIdText)
         }
       })
     },
@@ -993,66 +985,66 @@ shinyServer(function(input, output, session) {
     )
   })
   
-  # remove sample
+  # remove target
   observe({
-    input$removeSampleBtn
+    input$removetargetBtn
     isolate({
-      values$rdml$sample[[input$sampleSlct]] <- NULL
+      values$rdml$target[[input$targetSlct]] <- NULL
       updateSelectizeInput(session,
-                           "sampleSlct",
-                           choices = names(values$rdml$sample))
+                           "targetSlct",
+                           choices = names(values$rdml$target))
     })
   })
   
   ###### xRef
   
-  # on samplexRefSlct change
+  # on targetxRefSlct change
   observe({
-    if (input$samplexRefSlct == "") {
+    if (input$targetxRefSlct == "") {
       return(NULL)
     }
     isolate({
       # update fields
-      if (!is.null(values$rdml$sample[[input$sampleSlct]]$
-                   xRef[[input$samplexRefSlct]])) {
-        xRef <- values$rdml$sample[[input$sampleSlct]]$
-          xRef[[input$samplexRefSlct]]
+      if (!is.null(values$rdml$target[[input$targetSlct]]$
+                   xRef[[input$targetxRefSlct]])) {
+        xRef <- values$rdml$target[[input$targetSlct]]$
+          xRef[[input$targetxRefSlct]]
         updateTextInput(session,
-                        "samplexRefNameText",
+                        "targetxRefNameText",
                         value = testNull(xRef$name))
         updateTextInput(session,
-                        "samplexRefIdText",
+                        "targetxRefIdText",
                         value = testNull(xRef$id))
       } else {
         updateTextInput(session,
-                        "samplexRefNameText",
-                        value = input$samplexRefSlct)
+                        "targetxRefNameText",
+                        value = input$targetxRefSlct)
       }
     })
   })
   
-  # write to sample xRef
+  # write to target xRef
   observe({
-    if (is.null(testEmptyInput(input$samplexRefNameText))) {
+    if (is.null(testEmptyInput(input$targetxRefNameText))) {
       return(NULL)
     }
     tryCatch({
       xRef <- xRefType$new(
-        testEmptyInput(input$samplexRefNameText),
-        testEmptyInput(input$samplexRefIdText))
+        testEmptyInput(input$targetxRefNameText),
+        testEmptyInput(input$targetxRefIdText))
       isolate({
-        values$rdml$sample[[input$sampleSlct]]$
-          xRef[[input$samplexRefSlct]] <- xRef
+        values$rdml$target[[input$targetSlct]]$
+          xRef[[input$targetxRefSlct]] <- xRef
         # rename list elements
-        if (input$samplexRefSlct != 
-            input$samplexRefNameText) {
-          values$rdml$sample[[input$sampleSlct]]$
-            xRef <- values$rdml$sample[[input$sampleSlct]]$xRef
+        if (input$targetxRefSlct != 
+            input$targetxRefNameText) {
+          values$rdml$target[[input$targetSlct]]$
+            xRef <- values$rdml$target[[input$targetSlct]]$xRef
           updateSelectizeInput(
             session,
-            "samplexRefSlct",
-            choices = names(values$rdml$sample[[input$sampleSlct]]$xRef),
-            selected = input$samplexRefNameText)
+            "targetxRefSlct",
+            choices = names(values$rdml$target[[input$targetSlct]]$xRef),
+            selected = input$targetxRefNameText)
         }
       })
     },
@@ -1060,16 +1052,16 @@ shinyServer(function(input, output, session) {
     )
   })
   
-  # remove sample
+  # remove target xRef
   observe({
-    input$removeSamplexRefBtn
+    input$removetargetxRefBtn
     isolate({
-      values$rdml$sample[[input$sampleSlct]]$
-        xRef[[input$samplexRefSlct]]<- NULL
+      values$rdml$target[[input$targetSlct]]$
+        xRef[[input$targetxRefSlct]]<- NULL
       updateSelectizeInput(
         session,
-        "samplexRefSlct",
-        choices = names(values$rdml$sample[[input$sampleSlct]]$
+        "targetxRefSlct",
+        choices = names(values$rdml$target[[input$targetSlct]]$
                           xRef))
     })
   })
