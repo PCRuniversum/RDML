@@ -68,6 +68,7 @@ shinyServer(function(input, output, session) {
                         selected = NULL)
       # clone selected too temp RDML 
       values$rdml <- values$RDMLs[[input$rdmlFileSlct]]$clone(deep = TRUE)
+      rdml.out <<- values$rdml
       # update fields
       updateTextInput(session,
                       "dateMadeText",
@@ -812,8 +813,8 @@ shinyServer(function(input, output, session) {
       } else {
         updateSelectizeInput(
           session,
-          "targetxRefnSlct",
-          choices = names(values$rdml$target[[input$targetSlct]]$annotation))
+          "targetxRefSlct",
+          choices = names(values$rdml$target[[input$targetSlct]]$xRef))
       }
       # update fields
       if (!is.null(values$rdml$target[[input$targetSlct]])) {
@@ -889,6 +890,311 @@ shinyServer(function(input, output, session) {
                         "targetSequencesSequenceText",
                         value = testNull(olig$sequence))
         
+    })
+  })
+  
+  # write to target
+  observe({
+    if (is.null(testEmptyInput(input$targetIdText))) {
+      return(NULL)
+    }
+    tryCatch({
+      isolate({
+        xRef <- values$rdml$target[[input$targetSlct]]$xRef
+      })
+      target <- targetType$new(
+        idType$new(testEmptyInput(input$targetIdText)),
+        testEmptyInput(input$targetDescriptionText),
+        lapply(input$targetDocumentationSlct,
+               function(doc) idReferencesType$new(doc)),
+        xRef,
+        
+        targetTypeType$new(input$targetTypeSlct),
+        testEmptyInput(input$targetAemText),
+        testEmptyInput(as.numeric(input$targetAeText)),
+        testEmptyInput(as.numeric(input$targetAeSeText)),
+        testEmptyInput(as.numeric(input$targetDetectionLimitText)),
+        
+        dyeId= idReferencesType$new(testEmptyInput(input$targetDyeIdSlct)),
+        
+        {
+          isolate({
+            seq <- values$rdml$target[[input$targetSlct]]$sequences
+          })
+          seq[[input$targetSequencesTypeSlct]] <- 
+            tryCatch({
+              oligoType$new(
+                input$targetSequences3PrimeTagText,
+                input$targetSequences5PrimeTagText,
+                input$targetSequencesSequenceText
+              )
+            },
+            error = function(e) {
+              print(e$message)
+              NULL}
+            )
+          seq
+        },
+        
+        tryCatch({
+          commercialAssayType$new(
+            input$targetCaCompanyText,
+            input$targetCaOrderNumberText
+          )
+        },
+        error = function(e) {
+          print(e$message)
+          NULL}
+        )
+      )
+      isolate({
+        values$rdml$target[[input$targetSlct]] <- target
+        # rename list elements
+        if (input$targetSlct != input$targetIdText) {
+          values$rdml$target <- values$rdml$target
+          updateSelectizeInput(session,
+                               "targetSlct",
+                               choices = names(values$rdml$target),
+                               selected = input$targetIdText)
+        }
+      })
+    },
+    error = function(e) print(paste("target:", e$message))
+    )
+  })
+  
+  # remove target
+  observe({
+    input$removetargetBtn
+    isolate({
+      values$rdml$target[[input$targetSlct]] <- NULL
+      updateSelectizeInput(session,
+                           "targetSlct",
+                           choices = names(values$rdml$target))
+    })
+  })
+  
+  ###### xRef
+  
+  # on targetxRefSlct change
+  observe({
+    if (input$targetxRefSlct == "") {
+      return(NULL)
+    }
+    isolate({
+      # update fields
+      if (!is.null(values$rdml$target[[input$targetSlct]]$
+                   xRef[[input$targetxRefSlct]])) {
+        xRef <- values$rdml$target[[input$targetSlct]]$
+          xRef[[input$targetxRefSlct]]
+        updateTextInput(session,
+                        "targetxRefNameText",
+                        value = testNull(xRef$name))
+        updateTextInput(session,
+                        "targetxRefIdText",
+                        value = testNull(xRef$id))
+      } else {
+        updateTextInput(session,
+                        "targetxRefNameText",
+                        value = input$targetxRefSlct)
+      }
+    })
+  })
+  
+  # write to target xRef
+  observe({
+    if (is.null(testEmptyInput(input$targetxRefNameText))) {
+      return(NULL)
+    }
+    tryCatch({
+      xRef <- xRefType$new(
+        testEmptyInput(input$targetxRefNameText),
+        testEmptyInput(input$targetxRefIdText))
+      isolate({
+        values$rdml$target[[input$targetSlct]]$
+          xRef[[input$targetxRefSlct]] <- xRef
+        # rename list elements
+        if (input$targetxRefSlct != 
+            input$targetxRefNameText) {
+          values$rdml$target[[input$targetSlct]]$
+            xRef <- values$rdml$target[[input$targetSlct]]$xRef
+          updateSelectizeInput(
+            session,
+            "targetxRefSlct",
+            choices = names(values$rdml$target[[input$targetSlct]]$xRef),
+            selected = input$targetxRefNameText)
+        }
+      })
+    },
+    error = function(e) print(e$message)
+    )
+  })
+  
+  # remove target xRef
+  observe({
+    input$removetargetxRefBtn
+    isolate({
+      values$rdml$target[[input$targetSlct]]$
+        xRef[[input$targetxRefSlct]]<- NULL
+      updateSelectizeInput(
+        session,
+        "targetxRefSlct",
+        choices = names(values$rdml$target[[input$targetSlct]]$
+                          xRef))
+    })
+  })
+  
+  # Tcc Tab -----------------------------------------------------  
+  
+  
+  # init
+  observe({
+    if (is.null(values$rdml$thermalCyclingConditions))
+      return(NULL)
+    isolate({
+      updateSelectizeInput(session,
+                           "tccSlct",
+                           choices = names(values$rdml$thermalCyclingConditions))
+    })
+  })
+  
+  # on tccSlct change
+  observe({
+    if (input$tccSlct == "") {
+      return(NULL)
+    }
+    isolate({
+      if (length(values$rdml$
+                 thermalCyclingConditions[[input$tccSlct]]$step) == 0) {
+        updateSelectizeInput(
+          session,
+          "tccStepSlct",
+          choices = "")
+      } else {
+        updateSelectizeInput(
+          session,
+          "tccStepSlct",
+          choices = names(values$rdml$
+                            thermalCyclingConditions[[input$tccSlct]]$step))
+      }
+      # update fields
+      if (!is.null(values$rdml$
+                   thermalCyclingConditions[[input$tccSlct]])) {
+        tcc <- values$rdml$
+          thermalCyclingConditions[[input$tccSlct]]
+        updateTextInput(session,
+                        "tccIdText",
+                        value = testNull(tcc$id$id))
+        updateTextInput(session,
+                        "tccDescriptionText",
+                        value = testNull(tcc$description))
+        updateSelectInput(session,
+                          "tccDocumentationSlct",
+                          selected = names(tcc$documentation))
+        updateTextInput(session,
+                        "tccLidTemperatureText",
+                        value = testNull(tcc$lidTemperature))
+        updateSelectInput(session,
+                          "tccExperimenterSlct",
+                          selected = names(tcc$experimenter))
+        updateSelectizeInput(session,
+                             "tccStepSlct",
+                             choices = names(tcc$step))
+        
+        
+      } else {
+        updateTextInput(session,
+                        "tccIdText",
+                        value = input$tccSlct)
+      }
+    })
+  })
+  
+  # on tccStepSlct change
+  observe({
+    if (input$tccStepSlct == "" || input$tccStepTypeSlct == "") {
+      return(NULL)
+    }
+    isolate({
+      step <- values$rdml$thermalCyclingConditions[[input$tccSlct]]$
+        step[[input$tccStepSlct]]
+      updateTextInput(session,
+                      "tccStepNrText",
+                      value = testNull(step$nr))
+      updateTextInput(session,
+                      "tccStepDescriptionText",
+                      value = testNull(step$description))
+    
+      switch (input$tccStepTypeSlct,
+              temperature = {
+                updateTextInput(session,
+                                "tccStepTemperatureText",
+                                value = testNull(step$temperature$temperature))
+                updateTextInput(session,
+                                "tccStepDurationText",
+                                value = testNull(step$temperature$duration))
+                updateTextInput(session,
+                                "tccStepTemperatureChangeText",
+                                value = testNull(step$temperature$temperatureChange))
+                updateTextInput(session,
+                                "tccStepDurationChangeText",
+                                value = testNull(step$temperature$durationChange))
+                updateTextInput(session,
+                                "tccStepMeasureText",
+                                value = testNull(step$temperature$measure$value))
+                updateTextInput(session,
+                                "tccStepRampText",
+                                value = testNull(step$temperature$ramp))
+              },
+              gradient = {
+                updateTextInput(session,
+                                "tccStepHighTemperatureText",
+                                value = testNull(step$gradient$highTemperature))
+                updateTextInput(session,
+                                "tccStepLowTemperatureText",
+                                value = testNull(step$gradient$lowTemperature))
+                updateTextInput(session,
+                                "tccStepDurationText",
+                                value = testNull(step$gradient$duration))
+                updateTextInput(session,
+                                "tccStepTemperatureChangeText",
+                                value = testNull(step$gradient$temperatureChange))
+                updateTextInput(session,
+                                "tccStepDurationChangeText",
+                                value = testNull(step$gradient$durationChange))
+                updateTextInput(session,
+                                "tccStepMeasureText",
+                                value = testNull(step$gradient$measure$value))
+                updateTextInput(session,
+                                "tccStepRampText",
+                                value = testNull(step$gradient$ramp))
+              },
+              loop = {
+                updateTextInput(session,
+                                "tccStepGotoText",
+                                value = testNull(step$loop$goto))
+                updateTextInput(session,
+                                "tccStepRepeatText",
+                                value = testNull(step$loop$repeat.n))
+              },
+              pause = {
+                updateTextInput(session,
+                                "tccStepTemperatureText",
+                                value = testNull(step$pause$temperature))
+              },
+              lidopen = {
+                if (!is.null(step$lidOpen)) {
+                  updateCheckboxInput(session,
+                                  "tccStepLidOpenChk",
+                                  value = TRUE)
+                } else {
+                  updateCheckboxInput(session,
+                                      "tccStepLidOpenChk",
+                                      value = FALSE)
+                }
+              }
+      )
+      
     })
   })
   

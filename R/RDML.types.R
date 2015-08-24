@@ -3037,6 +3037,17 @@ stepType <-
               private$.loop <- loop
               private$.pause <- pause
               private$.lidOpen <- lidOpen
+              #               
+              #               
+              #               if (
+              #                 length(private[[
+              #                   !is.null(
+              #                     c(private$.temperature,
+              #                       private$.gradient,
+              #                       private$.loop,
+              #                       private$.pause,
+              #                       private$.lidOpen))]]) != 1)
+              #                 stop("Step have to contain 1 step type!")
             }
           ),
           private = list(
@@ -3067,6 +3078,11 @@ stepType <-
               assert_that(is.opt.type(temperature,
                                       temperatureType))
               private$.temperature <- temperature
+              
+              private$.gradient <- NULL
+              private$.loop <- NULL
+              private$.pause <- NULL
+              private$.lidOpen <- NULL
             },
             gradient = function(gradient) {
               if (missing(gradient))
@@ -3074,6 +3090,11 @@ stepType <-
               assert_that(is.opt.type(gradient,
                                       gradientType))
               private$.gradient <- gradient
+              
+              private$.temperature <- NULL
+              private$.loop <- NULL
+              private$.pause <- NULL
+              private$.lidOpen <- NULL
             },
             loop = function(loop) {
               if (missing(loop))
@@ -3081,6 +3102,11 @@ stepType <-
               assert_that(is.opt.type(loop,
                                       loopType))
               private$.loop <- loop
+              
+              private$.temperature <- NULL
+              private$.gradient <- NULL
+              private$.pause <- NULL
+              private$.lidOpen <- NULL
             },
             pause = function(pause) {
               if (missing(pause))
@@ -3088,6 +3114,11 @@ stepType <-
               assert_that(is.opt.type(pause,
                                       pauseType))
               private$.pause <- pause
+              
+              private$.temperature <- NULL
+              private$.gradient <- NULL
+              private$.loop <- NULL
+              private$.lidOpen <- NULL
             },
             lidOpen = function(lidOpen) {
               if (missing(lidOpen))
@@ -3095,6 +3126,11 @@ stepType <-
               assert_that(is.opt.type(lidOpen,
                                       lidOpenType))
               private$.lidOpen <- lidOpen
+              
+              private$.temperature <- NULL
+              private$.gradient <- NULL
+              private$.loop <- NULL
+              private$.pause <- NULL
             }
           ))
 
@@ -3149,7 +3185,8 @@ thermalCyclingConditionsType <-
               private$.documentation <- documentation
               private$.lidTemperature <- lidTemperature
               private$.experimenter <- experimenter
-              private$.step <- step
+              private$.step <- with.names(step,
+                                          quote(.$nr))
               
             }
           ),
@@ -3199,6 +3236,7 @@ thermalCyclingConditionsType <-
                 return(private$.step)
               assert_that(is.opt.list.type(step,
                                            idReferencesType))
-              private$.step <- step
+              private$.step <- with.names(step,
+                                          quote(.$nr))
             }
           ))
