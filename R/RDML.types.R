@@ -2666,11 +2666,10 @@ lidOpenType <-
           # class = FALSE,
           inherit = rdmlBaseType,
           public = list(
-            initialize = function(lidOpen) {
+            initialize = function() {
             }
           ),
           private = list(
-            .lidOpen = NA
           ))
 
 # pauseType ------------------------------------------------------------

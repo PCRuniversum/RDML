@@ -524,7 +524,7 @@ RDML$set("public", "initialize", function(filename,
               ),
               
               step = llply(tcc["step"],
-                           function(step) 
+                           function(step) {
                              stepType$new(
                                nr = as.integer(xmlValue(step[["nr"]])),
                                description = xmlValue(step[["description"]]),
@@ -546,45 +546,51 @@ RDML$set("public", "initialize", function(filename,
                                      ramp = 
                                        as.numeric(xmlValue(step[["temperature"]][["ramp"]]))
                                    )},
-                               gradient = NULL,
-                               #                                  gradientType$new(
-                               #                                  highTemperature = 
-                               #                                    as.numeric(xmlValue(step[["gradient"]][["highTemperature"]])),
-                               #                                  lowTemperature = 
-                               #                                    as.numeric(xmlValue(step[["gradient"]][["lowTemperature"]])),
-                               #                                  duration = 
-                               #                                    as.integer(xmlValue(step[["gradient"]][["duration"]])),
-                               #                                  temperatureChange = 
-                               #                                    as.numeric(xmlValue(step[["gradient"]][["temperatureChange"]])),
-                               #                                  durationChange = 
-                               #                                    as.integer(xmlValue(step[["gradient"]][["durationChange"]])),
-                               #                                  measure = measureType$new(
-                               #                                    xmlValue(step[["gradient"]][["measure"]])),
-                               #                                  ramp = 
-                               #                                    as.numeric(xmlValue(step[["gradient"]][["ramp"]]))
-                               # ),
-                               loop = NULL
-                               #                                  {
-                               #                                  if(is.null(xmlValue(step[["loop"]][["goto"]])))
-                               #                                              NULL
-                               #                                else
-                               #                                              loopType$new(
-                               #                                                goto = as.integer(xmlValue(step[["loop"]][["goto"]])),
-                               #                                                # should be called "repeat" but this is reserved word
-                               #                                                repeat.n = as.integer(xmlValue(step[["loop"]][["repeat"]])) 
-                               #                                              )}
-                               ,
-                               pause = 
-                               {
-                                 if(is.null(xmlValue(step[["pause"]][["temperature"]])))
+                               gradient = {
+                                 if(is.null(step[["gradient"]][["highTemperature"]]))
+                                   NULL
+                                 else
+                                   gradientType$new(
+                                     highTemperature = 
+                                       as.numeric(xmlValue(step[["gradient"]][["highTemperature"]])),
+                                     lowTemperature = 
+                                       as.numeric(xmlValue(step[["gradient"]][["lowTemperature"]])),
+                                     duration = 
+                                       as.integer(xmlValue(step[["gradient"]][["duration"]])),
+                                     temperatureChange = 
+                                       as.numeric(xmlValue(step[["gradient"]][["temperatureChange"]])),
+                                     durationChange = 
+                                       as.integer(xmlValue(step[["gradient"]][["durationChange"]])),
+                                     measure = measureType$new(
+                                       xmlValue(step[["gradient"]][["measure"]])),
+                                     ramp = 
+                                       as.numeric(xmlValue(step[["gradient"]][["ramp"]])))
+                               },
+                               loop = {
+                                 if(is.null(step[["loop"]][["goto"]]))
+                                   NULL
+                                 else
+                                   loopType$new(
+                                     goto = as.integer(xmlValue(step[["loop"]][["goto"]])),
+                                     # should be called "repeat" but this is reserved word
+                                     repeat.n = as.integer(xmlValue(step[["loop"]][["repeat"]])) 
+                                   )},
+                               pause = {
+                                 if(is.null(step[["pause"]][["temperature"]]))
                                    NULL
                                  else
                                    pauseType$new(
                                      temperature = 
                                        as.numeric(xmlValue(step[["pause"]][["temperature"]]))
                                    )},
-                               lidOpen = lidOpenType$new(xmlValue(step[["lidOpen"]][["lidOpenType"]]))
+                               lidOpen = {
+                                 if(is.null(step[["lidOpen"]]))
+                                   NULL
+                                 else
+                                   lidOpenType$new()
+                               }
                              )
+                           }
               )
             )
           }) %>% 

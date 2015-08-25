@@ -307,9 +307,9 @@ shinyServer(function(input, output, session) {
         updateTextInput(session,
                         "documentationIdText",
                         value = testNull(documentation$id$id))
-        #         updateTextInput(session,
-        #                         "documentationTextText",
-        #                         value = testNull(documentation$text))
+        updateTextInput(session,
+                        "documentationTextText",
+                        value = testNull(documentation$text))
       } else {
         updateTextInput(session,
                         "documentationIdText",
@@ -409,41 +409,41 @@ shinyServer(function(input, output, session) {
     })
     
 
-    
+
       # write to dye
-      dyes <- reactive({
-        if (is.null(testEmptyInput(input$dyeIdText)) ||
-            is.null(input$dyeSlct)) {
-          return(dyes)
+      observe({
+        if (is.null(testEmptyInput(input$dyeIdText))) {
+          return(NULL)
         }
         tryCatch({
-          tdyes <- dyes()
-          tdyes[[input$dyeSlct]] <- dyeType$new(
-            idType$new(testEmptyInput(input$dyeIdText)),
-            testEmptyInput(input$dyeDescriptionText))
+          dye <- 
+            documentationType$new(
+              idType$new(testEmptyInput(input$dyeIdText)),
+              testEmptyInput(input$dyeDescriptionText))
           isolate({
-            # values$rdml$dye[[input$dyeSlct]] <- dye
-            # print(dyes())
+            values$rdml$dye[[input$dyeSlct]] <- dye
             # rename list elements
             if (input$dyeSlct != input$dyeIdText) {
               values$rdml$dye <- values$rdml$dye
               updateSelectizeInput(session,
-                                   "dyeSlct",
+                                   "dye",
                                    choices = names(values$rdml$dye),
                                    selected = input$dyeIdText)
-              updateSelectInput(session,
-                                "targetDyeIdSlct",
-                                choices = names(values$rdml$dye))
             }
+            updateSelectizeInput(session,
+                                 "dyeSlct",
+                                 choices = names(values$rdml$dye),
+                                 selected = input$dyeIdText)
+            updateSelectInput(session,
+                              "targetDyeIdSlct",
+                              choices = names(values$rdml$dye))
           })
         },
-        error = function(e) {
-          print(e$message)
-          dyes
-          }
+        error = function(e) print(e$message)
         )
       })
-  
+      
+      
   # remove dye
     observe({
       input$removeDyeBtn
@@ -1124,6 +1124,22 @@ shinyServer(function(input, output, session) {
       updateTextInput(session,
                       "tccStepDescriptionText",
                       value = testNull(step$description))
+      updateSelectInput(session,
+                        "tccStepTypeSlct",
+                        selected = {
+                          if (!is.null(step$temperature))
+                            "temperature"
+                          else if ((!is.null(step$gradient)))
+                            "gradient"
+                          else if ((!is.null(step$loop)))
+                            "loop"
+                          else if ((!is.null(step$pause)))
+                            "pause"
+                          else if ((!is.null(step$lidOpen)))
+                            "lidOpen"
+                          else
+                            "temperature"
+                        })
     
       switch (input$tccStepTypeSlct,
               temperature = {
@@ -1182,15 +1198,15 @@ shinyServer(function(input, output, session) {
                                 "tccStepTemperatureText",
                                 value = testNull(step$pause$temperature))
               },
-              lidopen = {
-                if (!is.null(step$lidOpen)) {
+              lidOpen = {
+                if (is.null(step$lidOpen)) {
                   updateCheckboxInput(session,
                                   "tccStepLidOpenChk",
-                                  value = TRUE)
+                                  value = FALSE)
                 } else {
                   updateCheckboxInput(session,
                                       "tccStepLidOpenChk",
-                                      value = FALSE)
+                                      value = TRUE)
                 }
               }
       )
@@ -1356,7 +1372,6 @@ shinyServer(function(input, output, session) {
       paste0(values$selFile, '.RDML')
     },
     content = function(file) {
-      # Do not work!!!! ?????
       values$rdml$AsXML(file)
     }
   )
