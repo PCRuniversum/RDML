@@ -4,10 +4,9 @@
 #' of experiment.
 #' 
 #' @param request Output from AsTable method(\link{RDML.AsTable})
-#' @param limits \code{vector} with two values (min and max values) that limits
-#' cycles or temperature that should be gotten. If this values are smaller or bigger 
-#' than min or max values at dats - NA will be used.
-#' @param data.type Type of fluorescence data (i.e. 'adp' for qPCR or 'mdp' for
+#' @param limits range of cycles or temperature. If range is wider than range of 
+#' data, NA will be introduced.
+#' @param dp.type Type of fluorescence data (i.e. 'adp' for qPCR or 'mdp' for
 #'   melting)
 #' @param long.table Output table is ready for ggplot (See \link{RDML.AsTable}
 #'   for example)
@@ -33,9 +32,9 @@
 #' ## Select melting fluorescence data with sample.type 'unkn'.
 #' library(dplyr)
 #' tab <- cfx96$AsTable()
-#' fdata <- cfx96$GetFData(filter(tab, sample.type == "unkn")
-#'                         data.type = "mdp")
-#' ## Show names for getted fdata
+#' fdata <- cfx96$GetFData(filter(tab, sample.type == "unkn"),
+#'                         dp.type = "adp")
+#' ## Show names for obtained fdata
 #' colnames(fdata)
 #' }
 RDML$set("public", "GetFData",
@@ -50,7 +49,7 @@ RDML$set("public", "GetFData",
                  cbind(fdata.name = el$fdata.name)
              },
              .id = "fdata.name"
-           )
+             )
            ## Asserts for limits
            if (!is.null(limits)) {
              out <- out[out[, 1] >= limits[1] & out[, 1] <= limits[2], ]

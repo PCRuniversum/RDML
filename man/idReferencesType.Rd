@@ -9,7 +9,7 @@
 idReferencesType
 }
 \description{
-Contains id of another RDML object.Inherits: \link{idType}.
+Contains id of another RDML object. Inherits: \link{idType}.
 }
 \section{Initialization}{
  \preformatted{idReferencesType$new(id)}

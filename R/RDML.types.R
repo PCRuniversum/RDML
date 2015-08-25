@@ -208,7 +208,7 @@ rdmlIdType <-
 
 #' idType R6 class.
 #' 
-#' Contains identificator for varius RDML types.Inherits: \link{rdmlBaseType}.
+#' Contains identificator for varius RDML types. Inherits: \link{rdmlBaseType}.
 #' 
 #' @section Initialization: \preformatted{idType$new(id)}
 #'
@@ -255,7 +255,7 @@ idType <-
 
 #' reactIdType R6 class.
 #' 
-#' Contains identificator for reactType.Inherits: \link{rdmlBaseType}.
+#' Contains identificator for reactType. Inherits: \link{rdmlBaseType}.
 #' 
 #' @section Initialization: \preformatted{reactIdType$new(id)}
 #'
@@ -295,7 +295,7 @@ reactIdType <-
 
 #' idReferencesType R6 class.
 #' 
-#' Contains id of another RDML object.Inherits: \link{idType}.
+#' Contains id of another RDML object. Inherits: \link{idType}.
 #' 
 #' @section Initialization: \preformatted{idReferencesType$new(id)}
 #' 
@@ -315,7 +315,7 @@ idReferencesType <-
 
 #' experimenterType R6 class.
 #' 
-#' Contact details of the experimenter.Inherits: \link{rdmlBaseType}.
+#' Contact details of the experimenter. Inherits: \link{rdmlBaseType}.
 #' 
 #' @section Initialization: \preformatted{experimenterType$new(id, firstName, lastName,
 #'   email = NULL, labName = NULL, labAddress = NULL)}
@@ -604,7 +604,7 @@ annotationType <-
 
 #' quantityType R6 class.
 #' 
-#' A quantity is always defined by its value and its unit.Inherits:
+#' A quantity is always defined by its value and its unit. Inherits:
 #' \link{rdmlBaseType}.
 #' 
 #' @section Initialization: \preformatted{quantityType$new(value, unit)}
@@ -1054,10 +1054,8 @@ sampleType <-
               
               private$.id <- id
               private$.description <- description
-              private$.documentation <- with.names(documentation,
-                                                   quote(.$id))
-              private$.xRef <- with.names(xRef,
-                                          quote(.$name))
+              private$.documentation <- documentation
+              private$.xRef <- xRef
               private$.annotation <- with.names(annotation,
                                                 quote(.$property))
               private$.type <- type
@@ -1099,16 +1097,14 @@ sampleType <-
                 return(private$.documentation)
               assert_that(is.opt.list.type(documentation,
                                            idReferencesType))
-              private$.documentation <- with.names(documentation,
-                                                   quote(.$id))
+              private$.documentation <- documentation
             },
             xRef = function(xRef) {
               if (missing(xRef))
                 return(private$.xRef)
               assert_that(is.opt.list.type(xRef,
                                            xRefType))
-              private$.xRef <- with.names(xRef,
-                                          quote(.$name))
+              private$.xRef <- xRef
             },
             annotation = function(annotation) {
               if (missing(annotation))
@@ -1319,7 +1315,7 @@ sequencesType <-
 #' commercialAssayType R6 class.
 #' 
 #' For some commercial assays, the primer sequences may be unknown. This element 
-#' allows to describe commercial assays.Inherits: \link{rdmlBaseType}.
+#' allows to describe commercial assays. Inherits: \link{rdmlBaseType}.
 #' 
 #' @section Initialization: \preformatted{commercialAssayType$new(company, orderNumber)}
 #'   
@@ -1398,7 +1394,7 @@ targetTypeType <-
 #' targetType R6 class.
 #' 
 #' A target is a defined PCR reaction. PCR reactions for the same gene which 
-#' differ in primer sequences are considered different targets.Inherits: 
+#' differ in primer sequences are considered different targets. Inherits: 
 #' \link{rdmlBaseType}.
 #' 
 #' @section Initialization: \preformatted{targetType$new(id, description = NULL, 
@@ -1767,12 +1763,16 @@ adpsType <-
 
 #' mdpsType R6 class.
 #' 
-#' Contains of melting data points \code{matrix} -- single data points measured
-#' during amplification. \code{Matrix} columns: \describe{ \item{tmp}{(every
-#' point must be unique) Temperature - The temperature in degrees Celsius at the
-#' time of measurement.} \item{fluor}{Fluorescence - The fluorescence intensity 
-#' measured without any correction. The fluorescence intensity must not be 
-#' baseline corrected.}} Inherits: \link{rdmlBaseType}.
+#' Contains \code{matrix} of melting data points (single data points measured
+#' during amplification). 
+#' 
+#' Columns: \describe{ 
+#' \item{tmp}{(temperature in degrees Celsius at the time of measurement. 
+#' Every point must have unique value.} 
+#' \item{fluor}{fluorescence intensity measured without any correction 
+#' (including baselining).}} 
+#' 
+#' Inherits: \link{rdmlBaseType}.
 #' 
 #' @section Initialization: \preformatted{mdpsType$new(fpoints)}
 #'   
@@ -2236,7 +2236,7 @@ labelFormatType <-
 #' pcrFormatType R6 class.
 #' 
 #' The format of the run - This allows the software to display the data 
-#' according to the qPCR instrument run format.Inherits: 
+#' according to the qPCR instrument run format. Inherits: 
 #' \link{rdmlBaseType}.
 #' 
 #' Rotor formats always have 1 column; rows correspond to the number of places 
@@ -2329,7 +2329,7 @@ pcrFormatType <-
 #' runType R6 class.
 #' 
 #' A run is a set of reactions performed in one "run", for example one plate, 
-#' one rotor, one array, one chip.Inherits: \link{rdmlBaseType}.
+#' one rotor, one array, one chip. Inherits: \link{rdmlBaseType}.
 #' 
 #' @section Initialization: \preformatted{runType$new(id, description = NULL, 
 #'   documentation = NULL, experimenter = NULL, instrument = NULL, 
@@ -2544,7 +2544,7 @@ runType <-
 
 #' experimentType R6 class.
 #' 
-#' An experiment can contain several runs (\link{runType}).Inherits: 
+#' A qPCR experiment. It may contain several runs (\link{runType}). Inherits: 
 #' \link{rdmlBaseType}.
 #' 
 #' @section Initialization: \preformatted{experimentType$new(id, description = NULL,
@@ -2653,7 +2653,7 @@ experimentType <-
 #' This step waits for the user to open the lid and continues afterwards. It 
 #' allows to stop the program and to wait for the user to add for example 
 #' enzymes and continue the program afterwards. The temperature of the previous 
-#' step is maintained.Inherits: \link{rdmlBaseType}.
+#' step is maintained. Inherits: \link{rdmlBaseType}.
 #' 
 #' @section Initialization: \preformatted{lidOpenType$new()}
 #'   
@@ -2677,7 +2677,7 @@ lidOpenType <-
 #' pauseType R6 class.
 #' 
 #' This step allows to pause at a certain temperature. It is typically the last 
-#' step in an amplification protocol.Inherits: \link{rdmlBaseType}.
+#' step in an amplification protocol. Inherits: \link{rdmlBaseType}.
 #' 
 #' @section Initialization: \preformatted{pauseType$new(temperature)}
 #'   
@@ -2716,17 +2716,17 @@ pauseType <-
 #' loopType R6 class.
 #' 
 #' This step allows to form a loop or to exclude some steps. It allows to jump 
-#' to a certain "goto" step for "repeat" times. If the "goto" step is higher 
-#' than the step of the loop, "repeat" must be "0".Inherits: 
+#' to a certain "goto" step for "repeat" times. If the "goto" step is outside of 
+#' the loop range, it must have "repeat" value "0". Inherits: 
 #' \link{rdmlBaseType}.
 #' 
 #' @section Initialization: \preformatted{loopType$new(goto, repeat.n)}
 #'   
 #' @section Fields: \describe{ \item{\code{goto}}{\link[base]{numeric}.  The
 #'   step to go to to form the loop.}
-#' \item{\code{repeat.n}}{\link[base]{numeric}. Determines how often the loop is 
+#' \item{\code{repeat.n}}{\link[base]{numeric}. Determines how many times the loop is 
 #'   repeated. The first run through the loop is counted as 0, the last loop is 
-#'   "repeat" - 1. The loop is run through exactly "repeat" times.}}
+#'   "repeat" - 1.}}
 #'   
 #' @docType class
 #' @format An \code{\link{R6Class}} generator object.
@@ -2930,16 +2930,16 @@ temperatureType <-
 
 #' gradientType R6 class.
 #' 
-#' This step forms a temperature gradient across the PCR block. Inherits: 
+#' Details of the temperature gradient across the PCR block. Inherits: 
 #' \link{baseTemperatureType}.
 #' 
 #' @section Initialization: \preformatted{gradientType$new(highTemperature, 
 #'   lowTemperature, ...)}
 #'   
 #' @section Fields: \describe{ 
-#'   \item{\code{highTemperature}}{\link[base]{double}. The high temperature of
-#'   thegradient in degrees Celsius.}
-#'   \item{\code{lowTemperature}}{\link[base]{double}. The low temperature of
+#'   \item{\code{highTemperature}}{\link[base]{double}. The highest temperature of
+#'   the gradient in degrees Celsius.}
+#'   \item{\code{lowTemperature}}{\link[base]{double}. The lowest temperature of
 #'   the gradient in degrees Celsius.}
 #' \item{\code{...}}{ Params of parent class \link{baseTemperatureType}. }}
 #'   
@@ -3036,17 +3036,6 @@ stepType <-
               private$.loop <- loop
               private$.pause <- pause
               private$.lidOpen <- lidOpen
-              #               
-              #               
-              #               if (
-              #                 length(private[[
-              #                   !is.null(
-              #                     c(private$.temperature,
-              #                       private$.gradient,
-              #                       private$.loop,
-              #                       private$.pause,
-              #                       private$.lidOpen))]]) != 1)
-              #                 stop("Step have to contain 1 step type!")
             }
           ),
           private = list(
@@ -3077,11 +3066,6 @@ stepType <-
               assert_that(is.opt.type(temperature,
                                       temperatureType))
               private$.temperature <- temperature
-              
-              private$.gradient <- NULL
-              private$.loop <- NULL
-              private$.pause <- NULL
-              private$.lidOpen <- NULL
             },
             gradient = function(gradient) {
               if (missing(gradient))
@@ -3089,11 +3073,6 @@ stepType <-
               assert_that(is.opt.type(gradient,
                                       gradientType))
               private$.gradient <- gradient
-              
-              private$.temperature <- NULL
-              private$.loop <- NULL
-              private$.pause <- NULL
-              private$.lidOpen <- NULL
             },
             loop = function(loop) {
               if (missing(loop))
@@ -3101,11 +3080,6 @@ stepType <-
               assert_that(is.opt.type(loop,
                                       loopType))
               private$.loop <- loop
-              
-              private$.temperature <- NULL
-              private$.gradient <- NULL
-              private$.pause <- NULL
-              private$.lidOpen <- NULL
             },
             pause = function(pause) {
               if (missing(pause))
@@ -3113,11 +3087,6 @@ stepType <-
               assert_that(is.opt.type(pause,
                                       pauseType))
               private$.pause <- pause
-              
-              private$.temperature <- NULL
-              private$.gradient <- NULL
-              private$.loop <- NULL
-              private$.lidOpen <- NULL
             },
             lidOpen = function(lidOpen) {
               if (missing(lidOpen))
@@ -3125,11 +3094,6 @@ stepType <-
               assert_that(is.opt.type(lidOpen,
                                       lidOpenType))
               private$.lidOpen <- lidOpen
-              
-              private$.temperature <- NULL
-              private$.gradient <- NULL
-              private$.loop <- NULL
-              private$.pause <- NULL
             }
           ))
 
@@ -3184,8 +3148,7 @@ thermalCyclingConditionsType <-
               private$.documentation <- documentation
               private$.lidTemperature <- lidTemperature
               private$.experimenter <- experimenter
-              private$.step <- with.names(step,
-                                          quote(.$nr))
+              private$.step <- step
               
             }
           ),
@@ -3235,7 +3198,6 @@ thermalCyclingConditionsType <-
                 return(private$.step)
               assert_that(is.opt.list.type(step,
                                            idReferencesType))
-              private$.step <- with.names(step,
-                                          quote(.$nr))
+              private$.step <- step
             }
           ))

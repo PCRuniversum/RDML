@@ -9,7 +9,7 @@
 reactIdType
 }
 \description{
-Contains identificator for reactType.Inherits: \link{rdmlBaseType}.
+Contains identificator for reactType. Inherits: \link{rdmlBaseType}.
 }
 \section{Initialization}{
  \preformatted{reactIdType$new(id)}
