@@ -10,7 +10,7 @@ targetType
 }
 \description{
 A target is a defined PCR reaction. PCR reactions for the same gene which
-differ in primer sequences are considered different targets.Inherits:
+differ in primer sequences are considered different targets. Inherits:
 \link{rdmlBaseType}.
 }
 \section{Initialization}{

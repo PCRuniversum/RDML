@@ -7,11 +7,10 @@
 \arguments{
 \item{request}{Output from AsTable method(\link{RDML.AsTable})}
 
-\item{limits}{\code{vector} with two values (min and max values) that limits
-cycles or temperature that should be gotten. If this values are smaller or bigger
-than min or max values at dats - NA will be used.}
+\item{limits}{range of cycles or temperature. If range is wider than range of
+data, NA will be introduced.}
 
-\item{data.type}{Type of fluorescence data (i.e. 'adp' for qPCR or 'mdp' for
+\item{dp.type}{Type of fluorescence data (i.e. 'adp' for qPCR or 'mdp' for
 melting)}
 
 \item{long.table}{Output table is ready for ggplot (See \link{RDML.AsTable}
@@ -37,9 +36,9 @@ cfx96 <- RDML$new(filename)
 ## Select melting fluorescence data with sample.type 'unkn'.
 library(dplyr)
 tab <- cfx96$AsTable()
-fdata <- cfx96$GetFData(filter(tab, sample.type == "unkn")
-                        data.type = "mdp")
-## Show names for getted fdata
+fdata <- cfx96$GetFData(filter(tab, sample.type == "unkn"),
+                        dp.type = "adp")
+## Show names for obtained fdata
 colnames(fdata)
 }
 }

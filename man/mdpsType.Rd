@@ -9,12 +9,17 @@
 mdpsType
 }
 \description{
-Contains of melting data points \code{matrix} -- single data points measured
-during amplification. \code{Matrix} columns: \describe{ \item{tmp}{(every
-point must be unique) Temperature - The temperature in degrees Celsius at the
-time of measurement.} \item{fluor}{Fluorescence - The fluorescence intensity
-measured without any correction. The fluorescence intensity must not be
-baseline corrected.}} Inherits: \link{rdmlBaseType}.
+Contains \code{matrix} of melting data points (single data points measured
+during amplification).
+}
+\details{
+Columns: \describe{
+\item{tmp}{(temperature in degrees Celsius at the time of measurement.
+Every point must have unique value.}
+\item{fluor}{fluorescence intensity measured without any correction
+(including baselining).}}
+
+Inherits: \link{rdmlBaseType}.
 }
 \section{Initialization}{
  \preformatted{mdpsType$new(fpoints)}

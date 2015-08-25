@@ -9,7 +9,7 @@
 gradientType
 }
 \description{
-This step forms a temperature gradient across the PCR block. Inherits:
+Details of the temperature gradient across the PCR block. Inherits:
 \link{baseTemperatureType}.
 }
 \section{Initialization}{
@@ -19,9 +19,9 @@ This step forms a temperature gradient across the PCR block. Inherits:
 
 \section{Fields}{
  \describe{
-  \item{\code{highTemperature}}{\link[base]{double}. The high temperature of
-  thegradient in degrees Celsius.}
-  \item{\code{lowTemperature}}{\link[base]{double}. The low temperature of
+  \item{\code{highTemperature}}{\link[base]{double}. The highest temperature of
+  the gradient in degrees Celsius.}
+  \item{\code{lowTemperature}}{\link[base]{double}. The lowest temperature of
   the gradient in degrees Celsius.}
 \item{\code{...}}{ Params of parent class \link{baseTemperatureType}. }}
 }

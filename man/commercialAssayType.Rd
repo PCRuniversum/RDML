@@ -10,7 +10,7 @@ commercialAssayType
 }
 \description{
 For some commercial assays, the primer sequences may be unknown. This element
-allows to describe commercial assays.Inherits: \link{rdmlBaseType}.
+allows to describe commercial assays. Inherits: \link{rdmlBaseType}.
 }
 \section{Initialization}{
  \preformatted{commercialAssayType$new(company, orderNumber)}

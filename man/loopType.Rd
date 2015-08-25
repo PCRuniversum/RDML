@@ -10,8 +10,8 @@ loopType
 }
 \description{
 This step allows to form a loop or to exclude some steps. It allows to jump
-to a certain "goto" step for "repeat" times. If the "goto" step is higher
-than the step of the loop, "repeat" must be "0".Inherits:
+to a certain "goto" step for "repeat" times. If the "goto" step is outside of
+the loop range, it must have "repeat" value "0". Inherits:
 \link{rdmlBaseType}.
 }
 \section{Initialization}{
@@ -21,9 +21,9 @@ than the step of the loop, "repeat" must be "0".Inherits:
 \section{Fields}{
  \describe{ \item{\code{goto}}{\link[base]{numeric}.  The
   step to go to to form the loop.}
-\item{\code{repeat.n}}{\link[base]{numeric}. Determines how often the loop is
+\item{\code{repeat.n}}{\link[base]{numeric}. Determines how many times the loop is
   repeated. The first run through the loop is counted as 0, the last loop is
-  "repeat" - 1. The loop is run through exactly "repeat" times.}}
+  "repeat" - 1.}}
 }
 \keyword{datasets}
 
