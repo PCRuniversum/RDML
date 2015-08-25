@@ -364,7 +364,7 @@ shinyUI(
                                     actionButton("removeStepBtn",
                                                  "Remove Step")
                           )),
-                          actionButton("removeTargetBtn",
+                          actionButton("removeTccBtn",
                                        "Remove Thermal Cycling Conditions"))),
       tabPanel("Fluorescence Points")
     ),

@@ -370,93 +370,93 @@ shinyServer(function(input, output, session) {
   # Dye Tab -----------------------------------------------------  
   
   
-    # init
-    observe({
-      if (is.null(values$rdml$dye))
-        return(NULL)
-      isolate({
-        updateSelectizeInput(session,
-                             "dyeSlct",
-                             choices = names(values$rdml$dye))
-        updateSelectInput(session,
-                          "targetDyeIdSlct",
-                          choices = names(values$rdml$dye))
-      })
+  # init
+  observe({
+    if (is.null(values$rdml$dye))
+      return(NULL)
+    isolate({
+      updateSelectizeInput(session,
+                           "dyeSlct",
+                           choices = names(values$rdml$dye))
+      updateSelectInput(session,
+                        "targetDyeIdSlct",
+                        choices = names(values$rdml$dye))
     })
+  })
   
-
-    # on dyeSlct change
-    observe({
-      if (input$dyeSlct == "") {
-        return(NULL)
+  
+  # on dyeSlct change
+  observe({
+    if (input$dyeSlct == "") {
+      return(NULL)
+    }
+    isolate({
+      # update fields
+      if (!is.null(values$rdml$dye[[input$dyeSlct]])) {
+        dye <- values$rdml$dye[[input$dyeSlct]]
+        updateTextInput(session,
+                        "dyeIdText",
+                        value = testNull(dye$id$id))
+        updateTextInput(session,
+                        "dyeDescriptionText",
+                        value = testNull(dye$description))
+      } else {
+        updateTextInput(session,
+                        "dyeIdText",
+                        value = input$dyeSlct)
       }
-      isolate({
-        # update fields
-        if (!is.null(values$rdml$dye[[input$dyeSlct]])) {
-          dye <- values$rdml$dye[[input$dyeSlct]]
-          updateTextInput(session,
-                          "dyeIdText",
-                          value = testNull(dye$id$id))
-          updateTextInput(session,
-                          "dyeDescriptionText",
-                          value = testNull(dye$description))
-        } else {
-          updateTextInput(session,
-                          "dyeIdText",
-                          value = input$dyeSlct)
-        }
-      })
     })
-    
-
-
-      # write to dye
-      observe({
-        if (is.null(testEmptyInput(input$dyeIdText))) {
-          return(NULL)
-        }
-        tryCatch({
-          dye <- 
-            documentationType$new(
-              idType$new(testEmptyInput(input$dyeIdText)),
-              testEmptyInput(input$dyeDescriptionText))
-          isolate({
-            values$rdml$dye[[input$dyeSlct]] <- dye
-            # rename list elements
-            if (input$dyeSlct != input$dyeIdText) {
-              values$rdml$dye <- values$rdml$dye
-              updateSelectizeInput(session,
-                                   "dye",
-                                   choices = names(values$rdml$dye),
-                                   selected = input$dyeIdText)
-            }
-            updateSelectizeInput(session,
-                                 "dyeSlct",
-                                 choices = names(values$rdml$dye),
-                                 selected = input$dyeIdText)
-            updateSelectInput(session,
-                              "targetDyeIdSlct",
-                              choices = names(values$rdml$dye))
-          })
-        },
-        error = function(e) print(e$message)
-        )
-      })
-      
-      
-  # remove dye
-    observe({
-      input$removeDyeBtn
+  })
+  
+  
+  
+  # write to dye
+  observe({
+    if (is.null(testEmptyInput(input$dyeIdText))) {
+      return(NULL)
+    }
+    tryCatch({
+      dye <- 
+        documentationType$new(
+          idType$new(testEmptyInput(input$dyeIdText)),
+          testEmptyInput(input$dyeDescriptionText))
       isolate({
-        values$rdml$dye[[input$dyeSlct]] <- NULL
+        values$rdml$dye[[input$dyeSlct]] <- dye
+        # rename list elements
+        if (input$dyeSlct != input$dyeIdText) {
+          values$rdml$dye <- values$rdml$dye
+          updateSelectizeInput(session,
+                               "dye",
+                               choices = names(values$rdml$dye),
+                               selected = input$dyeIdText)
+        }
         updateSelectizeInput(session,
                              "dyeSlct",
-                             choices = names(values$rdml$dye))
+                             choices = names(values$rdml$dye),
+                             selected = input$dyeIdText)
         updateSelectInput(session,
                           "targetDyeIdSlct",
                           choices = names(values$rdml$dye))
       })
+    },
+    error = function(e) print(e$message)
+    )
+  })
+  
+  
+  # remove dye
+  observe({
+    input$removeDyeBtn
+    isolate({
+      values$rdml$dye[[input$dyeSlct]] <- NULL
+      updateSelectizeInput(session,
+                           "dyeSlct",
+                           choices = names(values$rdml$dye))
+      updateSelectInput(session,
+                        "targetDyeIdSlct",
+                        choices = names(values$rdml$dye))
     })
+  })
   
   # Sample Tab -----------------------------------------------------  
   
@@ -878,18 +878,18 @@ shinyServer(function(input, output, session) {
     }
     isolate({
       
-        olig <- values$rdml$target[[input$targetSlct]]$
-          sequences[[input$targetSequencesTypeSlct]]
-        updateTextInput(session,
-                        "targetSequences3PrimeTagText",
-                        value = testNull(olig$threePrimeTag))
-        updateTextInput(session,
-                        "targetSequences5PrimeTagText",
-                        value = testNull(olig$fivePrimeTag))
-        updateTextInput(session,
-                        "targetSequencesSequenceText",
-                        value = testNull(olig$sequence))
-        
+      olig <- values$rdml$target[[input$targetSlct]]$
+        sequences[[input$targetSequencesTypeSlct]]
+      updateTextInput(session,
+                      "targetSequences3PrimeTagText",
+                      value = testNull(olig$threePrimeTag))
+      updateTextInput(session,
+                      "targetSequences5PrimeTagText",
+                      value = testNull(olig$fivePrimeTag))
+      updateTextInput(session,
+                      "targetSequencesSequenceText",
+                      value = testNull(olig$sequence))
+      
     })
   })
   
@@ -965,7 +965,7 @@ shinyServer(function(input, output, session) {
   
   # remove target
   observe({
-    input$removetargetBtn
+    input$removeTargetBtn
     isolate({
       values$rdml$target[[input$targetSlct]] <- NULL
       updateSelectizeInput(session,
@@ -1140,7 +1140,7 @@ shinyServer(function(input, output, session) {
                           else
                             "temperature"
                         })
-    
+      
       switch (input$tccStepTypeSlct,
               temperature = {
                 updateTextInput(session,
@@ -1201,8 +1201,8 @@ shinyServer(function(input, output, session) {
               lidOpen = {
                 if (is.null(step$lidOpen)) {
                   updateCheckboxInput(session,
-                                  "tccStepLidOpenChk",
-                                  value = FALSE)
+                                      "tccStepLidOpenChk",
+                                      value = FALSE)
                 } else {
                   updateCheckboxInput(session,
                                       "tccStepLidOpenChk",
@@ -1214,136 +1214,143 @@ shinyServer(function(input, output, session) {
     })
   })
   
-  # write to target
+  # write to tcc
   observe({
-    if (is.null(testEmptyInput(input$targetIdText))) {
+    if (is.null(testEmptyInput(input$tccIdText))) {
       return(NULL)
     }
     tryCatch({
       isolate({
-        xRef <- values$rdml$target[[input$targetSlct]]$xRef
+        step <- values$rdml$target[[input$targetSlct]]$xRef
       })
-      target <- targetType$new(
-        idType$new(testEmptyInput(input$targetIdText)),
-        testEmptyInput(input$targetDescriptionText),
-        lapply(input$targetDocumentationSlct,
+      tcc <- targetType$new(
+        idType$new(testEmptyInput(input$tccIdText)),
+        testEmptyInput(input$tccDescriptionText),
+        lapply(input$tccDocumentationSlct,
                function(doc) idReferencesType$new(doc)),
-        xRef,
-        
-        targetTypeType$new(input$targetTypeSlct),
-        testEmptyInput(input$targetAemText),
-        testEmptyInput(as.numeric(input$targetAeText)),
-        testEmptyInput(as.numeric(input$targetAeSeText)),
-        testEmptyInput(as.numeric(input$targetDetectionLimitText)),
-        
-        dyeId= idReferencesType$new(testEmptyInput(input$targetDyeIdSlct)),
-        
-        {
-          isolate({
-            seq <- values$rdml$target[[input$targetSlct]]$sequences
-          })
-          seq[[input$targetSequencesTypeSlct]] <- 
-            tryCatch({
-              oligoType$new(
-                input$targetSequences3PrimeTagText,
-                input$targetSequences5PrimeTagText,
-                input$targetSequencesSequenceText
-              )
-            },
-            error = function(e) {
-              print(e$message)
-              NULL}
-            )
-          seq
-        },
-        
-        tryCatch({
-          commercialAssayType$new(
-            input$targetCaCompanyText,
-            input$targetCaOrderNumberText
-          )
-        },
-        error = function(e) {
-          print(e$message)
-          NULL}
-        )
-      )
-      isolate({
-        values$rdml$target[[input$targetSlct]] <- target
-        # rename list elements
-        if (input$targetSlct != input$targetIdText) {
-          values$rdml$target <- values$rdml$target
-          updateSelectizeInput(session,
-                               "targetSlct",
-                               choices = names(values$rdml$target),
-                               selected = input$targetIdText)
-        }
-      })
-    },
-    error = function(e) print(paste("target:", e$message))
+        testEmptyInput(as.numeric(input$tccLidTemperatureText)),
+        step)
+    
+    isolate({
+      values$rdml$tcc[[input$tccSlct]] <- tcc
+      # rename list elements
+      if (input$tccSlct != input$tccIdText) {
+        values$rdml$tcc <- values$rdml$tcc
+        updateSelectizeInput(session,
+                             "tccSlct",
+                             choices = names(values$rdml$tcc),
+                             selected = input$tccIdText)
+      }
+    })},
+    error = function(e) {
+      print(e$message)
+      NULL
+      }
     )
+    
   })
   
   # remove target
   observe({
-    input$removetargetBtn
+    input$removeTccBtn
     isolate({
-      values$rdml$target[[input$targetSlct]] <- NULL
+      values$rdml$tcc[[input$tccSlct]] <- NULL
       updateSelectizeInput(session,
-                           "targetSlct",
-                           choices = names(values$rdml$target))
+                           "tccSlct",
+                           choices = names(values$rdml$tcc))
     })
   })
   
-  ###### xRef
+  ###### step
   
-  # on targetxRefSlct change
-  observe({
-    if (input$targetxRefSlct == "") {
-      return(NULL)
-    }
-    isolate({
-      # update fields
-      if (!is.null(values$rdml$target[[input$targetSlct]]$
-                   xRef[[input$targetxRefSlct]])) {
-        xRef <- values$rdml$target[[input$targetSlct]]$
-          xRef[[input$targetxRefSlct]]
-        updateTextInput(session,
-                        "targetxRefNameText",
-                        value = testNull(xRef$name))
-        updateTextInput(session,
-                        "targetxRefIdText",
-                        value = testNull(xRef$id))
-      } else {
-        updateTextInput(session,
-                        "targetxRefNameText",
-                        value = input$targetxRefSlct)
-      }
-    })
-  })
   
-  # write to target xRef
+  
+  # write to tcc step
   observe({
-    if (is.null(testEmptyInput(input$targetxRefNameText))) {
+    if (is.null(testEmptyInput(input$tccStepNrText))) {
       return(NULL)
     }
     tryCatch({
       xRef <- xRefType$new(
-        testEmptyInput(input$targetxRefNameText),
-        testEmptyInput(input$targetxRefIdText))
+        testEmptyInput(input$tccStepNrText),
+        testEmptyInput(input$tccStepDescriptionText),
+        temperature = {
+          if (input$tccStepTypeSlct == "temperature")
+            NULL
+          else
+            temperatureType$new(
+              temperature = 
+                testEmptyInput(as.numeric(input$tccStepTemperatureText)),
+              duration = 
+                testEmptyInput(as.numeric(input$tccStepDurationText)),
+              temperatureChange = 
+                testEmptyInput(as.numeric(input$tccStepTemperatureChangeText)),
+              durationChange = 
+                testEmptyInput(as.numeric(input$tccStepDurationChangeText)),
+              measure = measureType$new(
+                testEmptyInput(input$tccStepMeasureText)),
+              ramp = 
+                testEmptyInput(as.numeric(input$tccStepRampText))
+            )},
+        gradient = {
+          if (input$tccStepTypeSlct == "gradient")
+            NULL
+          else
+            gradientType$new(
+              highTemperature = 
+                testEmptyInput(as.numeric(input$tccStepHighTemperatureText)),
+              lowTemperature = 
+                testEmptyInput(as.numeric(input$tccStepLowTemperatureText)),
+              duration = 
+                testEmptyInput(as.numeric(input$tccStepDurationText)),
+              temperatureChange = 
+                testEmptyInput(as.numeric(input$tccStepTemperatureChangeText)),
+              durationChange = 
+                testEmptyInput(as.numeric(input$tccStepDurationChangeText)),
+              measure = measureType$new(
+                testEmptyInput(input$tccStepMeasureText)),
+              ramp = 
+                testEmptyInput(as.numeric(input$tccStepRampText)))
+        },
+        loop = {
+          if (input$tccStepTypeSlct == "loop")
+            NULL
+          else
+            loopType$new(
+              goto = 
+                testEmptyInput(as.numeric(input$tccStepGotoText)),
+              repeat.n = 
+                testEmptyInput(as.numeric(input$tccStepRepeatText))) 
+            },
+        pause = {
+          if (input$tccStepTypeSlct == "pause")
+            NULL
+          else
+            pauseType$new(
+              temperature = 
+                testEmptyInput(as.numeric(input$tccStepTemperatureText)))
+            },
+        lidOpen = {
+          if (input$tccStepTypeSlct == "lidOpen" &&
+              input$tccStepLidOpenChk == TRUE)
+            NULL
+          else
+            lidOpenType$new()
+        })
       isolate({
-        values$rdml$target[[input$targetSlct]]$
-          xRef[[input$targetxRefSlct]] <- xRef
+        values$rdml$thermalCyclingConditions[[input$tccSlct]]$
+          step[[input$tccStepSlct]] <- step
         # rename list elements
-        if (input$targetxRefSlct != 
-            input$targetxRefNameText) {
-          values$rdml$target[[input$targetSlct]]$
-            xRef <- values$rdml$target[[input$targetSlct]]$xRef
+        if (input$tccStepSlct != 
+            input$tccStepNrText) {
+          values$rdml$thermalCyclingConditions[[input$tccSlct]]$
+            step <- values$rdml$thermalCyclingConditions[[input$tccSlct]]$step
           updateSelectizeInput(
             session,
             "targetxRefSlct",
-            choices = names(values$rdml$target[[input$targetSlct]]$xRef),
-            selected = input$targetxRefNameText)
+            choices = names(values$rdml$
+                              thermalCyclingConditions[[input$tccSlct]]$step),
+            selected = input$tccStepNrText)
         }
       })
     },
@@ -1351,17 +1358,17 @@ shinyServer(function(input, output, session) {
     )
   })
   
-  # remove target xRef
+  # remove tcc step
   observe({
-    input$removetargetxRefBtn
+    input$removeTccBtn
     isolate({
-      values$rdml$target[[input$targetSlct]]$
-        xRef[[input$targetxRefSlct]]<- NULL
+      values$rdml$thermalCyclingConditions[[input$tccSlct]]$
+        step[[input$tccStepSlct]]<- NULL
       updateSelectizeInput(
         session,
-        "targetxRefSlct",
-        choices = names(values$rdml$target[[input$targetSlct]]$
-                          xRef))
+        "tccStepSlct",
+        choices = names(values$rdml$thermalCyclingConditions[[input$tccSlct]]$
+                          step))
     })
   })
   
