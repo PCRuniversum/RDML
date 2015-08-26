@@ -9,12 +9,13 @@
 sampleType
 }
 \description{
-A sample is a defined template solution. Dilutions of the same material differ
-in concentration and are considered different samples. A technical replicate
-samples should contain the same name (reactions are performed on the same
-material), and biological replicates should contain different names (the
-nucleic acids derived from the different biological replicates are not the
-same). Serial dilutions in a standard curve must have a different name.\cr
+A sample is a template solution with defined concentation. Since dilutions
+of the same material differ in concentration, they are considered different
+samples. A technical replicate samples should contain the same name (reactions
+are performed on the same material), and biological replicates should contain
+different names (the template derived from the different biological replicates
+is are divergent). Serial dilutions in a standard curve must have different
+names (preferably stating their dillution).
 Inherits: \link{rdmlBaseType}.
 }
 \section{Initialization}{
@@ -34,16 +35,17 @@ Inherits: \link{rdmlBaseType}.
  \item{\code{xRef}}{\code{list} of \link{xRefType}.}
  \item{\code{annotation}}{\code{list} of \link{annotationType}.}
  \item{\code{type}}{\link{sampleTypeType}.}
- \item{\code{interRunCalibrator}}{\link[assertthat]{is.flag}. True if this
- sample is used as inter run calibrator. }
+ \item{\code{interRunCalibrator}}{\link[assertthat]{is.flag}. \code{TRUE}
+ if this sample is used as inter run calibrator. }
  \item{\code{quantity}}{\link{quantityType}. Quantity - The reference
  quantity of this sample. It should be only used if the sample is part of a
  standard curve. The provided value will be used to quantify unknown samples
- in absolute quantification assays. Only the use of true numbers is valid
- like 1, 10, 100, 1000 or 1, 0.1, 0.01, 0.001. The use of exponents is not
- valid like 1, 2, 3, 4 or -1, -2, -3, -4 because it will not be interpreted
- as 10E1, 10E2, 10E3, 10E4 or 10E-1, 10E-2, 10E-3, 10E-4. }
- \item{\code{calibratorSample}}{\link[assertthat]{is.flag}. True if this
+ in absolute quantification assays. Only the use of positive integers (like 1,
+ 10, 100, 1000) and fractions (e.g. 1, 0.1, 0.01, 0.001) is acceptable.
+ The use of exponents (1, 2, 3, 4 or -1, -2, -3, -4) if forbidden,
+ because it will not be interpreted as 10E1, 10E2, 10E3, 10E4 or 10E-1, 10E-2,
+ 10E-3, 10E-4. }
+ \item{\code{calibratorSample}}{\link[assertthat]{is.flag}. \code{TRUE} if this
  sample is used as calibrator sample. }
  \item{\code{cdnaSynthesisMethod}}{\link{cdnaSynthesisMethodType}.}
  \item{\code{templateQuantity}}{\link{templateQuantityType}.}

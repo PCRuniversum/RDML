@@ -5,10 +5,10 @@
 \alias{RDML.SetFData}
 \title{Sets fluorescence data vectors to \code{RDML} object}
 \arguments{
-\item{data}{\code{matrix} that contains in the first column constant data for all fluorescence vectors (i.e. cycle numbers or temperature)
-and fluorescence values in the following columns. The column name is the name of constant data.
-Names of other column are \code{fdata.names} (links to rows at \code{description}). Name of
-matrix passed to param becomes type of data.}
+\item{data}{\code{matrix} containing in the first column data corresponding to
+all fluorescence values in the following columns. The name of the first column
+is the name of variable and names of other column are \code{fdata.names} (links
+to rows at \code{description}).}
 
 \item{description}{output from \code{AsTable} function that describes fluorescence data.}
 

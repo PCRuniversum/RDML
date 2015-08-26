@@ -19,8 +19,8 @@ Inherits: \link{rdmlBaseType}.
 
 \section{Fields}{
  \describe{ \item{\code{nr}}{\link[assertthat]{is.count}. The
-  incremental number of the step. First step should be nr = 1 and then
-  increment each step by + 1. }
+  incremental number of the step. First step should have value 1. The increment
+  between steps should be constant and equivalent to 1.}
   \item{\code{description}}{\link[assertthat]{is.string}.}
   \item{\code{temperature}}{\link{temperatureType}.}
   \item{\code{gradient}}{\link{gradientType}.}

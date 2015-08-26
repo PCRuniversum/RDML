@@ -21,7 +21,7 @@ filename <- paste(PATH, "/extdata/", "BioRad_qPCR_melt.rdml", sep ="")
 cfx96 <- RDML$new(filename)
 #plot dendrogram
 cfx96$AsDendrogram()
-#save dendrogram as dendr object
+#assign dendrogram to the object
 dendr <- cfx96$AsDendrogram(plot.dendrogram = FALSE)
 }
 }

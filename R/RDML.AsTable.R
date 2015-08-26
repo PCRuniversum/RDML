@@ -1,7 +1,7 @@
 #' Represents fields of \code{RDML} object as \code{data.frame}
 #' 
-#' Formats particular fields of \code{RDML} object as \code{data.frame}s. 
-#' filter or pass them to \code{\link{RDML.GetFData}} and \code{RDML.SetFData} 
+#' Formats particular fields of \code{RDML} object as \code{data.frame}s, 
+#' filters or passes them to \code{\link{RDML.GetFData}} and \code{RDML.SetFData} 
 #' functions.
 #' 
 #' By default input this function forms \code{data.frame} with following columns: 

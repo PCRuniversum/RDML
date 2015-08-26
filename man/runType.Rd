@@ -21,28 +21,31 @@ one rotor, one array, one chip. Inherits: \link{rdmlBaseType}.
 }
 
 \section{Fields}{
- \describe{ \item{\code{id}}{\link{idType}.}
-  \item{\code{description}}{\link[assertthat]{is.string}.}
-  \item{\code{documentation}}{\code{list} of \link{idReferencesType}.}
-  \item{\code{experimenter}}{\code{list} of \link{idReferencesType}.}
-  \item{\code{instrument}}{\link[assertthat]{is.string}. Description of the
+ \describe{
+ \item{\code{id}}{\link{idType}.}
+ \item{\code{description}}{\link[assertthat]{is.string}.}
+ \item{\code{documentation}}{\code{list} of \link{idReferencesType}.}
+ \item{\code{experimenter}}{\code{list} of \link{idReferencesType}.}
+ \item{\code{instrument}}{\link[assertthat]{is.string}. Description of the
   instrument used to aquire the data.}
-  \item{\code{dataCollectionSoftware}}{\link{dataCollectionSoftwareType}.
+ \item{\code{dataCollectionSoftware}}{\link{dataCollectionSoftwareType}.
   Description of the software used to analyze/collect the data.}
-  \item{\code{backgroundDeterminationMethod}}{\link[base]{double}.
+ \item{\code{backgroundDeterminationMethod}}{\link[base]{double}.
   Description of method used to determine the background. }
-  \item{\code{cqDetectionMethod}}{\link[base]{double}. Description of method
+ \item{\code{cqDetectionMethod}}{\link[base]{double}. Description of method
   used to calculate the quantification cycle. }
-  \item{\code{thermalCyclingConditions}}{\link[base]{double}. The program
-  used to aquire the data.} \item{\code{pcrFormat}}{\link{adpsType}.}
-  \item{\code{runDate}}{\link{adpsType}. Date and time stamp when the data
-  was aquired.} \item{\code{react}}{\code{list} of \link{adpsType}.} }
+ \item{\code{thermalCyclingConditions}}{\link[base]{double}. The program
+  used to aquire the data.}
+ \item{\code{pcrFormat}}{\link{adpsType}.}
+ \item{\code{runDate}}{\link{adpsType}. Time stamp of data acquisition.}
+ \item{\code{react}}{\code{list} of \link{adpsType}.} }
 }
 
 \section{Methods}{
- \describe{\item{\code{AsDataFrame(dp.type =
-  "adp")}}{Represents amplification (\code{dp.type = "adp"}) or melting
-  (\code{dp.type = "mdp"}) data points as \code{data.frame}}}
+ \describe{
+ \item{\code{AsDataFrame(dp.type = "adp")}}{Represents amplification
+ (\code{dp.type = "adp"}) or melting (\code{dp.type = "mdp"}) data
+ points as \code{data.frame}}}
 }
 \keyword{datasets}
 

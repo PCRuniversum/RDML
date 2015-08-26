@@ -12,8 +12,8 @@
 \item{...}{additional columns}
 }
 \description{
-Formats particular fields of \code{RDML} object as \code{data.frame}s.
-filter or pass them to \code{\link{RDML.GetFData}} and \code{RDML.SetFData}
+Formats particular fields of \code{RDML} object as \code{data.frame}s,
+filters or passes them to \code{\link{RDML.GetFData}} and \code{RDML.SetFData}
 functions.
 }
 \details{

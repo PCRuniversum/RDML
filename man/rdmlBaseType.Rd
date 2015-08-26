@@ -9,18 +9,20 @@
 rdmlBaseType
 }
 \description{
-Most classes of RDML package inherit this class. It can't be directly
-accessed and serves only for inner package usage.
+Most classes from RDML package inherit this class. It is designed for internal
+usage and should not be directly accessed.
 }
 \section{Initialization}{
  \preformatted{rdmlBaseType$new()}
 }
 
 \section{Methods}{
- \describe{\item{\code{.asXMLnodes(node.name)}}{Represents
+ \describe{
+\item{\code{.asXMLnodes(node.name)}}{Represents
   object as XML nodes. Should not be called directly. \code{node.name} --
   name of the root node for the generated XML
-  tree.}\item{\code{print(...)}}{prints object}}
+  tree.}
+\item{\code{print(...)}}{prints object}}
 }
 \keyword{datasets}
 

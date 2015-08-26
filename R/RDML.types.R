@@ -14,15 +14,17 @@ with.names <- function(l, id) {
 
 #' Base R6 class for RDML package.
 #' 
-#' Most classes of RDML package inherit this class. It can't be directly 
-#' accessed and serves only for inner package usage.
+#' Most classes from RDML package inherit this class. It is designed for internal 
+#' usage and should not be directly accessed.
 #' 
 #' @section Initialization: \preformatted{rdmlBaseType$new()}
 #'   
-#' @section Methods: \describe{\item{\code{.asXMLnodes(node.name)}}{Represents
+#' @section Methods: \describe{
+#' \item{\code{.asXMLnodes(node.name)}}{Represents
 #'   object as XML nodes. Should not be called directly. \code{node.name} --
 #'   name of the root node for the generated XML
-#'   tree.}\item{\code{print(...)}}{prints object}}
+#'   tree.}
+#' \item{\code{print(...)}}{prints object}}
 #'   
 #' @docType class
 #' @format An \code{\link{R6Class}} generator object.
@@ -977,13 +979,14 @@ nucleotideType <-
 
 #'sampleType R6 class.
 #'
-#'A sample is a defined template solution. Dilutions of the same material differ
-#'in concentration and are considered different samples. A technical replicate 
-#'samples should contain the same name (reactions are performed on the same 
-#'material), and biological replicates should contain different names (the 
-#'nucleic acids derived from the different biological replicates are not the 
-#'same). Serial dilutions in a standard curve must have a different name.\cr 
-#'Inherits: \link{rdmlBaseType}.
+#' A sample is a template solution with defined concentation. Since dilutions 
+#' of the same material differ in concentration, they are considered different 
+#' samples. A technical replicate samples should contain the same name (reactions 
+#' are performed on the same material), and biological replicates should contain 
+#' different names (the template derived from the different biological replicates 
+#' is are divergent). Serial dilutions in a standard curve must have different 
+#' names (preferably stating their dillution). 
+#' Inherits: \link{rdmlBaseType}.
 #'
 #'@section Initialization: \preformatted{sampleType$new(id, description = NULL, 
 #'  documentation = NULL, xRef =  NULL, annotation = NULL, type = 
@@ -999,16 +1002,17 @@ nucleotideType <-
 #'  \item{\code{xRef}}{\code{list} of \link{xRefType}.} 
 #'  \item{\code{annotation}}{\code{list} of \link{annotationType}.} 
 #'  \item{\code{type}}{\link{sampleTypeType}.} 
-#'  \item{\code{interRunCalibrator}}{\link[assertthat]{is.flag}. True if this
-#'  sample is used as inter run calibrator. }
+#'  \item{\code{interRunCalibrator}}{\link[assertthat]{is.flag}. \code{TRUE} 
+#'  if this sample is used as inter run calibrator. }
 #'  \item{\code{quantity}}{\link{quantityType}. Quantity - The reference
 #'  quantity of this sample. It should be only used if the sample is part of a
 #'  standard curve. The provided value will be used to quantify unknown samples
-#'  in absolute quantification assays. Only the use of true numbers is valid
-#'  like 1, 10, 100, 1000 or 1, 0.1, 0.01, 0.001. The use of exponents is not
-#'  valid like 1, 2, 3, 4 or -1, -2, -3, -4 because it will not be interpreted
-#'  as 10E1, 10E2, 10E3, 10E4 or 10E-1, 10E-2, 10E-3, 10E-4. }
-#'  \item{\code{calibratorSample}}{\link[assertthat]{is.flag}. True if this
+#'  in absolute quantification assays. Only the use of positive integers (like 1, 
+#'  10, 100, 1000) and fractions (e.g. 1, 0.1, 0.01, 0.001) is acceptable. 
+#'  The use of exponents (1, 2, 3, 4 or -1, -2, -3, -4) if forbidden, 
+#'  because it will not be interpreted as 10E1, 10E2, 10E3, 10E4 or 10E-1, 10E-2, 
+#'  10E-3, 10E-4. }
+#'  \item{\code{calibratorSample}}{\link[assertthat]{is.flag}. \code{TRUE} if this
 #'  sample is used as calibrator sample. }
 #'  \item{\code{cdnaSynthesisMethod}}{\link{cdnaSynthesisMethodType}.} 
 #'  \item{\code{templateQuantity}}{\link{templateQuantityType}.}
@@ -1393,8 +1397,9 @@ targetTypeType <-
 
 #' targetType R6 class.
 #' 
-#' A target is a defined PCR reaction. PCR reactions for the same gene which 
-#' differ in primer sequences are considered different targets. Inherits: 
+#' A target is a PCR reaction with defined set of primers. PCR reactions 
+#' for the same gene with distinct primer sequences are considered different 
+#' targets. Inherits: 
 #' \link{rdmlBaseType}.
 #' 
 #' @section Initialization: \preformatted{targetType$new(id, description = NULL, 
@@ -2336,26 +2341,29 @@ pcrFormatType <-
 #'   cqDetectionMethod = NULL, thermalCyclingConditions = NULL, pcrFormat, 
 #'   runDate = NULL, react = NULL)}
 #'   
-#' @section Fields: \describe{ \item{\code{id}}{\link{idType}.} 
-#'   \item{\code{description}}{\link[assertthat]{is.string}.} 
-#'   \item{\code{documentation}}{\code{list} of \link{idReferencesType}.} 
-#'   \item{\code{experimenter}}{\code{list} of \link{idReferencesType}.} 
-#'   \item{\code{instrument}}{\link[assertthat]{is.string}. Description of the 
+#' @section Fields: \describe{ 
+#'  \item{\code{id}}{\link{idType}.} 
+#'  \item{\code{description}}{\link[assertthat]{is.string}.} 
+#'  \item{\code{documentation}}{\code{list} of \link{idReferencesType}.} 
+#'  \item{\code{experimenter}}{\code{list} of \link{idReferencesType}.} 
+#'  \item{\code{instrument}}{\link[assertthat]{is.string}. Description of the 
 #'   instrument used to aquire the data.} 
-#'   \item{\code{dataCollectionSoftware}}{\link{dataCollectionSoftwareType}. 
+#'  \item{\code{dataCollectionSoftware}}{\link{dataCollectionSoftwareType}. 
 #'   Description of the software used to analyze/collect the data.} 
-#'   \item{\code{backgroundDeterminationMethod}}{\link[base]{double}. 
+#'  \item{\code{backgroundDeterminationMethod}}{\link[base]{double}. 
 #'   Description of method used to determine the background. } 
-#'   \item{\code{cqDetectionMethod}}{\link[base]{double}. Description of method 
+#'  \item{\code{cqDetectionMethod}}{\link[base]{double}. Description of method 
 #'   used to calculate the quantification cycle. } 
-#'   \item{\code{thermalCyclingConditions}}{\link[base]{double}. The program 
-#'   used to aquire the data.} \item{\code{pcrFormat}}{\link{adpsType}.} 
-#'   \item{\code{runDate}}{\link{adpsType}. Date and time stamp when the data 
-#'   was aquired.} \item{\code{react}}{\code{list} of \link{adpsType}.} }
+#'  \item{\code{thermalCyclingConditions}}{\link[base]{double}. The program 
+#'   used to aquire the data.} 
+#'  \item{\code{pcrFormat}}{\link{adpsType}.} 
+#'  \item{\code{runDate}}{\link{adpsType}. Time stamp of data acquisition.} 
+#'  \item{\code{react}}{\code{list} of \link{adpsType}.} }
 #'   
-#' @section Methods: \describe{\item{\code{AsDataFrame(dp.type = 
-#'   "adp")}}{Represents amplification (\code{dp.type = "adp"}) or melting 
-#'   (\code{dp.type = "mdp"}) data points as \code{data.frame}}}
+#' @section Methods: \describe{
+#'  \item{\code{AsDataFrame(dp.type = "adp")}}{Represents amplification 
+#'  (\code{dp.type = "adp"}) or melting (\code{dp.type = "mdp"}) data 
+#'  points as \code{data.frame}}}
 #'   
 #' @docType class
 #' @format An \code{\link{R6Class}} generator object.
@@ -2991,8 +2999,8 @@ gradientType <-
 #'   NULL)}
 #'   
 #' @section Fields: \describe{ \item{\code{nr}}{\link[assertthat]{is.count}. The
-#'   incremental number of the step. First step should be nr = 1 and then
-#'   increment each step by + 1. }
+#'   incremental number of the step. First step should have value 1. The increment 
+#'   between steps should be constant and equivalent to 1.}
 #'   \item{\code{description}}{\link[assertthat]{is.string}.} 
 #'   \item{\code{temperature}}{\link{temperatureType}.} 
 #'   \item{\code{gradient}}{\link{gradientType}.} 
