@@ -9,9 +9,8 @@
 pcrFormatType
 }
 \description{
-The format of the run - This allows the software to display the data
-according to the qPCR instrument run format. Inherits:
-\link{rdmlBaseType}.
+The display format of the PCR, analogous to the the qPCR instrument run format.
+Inherits: \link{rdmlBaseType}.
 }
 \details{
 Rotor formats always have 1 column; rows correspond to the number of places
@@ -26,10 +25,10 @@ ABC      \tab 123         \cr 1536-well plate \tab 32   \tab 48      \tab ABC
 123         \cr 32-well rotor \tab 32   \tab 1       \tab 123      \tab 123
 \cr 72-well rotor \tab 72   \tab 1       \tab 123      \tab 123         \cr
 100-well rotor \tab 100  \tab 1       \tab 123      \tab 123         \cr free
-format \tab -1   \tab 1       \tab 123      \tab 123 } If rows are -1 then
-the software should not try to reconstruct a plate and just display all react
-data in list (1 column) form. If columns is 1 then the software should not
-display a column label.
+format \tab -1   \tab 1       \tab 123      \tab 123 } If rows field has value -1,
+the function will not try to reconstruct a plate and just display all run
+data in a single column. If the columns field has value 1 then the function will
+not display a column label.
 }
 \section{Initialization}{
  \preformatted{pcrFormatType$new(rows, columns, rowLabel, columnLabel)}

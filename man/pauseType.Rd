@@ -18,7 +18,7 @@ step in an amplification protocol. Inherits: \link{rdmlBaseType}.
 
 \section{Fields}{
  \describe{ \item{\code{temperature}}{\link[base]{numeric}.
-  The temperature in degrees Celsius to maintain during the pause.}
+  The temperature in degrees Celsius maintained during the pause.}
   }
 }
 \keyword{datasets}

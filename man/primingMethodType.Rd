@@ -9,7 +9,7 @@
 primingMethodType
 }
 \description{
-The primers used to reverse transcribe the RNA to cDNA. Can take values:
+The primers used in the reverse transcription. Can take values:
 \describe{
 \item{oligo-dt}{}
 \item{random}{}

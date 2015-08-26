@@ -11,7 +11,8 @@
 \code{dendrogram} object
 }
 \description{
-Plots and/or returns the structure of \code{RDML} file as dendrogram (tree view)
+Plots and/or returns the structure of \code{RDML} file as
+\code{\link[stats]{dendrogram}} (tree-like structure.)
 }
 \examples{
 \dontrun{
@@ -20,7 +21,7 @@ filename <- paste(PATH, "/extdata/", "BioRad_qPCR_melt.rdml", sep ="")
 cfx96 <- RDML$new(filename)
 #plot dendrogram
 cfx96$AsDendrogram()
-#save dendrogram
+#save dendrogram as dendr object
 dendr <- cfx96$AsDendrogram(plot.dendrogram = FALSE)
 }
 }

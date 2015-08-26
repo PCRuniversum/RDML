@@ -1,6 +1,7 @@
 #' Represents structure of \code{RDML} file as dendrogram
 #' 
-#' Plots and/or returns the structure of \code{RDML} file as dendrogram (tree view)
+#' Plots and/or returns the structure of \code{RDML} file as 
+#' \code{\link[stats]{dendrogram}} (tree-like structure.)
 #' 
 #' @param plot.dendrogram plots dendrogram if \code{TRUE}
 #' @return \code{dendrogram} object
@@ -19,7 +20,7 @@
 #' cfx96 <- RDML$new(filename)
 #' #plot dendrogram
 #' cfx96$AsDendrogram()
-#' #save dendrogram
+#' #assign dendrogram to the object
 #' dendr <- cfx96$AsDendrogram(plot.dendrogram = FALSE)
 #' }
 RDML$set("public", "AsDendrogram",

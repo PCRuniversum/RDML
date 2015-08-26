@@ -1,29 +1,32 @@
 #' R6 class \code{RDML} -- contains methods to read and overview fluorescence 
 #' data from RDML v1.1 and v1.2 format files
 #' 
-#' Main purpose of this class is to work with RDML format data (Lefever et al. 
-#' 2009) and transform it to the appropriate format of the \code{qpcR} (Ritz et 
-#' al. 2008, Spiess et al. 2008) and \code{chipPCR} packages (see 
-#' \link{RDML.new} for import details). 
+#' This class is a container for RDML format data (Lefever et al. 
+#' 2009). The data may be further transformed to the appropriate format of the 
+#' \code{qpcR} (Ritz et al. 2008, Spiess et al. 2008) and \code{chipPCR} 
+#' (Roediger et al. 2015) packages (see \link{RDML.new} for import details). 
 #' Real-time PCR Data Markup Language (RDML) is the recommended file format 
 #' element in the Minimum Information for Publication of Quantitative Real-Time 
-#' PCR Experiments (MIQE) guidelines (Bustin et al. 2009). Inner structure of 
-#' imported data mimics structure of RDML file v1.2. All data except fluorescence values
-#' can be represented as \code{data.frame} by method \code{AsTable}. Such variant of data representation allows easy samples 
-#' filtering (by targets, types, etc.) and serves as request for \code{GetFData}
-#' method -- gets fluorescence data for specified samples.
+#' PCR Experiments (MIQE) guidelines (Bustin et al. 2009). The inner structure of 
+#' imported data faithfully reflects the structure of RDML file v1.2. All data with 
+#' the exception for fluorescence values can be represented as \code{data.frame} by 
+#' method \code{AsTable}. Such possibility of data representation streamlines 
+#' sample filtering (by targets, types, etc.) and serves as request for \code{GetFData}
+#' method, which extracts gets fluorescence data for specified samples.
 #' 
 #' 
 #' @section Fields: Type, structure of data and description of fields can be 
 #'   viewed at RDML v1.2 file description. Names of fields are first level of 
 #'   XML tree.
-#' @section Methods: \describe{\item{new}{creates new instance of \code{RDML} 
-#'   class object (see \link{RDML.new})} \item{AsTable}{represent RDML data as 
-#'   \code{data.frame} (see \link{RDML.AsTable})}\item{GetFData}{gets
-#'   fluorescence data (see \link{RDML.GetFData})}\item{SetFData}{sets
-#'   fluorescence data (see \link{RDML.SetFData})}\item{Merge}{merges two 
-#'   \code{RDML} to one (see \link{MergeRDMLs})}
-#'   \item{AsDendrogram}{represents structure of \code{RDML} object as dendrogram(see \link{RDML.AsDendrogram})}}
+#' @section Methods: \describe{
+#' \item{new}{creates new instance of \code{RDML} class object (see \link{RDML.new})} 
+#' \item{AsTable}{represent RDML data as \code{data.frame} (see \link{RDML.AsTable})}
+#' \item{GetFData}{gets fluorescence data (see \link{RDML.GetFData})}
+#' \item{SetFData}{sets fluorescence data (see \link{RDML.SetFData})}
+#' \item{Merge}{merges two \code{RDML} to one (see \link{MergeRDMLs})}
+#' \item{AsDendrogram}{represents structure of \code{RDML} object as dendrogram(see 
+#'   \link{RDML.AsDendrogram})}
+#'  }
 #'   
 #' @author Konstantin A. Blagodatskikh <k.blag@@yandex.ru>, Stefan Roediger 
 #'   <stefan.roediger@@b-tu.de>, Michal Burdukiewicz 
@@ -35,6 +38,10 @@
 #'   
 #'   \code{chipPCR} package: 
 #'   http://cran.r-project.org/web/packages/chipPCR/index.html
+#'   
+#'   Roediger S, Burdukiewicz M and Schierack P (2015). chipPCR: an R Package 
+#'   to Pre-Process Raw Data of Amplification Curves. \emph{Bioinformatics} first 
+#'   published online April 24, 2015 doi:10.1093/bioinformatics/btv205
 #'   
 #'   Ritz, C., Spiess, A.-N., 2008. qpcR: an R package for sigmoidal model 
 #'   selection in quantitative real-time polymerase chain reaction analysis. 

@@ -9,7 +9,7 @@
 nucleotideType
 }
 \description{
-Can take values:
+Type of nucleic acid used as a template in the experiment. May have following values:
 \describe{
 \item{DNA}{}
 \item{genomic-DNA}{}

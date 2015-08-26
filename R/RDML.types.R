@@ -905,7 +905,7 @@ quantityUnitType <-
 
 #' primingMethodType R6 class.
 #' 
-#' The primers used to reverse transcribe the RNA to cDNA. Can take values:
+#' The primers used in the reverse transcription. Can take values:
 #' \describe{
 #' \item{oligo-dt}{}
 #' \item{random}{}
@@ -942,7 +942,7 @@ primingMethodType <-
 
 #' nucleotideType R6 class.
 #' 
-#' Can take values:
+#' Type of nucleic acid used as a template in the experiment. May have following values:
 #' \describe{
 #' \item{DNA}{}
 #' \item{genomic-DNA}{}
@@ -2235,9 +2235,8 @@ labelFormatType <-
 
 #' pcrFormatType R6 class.
 #' 
-#' The format of the run - This allows the software to display the data 
-#' according to the qPCR instrument run format. Inherits: 
-#' \link{rdmlBaseType}.
+#' The display format of the PCR, analogous to the the qPCR instrument run format. 
+#' Inherits: \link{rdmlBaseType}.
 #' 
 #' Rotor formats always have 1 column; rows correspond to the number of places 
 #' in the rotor. Values for common formats are: \tabular{lllll}{ Format \tab
@@ -2251,10 +2250,10 @@ labelFormatType <-
 #' 123         \cr 32-well rotor \tab 32   \tab 1       \tab 123      \tab 123  
 #' \cr 72-well rotor \tab 72   \tab 1       \tab 123      \tab 123         \cr
 #' 100-well rotor \tab 100  \tab 1       \tab 123      \tab 123         \cr free
-#' format \tab -1   \tab 1       \tab 123      \tab 123 } If rows are -1 then
-#' the software should not try to reconstruct a plate and just display all react
-#' data in list (1 column) form. If columns is 1 then the software should not
-#' display a column label.
+#' format \tab -1   \tab 1       \tab 123      \tab 123 } If rows field has value -1,
+#' the function will not try to reconstruct a plate and just display all run
+#' data in a single column. If the columns field has value 1 then the function will 
+#' not display a column label.
 #' 
 #' @section Initialization: \preformatted{pcrFormatType$new(rows, columns, rowLabel, columnLabel)}
 #'   
@@ -2682,7 +2681,7 @@ lidOpenType <-
 #' @section Initialization: \preformatted{pauseType$new(temperature)}
 #'   
 #' @section Fields: \describe{ \item{\code{temperature}}{\link[base]{numeric}.
-#'   The temperature in degrees Celsius to maintain during the pause.}
+#'   The temperature in degrees Celsius maintained during the pause.}
 #'   }
 #'   
 #' @docType class
