@@ -32,10 +32,20 @@ shinyServer(function(input, output, session) {
     if (is.null(input$rdmlFiles))
       return(NULL)
     isolate({
-      for(i in 1:length(input$rdmlFiles$name)) {
-        values$RDMLs[[input$rdmlFiles$name[i]]] <-
-          RDML$new(input$rdmlFiles$datapath[i])
-      }
+      withProgress(
+        for(i in 1:length(input$rdmlFiles$name)) {
+          values$RDMLs[[input$rdmlFiles$name[i]]] <-
+            RDML$new(input$rdmlFiles$datapath[i])
+          incProgress(1,
+                      message = {
+                        if (i != length(input$rdmlFiles$name))
+                          sprintf("Processing: %s", input$rdmlFiles$name[i + 1])
+                        else NULL })
+        },
+        min = 0,
+        max = length(input$rdmlFiles$name),
+        message = sprintf("Processing: %s", input$rdmlFiles$name[1]))
+      
     })
   })
   
@@ -68,7 +78,6 @@ shinyServer(function(input, output, session) {
                         selected = NULL)
       # clone selected too temp RDML 
       values$rdml <- values$RDMLs[[input$rdmlFileSlct]]$clone(deep = TRUE)
-      rdml.out <<- values$rdml
       # update fields
       updateTextInput(session,
                       "dateMadeText",
@@ -83,6 +92,28 @@ shinyServer(function(input, output, session) {
       #                            "idSlct",
       #                            choices = names(values$rdml))
     })
+  })
+  
+  # merge RDMLs
+  observe({
+    input$mergeBtn
+    isolate({
+      if (is.null(input$mergeRdmlsSlct) || input$mergeRdmlsSlct == "")
+        return(NULL)
+      withProgress(
+        values$rdml <- MergeRDMLs(
+          c(values$rdml, values$RDMLs[input$mergeRdmlsSlct])
+        ),
+        message = "Merging RDMLs. Please wait..."
+      )
+    })
+  })
+  
+  # dendro plot
+  output$dendroRDMLplot <- renderPlot({
+    if (is.null(values$rdml))
+      return(NULL)
+    values$rdml$AsDendrogram()
   })
   
   # write to RDML
@@ -1242,10 +1273,10 @@ shinyServer(function(input, output, session) {
         description = testEmptyInput(input$tccDescriptionText),
         documentation = 
           lapply(input$tccDocumentationSlct,
-               function(doc) idReferencesType$new(doc)),
+                 function(doc) idReferencesType$new(doc)),
         lidTemperature = testEmptyInput(as.numeric(input$tccLidTemperatureText)),
         experimenter = lapply(input$tccExperimenterSlct,
-               function(exper) idReferencesType$new(exper)),
+                              function(exper) idReferencesType$new(exper)),
         step = step)
       
       isolate({
@@ -1291,7 +1322,6 @@ shinyServer(function(input, output, session) {
     isolate({
       tccStepType <- input$tccStepTypeSlct
     })
-    print(input$tccStepLidOpenChk)
     tryCatch({
       step <- stepType$new(
         testEmptyInput(as.numeric(input$tccStepNrText)),
