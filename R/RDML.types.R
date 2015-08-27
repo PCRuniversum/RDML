@@ -3155,7 +3155,8 @@ thermalCyclingConditionsType <-
               private$.documentation <- documentation
               private$.lidTemperature <- lidTemperature
               private$.experimenter <- experimenter
-              private$.step <- step
+              private$.step <- with.names(step,
+                                          quote(.$nr))
               
             }
           ),
@@ -3204,7 +3205,8 @@ thermalCyclingConditionsType <-
               if (missing(step))
                 return(private$.step)
               assert_that(is.opt.list.type(step,
-                                           idReferencesType))
-              private$.step <- step
+                                           stepType))
+              private$.step <- with.names(step,
+                                          quote(.$nr))
             }
           ))

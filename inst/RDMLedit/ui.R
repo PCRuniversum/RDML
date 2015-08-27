@@ -361,7 +361,7 @@ shinyUI(
                                                     "Lid Open",
                                                     FALSE)
                                     ),
-                                    actionButton("removeStepBtn",
+                                    actionButton("removeTccStepBtn",
                                                  "Remove Step")
                           )),
                           actionButton("removeTccBtn",

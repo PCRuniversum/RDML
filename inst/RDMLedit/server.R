@@ -417,7 +417,7 @@ shinyServer(function(input, output, session) {
     }
     tryCatch({
       dye <- 
-        documentationType$new(
+        dyeType$new(
           idType$new(testEmptyInput(input$dyeIdText)),
           testEmptyInput(input$dyeDescriptionText))
       isolate({
@@ -1112,7 +1112,7 @@ shinyServer(function(input, output, session) {
   
   # on tccStepSlct change
   observe({
-    if (input$tccStepSlct == "" || input$tccStepTypeSlct == "") {
+    if (input$tccStepSlct == "") {
       return(NULL)
     }
     isolate({
@@ -1141,6 +1141,18 @@ shinyServer(function(input, output, session) {
                             "temperature"
                         })
       
+      
+      
+    })
+  })
+  
+  observe({
+    if (input$tccStepTypeSlct == "" || input$tccStepSlct == "") {
+      return(NULL)
+    }
+    isolate({
+      step <- values$rdml$thermalCyclingConditions[[input$tccSlct]]$
+        step[[input$tccStepSlct]]
       switch (input$tccStepTypeSlct,
               temperature = {
                 updateTextInput(session,
@@ -1208,9 +1220,11 @@ shinyServer(function(input, output, session) {
                                       "tccStepLidOpenChk",
                                       value = TRUE)
                 }
+              },
+              { 
+                NULL
               }
       )
-      
     })
   })
   
@@ -1221,43 +1235,47 @@ shinyServer(function(input, output, session) {
     }
     tryCatch({
       isolate({
-        step <- values$rdml$target[[input$targetSlct]]$xRef
+        step <- values$rdml$thermalCyclingConditions[[input$tccSlct]]$step
       })
-      tcc <- targetType$new(
-        idType$new(testEmptyInput(input$tccIdText)),
-        testEmptyInput(input$tccDescriptionText),
-        lapply(input$tccDocumentationSlct,
+      tcc <- thermalCyclingConditionsType$new(
+        id = idType$new(testEmptyInput(input$tccIdText)),
+        description = testEmptyInput(input$tccDescriptionText),
+        documentation = 
+          lapply(input$tccDocumentationSlct,
                function(doc) idReferencesType$new(doc)),
-        testEmptyInput(as.numeric(input$tccLidTemperatureText)),
-        step)
-    
-    isolate({
-      values$rdml$tcc[[input$tccSlct]] <- tcc
-      # rename list elements
-      if (input$tccSlct != input$tccIdText) {
-        values$rdml$tcc <- values$rdml$tcc
-        updateSelectizeInput(session,
-                             "tccSlct",
-                             choices = names(values$rdml$tcc),
-                             selected = input$tccIdText)
-      }
-    })},
-    error = function(e) {
-      print(e$message)
-      NULL
+        lidTemperature = testEmptyInput(as.numeric(input$tccLidTemperatureText)),
+        experimenter = lapply(input$tccExperimenterSlct,
+               function(exper) idReferencesType$new(exper)),
+        step = step)
+      
+      isolate({
+        values$rdml$thermalCyclingConditions[[input$tccSlct]] <- tcc
+        # rename list elements
+        if (input$tccSlct != input$tccIdText) {
+          values$rdml$thermalCyclingConditions <- 
+            values$rdml$thermalCyclingConditions
+          updateSelectizeInput(session,
+                               "tccSlct",
+                               choices = names(values$rdml$thermalCyclingConditions),
+                               selected = input$tccIdText)
+        }
+      })},
+      error = function(e) {
+        print(paste("tcc:", e$message))
+        NULL
       }
     )
     
   })
   
-  # remove target
+  # remove tcc
   observe({
     input$removeTccBtn
     isolate({
-      values$rdml$tcc[[input$tccSlct]] <- NULL
+      values$rdml$thermalCyclingConditions[[input$tccSlct]] <- NULL
       updateSelectizeInput(session,
                            "tccSlct",
-                           choices = names(values$rdml$tcc))
+                           choices = names(values$rdml$thermalCyclingConditions))
     })
   })
   
@@ -1270,14 +1288,16 @@ shinyServer(function(input, output, session) {
     if (is.null(testEmptyInput(input$tccStepNrText))) {
       return(NULL)
     }
+    isolate({
+      tccStepType <- input$tccStepTypeSlct
+    })
+    print(input$tccStepLidOpenChk)
     tryCatch({
-      xRef <- xRefType$new(
-        testEmptyInput(input$tccStepNrText),
+      step <- stepType$new(
+        testEmptyInput(as.numeric(input$tccStepNrText)),
         testEmptyInput(input$tccStepDescriptionText),
         temperature = {
-          if (input$tccStepTypeSlct == "temperature")
-            NULL
-          else
+          if (tccStepType == "temperature") {
             temperatureType$new(
               temperature = 
                 testEmptyInput(as.numeric(input$tccStepTemperatureText)),
@@ -1291,11 +1311,11 @@ shinyServer(function(input, output, session) {
                 testEmptyInput(input$tccStepMeasureText)),
               ramp = 
                 testEmptyInput(as.numeric(input$tccStepRampText))
-            )},
+            )
+          } else { NULL }
+        },
         gradient = {
-          if (input$tccStepTypeSlct == "gradient")
-            NULL
-          else
+          if (tccStepType == "gradient") {
             gradientType$new(
               highTemperature = 
                 testEmptyInput(as.numeric(input$tccStepHighTemperatureText)),
@@ -1311,38 +1331,35 @@ shinyServer(function(input, output, session) {
                 testEmptyInput(input$tccStepMeasureText)),
               ramp = 
                 testEmptyInput(as.numeric(input$tccStepRampText)))
+          } else { NULL }
         },
         loop = {
-          if (input$tccStepTypeSlct == "loop")
-            NULL
-          else
+          if (tccStepType == "loop") {
             loopType$new(
               goto = 
                 testEmptyInput(as.numeric(input$tccStepGotoText)),
               repeat.n = 
                 testEmptyInput(as.numeric(input$tccStepRepeatText))) 
-            },
+          } else { NULL }
+        },
         pause = {
-          if (input$tccStepTypeSlct == "pause")
-            NULL
-          else
+          if (tccStepType == "pause") {
             pauseType$new(
               temperature = 
                 testEmptyInput(as.numeric(input$tccStepTemperatureText)))
-            },
+          } else { NULL }
+        },
         lidOpen = {
-          if (input$tccStepTypeSlct == "lidOpen" &&
-              input$tccStepLidOpenChk == TRUE)
-            NULL
-          else
+          if (tccStepType == "lidOpen" &&
+              input$tccStepLidOpenChk == TRUE) {
             lidOpenType$new()
+          } else { NULL }
         })
       isolate({
         values$rdml$thermalCyclingConditions[[input$tccSlct]]$
           step[[input$tccStepSlct]] <- step
         # rename list elements
-        if (input$tccStepSlct != 
-            input$tccStepNrText) {
+        if (input$tccStepSlct != input$tccStepNrText) {
           values$rdml$thermalCyclingConditions[[input$tccSlct]]$
             step <- values$rdml$thermalCyclingConditions[[input$tccSlct]]$step
           updateSelectizeInput(
@@ -1360,7 +1377,7 @@ shinyServer(function(input, output, session) {
   
   # remove tcc step
   observe({
-    input$removeTccBtn
+    input$removeTccStepBtn
     isolate({
       values$rdml$thermalCyclingConditions[[input$tccSlct]]$
         step[[input$tccStepSlct]]<- NULL
