@@ -13,15 +13,15 @@ shinyUI(
                fileInput("rdmlFiles",
                          h4("Upload RDML File:"),
                          multiple = TRUE),
+               fileInput("fromTables",
+                         h4("Upload .csv Files to Create from File"),
+                         multiple = TRUE),
                selectizeInput("rdmlFileSlct",
                               "Show File",
                               choices = "",
                               options= list(
                                 create =TRUE
                               )),
-               fileInput("fromTables",
-                         h4("Upload .csv Files to Create from File"),
-                         multiple = TRUE),
                selectInput("mergeRdmlsSlct",
                            "Merge RDMLs",
                            multiple = TRUE,

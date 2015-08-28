@@ -94,6 +94,49 @@ shinyServer(function(input, output, session) {
     })
   })
   
+  # create from tables
+  observe({
+    if (is.null(input$fromTables) || length(input$fromTables$name) != 2)
+      return(NULL)
+    
+    isolate({
+      withProgress({
+        tables <- lapply(input$fromTables$datapath,
+                         function(x) read.csv(x,
+                                              stringsAsFactors = FALSE))
+        description.index <- 
+          sapply(tables,
+                 function(t) {
+                   if (length(intersect(
+                     c("fdata.name",
+                       "exp.id",
+                       "run.id",
+                       "react.id",
+                       "sample",
+                       "target",
+                       "target.dyeId"), colnames(t))) == 7)
+                     TRUE
+                   else
+                     FALSE })
+        description <- tables[[which(description.index == TRUE)]]
+        fdata <- tables[[which(description.index == FALSE)]]
+        newRDML <- RDML$new()
+        newRDML$SetFData(fdata,
+                             description)
+        values$RDMLs <- c(newRDML,
+                          values$RDMLs)
+        name <- input$fromTables$name[which(description.index == TRUE)]
+        names(values$RDMLs)[1] <- name
+#         updateSelectInput("rdmlFileSlc",
+#                           selected = name)
+      },
+      min = 0,
+      max = 1,
+      message = "Processing Tables..."
+      )
+    })
+  })
+  
   # merge RDMLs
   observe({
     input$mergeBtn
@@ -113,7 +156,9 @@ shinyServer(function(input, output, session) {
   output$dendroRDMLplot <- renderPlot({
     if (is.null(values$rdml))
       return(NULL)
-    values$rdml$AsDendrogram()
+    tryCatch(values$rdml$AsDendrogram(),
+             error = function(e) {cat(e$message)}
+             )
   })
   
   # write to RDML
