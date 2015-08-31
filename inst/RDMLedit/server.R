@@ -122,13 +122,13 @@ shinyServer(function(input, output, session) {
         fdata <- tables[[which(description.index == FALSE)]]
         newRDML <- RDML$new()
         newRDML$SetFData(fdata,
-                             description)
+                         description)
         values$RDMLs <- c(newRDML,
                           values$RDMLs)
         name <- input$fromTables$name[which(description.index == TRUE)]
         names(values$RDMLs)[1] <- name
-#         updateSelectInput("rdmlFileSlc",
-#                           selected = name)
+        #         updateSelectInput("rdmlFileSlc",
+        #                           selected = name)
       },
       min = 0,
       max = 1,
@@ -158,7 +158,7 @@ shinyServer(function(input, output, session) {
       return(NULL)
     tryCatch(values$rdml$AsDendrogram(),
              error = function(e) {cat(e$message)}
-             )
+    )
   })
   
   # write to RDML
@@ -347,7 +347,7 @@ shinyServer(function(input, output, session) {
   
   # remove experimenter
   observe({
-    input$removeExperimenterBtn
+    input$removexperimenterBtn
     isolate({
       values$rdml$experimenter[[input$experimenterSlct]] <- NULL
       updateSelectizeInput(session,
@@ -1463,6 +1463,364 @@ shinyServer(function(input, output, session) {
                           step))
     })
   })
+  
+  # Experiment Tab -----------------------------------------------------  
+  
+  
+  # init
+  observe({
+    if (is.null(values$rdml$experiment))
+      return(NULL)
+    isolate({
+      updateSelectizeInput(session,
+                           "experimentSlct",
+                           choices = names(values$rdml$experiment))
+    })
+  })
+  
+  # on experimentSlct change
+  observe({
+    if (input$experimentSlct == "") {
+      return(NULL)
+    }
+    isolate({
+      if (length(values$rdml$
+                 experiment[[input$experimentSlct]]$run) == 0) {
+        updateSelectizeInput(
+          session,
+          "runSlct",
+          choices = "")
+      } else {
+        updateSelectizeInput(
+          session,
+          "runSlct",
+          choices = names(values$rdml$
+                            experiment[[input$experimentSlct]]$run))
+      }
+      # update fields
+      if (!is.null(values$rdml$
+                   experiment[[input$experimentSlct]])) {
+        experiment <- values$rdml$
+          experiment[[input$experimentSlct]]
+        updateTextInput(session,
+                        "experimentIdText",
+                        value = testNull(experiment$id$id))
+        updateTextInput(session,
+                        "experimentDescriptionText",
+                        value = testNull(experiment$description))
+        updateSelectInput(session,
+                          "experimentDocumentationSlct",
+                          selected = names(experiment$documentation))
+        
+        
+      } else {
+        updateTextInput(session,
+                        "experimentIdText",
+                        value = input$experimentSlct)
+      }
+    })
+  })
+  
+  # on runSlct change
+  observe({
+    if (input$runSlct == "") {
+      return(NULL)
+    }
+    isolate({
+      if (length(values$rdml$
+                 experiment[[input$experimentSlct]]$
+                 run[[input$runSlct]]$react) == 0) {
+        updateSelectizeInput(
+          session,
+          "reactSlct",
+          choices = "")
+      } else {
+        updateSelectizeInput(
+          session,
+          "reactSlct",
+          choices = names(values$rdml$
+                            experiment[[input$experimentSlct]]$
+                            run[[input$runSlct]]$react))
+      }
+      # update fields
+      if (!is.null(values$rdml$
+                   experiment[[input$experimentSlct]]$
+                   run[[input$runSlct]])) {
+        run <- values$rdml$
+          experiment[[input$experimentSlct]]$
+          run[[input$runSlct]]
+        updateTextInput(session,
+                        "runIdText",
+                        value = testNull(run$id$id))
+        updateTextInput(session,
+                        "runDescriptionText",
+                        value = testNull(run$description))
+        updateSelectInput(session,
+                          "runDocumentationSlct",
+                          selected = names(run$documentation))
+        updateSelectInput(session,
+                          "runExperimenterSlct",
+                          selected = names(run$experimenter))
+        updateTextInput(session,
+                        "runInstrumentText",
+                        value = testNull(run$instrument))
+        
+        updateTextInput(session,
+                        "runDataCollectionSoftwareNameText",
+                        value = testNull(run$dataCollectionSoftware$name))
+        updateTextInput(session,
+                        "runDataCollectionSoftwareVersionText",
+                        value = testNull(run$dataCollectionSoftware$version))
+        
+        updateTextInput(session,
+                        "runBackgroundDeterminationMethodText",
+                        value = testNull(run$backgroundDeterminationMethod))
+        
+        updateSelectInput(session,
+                          "runCqDetectionMethodSlct",
+                          selected = names(run$cqDetectionMethod$value))
+        updateSelectInput(session,
+                          "runTccSlct",
+                          selected = names(run$thermalCyclingConditions))
+        
+        updateTextInput(session,
+                        "runRowsText",
+                        value = testNull(run$pcrFormat$rows))
+        updateTextInput(session,
+                        "runColumnsText",
+                        value = testNull(run$pcrFormat$columns))
+        updateSelectInput(session,
+                          "runRowLabelSlct",
+                          selected = names(run$pcrFormat$rowLabel$value))
+        updateSelectInput(session,
+                          "runColumnLabelSlct",
+                          selected = names(run$pcrFormat$columnLabel$value))
+        
+        updateTextInput(session,
+                        "runDateText",
+                        value = testNull(run$runDate))
+        
+        
+      } else {
+        updateTextInput(session,
+                        "runIdText",
+                        value = input$runSlct)
+      }
+    })
+  })
+  
+  
+  # on reactSlct change
+  observe({
+    if (input$reactSlct == "") {
+      return(NULL)
+    }
+    isolate({
+      if (length(values$rdml$
+                 experiment[[input$experimentSlct]]$
+                 run[[input$runSlct]]$
+                 react[[input$reactSlct]]) == 0) {
+        updateSelectizeInput(
+          session,
+          "dataSlct",
+          choices = "")
+      } else {
+        updateSelectizeInput(
+          session,
+          "dataSlct",
+          choices = names(values$rdml$
+                            experiment[[input$experimentSlct]]$
+                            run[[input$runSlct]]$
+                            react[[input$reactSlct]]$data))
+      }
+      # update fields
+      if (!is.null(values$rdml$
+                   experiment[[input$experimentSlct]]$
+                   run[[input$runSlct]]$
+                   react[[input$reactSlct]])) {
+        react <- values$rdml$
+          experiment[[input$experimentSlct]]$
+          run[[input$runSlct]]$
+          react[[input$reactSlct]]
+        updateTextInput(session,
+                        "reactIdText",
+                        value = testNull(react$id$id))
+        updateSelectInput(session,
+                          "reactSampleSlct",
+                          selected = react$sample$id)
+      } else {
+        updateTextInput(session,
+                        "reactIdText",
+                        value = input$reactSlct)
+      }
+    })
+  })
+  
+  
+  # on dataSlct change
+  observe({
+    if (input$dataSlct == "") {
+      return(NULL)
+    }
+    isolate({
+      
+      # update fields
+      if (!is.null(values$rdml$
+                   experiment[[input$experimentSlct]]$
+                   run[[input$runSlct]]$
+                   react[[input$reactSlct]]$
+                   data[[input$dataSlct]])) {
+        react <- values$rdml$
+          experiment[[input$experimentSlct]]$
+          run[[input$runSlct]]$
+          react[[input$reactSlct]]$
+          data[[input$dataSlct]]
+        
+        updateSelectInput(session,
+                          "dataTarSlct",
+                          selected = data$tar$id)
+        updateTextInput(session,
+                        "dataCqText",
+                        value = testNull(data$cq))
+        updateTextInput(session,
+                        "dataExclText",
+                        value = testNull(data$excl))
+        updateTextInput(session,
+                        "dataEndPtText",
+                        value = testNull(data$endPt))
+        updateTextInput(session,
+                        "dataBgFluorText",
+                        value = testNull(data$bgFluor))
+        updateTextInput(session,
+                        "dataBgFluorSlpText",
+                        value = testNull(data$bgFluorSlp))
+        updateTextInput(session,
+                        "dataQuantFluorText",
+                        value = testNull(data$quantFluor))
+      } else {
+        updateTextInput(session,
+                        "dataTarText",
+                        value = input$dataSlct)
+      }
+    })
+  })
+  
+  # write to experiment
+  observe({
+    if (is.null(testEmptyInput(input$experimentIdText))) {
+      return(NULL)
+    }
+    tryCatch({
+      isolate({
+        run <- values$rdml$
+          experiment[[input$experimentSlct]]$run
+      })
+      experiment <- experimentType$new(
+        id = idType$new(testEmptyInput(input$experimentIdText)),
+        description = testEmptyInput(input$experimentDescriptionText),
+        documentation = 
+          lapply(input$experimentDocumentationSlct,
+                 function(doc) idReferencesType$new(doc)),
+        run = run)
+      
+      isolate({
+        values$rdml$experiment[[input$experimentSlct]] <- experiment
+        # rename list elements
+        if (input$experimentSlct != input$experimentIdText) {
+          values$rdml$experiment <- 
+            values$rdml$experiment
+          updateSelectizeInput(session,
+                               "experimentSlct",
+                               choices = names(values$rdml$experiment),
+                               selected = input$experimentIdText)
+        }
+      })},
+      error = function(e) {
+        print(paste("experiment:", e$message))
+        NULL
+      }
+    )
+    
+  })
+  
+  # write to run
+  observe({
+    if (is.null(testEmptyInput(input$runIdText))) {
+      return(NULL)
+    }
+    tryCatch({
+      isolate({
+        react <- values$rdml$
+          experiment[[input$experimentSlct]]$
+          run[[input$runSlct]]$react
+      })
+      run <- runType$new(
+        id = idType$new(testEmptyInput(input$runIdText)),
+        description = testEmptyInput(input$runDescriptionText),
+        documentation = 
+          lapply(input$runDocumentationSlct,
+                 function(doc) idReferencesType$new(doc)),
+        experimenter = tryCatch(
+          idReferencesType$new(
+            testEmptyInput(input$runExperimenterSlct)),
+          error = function(e) return(NULL)),
+        instrument = testEmptyInput(input$runInstrumentText),
+        dataCollectionSoftware = 
+          dataCollectionSoftwareType$new(
+            testEmptyInput(input$runDataCollectionSoftwareNameText),
+            testEmptyInput(input$runDataCollectionSoftwareVersionText)),
+        testEmptyInput(input$runBackgroundDeterminationMethodText),
+        cqDetectionMethodType$new(
+          testEmptyInput(input$runCqDetectionMethodSlct)),
+        tryCatch(
+          idReferencesType$new(
+            testEmptyInput(input$runTccSlct)),
+          error = function(e) return(NULL)),
+        pcrFormat = pcrFormatType$new(
+          testEmptyInput(as.numeric(input$runRowsText)),
+          testEmptyInput(as.numeric(input$runColumnsText)),
+          labelFormatType$new(testEmptyInput(input$runRowLabelSlct)),
+          labelFormatType$new(testEmptyInput(input$runColumnLabelSlct))),
+        runDate = testEmptyInput(input$runDateText),
+        react = react
+      )
+      
+      isolate({
+        values$rdml$experiment[[input$experimentSlct]]$
+          run[[input$runSlct]] <- run
+        # rename list elements
+        if (input$runSlct != input$runIdText) {
+          values$rdml$experiment[[input$experimentSlct]]$
+            run
+          updateSelectizeInput(session,
+                               "experimentSlct",
+                               choices = names(
+                                 values$rdml$experiment[[input$experimentSlct]]$
+                                   run
+                               ),
+                               selected = input$runIdText)
+        }
+      })},
+      error = function(e) {
+        print(paste("run:", e$message))
+        NULL
+      }
+    )
+    
+  })
+  
+  # remove tcc
+  observe({
+    input$removeTccBtn
+    isolate({
+      values$rdml$thermalCyclingConditions[[input$tccSlct]] <- NULL
+      updateSelectizeInput(session,
+                           "tccSlct",
+                           choices = names(values$rdml$thermalCyclingConditions))
+    })
+  })
+  
+  
   
   # Download ----------------------------------------------------------------
   
