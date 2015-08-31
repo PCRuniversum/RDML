@@ -156,6 +156,7 @@ shinyServer(function(input, output, session) {
   output$dendroRDMLplot <- renderPlot({
     if (is.null(values$rdml))
       return(NULL)
+    input$updateDendroPlot
     tryCatch(values$rdml$AsDendrogram(),
              error = function(e) {cat(e$message)}
     )
@@ -316,6 +317,15 @@ shinyServer(function(input, output, session) {
     })
   })
   
+  updExperimenterRefs <- function() {
+    updateSelectInput(session,
+                      "tccExperimenterSlct",
+                      choices = names(values$rdml$experimenter))
+    updateSelectInput(session,
+                      "runExperimenterSlct",
+                      choices = names(values$rdml$experimenter))
+  }
+  
   # write to experimenter
   observe({
     if (is.null(testEmptyInput(input$experimenterIdText))) {
@@ -339,6 +349,7 @@ shinyServer(function(input, output, session) {
                                choices = names(values$rdml$experimenter),
                                selected = input$experimenterIdText)
         }
+        updExperimenterRefs()
       })
     },
     error = function(e) print(e$message)
@@ -353,6 +364,7 @@ shinyServer(function(input, output, session) {
       updateSelectizeInput(session,
                            "experimenterSlct",
                            choices = names(values$rdml$experimenter))
+      updExperimenterRefs()
     })
   })
   
@@ -394,6 +406,21 @@ shinyServer(function(input, output, session) {
     })
   })
   
+  updDocRefs <- function() {
+    updateSelectInput(session,
+                      "sampleDocumentationSlct",
+                      choices = names(values$rdml$documentation))
+    updateSelectInput(session,
+                      "targetDocumentationSlct",
+                      choices = names(values$rdml$documentation))
+    updateSelectInput(session,
+                      "experimentDocumentationSlct",
+                      choices = names(values$rdml$documentation))
+    updateSelectInput(session,
+                      "runDocumentationSlct",
+                      choices = names(values$rdml$documentation))
+  }
+  
   # write to documentation
   observe({
     if (is.null(testEmptyInput(input$documentationIdText))) {
@@ -414,12 +441,7 @@ shinyServer(function(input, output, session) {
                                choices = names(values$rdml$documentation),
                                selected = input$documentationIdText)
         }
-        updateSelectInput(session,
-                          "sampleDocumentationSlct",
-                          choices = names(values$rdml$documentation))
-        updateSelectInput(session,
-                          "targetDocumentationSlct",
-                          choices = names(values$rdml$documentation))
+        updDocRefs()
       })
     },
     error = function(e) print(e$message)
@@ -434,12 +456,7 @@ shinyServer(function(input, output, session) {
       updateSelectizeInput(session,
                            "documentationSlct",
                            choices = names(values$rdml$documentation))
-      updateSelectInput(session,
-                        "sampleDocumentationSlct",
-                        choices = names(values$rdml$documentation))
-      updateSelectInput(session,
-                        "targetDocumentationSlct",
-                        choices = names(values$rdml$documentation))
+      updDocRefs()
     })
   })
   
@@ -454,9 +471,6 @@ shinyServer(function(input, output, session) {
       updateSelectizeInput(session,
                            "dyeSlct",
                            choices = names(values$rdml$dye))
-      updateSelectInput(session,
-                        "targetDyeIdSlct",
-                        choices = names(values$rdml$dye))
     })
   })
   
@@ -484,7 +498,11 @@ shinyServer(function(input, output, session) {
     })
   })
   
-  
+  updDyeRefs <- function() {
+    updateSelectInput(session,
+                      "targetDyeIdSlct",
+                      choices = names(values$rdml$dye))
+  }
   
   # write to dye
   observe({
@@ -502,17 +520,12 @@ shinyServer(function(input, output, session) {
         if (input$dyeSlct != input$dyeIdText) {
           values$rdml$dye <- values$rdml$dye
           updateSelectizeInput(session,
-                               "dye",
+                               "dyeSlct",
                                choices = names(values$rdml$dye),
                                selected = input$dyeIdText)
         }
-        updateSelectizeInput(session,
-                             "dyeSlct",
-                             choices = names(values$rdml$dye),
-                             selected = input$dyeIdText)
-        updateSelectInput(session,
-                          "targetDyeIdSlct",
-                          choices = names(values$rdml$dye))
+        updDyeRefs()
+        
       })
     },
     error = function(e) print(e$message)
@@ -528,9 +541,7 @@ shinyServer(function(input, output, session) {
       updateSelectizeInput(session,
                            "dyeSlct",
                            choices = names(values$rdml$dye))
-      updateSelectInput(session,
-                        "targetDyeIdSlct",
-                        choices = names(values$rdml$dye))
+      updDyeRefs()
     })
   })
   
@@ -632,6 +643,12 @@ shinyServer(function(input, output, session) {
     })
   })
   
+  updSampleRefs <- function() {
+    updateSelectInput(session,
+                      "reactSampleSlct",
+                      choices = names(values$rdml$sample))
+  }
+  
   # write to sample
   observe({
     if (is.null(testEmptyInput(input$sampleIdText))) {
@@ -678,7 +695,7 @@ shinyServer(function(input, output, session) {
             })
         },
         error = function(e) {
-          print(e$message)
+          print(paste("sample:", e$message))
           NULL}
         ),
         
@@ -702,6 +719,7 @@ shinyServer(function(input, output, session) {
                                choices = names(values$rdml$sample),
                                selected = input$sampleIdText)
         }
+        updSampleRefs()
       })
     },
     error = function(e) print(e$message)
@@ -716,6 +734,7 @@ shinyServer(function(input, output, session) {
       updateSelectizeInput(session,
                            "sampleSlct",
                            choices = names(values$rdml$sample))
+      updSampleRefs()
     })
   })
   
@@ -969,6 +988,12 @@ shinyServer(function(input, output, session) {
     })
   })
   
+  updTargetRefs <- function() {
+    updateSelectInput(session,
+                      "dataTarSlct",
+                      choices = names(values$rdml$target))
+  }
+  
   # write to target
   observe({
     if (is.null(testEmptyInput(input$targetIdText))) {
@@ -1033,6 +1058,7 @@ shinyServer(function(input, output, session) {
                                choices = names(values$rdml$target),
                                selected = input$targetIdText)
         }
+        updTargetRefs()
       })
     },
     error = function(e) print(paste("target:", e$message))
@@ -1047,6 +1073,7 @@ shinyServer(function(input, output, session) {
       updateSelectizeInput(session,
                            "targetSlct",
                            choices = names(values$rdml$target))
+      updTargetRefs()
     })
   })
   
@@ -1304,6 +1331,15 @@ shinyServer(function(input, output, session) {
     })
   })
   
+  updTccRefs <- function() {
+    updateSelectInput(session,
+                      "sampleCsmTccSlct",
+                      choices = names(values$rdml$thermalCyclingConditions))
+    updateSelectInput(session,
+                      "runTccSlct",
+                      choices = names(values$rdml$thermalCyclingConditions))
+  }
+  
   # write to tcc
   observe({
     if (is.null(testEmptyInput(input$tccIdText))) {
@@ -1335,6 +1371,7 @@ shinyServer(function(input, output, session) {
                                choices = names(values$rdml$thermalCyclingConditions),
                                selected = input$tccIdText)
         }
+        updTccRefs()
       })},
       error = function(e) {
         print(paste("tcc:", e$message))
@@ -1352,6 +1389,7 @@ shinyServer(function(input, output, session) {
       updateSelectizeInput(session,
                            "tccSlct",
                            choices = names(values$rdml$thermalCyclingConditions))
+      updTccRefs()
     })
   })
   
@@ -1791,7 +1829,7 @@ shinyServer(function(input, output, session) {
         # rename list elements
         if (input$runSlct != input$runIdText) {
           values$rdml$experiment[[input$experimentSlct]]$
-            run
+            run <- values$rdml$experiment[[input$experimentSlct]]$run
           updateSelectizeInput(session,
                                "experimentSlct",
                                choices = names(
@@ -1809,14 +1847,169 @@ shinyServer(function(input, output, session) {
     
   })
   
-  # remove tcc
+  # write to react
   observe({
-    input$removeTccBtn
+    if (is.null(testEmptyInput(input$reactIdText))) {
+      return(NULL)
+    }
+    tryCatch({
+      isolate({
+        data <- values$rdml$
+          experiment[[input$experimentSlct]]$
+          run[[input$runSlct]]$
+          react[[input$reactSlct]]$data
+      })
+      react <- reactType$new(
+        id = reactIdType$new(
+          as.numeric(testEmptyInput(input$reactIdText))),
+        sample = idReferencesType$new(
+            testEmptyInput(input$runExperimenterSlct)),
+        data = data
+      )
+      
+      isolate({
+        values$rdml$experiment[[input$experimentSlct]]$
+          run[[input$runSlct]]$
+          react[[input$reactSlct]] <- react
+        # rename list elements
+        if (input$reactSlct != input$reactIdText) {
+          values$rdml$experiment[[input$experimentSlct]]$
+            run[[input$runSlct]]$
+            react <- values$rdml$experiment[[input$experimentSlct]]$
+            run[[input$runSlct]]$
+            react
+          updateSelectizeInput(session,
+                               "reactSlct",
+                               choices = names(
+                                 values$rdml$experiment[[input$experimentSlct]]$
+                                   run[[input$runSlct]]$
+                                   react
+                               ),
+                               selected = input$reactIdText)
+        }
+      })},
+      error = function(e) {
+        print(paste("react:", e$message))
+        NULL
+      }
+    )
+    
+  })
+  
+  
+  # write to data
+  observe({
+    if (is.null(testEmptyInput(input$dataTarSlct))) {
+      return(NULL)
+    }
+    tryCatch({
+      isolate({
+        adp <- values$rdml$
+          experiment[[input$experimentSlct]]$
+          run[[input$runSlct]]$
+          react[[input$reactSlct]]$
+          data[[input$dataTarSlct]]$adp
+        mdp <- values$rdml$
+          experiment[[input$experimentSlct]]$
+          run[[input$runSlct]]$
+          react[[input$reactSlct]]$
+          data[[input$dataTarSlct]]$mdp
+      })
+      data <- dataType$new(
+        tar = idReferencesType$new(testEmptyInput(input$dataTarSlct)),
+        cq = testEmptyInput(as.numeric(input$dataCqText)),
+        excl = testEmptyInput(input$dataExclText),
+        adp = adp,
+        mdp = mdp,
+        endPt = testEmptyInput(input$dataEndPtText),
+        bgFluor = testEmptyInput(input$dataBgFluorText),
+        bgFluorSlp = testEmptyInput(input$dataBgFluorSlpText),
+        quantFluor = testEmptyInput(input$dataQuantFluorText)
+      )
+      
+      isolate({
+        values$rdml$experiment[[input$experimentSlct]]$
+          run[[input$runSlct]]$
+          react[[input$reactSlct]]$
+          data[[input$dataTarSlct]] <- data
+        # rename list elements
+        if (input$dataSlct != input$dataTarSlct) {
+          values$rdml$experiment[[input$experimentSlct]]$
+            run[[input$runSlct]]$
+            react[[input$reactSlct]]$data <- values$rdml$experiment[[input$experimentSlct]]$
+            run[[input$runSlct]]$
+            react[[input$reactSlct]]$data
+          updateSelectizeInput(session,
+                               "dataSlct",
+                               choices = names(
+                                 values$rdml$experiment[[input$experimentSlct]]$
+                                   run[[input$runSlct]]$
+                                   react[[input$reactSlct]]$data
+                               ),
+                               selected = input$dataSlct)
+        }
+      })},
+      error = function(e) {
+        print(paste("data:", e$message))
+        NULL
+      }
+    )
+    
+  })
+  
+  # remove experiment
+  observe({
+    input$removeExperimentBtn
     isolate({
-      values$rdml$thermalCyclingConditions[[input$tccSlct]] <- NULL
+      values$rdml$experiment[[input$experimentSlct]] <- NULL
       updateSelectizeInput(session,
-                           "tccSlct",
-                           choices = names(values$rdml$thermalCyclingConditions))
+                           "experimentSlct",
+                           choices = names(values$rdml$experiment))
+    })
+  })
+  
+  # remove run
+  observe({
+    input$removeRunBtn
+    isolate({
+      values$rdml$experiment[[input$experimentSlct]]$
+        run[[input$runSlct]] <- NULL
+      updateSelectizeInput(session,
+                           "runSlct",
+                           choices = names(values$rdml$experiment$
+                                             run))
+    })
+  })
+  
+  # remove react
+  observe({
+    input$removeReactBtn
+    isolate({
+      values$rdml$experiment[[input$experimentSlct]]$
+        run[[input$runSlct]]$
+        react[[input$reactSlct]] <- NULL
+      updateSelectizeInput(session,
+                           "reactSlct",
+                           choices = names(values$rdml$experiment[[input$experimentSlct]]$
+                                             run[[input$runSlct]]$
+                                             react))
+    })
+  })
+  
+  # remove data
+  observe({
+    input$removeDataBtn
+    isolate({
+      values$rdml$experiment[[input$experimentSlct]]$
+        run[[input$runSlct]]$
+        react[[input$reactSlct]]$
+        data[[input$dataSlct]] <- NULL
+      updateSelectizeInput(session,
+                           "dataSlct",
+                           choices = names(values$rdml$experiment[[input$experimentSlct]]$
+                                             run[[input$runSlct]]$
+                                             react[[input$reactSlct]]$
+                                             data))
     })
   })
   

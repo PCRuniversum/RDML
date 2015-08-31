@@ -37,6 +37,8 @@ shinyUI(
                actionButton("updateRDMLBtn",
                             "Update"),
                downloadLink("downloadRDML", "Download RDML"),
+               actionButton("updateDendroPlot",
+                            "Update Dendrogram"),
                plotOutput("dendroRDMLplot")),
       navbarMenu("Metadata",
                  tabPanel("ID",
@@ -459,6 +461,8 @@ shinyUI(
                                              options= list(
                                                create =TRUE
                                              )),
+                              textInput("reactIdText", "ID",
+                                        ""),
                               selectInput("reactSampleSlct",
                                           "Sample",
                                           choices = ""),
@@ -471,8 +475,7 @@ shinyUI(
                                                  create =TRUE
                                                )),
                                 selectInput("dataTarSlct",
-                                            "Documentation",
-                                            multiple = TRUE,
+                                            "Target",
                                             choices = ""),
                                 textInput("dataCqText", "Cq",
                                           ""),
