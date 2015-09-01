@@ -410,7 +410,8 @@ RDML$set("public", "initialize", function(filename,
           function(target) {
             targetType$new(
               id = idType$new({ 
-                ifelse(length(private$.id) != 0 &&
+                ifelse(length(unzipped.rdml) > 1 &&
+                         length(private$.id) != 0 &&
                          private$.id[[1]]$publisher == "Roche Diagnostics",
                        {
                          id <- xmlAttrs(target, "id")
@@ -613,7 +614,8 @@ RDML$set("public", "initialize", function(filename,
                        "']/..")                                                      
     dataType$new(
       tar = idReferencesType$new(
-        ifelse(length(private$.id) != 0 &&
+        ifelse(length(unzipped.rdml) > 1 &&
+               length(private$.id) != 0 &&
                  private$.id[[1]]$publisher == "Roche Diagnostics",
                gsub("@(.+)$", "\\1", 
                     regmatches(tar.id,gregexpr("@(.+)$",tar.id))[[1]])
@@ -711,7 +713,8 @@ RDML$set("public", "initialize", function(filename,
     #     cat(sprintf("\nreact: %i", react.id))
     sample <- xmlAttrs(react[["sample"]],"id")
     ######
-    if(length(private$.id) != 0 && 
+    if(length(unzipped.rdml) > 1 &&
+       length(private$.id) != 0 && 
        private$.id[[1]]$publisher == "Roche Diagnostics") {
       # remove Roche omitted ('ntp') samples
       if(is.null(private$.sample[[sample]]))
@@ -831,7 +834,10 @@ RDML$set("public", "initialize", function(filename,
   # return()
   # private$.recalcPositions()
   
-  if (length(private$.id) != 0 && private$.id[[1]]$publisher == "Roche Diagnostics") {    
+  # parse original!!! Roche files
+  if (length(unzipped.rdml) > 1 &&
+      length(private$.id) != 0 && 
+      private$.id[[1]]$publisher == "Roche Diagnostics") {    
     for(i in 1:length(private$.sample)) {
       private$.sample[[i]]$id <- idType$new(private$.sample[[i]]$description)
     }

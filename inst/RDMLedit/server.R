@@ -158,7 +158,7 @@ shinyServer(function(input, output, session) {
       return(NULL)
     input$updateDendroPlot
     tryCatch(values$rdml$AsDendrogram(),
-             error = function(e) {cat(e$message)}
+             error = function(e) {print(e$message)}
     )
   })
   
@@ -675,7 +675,7 @@ shinyServer(function(input, output, session) {
                            quantityUnitType$new(input$sampleQuantityUnitText))
         },
         error = function(e) {
-          print(e$message)
+          print(paste("sample quantity:", e$message))
           NULL}
         ),
         
@@ -695,7 +695,7 @@ shinyServer(function(input, output, session) {
             })
         },
         error = function(e) {
-          print(paste("sample:", e$message))
+          print(paste("sample cdna :", e$message))
           NULL}
         ),
         
@@ -705,7 +705,7 @@ shinyServer(function(input, output, session) {
             nucleotideType$new(testEmptyInput(input$sampleTemplateQuantityNucleotideSlct)))
         },
         error = function(e) {
-          print(e$message)
+          print(paste("sample tempalte quantity:", e$message))
           NULL}
         )
       )
@@ -722,7 +722,7 @@ shinyServer(function(input, output, session) {
         updSampleRefs()
       })
     },
-    error = function(e) print(e$message)
+    error = function(e) print(paste("sample quantity:", e$message))
     )
   })
   
@@ -988,11 +988,11 @@ shinyServer(function(input, output, session) {
     })
   })
   
-  updTargetRefs <- function() {
-    updateSelectInput(session,
-                      "dataTarSlct",
-                      choices = names(values$rdml$target))
-  }
+  #   updTargetRefs <- function() {
+  #     updateSelectInput(session,
+  #                       "dataTarSlct",
+  #                       choices = names(values$rdml$target))
+  #   }
   
   # write to target
   observe({
@@ -1020,9 +1020,9 @@ shinyServer(function(input, output, session) {
         
         {
           isolate({
-            seq <- values$rdml$target[[input$targetSlct]]$sequences
+            sequences <- values$rdml$target[[input$targetSlct]]$sequences
           })
-          seq[[input$targetSequencesTypeSlct]] <- 
+          sequences[[input$targetSequencesTypeSlct]] <- 
             tryCatch({
               oligoType$new(
                 input$targetSequences3PrimeTagText,
@@ -1034,7 +1034,11 @@ shinyServer(function(input, output, session) {
               print(e$message)
               NULL}
             )
-          seq
+          if (is.list(sequences)) {
+            do.call(sequencesType$new, sequences)
+          } else {
+            NULL
+          }
         },
         
         tryCatch({
@@ -1058,7 +1062,7 @@ shinyServer(function(input, output, session) {
                                choices = names(values$rdml$target),
                                selected = input$targetIdText)
         }
-        updTargetRefs()
+        # updTargetRefs()
       })
     },
     error = function(e) print(paste("target:", e$message))
@@ -1073,7 +1077,7 @@ shinyServer(function(input, output, session) {
       updateSelectizeInput(session,
                            "targetSlct",
                            choices = names(values$rdml$target))
-      updTargetRefs()
+      # updTargetRefs()
     })
   })
   
@@ -1708,7 +1712,7 @@ shinyServer(function(input, output, session) {
                    run[[input$runSlct]]$
                    react[[input$reactSlct]]$
                    data[[input$dataSlct]])) {
-        react <- values$rdml$
+        data <- values$rdml$
           experiment[[input$experimentSlct]]$
           run[[input$runSlct]]$
           react[[input$reactSlct]]$
@@ -1716,6 +1720,7 @@ shinyServer(function(input, output, session) {
         
         updateSelectInput(session,
                           "dataTarSlct",
+                          choices = names(values$rdml$target),
                           selected = data$tar$id)
         updateTextInput(session,
                         "dataCqText",
@@ -1798,10 +1803,9 @@ shinyServer(function(input, output, session) {
         documentation = 
           lapply(input$runDocumentationSlct,
                  function(doc) idReferencesType$new(doc)),
-        experimenter = tryCatch(
-          idReferencesType$new(
-            testEmptyInput(input$runExperimenterSlct)),
-          error = function(e) return(NULL)),
+        experimenter = 
+          lapply(input$runExperimenterSlct,
+                 function(experimenter) idReferencesType$new(experimenter)),
         instrument = testEmptyInput(input$runInstrumentText),
         dataCollectionSoftware = 
           dataCollectionSoftwareType$new(
@@ -1815,10 +1819,12 @@ shinyServer(function(input, output, session) {
             testEmptyInput(input$runTccSlct)),
           error = function(e) return(NULL)),
         pcrFormat = pcrFormatType$new(
-          testEmptyInput(as.numeric(input$runRowsText)),
-          testEmptyInput(as.numeric(input$runColumnsText)),
-          labelFormatType$new(testEmptyInput(input$runRowLabelSlct)),
-          labelFormatType$new(testEmptyInput(input$runColumnLabelSlct))),
+          rows = testEmptyInput(as.numeric(input$runRowsText)),
+          columns = testEmptyInput(as.numeric(input$runColumnsText)),
+          rowLabel = 
+            labelFormatType$new(testEmptyInput(input$runRowLabelSlct)),
+          columnLabel = 
+            labelFormatType$new(testEmptyInput(input$runColumnLabelSlct))),
         runDate = testEmptyInput(input$runDateText),
         react = react
       )
@@ -1863,7 +1869,7 @@ shinyServer(function(input, output, session) {
         id = reactIdType$new(
           as.numeric(testEmptyInput(input$reactIdText))),
         sample = idReferencesType$new(
-            testEmptyInput(input$runExperimenterSlct)),
+          testEmptyInput(input$runExperimenterSlct)),
         data = data
       )
       
@@ -1921,10 +1927,10 @@ shinyServer(function(input, output, session) {
         excl = testEmptyInput(input$dataExclText),
         adp = adp,
         mdp = mdp,
-        endPt = testEmptyInput(input$dataEndPtText),
-        bgFluor = testEmptyInput(input$dataBgFluorText),
-        bgFluorSlp = testEmptyInput(input$dataBgFluorSlpText),
-        quantFluor = testEmptyInput(input$dataQuantFluorText)
+        endPt = testEmptyInput(as.numeric(input$dataEndPtText)),
+        bgFluor = testEmptyInput(as.numeric(input$dataBgFluorText)),
+        bgFluorSlp = testEmptyInput(as.numeric(input$dataBgFluorSlpText)),
+        quantFluor = testEmptyInput(as.numeric(input$dataQuantFluorText))
       )
       
       isolate({
@@ -1936,7 +1942,8 @@ shinyServer(function(input, output, session) {
         if (input$dataSlct != input$dataTarSlct) {
           values$rdml$experiment[[input$experimentSlct]]$
             run[[input$runSlct]]$
-            react[[input$reactSlct]]$data <- values$rdml$experiment[[input$experimentSlct]]$
+            react[[input$reactSlct]]$data <- 
+            values$rdml$experiment[[input$experimentSlct]]$
             run[[input$runSlct]]$
             react[[input$reactSlct]]$data
           updateSelectizeInput(session,
@@ -2013,13 +2020,89 @@ shinyServer(function(input, output, session) {
     })
   })
   
+  # Curves and table --------------------------------------------------------
   
+  rdmlTable <- reactive({
+    if (is.null(values$rdml) || !(input$mainNavbar %in% c("adp",
+                                                          "mdp")))
+      return(NULL)
+    tbl <- values$rdml$AsTable() %>% 
+      filter_(paste(input$mainNavbar, "TRUE", sep = "==")) %>% 
+      select(-c(adp, mdp))
+    if (nrow(tbl) == 0) {
+      return(NULL)
+    }
+    tbl
+  })
+  
+  fdata <- reactive({
+    if (is.null(rdmlTable())) 
+      return(NULL)
+    tbl <- rdmlTable()
+    if (!is.null(input$selectedRows)) {
+      tbl <- 
+        filter(tbl,
+               fdata.name %in% input$selectedRows[
+                 seq(1, length(input$selectedRows), by = 9)])
+    }
+    values$rdml$GetFData(tbl, 
+                         dp.type = input$mainNavbar,
+                         long.table = TRUE)
+  })
+  
+  # qPCR
+  observe({
+    if (is.null(fdata()) || input$mainNavbar == "mdp")
+      return(NULL)
+    ggvis(fdata(), ~cyc, ~fluor) %>%
+      group_by(fdata.name) %>%
+      layer_paths() %>% 
+      bind_shiny("qPCRPlot")
+  })
+  
+  output$qPCRDt <- renderDataTable({
+    if (is.null(rdmlTable())) 
+      return(NULL)
+    rdmlTable()
+  },
+  callback = "function(table) {
+    table.on('click.dt', 'tr', function() {
+    $(this).toggleClass('selected');
+    Shiny.onInputChange('selectedRows',
+    table.rows('.selected').data().toArray());
+    });
+    }"
+  )
+  
+  # melting
+  observe({
+    if (is.null(fdata()) || input$mainNavbar == "adp")
+      return(NULL)
+    ggvis(fdata(), ~tmp, ~fluor) %>%
+      group_by(fdata.name) %>%
+      layer_paths() %>% 
+      bind_shiny("meltingPlot")
+  })
+  
+  output$meltingDt <- renderDataTable({
+    if (is.null(rdmlTable())) 
+      return(NULL)
+    rdmlTable()
+  },
+  callback = "function(table) {
+    table.on('click.dt', 'tr', function() {
+    $(this).toggleClass('selected');
+    Shiny.onInputChange('selectedRows',
+    table.rows('.selected').data().toArray());
+    });
+    }"
+  )
   
   # Download ----------------------------------------------------------------
   
   output$downloadRDML <- downloadHandler(
     filename = function() {
-      paste0(values$selFile, '.RDML')
+      paste0(input$rdmlFileSlct, '.RDML')
     },
     content = function(file) {
       values$rdml$AsXML(file)
@@ -2036,6 +2119,7 @@ shinyServer(function(input, output, session) {
   })
   
 })
+
 
 
 

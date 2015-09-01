@@ -2,6 +2,7 @@ library(shiny)
 library(shinythemes)
 library(rhandsontable)
 library(dplyr)
+library(ggvis)
 
 shinyUI(
   tags$div(
@@ -154,7 +155,8 @@ shinyUI(
                                                  "Remove Annotation")),
                           selectInput("sampleTypeSlct",
                                       "Type",
-                                      choices = c("unkn", "nac",
+                                      choices = c("unkn", "ntc",
+                                                  "nac",
                                                   "std", "ntp",
                                                   "nrt", "pos",
                                                   "opt")),
@@ -441,13 +443,13 @@ shinyUI(
                                         ""),
                               selectInput("runRowLabelSlct",
                                           "Row Label",
-                                          choices = c("123",
-                                                      "ABC",
+                                          choices = c("ABC",
+                                                      "123",
                                                       "A1a1")),
                               selectInput("runColumnLabelSlct",
                                           "Column Label",
-                                          choices = c("ABC",
-                                                      "123",
+                                          choices = c("123",
+                                                      "ABC",
                                                       "A1a1"))
                               
                             ),
@@ -494,18 +496,27 @@ shinyUI(
                                           ""),
                                 actionButton("removeDataBtn",
                                              "Remove Data")
-                                ),
+                              ),
                               actionButton("removeReactBtn",
                                            "Remove React")
                             ),
                             actionButton("removeRunBtn",
-                                         "Remove Run"))
-                 ),
-                 actionButton("removeExperimentBtn",
-                              "Remove Experiment")
+                                         "Remove Run")
+                          ),
+                          actionButton("removeExperimentBtn",
+                                       "Remove Experiment")
+                 )
                  
       ),
-      tabPanel("Fluorescence Points")
+      tabPanel("qPCR",
+               ggvisOutput("qPCRPlot"),
+               dataTableOutput("qPCRDt"),
+               value = "adp"),
+      tabPanel("Melting",
+               ggvisOutput("meltingPlot"),
+               dataTableOutput("meltingDt"),
+               value = "mdp"),
+      id = "mainNavbar"
     ),
     uiOutput("logText")
   )
