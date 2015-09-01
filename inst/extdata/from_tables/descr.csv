@@ -1,0 +1,4 @@
+"fdata.name","exp.id","run.id","react.id","sample","target","target.dyeId"
+"D1","exp1","run1",1,"D1 - Stock cDNA","MLC-2v","Cy5"
+"D2","exp1","run2",1,"D2 - 1/10 cDNA","MLC-2v","Cy5"
+"D3","exp1","run3",1,"D3 - 1/100 cDNA","MLC-2v","Cy5"
