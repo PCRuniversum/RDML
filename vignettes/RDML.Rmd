@@ -403,11 +403,13 @@ To provide functional programming style, which is more convenient in **R**, the 
 
 The RDML format may also store data from the high-throughput technologies as digital PCR or 384-well qPCR. To make the RDML package the most appropriate tool for such applications, we optimize the saving functionality of the package. Thanks to this, the RDML package is able to save in a reasonable time even large number of PCR experiments.
 
-We benchmarked the time needed for saving RDML object with different numbers of experiments on two desktop machines:  
-1. Windows 7 x64 (build 7601) Service Pack 1 on Intel Core i5 (2,40 GHz) with 4,00 GB RAM. 
-2. Stefan's machine.  
+We benchmarked the time needed for saving RDML object with different numbers of experiments on two desktop machines:
 
-In both cases we used R 3.2.1 (2015-06-18).
+1. Windows 7 x64 (build 7601) Service Pack 1 on Intel Core i5 (2,40 GHz) with 4,00 GB RAM.
+
+2. Kubuntu 15.04 (Kernel 3.19.0-27-generic) Intel(R) Pentium(R) CPU 997 @ 1.60GHz with 4,00 GB RAM
+
+In case "1." we used R version 3.2.1 (2015-06-18) and in case "2." we used R version 3.1.2 (2014-10-31).
 
 To have the fairest comparison and take into account various factor like garbage collection, we repeated the procedure 100 times.
 
