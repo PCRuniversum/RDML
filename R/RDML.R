@@ -66,12 +66,11 @@
 #' @docType class
 #' @format An \code{\link{R6Class}} generator object.
 #' @export
-#' @import assertthat rlist
+#' @import rlist
 #' @importFrom R6 R6Class
 #' @importFrom plyr alply llply ldply laply ddply compact .
 #' @importFrom tidyr spread
-#' @import dplyr
-#' @include RDML.asserts.R
+#' @import dplyr checkmate
 #' @include RDML.types.R
 #' @examples 
 #' ## EXAMPLE 1:
@@ -217,22 +216,21 @@ RDML <- R6Class("RDML",
                   dateMade = function(date.made) {
                     if(missing(date.made))
                       return(private$.dateMade)
-                    assert_that(is.opt.string(date.made))
+                    assert(checkNull(date.made), checkString(date.made))
                     private$.dateMade <- date.made
                   },
                   
                   dateUpdated = function(date.updated) {
                     if(missing(date.updated))
                       return(private$.dateUpdated)
-                    assert_that(is.opt.string(date.updated))
+                    assert(checkNull(date.updated), checkString(date.updated))
                     private$.dateUpdated <- date.updated
                   },
                   
                   id = function(id) {
                     if(missing(id))
                       return(private$.id)                    
-                    assert_that(is.list.type(id,
-                                             rdmlIdType))
+                    assertList(id, "rdmlIdType")
                     private$.id <- 
                       with.names(id,
                                  quote(.$publisher))
@@ -241,8 +239,7 @@ RDML <- R6Class("RDML",
                   experimenter = function(experimenter) {
                     if(missing(experimenter))
                       return(private$.experimenter)
-                    assert_that(is.list.type(experimenter,
-                                             experimenterType))
+                    assertList(experimenter, "experimenterType")
                     private$.experimenter <- 
                       with.names(experimenter,
                                  quote(.$id$id))
@@ -251,8 +248,7 @@ RDML <- R6Class("RDML",
                   documentation = function(documentation) {
                     if(missing(documentation))
                       return(private$.documentation)
-                    assert_that(is.list.type(documentation,
-                                             documentationType))                    
+                    assertList(documentation, "documentationType")                    
                     private$.documentation <- 
                       with.names(documentation,
                                  quote(.$id$id))
@@ -261,8 +257,7 @@ RDML <- R6Class("RDML",
                   dye = function(dye) {
                     if(missing(dye))
                       return(private$.dye)
-                    assert_that(is.list.type(dye,
-                                             dyeType))
+                    assertList(dye, "dyeType")
                     private$.dye <- 
                       with.names(dye,
                                  quote(.$id$id))
@@ -271,8 +266,7 @@ RDML <- R6Class("RDML",
                   sample = function(sample) {
                     if(missing(sample))
                       return(private$.sample)
-                    assert_that(is.list.type(sample,
-                                             sampleType))
+                    assertList(sample, "sampleType")
                     private$.sample <- 
                       with.names(sample,
                                  quote(.$id$id))
@@ -281,8 +275,7 @@ RDML <- R6Class("RDML",
                   target = function(target) {
                     if(missing(target))
                       return(private$.target)
-                    assert_that(is.list.type(target,
-                                             targetType))
+                    assertList(target, "targetType")
                     private$.target <- 
                       with.names(target,
                                  quote(.$id$id))
@@ -291,8 +284,7 @@ RDML <- R6Class("RDML",
                   thermalCyclingConditions = function(thermalCyclingConditions) {
                     if(missing(thermalCyclingConditions))
                       return(private$.thermalCyclingConditions)
-                    assert_that(is.list.type(thermalCyclingConditions,
-                                             thermalCyclingConditionsType))
+                    assertList(thermalCyclingConditions, "thermalCyclingConditionsType")
                     private$.thermalCyclingConditions <- 
                       with.names(thermalCyclingConditions,
                                  quote(.$id$id))
@@ -301,8 +293,7 @@ RDML <- R6Class("RDML",
                   experiment = function(experiment) {
                     if(missing(experiment))
                       return(private$.experiment)
-                    assert_that(is.list.type(experiment,
-                                             experimentType))
+                    assertList(experiment, "experimentType")
                     private$.experiment <- with.names(experiment,
                                                       quote(.$id$id))
                   }

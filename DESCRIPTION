@@ -22,7 +22,7 @@ Depends:
     R (> 3.0.3)
 Imports:
     R6 (>= 2.0.1),
-    assertthat (>= 0.1),
+    checkmate (>= 1.6.2),
     XML (>= 3.98-1.1),
     plyr (>= 1.8.1),
     dplyr (>= 0.4.1),
@@ -30,7 +30,6 @@ Imports:
     rlist (>= 0.4)
 Collate:
     'RDML.types.R'
-    'RDML.asserts.R'
     'RDML.R'
     'RDML.AsDendrogram.R'
     'RDML.AsTable.R'

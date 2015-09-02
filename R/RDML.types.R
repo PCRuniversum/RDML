@@ -172,9 +172,10 @@ rdmlIdType <-
             initialize = function(publisher,
                                   serialNumber,
                                   MD5Hash = NULL) {
-              assert_that(is.string(publisher))
-              assert_that(is.string(serialNumber))
-              assert_that(is.opt.string(MD5Hash))
+              assertString(publisher)
+              assertString(serialNumber)
+              assert(checkNull(MD5Hash),
+                     checkString(MD5Hash), na.ok = TRUE)
               private$.publisher <- publisher
               private$.serialNumber <- serialNumber
               private$.MD5Hash <- MD5Hash
@@ -189,19 +190,20 @@ rdmlIdType <-
             publisher = function(publisher) {
               if (missing(publisher))
                 return(private$.publisher)
-              assert_that(is.string(publisher))
+              assertString(publisher)
               private$.publisher <- publisher
             },
             serialNumber = function(serialNumber) {
               if (missing(serialNumber))
                 return(private$.serialNumber)
-              assert_that(is.string(serialNumber))
+              assertString(serialNumber)
               private$.serialNumber <- serialNumber
             },
             MD5Hash = function(MD5Hash) {
               if (missing(MD5Hash))
                 return(private$.MD5Hash)
-              assert_that(is.opt.string(MD5Hash))
+              assert(checkNull(MD5Hash),
+                     checkString(MD5Hash), na.ok = TRUE)
               private$.MD5Hash <- MD5Hash
             }
           ))
@@ -227,7 +229,7 @@ idType <-
           inherit = rdmlBaseType,
           public = list(
             initialize = function(id) {
-              assert_that(is.string(id))
+              assertString(id)
               private$.id <- id
             },
             .asXMLnodes = function(node.name,
@@ -248,7 +250,7 @@ idType <-
             id = function(id) {
               if (missing(id))
                 return(private$.id)
-              assert_that(is.string(id))
+              assertString(id)
               private$.id <- id
             }
           ))
@@ -274,7 +276,7 @@ reactIdType <-
           inherit = idType,
           public = list(
             initialize = function(id) {
-              assert_that(is.count(id))
+              assertCount(id)
               private$.id <- id
             }#,
             #             print = function(...) {
@@ -288,7 +290,7 @@ reactIdType <-
             id = function(id) {
               if (missing(id))
                 return(private$.id)
-              assert_that(is.count(id))
+              assertCount(id)
               private$.id <- id
             }
           ))
@@ -345,12 +347,15 @@ experimenterType <-
                                   email = NULL,
                                   labName = NULL,
                                   labAddress = NULL) {
-              assert_that(is.type(id, idType))
-              assert_that(is.string(firstName))
-              assert_that(is.string(lastName))
-              assert_that(is.opt.string(email))
-              assert_that(is.opt.string(labName))
-              assert_that(is.opt.string(labAddress))
+              assertClass(id, "idType")
+              assertString(firstName)
+              assertString(lastName)
+              assert(checkNull(email),
+                     checkString(email, na.ok = TRUE))
+              assert(checkNull(labName),
+                     checkString(labName, na.ok = TRUE))
+              assert(checkNull(labAddress),
+                     checkString(labAddress, na.ok = TRUE))
               private$.id <- id
               private$.firstName <- firstName
               private$.lastName <- lastName
@@ -371,37 +376,40 @@ experimenterType <-
             id = function(id) {
               if (missing(id))
                 return(private$.id)
-              assert_that(is.type(id, idType))
+              assertClass(id, "idType")
               private$.id <- id
             },
             firstName = function(firstName) {
               if (missing(firstName))
                 return(private$.firstName)
-              assert_that(is.string(firstName))
+              assertString(firstName)
               private$.firstName <- firstName
             },
             lastName = function(lastName) {
               if (missing(lastName))
                 return(private$.lastName)
-              assert_that(is.string(lastName))
+              assertString(lastName)
               private$.lastName <- lastName
             },
             email = function(email) {
               if (missing(email))
                 return(private$.email)
-              assert_that(is.opt.string(email))
+              assert(checkNull(email),
+                     checkString(email, na.ok = TRUE))
               private$.email <- email
             },
             labName = function(labName) {
               if (missing(labName))
                 return(private$.labName)
-              assert_that(is.opt.string(labName))
+              assert(checkNull(labName),
+                     checkString(labName, na.ok = TRUE))
               private$.labName <- labName
             },
             labAddress = function(labAddress) {
               if (missing(labAddress))
                 return(private$.labAddress)
-              assert_that(is.opt.string(labAddress))
+              assert(checkNull(labAddress),
+                     checkString(labAddress, na.ok = TRUE))
               private$.labAddress <- labAddress
             }
           ))
@@ -430,8 +438,9 @@ documentationType <-
           public = list(
             initialize = function(id,
                                   text = NULL) {
-              assert_that(is.type(id, idType))
-              assert_that(is.opt.string(text))
+              assertClass(id, "idType")
+              assert(checkNull(text),
+                     checkString(text, na.ok = TRUE))
               private$.id <- id
               private$.text <- text
             }
@@ -444,13 +453,14 @@ documentationType <-
             id = function(id) {
               if (missing(id))
                 return(private$.id)
-              assert_that(is.type(id, idType))
+              assertClass(id, "idType")
               private$.id <- id
             },
             text = function(text) {
               if (missing(text))
                 return(private$.text)
-              assert_that(is.opt.string(text))
+              assert(checkNull(text),
+                     checkString(text, na.ok = TRUE))
               private$.text <- text
             }
           ))
@@ -478,8 +488,9 @@ dyeType <-
           public = list(
             initialize = function(id,
                                   description = NULL) {
-              assert_that(is.type(id, idType))
-              assert_that(is.opt.string(description))
+              assertClass(id, "idType")
+              assert(checkNull(description),
+                     checkString(description, na.ok = TRUE))
               private$.id <- id
               private$.description <- description
             }
@@ -492,13 +503,14 @@ dyeType <-
             id = function(id) {
               if (missing(id))
                 return(private$.id)
-              assert_that(is.type(id, idType))
+              assertClass(id, "idType")
               private$.id <- id
             },
             description = function(description) {
               if (missing(description))
                 return(private$.description)
-              assert_that(is.opt.string(description))
+              assert(checkNull(description),
+                     checkString(description, na.ok = TRUE))
               private$.description <- description
             }
           ))
@@ -528,8 +540,10 @@ xRefType <-
           public = list(
             initialize = function(name = NULL,
                                   id = NULL) {
-              assert_that(is.opt.string(name))
-              assert_that(is.opt.string(id))
+              assert(checkNull(name),
+                     checkString(name, na.ok = TRUE))
+              assert(checkNull(id),
+                     checkString(id, na.ok = TRUE))
               private$.name <- name
               private$.id <- id
             }
@@ -542,13 +556,15 @@ xRefType <-
             name = function(name) {
               if (missing(name))
                 return(private$.name)
-              assert_that(is.opt.string(name))
+              assert(checkNull(name),
+                     checkString(name, na.ok = TRUE))
               private$.name <- name
             },
             id = function(id) {
               if (missing(id))
                 return(private$.id)
-              assert_that(is.opt.string(id))
+              assert(checkNull(id),
+                     checkString(id, na.ok = TRUE))
               private$.id <- id
             }
           ))
@@ -577,8 +593,8 @@ annotationType <-
           public = list(
             initialize = function(property,
                                   value) {
-              assert_that(is.string(property))
-              assert_that(is.string(value))
+              assertString(property)
+              assertString(value)
               private$.property <- property
               private$.value <- value
             }
@@ -591,13 +607,13 @@ annotationType <-
             property = function(property) {
               if (missing(property))
                 return(private$.property)
-              assert_that(is.string(property))
+              assertString(property)
               private$.property <- property
             },
             value = function(value) {
               if (missing(value))
                 return(private$.value)
-              assert_that(is.string(value))
+              assertString(value)
               private$.value <- value
             }
           ))
@@ -626,9 +642,8 @@ quantityType <-
           public = list(
             initialize = function(value,
                                   unit) {
-              assert_that(is.float(value))
-              assert_that(is.type(unit,
-                                  quantityUnitType))
+              assertNumber(value, na.ok = TRUE)
+              assertClass(unit, "quantityUnitType")
               private$.value <- value
               private$.unit <- unit
             }
@@ -641,14 +656,13 @@ quantityType <-
             value = function(value) {
               if (missing(value))
                 return(private$.value)
-              assert_that(is.float(value))
+              assertNumber(value, na.ok = TRUE)
               private$.value <- value
             },
             unit = function(unit) {
               if (missing(unit))
                 return(private$.unit)
-              assert_that(is.type(unit,
-                                  quantityUnitType))
+              assertClass(unit, "quantityUnitType")
               private$.unit <- unit
             }
           ))
@@ -685,12 +699,14 @@ cdnaSynthesisMethodType <-
                                   primingMethod = NULL,
                                   dnaseTreatment = NULL,
                                   thermalCyclingConditions = NULL) {
-              assert_that(is.opt.string(enzyme))
-              assert_that(is.opt.type(primingMethod,
-                                      primingMethodType))
-              assert_that(is.opt.flag(dnaseTreatment))
-              assert_that(is.opt.type(thermalCyclingConditions,
-                                      idType))
+              assert(checkNull(enzyme),
+                     checkString(enzyme, na.ok = TRUE))
+              assert(checkNull(primingMethod),
+                     checkClass(primingMethod, "primingMethodType"))
+              assert(checkNull(dnaseTreatment),
+                     checkFlag(dnaseTreatment, na.ok = TRUE))
+              assert(checkNull(thermalCyclingConditions),
+                     checkClass(thermalCyclingConditions, "idType"))
               private$.enzyme <- enzyme
               private$.primingMethod <- primingMethod
               private$.dnaseTreatment <- dnaseTreatment
@@ -707,27 +723,29 @@ cdnaSynthesisMethodType <-
             enzyme = function(enzyme) {
               if (missing(enzyme))
                 return(private$.enzyme)
-              assert_that(is.opt.string(enzyme))
+              assert(checkNull(enzyme),
+                     checkString(enzyme, na.ok = TRUE))
               private$.enzyme <- enzyme
             },
             primingMethod = function(primingMethod) {
               if (missing(primingMethod))
                 return(private$.primingMethod)
-              assert_that(is.opt.type(primingMethod,
-                                      primingMethodType))
+              assert(checkNull(primingMethod),
+                     checkClass(primingMethod, "primingMethodType"))
               private$.primingMethod <- primingMethod
             },
             dnaseTreatment = function(dnaseTreatment) {
               if (missing(dnaseTreatment))
                 return(private$.dnaseTreatment)
-              assert_that(is.opt.flag(dnaseTreatment))
+              assert(checkNull(dnaseTreatment),
+                     checkFlag(dnaseTreatment, na.ok = TRUE))
               private$.dnaseTreatment <- dnaseTreatment
             },
             thermalCyclingConditions = function(thermalCyclingConditions) {
               if (missing(thermalCyclingConditions))
                 return(private$.thermalCyclingConditions)
-              assert_that(is.opt.type(thermalCyclingConditions,
-                                      idType))
+              assert(checkNull(thermalCyclingConditions),
+                     checkClass(thermalCyclingConditions, "idType"))
               private$.thermalCyclingConditions <- thermalCyclingConditions
             }
           ))
@@ -756,9 +774,8 @@ templateQuantityType <-
           public = list(
             initialize = function(conc,
                                   nucleotide) {
-              assert_that(is.float(conc))
-              assert_that(is.type(nucleotide,
-                                  nucleotideType))
+              assertNumber(conc, na.ok = TRUE)
+              assertClass(nucleotide, "nucleotideType")
               private$.conc <- conc
               private$.nucleotide <- nucleotide
             }
@@ -771,14 +788,13 @@ templateQuantityType <-
             conc = function(conc) {
               if (missing(conc))
                 return(private$.conc)
-              assert_that(is.float(conc))
+              assertNumber(conc, na.ok = TRUE)
               private$.conc <- conc
             },
             nucleotide = function(nucleotide) {
               if (missing(nucleotide))
                 return(private$.nucleotide)
-              assert_that(is.type(nucleotide,
-                                  nucleotideType))
+              assertClass(nucleotide, "nucleotideType")
               private$.nucleotide <- nucleotide
             }
           ))
@@ -803,7 +819,7 @@ enumType <-
           inherit = rdmlBaseType,
           public = list(
             initialize = function(value, ...) {
-              assert_that(is.enum(value, private$.levels))
+              assert(checkNull(value), checkChoice(value, c(private$.levels)))
               private$.value <- value
             },
             print = function(...) {
@@ -827,7 +843,7 @@ enumType <-
             value = function(value) {
               if (missing(value))
                 return(private$.value)
-              assert_that(is.enum(value, private$.levels))
+              assertChoice(value, c(private$.levels))
               private$.value <- value
             }
           ))
@@ -1037,24 +1053,26 @@ sampleType <-
                                   calibratorSample = FALSE,
                                   cdnaSynthesisMethod = NULL,
                                   templateQuantity = NULL) {
-              assert_that(is.type(id, idType))
-              assert_that(is.opt.string(description))
-              assert_that(is.opt.list.type(documentation,
-                                           idReferencesType))
-              assert_that(is.opt.list.type(xRef,
-                                           xRefType))
-              assert_that(is.opt.list.type(annotation,
-                                           annotationType))
-              assert_that(is.type(type,
-                                  sampleTypeType))
-              assert_that(is.opt.flag(interRunCalibrator))
-              assert_that(is.opt.type(quantity,
-                                      quantityType))
-              assert_that(is.opt.flag(calibratorSample))
-              assert_that(is.opt.type(cdnaSynthesisMethod,
-                                      cdnaSynthesisMethodType))
-              assert_that(is.opt.type(templateQuantity,
-                                      templateQuantityType))
+              assertClass(id, "idType")
+              assert(checkNull(description),
+                     checkString(description, na.ok = TRUE))
+              assert(checkNull(documentation),
+                     checkList(documentation, "idReferencesType"))
+              assert(checkNull(xRef),
+                     checkList(xRef, "xRefType"))
+              assert(checkNull(annotation),
+                     checkList(annotation, "annotationType"))
+              assertClass(type, "sampleTypeType")
+              assert(checkNull(interRunCalibrator),
+                     checkFlag(interRunCalibrator, na.ok = TRUE))
+              assert(checkNull(quantity),
+                     checkClass(quantity, "quantityType"))
+              assert(checkNull(calibratorSample),
+                     checkFlag(calibratorSample, na.ok = TRUE))
+              assert(checkNull(cdnaSynthesisMethod),
+                     checkClass(cdnaSynthesisMethod, "cdnaSynthesisMethodType"))
+              assert(checkNull(templateQuantity),
+                     checkClass(templateQuantity, "templateQuantityType"))
               
               private$.id <- id
               private$.description <- description
@@ -1087,75 +1105,77 @@ sampleType <-
             id = function(id) {
               if (missing(id))
                 return(private$.id)
-              assert_that(is.type(id, idType))
+              assertClass(id, "idType")
               private$.id <- id
             },
             description = function(description) {
               if (missing(description))
                 return(private$.description)
-              assert_that(is.opt.string(description))
+              assert(checkNull(description),
+                     checkString(description, na.ok = TRUE))
               private$.description <- description
             },
             documentation = function(documentation) {
               if (missing(documentation))
                 return(private$.documentation)
-              assert_that(is.opt.list.type(documentation,
-                                           idReferencesType))
+              assert(checkNull(documentation),
+                     checkList(documentation, "idReferencesType"))
               private$.documentation <- documentation
             },
             xRef = function(xRef) {
               if (missing(xRef))
                 return(private$.xRef)
-              assert_that(is.opt.list.type(xRef,
-                                           xRefType))
+              assert(checkNull(xRef),
+                     checkList(xRef, "xRefType"))
               private$.xRef <- xRef
             },
             annotation = function(annotation) {
               if (missing(annotation))
                 return(private$.annotation)
-              assert_that(is.opt.list.type(annotation,
-                                           annotationType))
+              assert(checkNull(annotation),
+                     checkList(annotation, "annotationType"))
               private$.annotation <- with.names(annotation,
                                                 quote(.$property))
             },
             type = function(type) {
               if (missing(type))
                 return(private$.type)
-              assert_that(is.type(type,
-                                  sampleTypeType))
+              assertClass(type, "sampleTypeType")
               private$.type <- type
             },
             interRunCalibrator = function(interRunCalibrator) {
               if (missing(interRunCalibrator))
                 return(private$.interRunCalibrator)
-              assert_that(is.opt.flag(interRunCalibrator))
+              assert(checkNull(interRunCalibrator),
+                     checkFlag(interRunCalibrator, na.ok = TRUE))
               private$.interRunCalibrator <- interRunCalibrator
             },
             quantity = function(quantity) {
               if (missing(quantity))
                 return(private$.quantity)
-              assert_that(is.opt.type(quantity,
-                                      quantityType))
+              assert(checkNull(quantity),
+                     checkClass(quantity, "quantityType"))
               private$.quantity <- quantity
             },
             calibratorSample = function(calibratorSample) {
               if (missing(calibratorSample))
                 return(private$.calibratorSample)
-              assert_that(is.opt.flag(calibratorSample))
+              assert(checkNull(calibratorSample),
+                     checkFlag(calibratorSample, na.ok = TRUE))
               private$.calibratorSample <- calibratorSample
             },
             cdnaSynthesisMethod = function(cdnaSynthesisMethod) {
               if (missing(cdnaSynthesisMethod))
                 return(private$.cdnaSynthesisMethod)
-              assert_that(is.opt.type(cdnaSynthesisMethod,
-                                      cdnaSynthesisMethodType))
+              assert(checkNull(cdnaSynthesisMethod),
+                     checkClass(cdnaSynthesisMethod, "cdnaSynthesisMethodType"))
               private$.cdnaSynthesisMethod <- cdnaSynthesisMethod
             },
             templateQuantity = function(templateQuantity) {
               if (missing(templateQuantity))
                 return(private$.templateQuantity)
-              assert_that(is.opt.type(templateQuantity,
-                                      templateQuantityType))
+              assert(checkNull(templateQuantity),
+                     checkClass(templateQuantity, "templateQuantityType"))
               private$.templateQuantity <- templateQuantity
             }
           ))
@@ -1188,9 +1208,11 @@ oligoType <-
             initialize = function(threePrimeTag = NULL,
                                   fivePrimeTag = NULL,
                                   sequence) {
-              assert_that(is.opt.string(threePrimeTag))
-              assert_that(is.opt.string(fivePrimeTag))
-              assert_that(is.string(sequence))
+              assert(checkNull(threePrimeTag),
+                     checkString(threePrimeTag, na.ok = TRUE))
+              assert(checkNull(fivePrimeTag),
+                     checkString(fivePrimeTag, na.ok = TRUE))
+              assertString(sequence)
               private$.threePrimeTag <- threePrimeTag
               private$.fivePrimeTag <- fivePrimeTag
               private$.sequence <- sequence
@@ -1205,19 +1227,21 @@ oligoType <-
             threePrimeTag = function(threePrimeTag) {
               if (missing(threePrimeTag))
                 return(private$.threePrimeTag)
-              assert_that(is.opt.string(threePrimeTag))
+              assert(checkNull(threePrimeTag),
+                     checkString(threePrimeTag, na.ok = TRUE))
               private$.threePrimeTag <- threePrimeTag
             },
             fivePrimeTag = function(fivePrimeTag) {
               if (missing(fivePrimeTag))
                 return(private$.fivePrimeTag)
-              assert_that(is.opt.string(fivePrimeTag))
+              assert(checkNull(fivePrimeTag),
+                     checkString(fivePrimeTag, na.ok = TRUE))
               private$.fivePrimeTag <- fivePrimeTag
             },
             sequence = function(sequence) {
               if (missing(sequence))
                 return(private$.sequence)
-              assert_that(is.string(sequence))
+              assertString(sequence)
               private$.sequence <- sequence
             }
           ))
@@ -1252,16 +1276,16 @@ sequencesType <-
                                   probe1 = NULL,
                                   probe2 = NULL,
                                   amplicon = NULL) {
-              assert_that(is.opt.type(forwardPrimer,
-                                      oligoType))
-              assert_that(is.opt.type(reversePrimer,
-                                      oligoType))
-              assert_that(is.opt.type(probe1,
-                                      oligoType))
-              assert_that(is.opt.type(probe2,
-                                      oligoType))
-              assert_that(is.opt.type(amplicon,
-                                      oligoType))
+              assert(checkNull(forwardPrimer),
+                     checkClass(forwardPrimer, "oligoType"))
+              assert(checkNull(reversePrimer),
+                     checkClass(reversePrimer, "oligoType"))
+              assert(checkNull(probe1),
+                     checkClass(probe1, "oligoType"))
+              assert(checkNull(probe2),
+                     checkClass(probe2, "oligoType"))
+              assert(checkNull(amplicon),
+                     checkClass(amplicon, "oligoType"))
               private$.forwardPrimer <- forwardPrimer
               private$.reversePrimer <- reversePrimer
               private$.probe1 <- probe1
@@ -1280,36 +1304,36 @@ sequencesType <-
             forwardPrimer = function(forwardPrimer) {
               if (missing(forwardPrimer))
                 return(private$.forwardPrimer)
-              assert_that(is.opt.type(forwardPrimer,
-                                      oligoType))
+              assert(checkNull(forwardPrimer),
+                     checkClass(forwardPrimer, "oligoType"))
               private$.forwardPrimer <- forwardPrimer
             },
             reversePrimer = function(reversePrimer) {
               if (missing(reversePrimer))
                 return(private$.reversePrimer)
-              assert_that(is.opt.type(reversePrimer,
-                                      oligoType))
+              assert(checkNull(reversePrimer),
+                     checkClass(reversePrimer, "oligoType"))
               private$.reversePrimer <- reversePrimer
             },
             probe1 = function(probe1) {
               if (missing(probe1))
                 return(private$.probe1)
-              assert_that(is.opt.type(probe1,
-                                      oligoType))
+              assert(checkNull(probe1),
+                     checkClass(probe1, "oligoType"))
               private$.probe1 <- probe1
             },
             probe2 = function(probe2) {
               if (missing(probe2))
                 return(private$.probe2)
-              assert_that(is.opt.type(probe2,
-                                      oligoType))
+              assert(checkNull(probe2),
+                     checkClass(probe2, "oligoType"))
               private$.probe2 <- probe2
             },
             amplicon = function(amplicon) {
               if (missing(amplicon))
                 return(private$.amplicon)
-              assert_that(is.opt.type(amplicon,
-                                      oligoType))
+              assert(checkNull(amplicon),
+                     checkClass(amplicon, "oligoType"))
               private$.amplicon <- amplicon
             }
           ))
@@ -1338,8 +1362,8 @@ commercialAssayType <-
           public = list(
             initialize = function(company,
                                   orderNumber) {
-              assert_that(is.string(company))
-              assert_that(is.string(orderNumber))
+              assertString(company)
+              assertString(orderNumber)
               private$.company <- company
               private$.orderNumber <- orderNumber
             }
@@ -1352,13 +1376,13 @@ commercialAssayType <-
             company = function(company) {
               if (missing(company))
                 return(private$.company)
-              assert_that(is.string(company))
+              assertString(company)
               private$.company <- company
             },
             orderNumber = function(orderNumber) {
               if (missing(orderNumber))
                 return(private$.orderNumber)
-              assert_that(is.string(orderNumber))
+              assertString(orderNumber)
               private$.orderNumber <- orderNumber
             }
           ))
@@ -1440,24 +1464,27 @@ targetType <-
                                   dyeId,
                                   sequences = NULL,
                                   commercialAssay = NULL) {
-              assert_that(is.type(id, idType))
-              assert_that(is.opt.string(description))
-              assert_that(is.opt.list.type(documentation,
-                                           idReferencesType))
-              assert_that(is.opt.list.type(xRef,
-                                           xRefType))
-              assert_that(is.type(type,
-                                  targetTypeType))
-              assert_that(is.opt.string(amplificationEfficiencyMethod))
-              assert_that(is.opt.double(amplificationEfficiency))
-              assert_that(is.opt.double(amplificationEfficiencySE))
-              assert_that(is.opt.double(detectionLimit))
-              assert_that(is.type(dyeId,
-                                  idReferencesType))
-              assert_that(is.opt.type(sequences,
-                                      sequencesType))
-              assert_that(is.opt.type(commercialAssay,
-                                      commercialAssayType))
+              assertClass(id, "idType")
+              assert(checkNull(description),
+                     checkString(description, na.ok = TRUE))
+              assert(checkNull(documentation),
+                     checkList(documentation, "idReferencesType"))
+              assert(checkNull(xRef),
+                     checkList(xRef, "xRefType"))
+              assertClass(type, "targetTypeType")
+              assert(checkNull(amplificationEfficiencyMethod),
+                     checkString(amplificationEfficiencyMethod, na.ok = TRUE))
+              assert(checkNull(amplificationEfficiency),
+                     checkNumber(amplificationEfficiency))
+              assert(checkNull(amplificationEfficiencySE),
+                     checkNumber(amplificationEfficiencySE, na.ok = TRUE))
+              assert(checkNull(detectionLimit),
+                     checkNumber(detectionLimit))
+              assertClass(dyeId, "idReferencesType")
+              assert(checkNull(sequences),
+                     checkClass(sequences, "sequencesType"))
+              assert(checkNull(commercialAssay),
+                     checkClass(commercialAssay, "commercialAssayType"))
               
               private$.id <- id
               private$.description <- description
@@ -1491,80 +1518,83 @@ targetType <-
             id = function(id) {
               if (missing(id))
                 return(private$.id)
-              assert_that(is.type(id, idType))
+              assertClass(id, "idType")
               private$.id <- id
             },
             description = function(description) {
               if (missing(description))
                 return(private$.description)
-              assert_that(is.opt.string(description))
+              assert(checkNull(description),
+                     checkString(description, na.ok = TRUE))
               private$.description <- description
             },
             documentation = function(documentation) {
               if (missing(documentation))
                 return(private$.documentation)
-              assert_that(is.opt.list.type(documentation,
-                                           idReferencesType))
+              assert(checkNull(documentation),
+                     checkList(documentation, "idReferencesType"))
               private$.documentation <- documentation
             },
             xRef = function(xRef) {
               if (missing(xRef))
                 return(private$.xRef)
-              assert_that(is.opt.list.type(xRef,
-                                           xRefType))
+              assert(checkNull(xRef),
+                     checkList(xRef, "xRefType"))
               private$.xRef <- xRef
             },
             type = function(type) {
               if (missing(type))
                 return(private$.type)
-              assert_that(is.type(type,
-                                  targetTypeType))
+              assertClass(type, "targetTypeType")
               private$.type <- type
             },
             amplificationEfficiencyMethod = 
               function(amplificationEfficiencyMethod) {
                 if (missing(amplificationEfficiencyMethod))
                   return(private$.amplificationEfficiencyMethod)
-                assert_that(is.opt.string(amplificationEfficiencyMethod))
+                assert(checkNull(amplificationEfficiencyMethod),
+                       checkString(amplificationEfficiencyMethod, na.ok = TRUE))
                 private$.amplificationEfficiencyMethod <- amplificationEfficiencyMethod
               },
             amplificationEfficiency = function(amplificationEfficiency) {
               if (missing(amplificationEfficiency))
                 return(private$.amplificationEfficiency)
-              assert_that(is.opt.double(amplificationEfficiency))
+              assert(checkNull(amplificationEfficiency),
+                     checkNumber(amplificationEfficiency))
               private$.amplificationEfficiency <- amplificationEfficiency
             },
             amplificationEfficiencySE = function(amplificationEfficiencySE) {
               if (missing(amplificationEfficiencySE))
                 return(private$.amplificationEfficiencySE)
-              assert_that(is.opt.double(amplificationEfficiencySE))
+              assert(checkNull(amplificationEfficiencySE),
+                     checkNumber(amplificationEfficiencySE, na.ok = TRUE))
               private$.amplificationEfficiencySE <- amplificationEfficiencySE
             },
             detectionLimit = function(detectionLimit) {
               if (missing(detectionLimit))
                 return(private$.detectionLimit)
-              assert_that(is.opt.double(detectionLimit))
+              assert(checkNull(detectionLimit),
+                     checkNumber(detectionLimit))
               private$.detectionLimit <- detectionLimit
             },
             dyeId = function(dyeId) {
               if (missing(dyeId))
                 return(private$.dyeId)
-              assert_that(is.type(dyeId,
-                                  idReferencesType))
+              assertClass(dyeId, "idReferencesType")
               private$.dyeId <- dyeId
             },
             sequences = function(sequences) {
               if (missing(sequences))
                 return(private$.sequences)
-              assert_that(is.opt.type(sequences,
-                                      sequencesType))
+              assert(checkNull(sequences),
+                     checkClass(sequences, "sequencesType"))
               private$.sequences <- sequences
             },
             commercialAssay = function(commercialAssay) {
               if (missing(commercialAssay))
                 return(private$.commercialAssay)
-              assert_that(is.opt.type(commercialAssay,
-                                      commercialAssayType))
+              assert(checkNull(commercialAssay),
+                     checkClass(commercialAssay, "commercialAssayType"))
               private$.commercialAssay <- commercialAssay
             }
           ))
@@ -1578,9 +1608,10 @@ targetType <-
 #             initialize = function(cyc,
 #                                   tmp = NULL,
 #                                   fluor) {
-#               assert_that(is.float(cyc))
-#               assert_that(is.opt.double(tmp))
-#               assert_that(is.float(fluor))
+#               assertNumber(cyc)
+#               assert(checkNull(tmp),
+# checkNumber(tmp))
+#               assertNumber(fluor)
 #               private$.cyc <- cyc
 #               private$.tmp <- tmp
 #               private$.fluor <- fluor
@@ -1603,19 +1634,20 @@ targetType <-
 #             cyc = function(cyc) {
 #               if (missing(cyc))
 #                 return(private$.cyc)
-#               assert_that(is.float(cyc))
+#               assertNumber(cyc)
 #               private$.cyc <- cyc
 #             },
 #             tmp = function(tmp) {
 #               if (missing(tmp))
 #                 return(private$.tmp)
-#               assert_that(is.opt.double(tmp))
+#               assert(checkNull(tmp),
+# checkNumber(tmp))
 #               private$.tmp <- tmp
 #             },
 #             fluor = function(fluor) {
 #               if (missing(fluor))
 #                 return(private$.fluor)
-#               assert_that(is.float(fluor))
+#               assertNumber(fluor)
 #               private$.fluor <- fluor
 #             }
 #           ))
@@ -1629,8 +1661,8 @@ targetType <-
 #           public = list(
 #             initialize = function(tmp,
 #                                   fluor) {
-#               assert_that(is.float(tmp))
-#               assert_that(is.float(fluor))
+#               assertNumber(tmp)
+#               assertNumber(fluor)
 #               private$.tmp <- tmp
 #               private$.fluor <- fluor
 #             },
@@ -1648,13 +1680,13 @@ targetType <-
 #             tmp = function(tmp) {
 #               if (missing(tmp))
 #                 return(private$.tmp)
-#               assert_that(is.float(tmp))
+#               assertNumber(tmp)
 #               private$.tmp <- tmp
 #             },
 #             fluor = function(fluor) {
 #               if (missing(fluor))
 #                 return(private$.fluor)
-#               assert_that(is.float(fluor))
+#               assertNumber(fluor)
 #               private$.fluor <- fluor
 #             }
 #           ))
@@ -1713,11 +1745,9 @@ adpsType <-
           inherit = rdmlBaseType,
           public = list(
             initialize = function(fpoints) {
-              assert_that(is.double.matrix(fpoints))
-              assert_that(has.col.names(fpoints,
-                                        c("cyc", "tmp", "fluor")) ||
-                            has.col.names(fpoints,
-                                          c("cyc", "fluor")))
+              assert((colnames(fpoints) == c("cyc", "tmp", "fluor") ||
+                        colnames(fpoints) == c("cyc", "fluor")))
+              assertMatrix(fpoints, mode = "numeric")
               private$.fpoints <- fpoints
             },
             .asXMLnodes = function(node.name) {
@@ -1755,11 +1785,9 @@ adpsType <-
             fpoints = function(fpoints) {
               if (missing(fpoints))
                 return(private$.fpoints)
-              assert_that(is.double.matrix(fpoints))
-              assert_that(has.col.names(fpoints,
-                                        c("cyc", "tmp", "fluor")) ||
-                            has.col.names(fpoints,
-                                          c("cyc", "fluor")))
+              assert((colnames(fpoints) == c("cyc", "fluor") ||
+                        colnames(fpoints) == c("cyc", "tmp", "fluor")))
+              assertMatrix(fpoints, mode = "numeric")
               private$.fpoints <- fpoints
             }
           ))
@@ -1794,9 +1822,8 @@ mdpsType <-
           inherit = rdmlBaseType,
           public = list(
             initialize = function(fpoints) {
-              assert_that(is.double.matrix(fpoints))
-              assert_that(has.col.names(fpoints,
-                                        c("tmp", "fluor")))
+              assert(colnames(fpoints) == c("tmp", "fluor"))
+              assertMatrix(fpoints, mode = "numeric")
               private$.fpoints <- fpoints
             },
             .asXMLnodes = function(node.name) {
@@ -1823,9 +1850,8 @@ mdpsType <-
             fpoints = function(fpoints) {
               if (missing(fpoints))
                 return(private$.fpoints)
-              assert_that(is.double.matrix(fpoints))
-              assert_that(has.col.names(fpoints,
-                                        c("tmp", "fluor")))
+              assert(colnames(fpoints) == c("tmp", "fluor"))
+              assertMatrix(fpoints, mode = "numeric")
               private$.fpoints <- fpoints
             }
           ))
@@ -1889,22 +1915,23 @@ dataType <-
                                   bgFluor = NULL,
                                   bgFluorSlp = NULL,
                                   quantFluor = NULL) {
-              assert_that(is.type(tar,
-                                  idReferencesType))
-              assert_that(is.opt.double(cq))
-              assert_that(is.opt.string(excl))
-              #               assert_that(is.opt.list.type(adp,
-              #                                            dpAmpCurveType))
-              #               assert_that(is.opt.list.type(mdp,
-              #                                            dpMeltingCurveType))
-              assert_that(is.opt.type(adp,
-                                      adpsType))
-              assert_that(is.opt.type(mdp,
-                                      mdpsType))
-              assert_that(is.opt.double(endPt))
-              assert_that(is.opt.double(bgFluor))
-              assert_that(is.opt.double(bgFluorSlp))
-              assert_that(is.opt.double(quantFluor))
+              assertClass(tar, "idReferencesType")
+              assert(checkNull(cq),
+                     checkNumber(cq))
+              assert(checkNull(excl),
+                     checkString(excl, na.ok = TRUE))
+              assert(checkNull(adp),
+                     checkClass(adp, "adpsType"))
+              assert(checkNull(mdp),
+                     checkClass(mdp, "mdpsType"))
+              assert(checkNull(endPt),
+                     checkNumber(endPt))
+              assert(checkNull(bgFluor),
+                     checkNumber(bgFluor))
+              assert(checkNull(bgFluorSlp),
+                     checkNumber(bgFluorSlp))
+              assert(checkNull(quantFluor),
+                     checkNumber(quantFluor))
               
               private$.tar <- tar
               private$.cq <- cq
@@ -1940,58 +1967,63 @@ dataType <-
             tar = function(tar) {
               if (missing(tar))
                 return(private$.tar)
-              assert_that(is.type(tar,
-                                  idReferencesType))
+              assertClass(tar, "idReferencesType")
               private$.tar <- tar
             },
             cq = function(cq) {
               if (missing(cq))
                 return(private$.cq)
-              assert_that(is.opt.double(cq))
+              assert(checkNull(cq),
+                     checkNumber(cq))
               private$.cq <- cq
             },
             excl = function(excl) {
               if (missing(excl))
                 return(private$.excl)
-              assert_that(is.opt.string(excl))
+              assert(checkNull(excl),
+                     checkString(excl, na.ok = TRUE))
               private$.excl <- excl
             },
             adp = function(adp) {
               if (missing(adp))
                 return(private$.adp)
-              assert_that(is.opt.type(adp,
-                                      adpsType))
+              assert(checkNull(adp),
+                     checkClass(adp, "adpsType"))
               private$.adp <- adp
             },
             mdp = function(mdp) {
               if (missing(mdp))
                 return(private$.mdp)
-              assert_that(is.opt.type(mdp,
-                                      mdpsType))
+              assert(checkNull(mdp),
+                     checkClass(mdp, "mdpsType"))
               private$.mdp <- mdp
             },
             endPt = function(endPt) {
               if (missing(endPt))
                 return(private$.endPt)
-              assert_that(is.opt.double(endPt))
+              assert(checkNull(endPt),
+                     checkNumber(endPt))
               private$.endPt <- endPt
             },
             bgFluor = function(bgFluor) {
               if (missing(bgFluor))
                 return(private$.bgFluor)
-              assert_that(is.opt.double(bgFluor))
+              assert(checkNull(bgFluor),
+                     checkNumber(bgFluor))
               private$.bgFluor <- bgFluor
             },
             bgFluorSlp = function(bgFluorSlp) {
               if (missing(bgFluorSlp))
                 return(private$.bgFluorSlp)
-              assert_that(is.opt.double(bgFluorSlp))
+              assert(checkNull(bgFluorSlp),
+                     checkNumber(bgFluorSlp))
               private$.bgFluorSlp <- bgFluorSlp
             },
             quantFluor = function(quantFluor) {
               if (missing(quantFluor))
                 return(private$.quantFluor)
-              assert_that(is.opt.double(quantFluor))
+              assert(checkNull(quantFluor),
+                     checkNumber(quantFluor))
               private$.quantFluor <- quantFluor
             }
           ))
@@ -2051,12 +2083,10 @@ reactType <-
             initialize = function(id,
                                   sample,
                                   data = NULL) {
-              assert_that(is.type(id,
-                                  reactIdType))
-              assert_that(is.type(sample,
-                                  idReferencesType))
-              assert_that(is.opt.list.type(data,
-                                           dataType))
+              assertClass(id, "reactIdType")
+              assertClass(sample, "idReferencesType")
+              assert(checkNull(data),
+                     checkList(data, "dataType"))
               private$.id <- id
               private$.sample <- sample
               private$.data <- with.names(data,
@@ -2064,7 +2094,7 @@ reactType <-
             },
             AsDataFrame = function(dp.type = "adp",
                                    long.table = FALSE) {
-              assert_that(is.string(dp.type))
+              assertString(dp.type)
               out <-
                 private$.data %>% 
                 ldply(function(data)
@@ -2077,8 +2107,7 @@ reactType <-
               out
             },
             Position = function(pcrFormat) {
-              assert_that(is.type(pcrFormat,
-                                  pcrFormatType))
+              assertClass(pcrFormat, "pcrFormatType")
               stopifnot(pcrFormat$rowLabel$value == "ABC",
                         pcrFormat$columnLabel$value == "123")
               sprintf("%s%02i",
@@ -2095,22 +2124,20 @@ reactType <-
             id = function(id) {
               if (missing(id))
                 return(private$.id)
-              assert_that(is.type(id,
-                                  reactIdType))
+              assertClass(id, "reactIdType")
               private$.id <- id
             },
             sample = function(sample) {
               if (missing(sample))
                 return(private$.sample)
-              assert_that(is.type(sample,
-                                  idReferencesType))
+              assertClass(sample, "idReferencesType")
               private$.sample <- sample
             },
             data = function(data) {
               if (missing(data))
                 return(private$.data)
-              assert_that(is.opt.list.type(data,
-                                           dataType))
+              assert(checkNull(data),
+                     checkList(data, "dataType"))
               private$.data <- with.names(data,
                                           quote(.$tar$id))
             }
@@ -2143,8 +2170,8 @@ dataCollectionSoftwareType <-
           public = list(
             initialize = function(name,
                                   version) {
-              assert_that(is.string(name))
-              assert_that(is.string(version))
+              assertString(name)
+              assertString(version)
               private$.name <- name
               private$.version <- version
             }
@@ -2157,13 +2184,13 @@ dataCollectionSoftwareType <-
             name = function(name) {
               if (missing(name))
                 return(private$.name)
-              assert_that(is.string(name))
+              assertString(name)
               private$.name <- name
             },
             version = function(version) {
               if (missing(version))
                 return(private$.version)
-              assert_that(is.string(version))
+              assertString(version)
               private$.version <- version
             }
           ))
@@ -2281,12 +2308,10 @@ pcrFormatType <-
                                   columns,
                                   rowLabel,
                                   columnLabel) {
-              assert_that(is.count(rows))
-              assert_that(is.count(columns))
-              assert_that(is.type(rowLabel,
-                                  labelFormatType))
-              assert_that(is.type(columnLabel,
-                                  labelFormatType))
+              assertCount(rows)
+              assertCount(columns)
+              assertClass(rowLabel, "labelFormatType")
+              assertClass(columnLabel, "labelFormatType")
               private$.rows <- rows
               private$.columns <- columns
               private$.rowLabel <- rowLabel
@@ -2303,27 +2328,25 @@ pcrFormatType <-
             rows = function(rows) {
               if (missing(rows))
                 return(private$.rows)
-              assert_that(is.count(rows))
+              assertCount(rows)
               private$.rows <- rows
             },
             columns = function(columns) {
               if (missing(columns))
                 return(private$.columns)
-              assert_that(is.count(columns))
+              assertCount(columns)
               private$.columns <- columns
             },
             rowLabel = function(rowLabel) {
               if (missing(rowLabel))
                 return(private$.rowLabel)
-              assert_that(is.type(rowLabel,
-                                  labelFormatType))
+              assertClass(rowLabel, "labelFormatType")
               private$.rowLabel <- rowLabel
             },
             columnLabel = function(columnLabel) {
               if (missing(columnLabel))
                 return(private$.columnLabel)
-              assert_that(is.type(columnLabel,
-                                  labelFormatType))
+              assertClass(columnLabel, "labelFormatType")
               private$.columnLabel <- columnLabel
             }
           ))
@@ -2385,26 +2408,28 @@ runType <-
                                   pcrFormat,
                                   runDate = NULL,
                                   react = NULL) {
-              assert_that(is.type(id,
-                                  idType))
-              assert_that(is.opt.string(description))
-              assert_that(is.opt.list.type(documentation,
-                                           idReferencesType))
-              assert_that(is.opt.list.type(experimenter,
-                                           idReferencesType))
-              assert_that(is.opt.string(instrument))
-              assert_that(is.opt.type(dataCollectionSoftware,
-                                      dataCollectionSoftwareType))
-              assert_that(is.opt.string(backgroundDeterminationMethod))
-              assert_that(is.opt.type(cqDetectionMethod,
-                                      cqDetectionMethodType))
-              assert_that(is.opt.type(thermalCyclingConditions,
-                                      idReferencesType))
-              assert_that(is.type(pcrFormat,
-                                  pcrFormatType))
-              assert_that(is.opt.string(runDate)) # date time
-              assert_that(is.opt.list.type(react,
-                                           reactType))
+              assertClass(id, "idType")
+              assert(checkNull(description),
+                     checkString(description, na.ok = TRUE))
+              assert(checkNull(documentation),
+                     checkList(documentation, "idReferencesType"))
+              assert(checkNull(experimenter),
+                     checkList(experimenter, "idReferencesType"))
+              assert(checkNull(instrument),
+                     checkString(instrument, na.ok = TRUE))
+              assert(checkNull(dataCollectionSoftware),
+                     checkClass(dataCollectionSoftware, "dataCollectionSoftwareType"))
+              assert(checkNull(backgroundDeterminationMethod),
+                     checkString(backgroundDeterminationMethod, na.ok = TRUE))
+              assert(checkNull(cqDetectionMethod),
+                     checkClass(cqDetectionMethod, "cqDetectionMethodType"))
+              assert(checkNull(thermalCyclingConditions),
+                     checkClass(thermalCyclingConditions, "idReferencesType"))
+              assertClass(pcrFormat, "pcrFormatType")
+              assert(checkNull(runDate),
+                     checkString(runDate, na.ok = TRUE)) # date time
+              assert(checkNull(react),
+                     checkList(react, "reactType"))
               
               private$.id <- id
               private$.description <- description
@@ -2422,7 +2447,7 @@ runType <-
             },
             AsDataFrame = function(dp.type = "adp",
                                    long.table = FALSE) {
-              assert_that(is.string(dp.type))
+              assertString(dp.type)
               out <- 
                 private$.react %>% 
                 ldply(function(react)
@@ -2467,81 +2492,83 @@ runType <-
             id = function(id) {
               if (missing(id))
                 return(private$.id)
-              assert_that(is.type(id,
-                                  idType))
+              assertClass(id, "idType")
               private$.id <- id
             },
             description = function(description) {
               if (missing(description))
                 return(private$.description)
-              assert_that(is.opt.string(description))
+              assert(checkNull(description),
+                     checkString(description, na.ok = TRUE))
               private$.description <- description
             },
             documentation = function(documentation) {
               if (missing(documentation))
                 return(private$.documentation)
-              assert_that(is.opt.list.type(documentation,
-                                           idReferencesType))
+              assert(checkNull(documentation),
+                     checkList(documentation, "idReferencesType"))
               private$.documentation <- documentation
             },
             experimenter = function(experimenter) {
               if (missing(experimenter))
                 return(private$.experimenter)
-              assert_that(is.opt.list.type(experimenter,
-                                           idReferencesType))
+              assert(checkNull(experimenter),
+                     checkList(experimenter, "idReferencesType"))
               private$.experimenter <- experimenter
             },
             instrument = function(instrument) {
               if (missing(instrument))
                 return(private$.instrument)
-              assert_that(is.opt.string(instrument))
+              assert(checkNull(instrument),
+                     checkString(instrument, na.ok = TRUE))
               private$.instrument <- instrument
             },
             dataCollectionSoftware = function(dataCollectionSoftware) {
               if (missing(dataCollectionSoftware))
                 return(private$.dataCollectionSoftware)
-              assert_that(is.opt.type(dataCollectionSoftware,
-                                      dataCollectionSoftwareType))
+              assert(checkNull(dataCollectionSoftware),
+                     checkClass(dataCollectionSoftware, "dataCollectionSoftwareType"))
               private$.dataCollectionSoftware <- dataCollectionSoftware
             },
             backgroundDeterminationMethod = function(backgroundDeterminationMethod) {
               if (missing(backgroundDeterminationMethod))
                 return(private$.backgroundDeterminationMethod)
-              assert_that(is.opt.string(backgroundDeterminationMethod))
+              assert(checkNull(backgroundDeterminationMethod),
+                     checkString(backgroundDeterminationMethod, na.ok = TRUE))
               private$.backgroundDeterminationMethod <- backgroundDeterminationMethod
             },
             cqDetectionMethod = function(cqDetectionMethod) {
               if (missing(cqDetectionMethod))
                 return(private$.cqDetectionMethod)
-              assert_that(is.opt.type(cqDetectionMethod,
-                                      cqDetectionMethodType))
+              assert(checkNull(cqDetectionMethod),
+                     checkClass(cqDetectionMethod, "cqDetectionMethodType"))
               private$.cqDetectionMethod <- cqDetectionMethod
             },
             thermalCyclingConditions = function(thermalCyclingConditions) {
               if (missing(thermalCyclingConditions))
                 return(private$.thermalCyclingConditions)
-              assert_that(is.opt.type(thermalCyclingConditions,
-                                      idReferencesType))
+              assert(checkNull(thermalCyclingConditions),
+                     checkClass(thermalCyclingConditions, "idReferencesType"))
               private$.thermalCyclingConditions <- thermalCyclingConditions
             },
             pcrFormat = function(pcrFormat) {
               if (missing(pcrFormat))
                 return(private$.pcrFormat)
-              assert_that(is.type(pcrFormat,
-                                  pcrFormatType))
+              assertClass(pcrFormat, "pcrFormatType")
               private$.pcrFormat <- pcrFormat
             },
             runDate = function(runDate) {
               if (missing(runDate))
                 return(private$.runDate)
-              assert_that(is.opt.string(runDate)) # date time
+              assert(checkNull(runDate),
+                     checkString(runDate, na.ok = TRUE)) # date time
               private$.runDate <- runDate
             },
             react = function(react) {
               if (missing(react))
                 return(private$.react)
-              assert_that(is.opt.list.type(react,
-                                           reactType))
+              assert(checkNull(react),
+                     checkList(react, "reactType"))
               private$.react <- with.names(react,
                                            quote(.$id$id))
             }
@@ -2582,13 +2609,13 @@ experimentType <-
                                   description = NULL,
                                   documentation = NULL,
                                   run = NULL) {
-              assert_that(is.type(id,
-                                  idType))
-              assert_that(is.opt.string(description))
-              assert_that(is.opt.list.type(documentation,
-                                           idReferencesType))
-              assert_that(is.opt.list.type(run,
-                                           runType))
+              assertClass(id, "idType")
+              assert(checkNull(description),
+                     checkString(description, na.ok = TRUE))
+              assert(checkNull(documentation),
+                     checkList(documentation, "idReferencesType"))
+              assert(checkNull(run),
+                     checkList(run, "runType"))
               
               private$.id <- id
               private$.description <- description
@@ -2598,8 +2625,8 @@ experimentType <-
             },
             AsDataFrame = function(dp.type = "adp",
                                    long.table = FALSE) {
-              assert_that(is.string(dp.type))
-              assert_that(is.flag(long.table))
+              assertString(dp.type)
+              assertFlag(long.table)
               out <-
                 private$.run %>% 
                 ldply(function(run)
@@ -2627,27 +2654,28 @@ experimentType <-
             id = function(id) {
               if (missing(id))
                 return(private$.id)
-              assert_that(is.type(id, idType))
+              assertClass(id, "idType")
               private$.id <- id
             },
             description = function(description) {
               if (missing(description))
                 return(private$.description)
-              assert_that(is.opt.string(description))
+              assert(checkNull(description),
+                     checkString(description, na.ok = TRUE))
               private$.description <- description
             },
             documentation = function(documentation) {
               if (missing(documentation))
                 return(private$.documentation)
-              assert_that(is.opt.list.type(documentation,
-                                           idReferencesType))
+              assert(checkNull(documentation),
+                     checkList(documentation, "idReferencesType"))
               private$.documentation <- documentation
             },
             run = function(run) {
               if (missing(run))
                 return(private$.run)
-              assert_that(is.opt.list.type(run,
-                                           runType))
+              assert(checkNull(run),
+                     checkList(run, "runType"))
               private$.run <- with.names(run,
                                          quote(.$id$id))
             }
@@ -2701,7 +2729,7 @@ pauseType <-
           inherit = rdmlBaseType,
           public = list(
             initialize = function(temperature) {
-              assert_that(is.float(temperature))
+              assertNumber(temperature)
               private$.temperature <- temperature
             }
           ),
@@ -2712,7 +2740,7 @@ pauseType <-
             temperature = function(temperature) {
               if (missing(temperature))
                 return(private$.temperature)
-              assert_that(is.float(temperature))
+              assertNumber(temperature)
               private$.temperature <- temperature
             }
           ))
@@ -2745,8 +2773,8 @@ loopType <-
           public = list(
             initialize = function(goto,
                                   repeat.n) {
-              assert_that(is.count(goto))
-              assert_that(is.count(repeat.n))
+              assertCount(goto)
+              assertCount(repeat.n)
               private$.goto <- goto
               private$.repeat <- repeat.n
             }
@@ -2759,13 +2787,13 @@ loopType <-
             goto = function(goto) {
               if (missing(goto))
                 return(private$.goto)
-              assert_that(is.float(goto))
+              assertNumber(goto)
               private$.goto <- goto
             },
             repeat.n = function(repeat.n) {
               if (missing(repeat.n))
                 return(private$.repeat)
-              assert_that(is.float(repeat.n))
+              assertNumber(repeat.n)
               private$.repeat <- repeat.n
             }
           ))
@@ -2838,12 +2866,15 @@ baseTemperatureType <-
                                   durationChange = NULL,
                                   measure = NULL,
                                   ramp = NULL) {
-              assert_that(is.count(duration))
-              assert_that(is.opt.double(temperatureChange))
-              assert_that(is.opt.count(durationChange))
-              assert_that(is.opt.type(measure,
-                                      measureType))
-              assert_that(is.opt.double(ramp))
+              assertCount(duration)
+              assert(checkNull(temperatureChange),
+                     checkNumber(temperatureChange))
+              assert(checkNull(durationChange),
+                     checkCount(durationChange))
+              assert(checkNull(measure),
+                     checkClass(measure, "measureType"))
+              assert(checkNull(ramp),
+                     checkNumber(ramp))
               
               private$.duration <- duration
               private$.temperatureChange <- temperatureChange
@@ -2863,32 +2894,35 @@ baseTemperatureType <-
             duration = function(duration) {
               if (missing(duration))
                 return(private$.duration)
-              assert_that(is.count(duration))
+              assertCount(duration)
               private$.duration <- duration
             },
             temperatureChange = function(temperatureChange) {
               if (missing(temperatureChange))
                 return(private$.temperatureChange)
-              assert_that(is.opt.double(temperatureChange))
+              assert(checkNull(temperatureChange),
+                     checkNumber(temperatureChange))
               private$.temperatureChange <- temperatureChange
             },
             durationChange = function(durationChange) {
               if (missing(durationChange))
                 return(private$.durationChange)
-              assert_that(is.opt.count(durationChange))
+              assert(checkNull(durationChange),
+                     checkCount(durationChange))
               private$.durationChange <- durationChange
             },
             measure = function(measure) {
               if (missing(measure))
                 return(private$.measure)
-              assert_that(is.opt.type(measure,
-                                      measureType))
+              assert(checkNull(measure),
+                     checkClass(measure, "measureType"))
               private$.measure <- measure
             },
             ramp = function(ramp) {
               if (missing(ramp))
                 return(private$.ramp)
-              assert_that(is.opt.double(ramp))
+              assert(checkNull(ramp),
+                     checkNumber(ramp))
               private$.ramp <- ramp
             }
           ))
@@ -2916,7 +2950,7 @@ temperatureType <-
           inherit = baseTemperatureType,
           public = list(
             initialize = function(temperature, ...) {
-              assert_that(is.float(temperature))
+              assertNumber(temperature)
               private$.temperature <- temperature
               super$initialize(...)
             }
@@ -2928,7 +2962,7 @@ temperatureType <-
             temperature = function(temperature) {
               if (missing(temperature))
                 return(private$.temperature)
-              assert_that(is.float(temperature))
+              assertNumber(temperature)
               private$.temperature <- temperature
             }
           ))
@@ -2961,8 +2995,8 @@ gradientType <-
             initialize = function(highTemperature,
                                   lowTemperature,
                                   ...) {
-              assert_that(is.float(highTemperature))
-              assert_that(is.float(lowTemperature))
+              assertNumber(highTemperature)
+              assertNumber(lowTemperature)
               private$.highTemperature <- highTemperature
               private$.lowTemperature <- lowTemperature
               super$initialize(...)
@@ -2976,13 +3010,13 @@ gradientType <-
             highTemperature = function(highTemperature) {
               if (missing(highTemperature))
                 return(private$.highTemperature)
-              assert_that(is.float(highTemperature))
+              assertNumber(highTemperature)
               private$.highTemperature <- highTemperature
             },
             lowTemperature = function(lowTemperature) {
               if (missing(lowTemperature))
                 return(private$.lowTemperature)
-              assert_that(is.float(lowTemperature))
+              assertNumber(lowTemperature)
               private$.lowTemperature <- lowTemperature
             }
           ))
@@ -3023,18 +3057,19 @@ stepType <-
                                   loop = NULL,
                                   pause = NULL,
                                   lidOpen = NULL) {
-              assert_that(is.count(nr))
-              assert_that(is.opt.string(description))
-              assert_that(is.opt.type(temperature,
-                                      temperatureType))
-              assert_that(is.opt.type(gradient,
-                                      gradientType))
-              assert_that(is.opt.type(loop,
-                                      loopType))
-              assert_that(is.opt.type(pause,
-                                      pauseType))
-              assert_that(is.opt.type(lidOpen,
-                                      lidOpenType))
+              assertCount(nr)
+              assert(checkNull(description),
+                     checkString(description, na.ok = TRUE))
+              assert(checkNull(temperature),
+                     checkClass(temperature, "temperatureType"))
+              assert(checkNull(gradient),
+                     checkClass(gradient, "gradientType"))
+              assert(checkNull(loop),
+                     checkClass(loop, "loopType"))
+              assert(checkNull(pause),
+                     checkClass(pause, "pauseType"))
+              assert(checkNull(lidOpen),
+                     checkClass(lidOpen, "lidOpenType"))
               
               private$.nr <- nr
               private$.description <- description
@@ -3058,48 +3093,49 @@ stepType <-
             nr = function(nr) {
               if (missing(nr))
                 return(private$.nr)
-              assert_that(is.count(nr))
+              assertCount(nr)
               private$.nr <- nr
             },
             description = function(description) {
               if (missing(description))
                 return(private$.description)
-              assert_that(is.opt.string(description))
+              assert(checkNull(description),
+                     checkString(description, na.ok = TRUE))
               private$.description <- description
             },
             temperature = function(temperature) {
               if (missing(temperature))
                 return(private$.temperature)
-              assert_that(is.opt.type(temperature,
-                                      temperatureType))
+              assert(checkNull(temperature),
+                     checkClass(temperature, "temperatureType"))
               private$.temperature <- temperature
             },
             gradient = function(gradient) {
               if (missing(gradient))
                 return(private$.gradient)
-              assert_that(is.opt.type(gradient,
-                                      gradientType))
+              assert(checkNull(gradient),
+                     checkClass(gradient, "gradientType"))
               private$.gradient <- gradient
             },
             loop = function(loop) {
               if (missing(loop))
                 return(private$.loop)
-              assert_that(is.opt.type(loop,
-                                      loopType))
+              assert(checkNull(loop),
+                     checkClass(loop, "loopType"))
               private$.loop <- loop
             },
             pause = function(pause) {
               if (missing(pause))
                 return(private$.pause)
-              assert_that(is.opt.type(pause,
-                                      pauseType))
+              assert(checkNull(pause),
+                     checkClass(pause, "pauseType"))
               private$.pause <- pause
             },
             lidOpen = function(lidOpen) {
               if (missing(lidOpen))
                 return(private$.lidOpen)
-              assert_that(is.opt.type(lidOpen,
-                                      lidOpenType))
+              assert(checkNull(lidOpen),
+                     checkClass(lidOpen, "lidOpenType"))
               private$.lidOpen <- lidOpen
             }
           ))
@@ -3139,16 +3175,17 @@ thermalCyclingConditionsType <-
                                   lidTemperature = NULL,
                                   experimenter = NULL,
                                   step) {
-              assert_that(is.type(id,
-                                  idType))
-              assert_that(is.opt.string(description))
-              assert_that(is.opt.list.type(documentation,
-                                           idReferencesType))
-              assert_that(is.opt.double(lidTemperature))
-              assert_that(is.opt.list.type(experimenter,
-                                           idReferencesType))
-              assert_that(is.opt.list.type(step,
-                                           stepType))
+              assertClass(id, "idType")
+              assert(checkNull(description),
+                     checkString(description, na.ok = TRUE))
+              assert(checkNull(documentation),
+                     checkList(documentation, "idReferencesType"))
+              assert(checkNull(lidTemperature),
+                     checkNumber(lidTemperature))
+              assert(checkNull(experimenter),
+                     checkList(experimenter, "idReferencesType"))
+              assert(checkNull(step),
+                     checkList(step, "stepType"))
               
               private$.id <- id
               private$.description <- description
@@ -3172,40 +3209,42 @@ thermalCyclingConditionsType <-
             id = function(id) {
               if (missing(id))
                 return(private$.id)
-              assert_that(is.type(id, idType))
+              assertClass(id, "idType")
               private$.id <- id
             },
             description = function(description) {
               if (missing(description))
                 return(private$.description)
-              assert_that(is.opt.string(description))
+              assert(checkNull(description),
+                     checkString(description, na.ok = TRUE))
               private$.description <- description
             },
             documentation = function(documentation) {
               if (missing(documentation))
                 return(private$.documentation)
-              assert_that(is.opt.list.type(documentation,
-                                           idReferencesType))
+              assert(checkNull(documentation),
+                     checkList(documentation, "idReferencesType"))
               private$.documentation <- documentation
             },
             lidTemperature = function(lidTemperature) {
               if (missing(lidTemperature))
                 return(private$.lidTemperature)
-              assert_that(is.opt.double(lidTemperature))
+              assert(checkNull(lidTemperature),
+                     checkNumber(lidTemperature))
               private$.lidTemperature <- lidTemperature
             },
             experimenter = function(experimenter) {
               if (missing(experimenter))
                 return(private$.experimenter)
-              assert_that(is.opt.list.type(experimenter,
-                                           idReferencesType))
+              assert(checkNull(experimenter),
+                     checkList(experimenter, "idReferencesType"))
               private$.experimenter <- experimenter
             },
             step = function(step) {
               if (missing(step))
                 return(private$.step)
-              assert_that(is.opt.list.type(step,
-                                           stepType))
+              assert(checkNull(step),
+                     checkList(step, "stepType"))
               private$.step <- with.names(step,
                                           quote(.$nr))
             }

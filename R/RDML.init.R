@@ -1,3 +1,31 @@
+xmlValue <- function(val) {
+  out <- XML::xmlValue(val)
+  if (is.na(out))
+    return(NULL)
+  out
+}
+
+as.logical <- function(val) {
+  out <- base::as.logical(val)
+  if (length(out) == 0)
+    return(NULL)
+  out
+}
+
+as.numeric <- function(val) {
+  out <- base::as.numeric(val)
+  if (length(out) == 0)
+    return(NULL)
+  out
+}
+
+as.integer <- function(val) {
+  out <- base::as.integer(val)
+  if (length(out) == 0)
+    return(NULL)
+  out
+}
+
 FromPositionToId <- function(react.id) {
   row <- which(LETTERS ==
                  gsub("([A-Z])[0-9]+", "\\1", react.id))
@@ -203,37 +231,38 @@ RDML$set("public", "initialize", function(filename,
                                           experiment = NULL,
                                           conditions.sep = NULL) {  
   if(missing(filename)) {
-    assert_that(is.opt.string(dateMade))
+    assert(checkNull(dateMade), checkString(dateMade))
     private$.dateMade <- dateMade
-    assert_that(is.opt.string(dateUpdated))
+    assert(checkNull(dateUpdated), checkString(dateUpdated))
     private$.dateUpdated <- dateUpdated
-    assert_that(is.opt.list.type(id,
-                                 rdmlIdType))
+    assert(checkNull(id), checkList(id, "rdmlIdType"))
     private$.id <- id
-    assert_that(is.opt.list.type(experimenter,
-                                 experimenterType))
+    assert(checkNull(experimenter), 
+           checkList(experimenter, 
+                     "experimenterType"))
     private$.experimenter <- experimenter
-    assert_that(is.opt.list.type(documentation,
-                                 documentationType))                    
+    assert(checkNull(documentation),
+           checkList(documentation, 
+                     "documentationType"))                    
     private$.documentation <- documentation
-    assert_that(is.opt.list.type(dye,
-                                 dyeType))
+    assert(checkNull(dye),
+           checkList(dye, "dyeType"))
     private$.dye <- dye
-    assert_that(is.opt.list.type(sample,
-                                 sampleType))
+    assert(checkNull(sample), 
+           checkList(sample, "sampleType"))
     private$.sample <- sample
-    assert_that(is.opt.list.type(target,
-                                 targetType))
+    assert(checkNull(target), 
+           checkList(target, "targetType"))
     private$.target <- target
-    assert_that(is.opt.list.type(thermalCyclingConditions,
-                                 thermalCyclingConditionsType))
+    assert(checkNull(thermalCyclingConditions), 
+           checkList(thermalCyclingConditions, "thermalCyclingConditionsType"))
     private$.thermalCyclingConditions <- thermalCyclingConditions
-    assert_that(is.opt.list.type(experiment,
-                                 experimentType))
+    assert(checkNull(experiment), 
+           checkList(experiment, "experimentType"))
     private$.experiment <- experiment
     return()
   }
-  assert_that(is.string(filename))
+  assertString(filename)
   # Unzips RDML to unique folder to get inner XML content.
   # Unique folder is needed to prevent file ovewriting
   # by parallel function usage.
@@ -370,13 +399,16 @@ RDML$set("public", "initialize", function(filename,
               type = sampleTypeType$new(type),
               interRunCalibrator = 
                 as.logical(xmlValue(sample[["interRunCalibrator"]])),
-              quantity = 
-                quantityType$new(
-                  value = as.numeric(
-                    xmlValue(sample[["quantity"]][["value"]])),
-                  unit = quantityUnitType$new(
-                    sample[["quantity"]][["unit"]] %>% 
-                      xmlValue)),
+              quantity = {
+                if (is.null(xmlValue(sample[["quantity"]][["value"]])))
+                  NULL
+                else
+                  quantityType$new(
+                    value = as.numeric(xmlValue(sample[["quantity"]][["value"]])),
+                    unit = quantityUnitType$new(
+                      sample[["quantity"]][["unit"]] %>% 
+                        xmlValue))
+              },
               calibratorSample = 
                 as.logical(xmlValue(sample[["calibaratorSample"]])),
               cdnaSynthesisMethod = 
@@ -392,12 +424,16 @@ RDML$set("public", "initialize", function(filename,
                                  "id")),
                       error = function(e) NULL)
                 ),
-              templateQuantity = 
-                templateQuantityType$new(
-                  conc = as.numeric(xmlValue(sample[["templateQuantity"]][["conc"]])),
-                  nucleotide = nucleotideType$new(
-                    xmlValue(sample[["templateQuantity"]][["nucleotide"]]))
-                )
+              templateQuantity = {
+                if (is.null(xmlValue(sample[["templateQuantity"]][["conc"]])))
+                  NULL
+                else
+                  templateQuantityType$new(
+                    conc = as.numeric(xmlValue(sample[["templateQuantity"]][["conc"]])),
+                    nucleotide = nucleotideType$new(
+                      xmlValue(sample[["templateQuantity"]][["nucleotide"]]))
+                  )
+              }
             )
             
           }) %>% 
@@ -451,39 +487,58 @@ RDML$set("public", "initialize", function(filename,
               # dyeId = NA,
               
               sequences = sequencesType$new(
-                forwardPrimer = 
+                forwardPrimer = {
+                  if (is.null(xmlValue(target[["sequences"]][["forwardPrimer"]][["sequence"]])))
+                    NULL
+                  else
                   oligoType$new(
                     threePrimeTag = 
                       xmlValue(target[["sequences"]][["forwardPrimer"]][["threePrimeTag"]]),
                     fivePrimeTag = 
                       xmlValue(target[["sequences"]][["forwardPrimer"]][["fivePrimeTag"]]),
                     sequence = 
-                      xmlValue(target[["sequences"]][["forwardPrimer"]][["sequence"]])),
-                reversePrimer = 
+                      xmlValue(target[["sequences"]][["forwardPrimer"]][["sequence"]]))
+                  },
+                reversePrimer = {
+                  if (is.null(xmlValue(target[["sequences"]][["reversePrimer"]][["sequence"]])))
+                    NULL
+                else
                   oligoType$new(
                     threePrimeTag = 
                       xmlValue(target[["sequences"]][["reversePrimer"]][["threePrimeTag"]]),
                     fivePrimeTag = 
                       xmlValue(target[["sequences"]][["reversePrimer"]][["fivePrimeTag"]]),
                     sequence = 
-                      xmlValue(target[["sequences"]][["reversePrimer"]][["sequence"]])),
-                probe1 = 
+                      xmlValue(target[["sequences"]][["reversePrimer"]][["sequence"]]))
+                },
+                probe1 = {
+                  if (is.null(xmlValue(target[["sequences"]][["probe1"]][["sequence"]])))
+                    NULL
+                else
                   oligoType$new(
                     threePrimeTag = 
                       xmlValue(target[["sequences"]][["probe1"]][["threePrimeTag"]]),
                     fivePrimeTag = 
                       xmlValue(target[["sequences"]][["probe1"]][["fivePrimeTag"]]),
                     sequence = 
-                      xmlValue(target[["sequences"]][["probe1"]][["sequence"]])),
-                probe2 = 
+                      xmlValue(target[["sequences"]][["probe1"]][["sequence"]]))
+},
+                probe2 = {
+                  if (is.null(xmlValue(target[["sequences"]][["probe2"]][["sequence"]])))
+                    NULL
+                else
                   oligoType$new(
                     threePrimeTag = 
                       xmlValue(target[["sequences"]][["probe2"]][["threePrimeTag"]]),
                     fivePrimeTag = 
                       xmlValue(target[["sequences"]][["probe2"]][["fivePrimeTag"]]),
                     sequence = 
-                      xmlValue(target[["sequences"]][["probe2"]][["sequence"]])),
-                amplicon = 
+                      xmlValue(target[["sequences"]][["probe2"]][["sequence"]]))
+},
+                amplicon = {
+                  if (is.null(xmlValue(target[["sequences"]][["amplicon"]][["sequence"]])))
+                    NULL
+                else
                   oligoType$new(
                     threePrimeTag = 
                       xmlValue(target[["sequences"]][["amplicon"]][["threePrimeTag"]]),
@@ -491,13 +546,18 @@ RDML$set("public", "initialize", function(filename,
                       xmlValue(target[["sequences"]][["amplicon"]][["fivePrimeTag"]]),
                     sequence = 
                       xmlValue(target[["sequences"]][["amplicon"]][["sequence"]]))
+                }
               ),
-              commercialAssay = 
+              commercialAssay = {
+                if (is.null(xmlValue(target[["sequences"]][["amplicon"]][["sequence"]])))
+                  NULL 
+                else
                 commercialAssayType$new(
                   company = 
                     xmlValue(target[["commercialAssay"]][["company"]]),
                   orderNumber = 
                     xmlValue(target[["commercialAssay"]][["orderNumber"]]))
+              }
             )
           }
     ) %>% 
@@ -615,7 +675,7 @@ RDML$set("public", "initialize", function(filename,
     dataType$new(
       tar = idReferencesType$new(
         ifelse(length(unzipped.rdml) > 1 &&
-               length(private$.id) != 0 &&
+                 length(private$.id) != 0 &&
                  private$.id[[1]]$publisher == "Roche Diagnostics",
                gsub("@(.+)$", "\\1", 
                     regmatches(tar.id,gregexpr("@(.+)$",tar.id))[[1]])
