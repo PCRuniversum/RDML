@@ -1745,8 +1745,9 @@ adpsType <-
           inherit = rdmlBaseType,
           public = list(
             initialize = function(fpoints) {
-              assert((colnames(fpoints) == c("cyc", "tmp", "fluor") ||
-                        colnames(fpoints) == c("cyc", "fluor")))
+              assert(
+                length(setdiff(colnames(fpoints), c("cyc", "tmp", "fluor"))) == 0||
+                  length(setdiff(colnames(fpoints), c("cyc", "fluor"))) == 0)
               assertMatrix(fpoints, mode = "numeric")
               private$.fpoints <- fpoints
             },
@@ -1785,8 +1786,9 @@ adpsType <-
             fpoints = function(fpoints) {
               if (missing(fpoints))
                 return(private$.fpoints)
-              assert((colnames(fpoints) == c("cyc", "fluor") ||
-                        colnames(fpoints) == c("cyc", "tmp", "fluor")))
+              assert(
+                length(setdiff(colnames(fpoints), c("cyc", "tmp", "fluor"))) == 0||
+                  length(setdiff(colnames(fpoints), c("cyc", "fluor"))) == 0)
               assertMatrix(fpoints, mode = "numeric")
               private$.fpoints <- fpoints
             }
@@ -1822,7 +1824,7 @@ mdpsType <-
           inherit = rdmlBaseType,
           public = list(
             initialize = function(fpoints) {
-              assert(colnames(fpoints) == c("tmp", "fluor"))
+              assert(length(setdiff(colnames(fpoints), c("tmp", "fluor"))) == 0)
               assertMatrix(fpoints, mode = "numeric")
               private$.fpoints <- fpoints
             },
@@ -1850,7 +1852,7 @@ mdpsType <-
             fpoints = function(fpoints) {
               if (missing(fpoints))
                 return(private$.fpoints)
-              assert(colnames(fpoints) == c("tmp", "fluor"))
+              assert(length(setdiff(colnames(fpoints), c("tmp", "fluor"))) == 0)
               assertMatrix(fpoints, mode = "numeric")
               private$.fpoints <- fpoints
             }

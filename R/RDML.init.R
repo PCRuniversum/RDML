@@ -390,12 +390,16 @@ RDML$set("public", "initialize", function(filename,
                           property = xmlValue(annotation[["property"]]),
                           value = xmlValue(annotation[["value"]])
                         )),                  
-                if (!is.null(conditions.sep))
-                  annotationType$new(
-                    property = "condition",
-                    value = gsub(sprintf("^.*%s(.*)$",
-                                         conditions.sep),
-                                 "\\1", id))),
+                if (!is.null(conditions.sep)) {
+                  val <- gsub(sprintf("^.*%s(.*)$",
+                                      conditions.sep),
+                              "\\1", id)
+                  if (length(val) != 0) {
+                    annotationType$new(
+                      property = "condition",
+                      value = val)
+                  }
+                }),
               type = sampleTypeType$new(type),
               interRunCalibrator = 
                 as.logical(xmlValue(sample[["interRunCalibrator"]])),
