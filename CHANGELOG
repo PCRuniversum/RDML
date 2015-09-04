@@ -1,3 +1,7 @@
+Changes from Version 0.9-1 to 0.9-2 [September 09 2015]
+* GUI beta version
+* migration to checkmate instead of assertthat
+
 Changes from Version 0.8-4 to 0.9-1 [July 08 2015]
 * now all RDML types are R6 classes
 

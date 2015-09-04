@@ -154,9 +154,9 @@ rdmlBaseType <-
 #'   MD5Hash = NULL)}
 #'   
 #' @section Fields: \describe{  
-#'   \item{\code{publisher}}{\link[assertthat]{is.string}. RDML file publisher.}
-#'   \item{\code{serialNumber}}{\link[assertthat]{is.string}. Serial number.} 
-#'   \item{\code{MD5Hash}}{\link[assertthat]{is.string}. An MD5Hash calculated
+#'   \item{\code{publisher}}{\link[checkmate]{checkString}. RDML file publisher.}
+#'   \item{\code{serialNumber}}{\link[checkmate]{checkString}. Serial number.} 
+#'   \item{\code{MD5Hash}}{\link[checkmate]{checkString}. An MD5Hash calculated
 #'   over the complete file after removing all rdmlIDTypes and all whitespaces
 #'   between elements.}
 #'   }
@@ -217,7 +217,7 @@ rdmlIdType <-
 #' @section Initialization: \preformatted{idType$new(id)}
 #'
 #'   @section Fields: \describe{     
-#' \item{\code{id}}{\link[assertthat]{is.string}. Identificator.}
+#' \item{\code{id}}{\link[checkmate]{checkString}. Identificator.}
 #' }
 #'   
 #' @docType class
@@ -264,7 +264,7 @@ idType <-
 #' @section Initialization: \preformatted{reactIdType$new(id)}
 #'
 #'   @section Fields: \describe{     
-#' \item{\code{id}}{\link[assertthat]{is.count}. Identificator.}
+#' \item{\code{id}}{\link[checkmate]{checkCount}. Identificator.}
 #' }
 #' 
 #' @docType class
@@ -304,7 +304,7 @@ reactIdType <-
 #' @section Initialization: \preformatted{idReferencesType$new(id)}
 #' 
 #' @section Fields: \describe{  
-#' \item{\code{id}}{\link[assertthat]{is.string}. Identificator.}
+#' \item{\code{id}}{\link[checkmate]{checkString}. Identificator.}
 #' }
 #'         
 #' @docType class
@@ -326,11 +326,11 @@ idReferencesType <-
 #'  
 #'   @section Fields: \describe{   
 #' \item{\code{id}}{\link{idType}. Identificator.}
-#' \item{\code{firstName}}{\link[assertthat]{is.string}. First name.}
-#' \item{\code{lastName}}{\link[assertthat]{is.string}. Last name.}
-#' \item{\code{email}}{\link[assertthat]{is.string}. Email.}
-#' \item{\code{labName}}{\link[assertthat]{is.string}. Lab name.}
-#' \item{\code{labAddress}}{\link[assertthat]{is.string}. Lab address.}
+#' \item{\code{firstName}}{\link[checkmate]{checkString}. First name.}
+#' \item{\code{lastName}}{\link[checkmate]{checkString}. Last name.}
+#' \item{\code{email}}{\link[checkmate]{checkString}. Email.}
+#' \item{\code{labName}}{\link[checkmate]{checkString}. Lab name.}
+#' \item{\code{labAddress}}{\link[checkmate]{checkString}. Lab address.}
 #'   }
 #'   
 #' @docType class
@@ -425,7 +425,7 @@ experimenterType <-
 #'   
 #'   @section Fields: \describe{  
 #' \item{\code{id}}{\link{idType}. Identificator.}
-#' \item{\code{text}}{\link[assertthat]{is.string}. Text.}
+#' \item{\code{text}}{\link[checkmate]{checkString}. Text.}
 #'   }
 #'   
 #' @docType class
@@ -475,7 +475,7 @@ documentationType <-
 #'   
 #'   @section Fields: \describe{  
 #' \item{\code{id}}{\link{idType}. Identificator.}
-#' \item{\code{description}}{ \link[assertthat]{is.string}. Description.
+#' \item{\code{description}}{ \link[checkmate]{checkString}. Description.
 #'   }}
 #'   
 #' @docType class
@@ -524,9 +524,9 @@ dyeType <-
 #' @section Initialization: \preformatted{xRefType$new(name = NULL, id = NULL)}
 #'   
 #'   @section Fields: \describe{  
-#'   \item{\code{name}}{\link[assertthat]{is.string}. Reference to an external
+#'   \item{\code{name}}{\link[checkmate]{checkString}. Reference to an external
 #'   database, } for example "GenBank". 
-#'   \item{\code{id}}{\link[assertthat]{is.string}. The ID of the entry within
+#'   \item{\code{id}}{\link[checkmate]{checkString}. The ID of the entry within
 #'   the external database, for example "AJ832138".}
 #'   }
 #'   
@@ -577,8 +577,8 @@ xRefType <-
 #' sex could be a property with the possible values M or F. Inherits:
 #' \link{rdmlBaseType}.
 #' 
-#' @section Fields: \describe{ \item{property}{\link[assertthat]{is.string}.
-#'   Property name} \item{value}{\link[assertthat]{is.string}. Value} }
+#' @section Fields: \describe{ \item{property}{\link[checkmate]{checkString}.
+#'   Property name} \item{value}{\link[checkmate]{checkString}. Value} }
 #'   
 #' @docType class
 #' @format An \code{\link{R6Class}} generator object.
@@ -628,7 +628,7 @@ annotationType <-
 #' @section Initialization: \preformatted{quantityType$new(value, unit)}
 #' 
 #'   @section Fields: \describe{    
-#' \item{\code{value}}{\link[base]{is.double}. Value.}
+#' \item{\code{value}}{\link[checkmate]{checkNumber}. Value.}
 #' \item{\code{unit}}{\link{quantityUnitType}. Unit.}
 #'   }
 #'   
@@ -679,10 +679,10 @@ quantityType <-
 #'   NULL)}
 #'   
 #'   @section Fields: \describe{  
-#'   \item{\code{enzyme}}{\link[assertthat]{is.string}. Name of the enzyme used for 
+#'   \item{\code{enzyme}}{\link[checkmate]{checkString}. Name of the enzyme used for 
 #'   reverse transcription.} 
 #'   \item{\code{primingMethod}}{\link{primingMethodType}.} 
-#'   \item{\code{dnaseTreatment}}{\link[assertthat]{is.flag} if \code{TRUE}RNA was
+#'   \item{\code{dnaseTreatment}}{\link[checkmate]{checkFlag} if \code{TRUE}RNA was
 #'   DNAse treated prior cDNA synthesis.}
 #'   \item{\code{thermalCyclingConditions}}{\link{idReferencesType}.}
 #'   }
@@ -759,7 +759,7 @@ cdnaSynthesisMethodType <-
 #' @section Initialization: \preformatted{templateQuantityType$new(conc, nucleotide)}
 #'   
 #'   @section Fields: \describe{  
-#' \item{\code{conc}}{\link[base]{is.double}. Concentration of the template in nanogram}
+#' \item{\code{conc}}{\link[checkmate]{checkNumber}. Concentration of the template in nanogram}
 #'   per microliter in the final reaction mix.
 #' \item{\code{nucleotide}}{\link{nucleotideType}.}
 #'   }
@@ -808,7 +808,7 @@ templateQuantityType <-
 #' 
 #' @section Initialization: \preformatted{enumType$new(value)}
 #'   @section Fields: \describe{  
-#' \item{\code{value}}{\link[assertthat]{is.string}. Value.}
+#' \item{\code{value}}{\link[checkmate]{checkString}. Value.}
 #'   }
 #'   
 #' @docType class
@@ -868,7 +868,7 @@ enumType <-
 #' @section Initialization: \preformatted{sampleTypeType$new(value)}
 #'  
 #'   @section Fields: \describe{   
-#' \item{\code{value}}{\link[assertthat]{is.string}. Value.}
+#' \item{\code{value}}{\link[checkmate]{checkString}. Value.}
 #'   }
 #'   
 #' @docType class
@@ -904,7 +904,7 @@ sampleTypeType <-
 #' @section Initialization: \preformatted{quantityUnitType$new(value)}
 #'   
 #'   @section Fields: \describe{  
-#' \item{\code{value}}{\link[assertthat]{is.string}. Value.}
+#' \item{\code{value}}{\link[checkmate]{checkString}. Value.}
 #'   }
 #'   
 #' @docType class
@@ -937,7 +937,7 @@ quantityUnitType <-
 #' @section Initialization: \preformatted{primingMethodType$new(value)}
 #'   
 #'   @section Fields: \describe{  
-#' \item{\code{value}}{\link[assertthat]{is.string}. Value.}
+#' \item{\code{value}}{\link[checkmate]{checkString}. Value.}
 #'   }
 #'   
 #' @docType class
@@ -973,7 +973,7 @@ primingMethodType <-
 #' @section Initialization: \preformatted{nucleotideType$new(value)}
 #'   
 #'   @section Fields: \describe{  
-#' \item{\code{value}}{\link[assertthat]{is.string}. Value.}
+#' \item{\code{value}}{\link[checkmate]{checkString}. Value.}
 #'   }
 #'   
 #' @docType class
@@ -1013,12 +1013,12 @@ nucleotideType <-
 #'  @section Fields: \describe{  
 #'  \item{\code{id}}{\link{idType}. Concentration of the template in nanogram
 #'  per microliter in the final reaction mix. }
-#'  \item{\code{description}}{\link[assertthat]{is.string}.} 
+#'  \item{\code{description}}{\link[checkmate]{checkString}.} 
 #'  \item{\code{documentation}}{\code{list} of \link{idReferencesType}.} 
 #'  \item{\code{xRef}}{\code{list} of \link{xRefType}.} 
 #'  \item{\code{annotation}}{\code{list} of \link{annotationType}.} 
 #'  \item{\code{type}}{\link{sampleTypeType}.} 
-#'  \item{\code{interRunCalibrator}}{\link[assertthat]{is.flag}. \code{TRUE} 
+#'  \item{\code{interRunCalibrator}}{\link[checkmate]{checkFlag}. \code{TRUE} 
 #'  if this sample is used as inter run calibrator. }
 #'  \item{\code{quantity}}{\link{quantityType}. Quantity - The reference
 #'  quantity of this sample. It should be only used if the sample is part of a
@@ -1028,7 +1028,7 @@ nucleotideType <-
 #'  The use of exponents (1, 2, 3, 4 or -1, -2, -3, -4) if forbidden, 
 #'  because it will not be interpreted as 10E1, 10E2, 10E3, 10E4 or 10E-1, 10E-2, 
 #'  10E-3, 10E-4. }
-#'  \item{\code{calibratorSample}}{\link[assertthat]{is.flag}. \code{TRUE} if this
+#'  \item{\code{calibratorSample}}{\link[checkmate]{checkFlag}. \code{TRUE} if this
 #'  sample is used as calibrator sample. }
 #'  \item{\code{cdnaSynthesisMethod}}{\link{cdnaSynthesisMethodType}.} 
 #'  \item{\code{templateQuantity}}{\link{templateQuantityType}.}
@@ -1190,11 +1190,11 @@ sampleType <-
 #'   fivePrimeTag = NULL, sequence)}
 #'   
 #'   @section Fields: \describe{  
-#'   \item{\code{threePrimeTag}}{\link[assertthat]{is.string}. Description of
+#'   \item{\code{threePrimeTag}}{\link[checkmate]{checkString}. Description of
 #'   three prime modification (if present). }
-#'   \item{\code{fivePrimeTag}}{\link[assertthat]{is.string}. Description of
+#'   \item{\code{fivePrimeTag}}{\link[checkmate]{checkString}. Description of
 #'   five prime modification (if present).}
-#'   \item{\code{sequence}}{\link[assertthat]{is.string}.}
+#'   \item{\code{sequence}}{\link[checkmate]{checkString}.}
 #'   }
 #'   
 #' @docType class
@@ -1348,8 +1348,8 @@ sequencesType <-
 #' @section Initialization: \preformatted{commercialAssayType$new(company, orderNumber)}
 #'   
 #'   @section Fields: \describe{  
-#' \item{\code{company}}{\link[assertthat]{is.string}.}
-#' \item{\code{orderNumber}}{\link[assertthat]{is.string}.}
+#' \item{\code{company}}{\link[checkmate]{checkString}.}
+#' \item{\code{orderNumber}}{\link[checkmate]{checkString}.}
 #'   }
 #'   
 #' @docType class
@@ -1401,7 +1401,7 @@ commercialAssayType <-
 #' @section Initialization: \preformatted{targetTypeType$new(value)}
 #' 
 #'   @section Fields: \describe{  
-#' \item{\code{value}}{\link[assertthat]{is.string}.}
+#' \item{\code{value}}{\link[checkmate]{checkString}.}
 #' }
 #'  
 #' @docType class
@@ -1432,14 +1432,14 @@ targetTypeType <-
 #'   detectionLimit = NULL, dyeId, sequences = NULL, commercialAssay = NULL)}
 #'   
 #' @section Fields: \describe{ \item{\code{id}}{\link{idType}.} 
-#'   \item{\code{description}}{\link[assertthat]{is.string}.} 
+#'   \item{\code{description}}{\link[checkmate]{checkString}.} 
 #'   \item{\code{documentation}}{\code{list} of \link{idReferencesType}.} 
 #'   \item{\code{xRef}}{\code{list} of \link{xRefType}.} 
 #'   \item{\code{type}}{\link{targetTypeType}.} 
-#'   \item{\code{amplificationEfficiencyMethod}}{\link[assertthat]{is.string}.} 
-#'   \item{\code{amplificationEfficiency}}{\link[base]{double}.} 
-#'   \item{\code{amplificationEfficiencySE}}{\link[base]{double}.} 
-#'   \item{\code{detectionLimit}}{\link[base]{double}.} 
+#'   \item{\code{amplificationEfficiencyMethod}}{\link[checkmate]{checkString}.} 
+#'   \item{\code{amplificationEfficiency}}{\link[checkmate]{checkNumber}.} 
+#'   \item{\code{amplificationEfficiencySE}}{\link[checkmate]{checkNumber}.} 
+#'   \item{\code{detectionLimit}}{\link[checkmate]{checkNumber}.} 
 #'   \item{\code{dyeId}}{\link{idReferencesType}.} 
 #'   \item{\code{sequences}}{\link{sequencesType}.} 
 #'   \item{\code{commercialAssay}}{\link{commercialAssayType}.} }
@@ -1706,7 +1706,7 @@ targetType <-
 #' @section Initialization: \preformatted{adpsType$new(fpoints)}
 #' 
 #' @section Fields: \describe{    
-#'   \item{\code{fpoints}}{\link[base]{matrix}. Matrix with amplification data
+#'   \item{\code{fpoints}}{\link[checkmate]{assertMatrix}. Matrix with amplification data
 #'   points.}
 #'   }
 #'   
@@ -1810,7 +1810,7 @@ adpsType <-
 #' @section Initialization: \preformatted{mdpsType$new(fpoints)}
 #'   
 #'   @section Fields: \describe{  
-#' \item{\code{fpoints}}{\link[base]{matrix}. Matrix with amplification data points.}
+#' \item{\code{fpoints}}{\link[checkmate]{assertMatrix}. Matrix with amplification data points.}
 #'   }
 #'   
 #' @docType class
@@ -1869,10 +1869,10 @@ mdpsType <-
 #' @section Fields: \describe{ 
 #' \item{\code{tar}}{\link{idReferencesType}. 
 #'   TargetID - A reference to a target.} 
-#'   \item{\code{cq}}{\link[base]{double}. 
+#'   \item{\code{cq}}{\link[checkmate]{checkNumber}. 
 #'   Calculated fractional PCR cycle used for downstream quantification. 
 #'   Negative values express following condition: Not Available: -1.0 } 
-#'   \item{\code{excl}}{\link[assertthat]{is.string}. Excluded. If \code{excl}
+#'   \item{\code{excl}}{\link[checkmate]{checkString}. Excluded. If \code{excl}
 #'   is present, this entry should not be evaluated. Do not set this element 
 #'   to \code{FALSE} if the entry is valid. Instead, leave the entire \code{excl} 
 #'   element out instead. It may contain a string with a reason for the exclusion. 
@@ -1880,16 +1880,16 @@ mdpsType <-
 #'   seperated by semicolons ";".} 
 #'   \item{\code{adp}}{\link{adpsType}.} 
 #'   \item{\code{mdp}}{\link{mdpsType}.} 
-#'   \item{\code{endPt}}{\link[base]{double}}. Value of the endpoint measurement. 
-#'   \item{\code{bgFluor}}{\link[base]{double}. Background 
+#'   \item{\code{endPt}}{\link[checkmate]{checkNumber}}. Value of the endpoint measurement. 
+#'   \item{\code{bgFluor}}{\link[checkmate]{checkNumber}. Background 
 #'   fluorescence (the y-intercept of the baseline trend based on the estimated
 #'   background fluorescence). } 
-#'   \item{\code{bgFluorSlp}}{\link[base]{double}. 
+#'   \item{\code{bgFluorSlp}}{\link[checkmate]{checkNumber}. 
 #'   Background fluorescence slope - The slope of the baseline trend based on 
 #'   the estimated background fluorescence. The element should be absent to 
 #'   indicate a slope of 0.0; If this element is present without the \code{bgFluor} 
 #'   element it should be ignored. } 
-#'   \item{\code{quantFluor}}{\link[base]{double}. Quantification flourescence -
+#'   \item{\code{quantFluor}}{\link[checkmate]{checkNumber}. Quantification flourescence -
 #'   The fluorescence value corresponding to the treshold line.} }
 #'   
 #' @section Methods: \describe{
@@ -2153,8 +2153,8 @@ reactType <-
 #' @section Initialization: \preformatted{dataCollectionSoftwareType$new(name, version)}
 #'
 #'   @section Fields: \describe{   
-#' \item{\code{name}}{\link[assertthat]{is.string}.}
-#' \item{\code{version}}{\link[assertthat]{is.string}.}
+#' \item{\code{name}}{\link[checkmate]{checkString}.}
+#' \item{\code{version}}{\link[checkmate]{checkString}.}
 #'   }
 #'   
 #' @docType class
@@ -2212,7 +2212,7 @@ dataCollectionSoftwareType <-
 #' @section Initialization: \preformatted{cqDetectionMethodType$new(value)}
 #'   
 #'   @section Fields: \describe{
-#' \item{\code{value}}{\link[assertthat]{is.string}.}
+#' \item{\code{value}}{\link[checkmate]{checkString}.}
 #'   }
 #'   
 #' @docType class
@@ -2246,7 +2246,7 @@ cqDetectionMethodType <-
 #' @section Initialization: \preformatted{labelFormatType$new(value)}
 #'   
 #'   @section Fields: \describe{
-#' \item{\code{value}}{\link[assertthat]{is.string}.}
+#' \item{\code{value}}{\link[checkmate]{checkString}.}
 #'   }
 #'   
 #' @docType class
@@ -2290,8 +2290,8 @@ labelFormatType <-
 #' @section Initialization: \preformatted{pcrFormatType$new(rows, columns, rowLabel, columnLabel)}
 #'   
 #'   @section Fields: \describe{
-#' \item{\code{rows}}{\link[assertthat]{is.count}.}
-#' \item{\code{columns}}{\link[assertthat]{is.count}.}
+#' \item{\code{rows}}{\link[checkmate]{checkCount}.}
+#' \item{\code{columns}}{\link[checkmate]{checkCount}.}
 #' \item{\code{rowLabel}}{\link{labelFormatType}.}
 #' \item{\code{columnLabel}}{\link{labelFormatType}.}
 #'   }
@@ -2366,18 +2366,18 @@ pcrFormatType <-
 #'   
 #' @section Fields: \describe{ 
 #'  \item{\code{id}}{\link{idType}.} 
-#'  \item{\code{description}}{\link[assertthat]{is.string}.} 
+#'  \item{\code{description}}{\link[checkmate]{checkString}.} 
 #'  \item{\code{documentation}}{\code{list} of \link{idReferencesType}.} 
 #'  \item{\code{experimenter}}{\code{list} of \link{idReferencesType}.} 
-#'  \item{\code{instrument}}{\link[assertthat]{is.string}. Description of the 
+#'  \item{\code{instrument}}{\link[checkmate]{checkString}. Description of the 
 #'   instrument used to aquire the data.} 
 #'  \item{\code{dataCollectionSoftware}}{\link{dataCollectionSoftwareType}. 
 #'   Description of the software used to analyze/collect the data.} 
-#'  \item{\code{backgroundDeterminationMethod}}{\link[base]{double}. 
+#'  \item{\code{backgroundDeterminationMethod}}{\link[checkmate]{checkString}. 
 #'   Description of method used to determine the background. } 
-#'  \item{\code{cqDetectionMethod}}{\link[base]{double}. Description of method 
+#'  \item{\code{cqDetectionMethod}}{\link{cqDetectionMethodType}. Description of method 
 #'   used to calculate the quantification cycle. } 
-#'  \item{\code{thermalCyclingConditions}}{\link[base]{double}. The program 
+#'  \item{\code{thermalCyclingConditions}}{\link{idReferencesType}. The program 
 #'   used to aquire the data.} 
 #'  \item{\code{pcrFormat}}{\link{adpsType}.} 
 #'  \item{\code{runDate}}{\link{adpsType}. Time stamp of data acquisition.} 
@@ -2586,7 +2586,7 @@ runType <-
 #'
 #'   @section Fields: \describe{   
 #' \item{\code{id}}{\link{idType}.}
-#' \item{\code{description}}{\link[assertthat]{is.string}.}
+#' \item{\code{description}}{\link[checkmate]{checkString}.}
 #' \item{\code{documentation}}{\code{list} of \link{idReferencesType}.}
 #' \item{\code{run}}{\code{list} of \link{runType}.}
 #' }
@@ -2716,7 +2716,7 @@ lidOpenType <-
 #' 
 #' @section Initialization: \preformatted{pauseType$new(temperature)}
 #'   
-#' @section Fields: \describe{ \item{\code{temperature}}{\link[base]{numeric}.
+#' @section Fields: \describe{ \item{\code{temperature}}{\link[checkmate]{checkNumber}.
 #'   The temperature in degrees Celsius maintained during the pause.}
 #'   }
 #'   
@@ -2757,9 +2757,9 @@ pauseType <-
 #' 
 #' @section Initialization: \preformatted{loopType$new(goto, repeat.n)}
 #'   
-#' @section Fields: \describe{ \item{\code{goto}}{\link[base]{numeric}.  The
+#' @section Fields: \describe{ \item{\code{goto}}{\link[checkmate]{assertCount}.  The
 #'   step to go to to form the loop.}
-#' \item{\code{repeat.n}}{\link[base]{numeric}. Determines how many times the loop is 
+#' \item{\code{repeat.n}}{\link[checkmate]{assertCount}. Determines how many times the loop is 
 #'   repeated. The first run through the loop is counted as 0, the last loop is 
 #'   "repeat" - 1.}}
 #'   
@@ -2787,13 +2787,13 @@ loopType <-
             goto = function(goto) {
               if (missing(goto))
                 return(private$.goto)
-              assertNumber(goto)
+              assertCount(goto)
               private$.goto <- goto
             },
             repeat.n = function(repeat.n) {
               if (missing(repeat.n))
                 return(private$.repeat)
-              assertNumber(repeat.n)
+              assertCount(repeat.n)
               private$.repeat <- repeat.n
             }
           ))
@@ -2812,7 +2812,7 @@ loopType <-
 #' @section Initialization: \preformatted{measureType$new(value)}
 #' 
 #'   @section Fields: \describe{ 
-#' \item{\code{value}}{\link[assertthat]{is.string}.}
+#' \item{\code{value}}{\link[checkmate]{checkString}.}
 #' }
 #'   
 #' @docType class
@@ -2839,17 +2839,17 @@ measureType <-
 #'   NULL)}
 #'   
 #' @section Fields: \describe{ 
-#'   \item{\code{duration}}{\link[assertthat]{is.count}. Duration of this
+#'   \item{\code{duration}}{\link[checkmate]{checkCount}. Duration of this
 #'   step in seconds.}
-#'   \item{\code{temperatureChange}}{\link[base]{double}. Change 
+#'   \item{\code{temperatureChange}}{\link[checkmate]{checkNumber}. Change 
 #'   of the temperature between two consecutive cycles: actual temperature
 #'   = temperature + (temperatureChange * cycle counter)}
-#'   \item{\code{durationChange}}{\link[assertthat]{is.count}. Change of the
+#'   \item{\code{durationChange}}{\link[checkmate]{checkCount}. Change of the
 #'   duration between two consecutive cycles: actual duration = duration +
 #'   (durationChange * cycle counter)}
 #'   \item{\code{measure}}{\link{measureType}. Indicates to make a measurement 
 #'   and store it as meltcurve or real-time data.}
-#'   \item{\code{ramp}}{\link[base]{double}. Allowed temperature
+#'   \item{\code{ramp}}{\link[checkmate]{checkNumber}. Allowed temperature
 #'   change between two consecutive cycles in degrees Celsius per second. If unstated,
 #'   the maximal change rate is assumed.}
 #'   }
@@ -2936,7 +2936,7 @@ baseTemperatureType <-
 #' 
 #' @section Initialization: \preformatted{temperatureType$new(temperature, ...)}
 #'   
-#' @section Fields: \describe{ \item{\code{temperature}}{\link[base]{double}.
+#' @section Fields: \describe{ \item{\code{temperature}}{\link[checkmate]{checkNumber}.
 #'   The temperature of the step in  degrees Celsius.}
 #' \item{\code{...}}{ Params of parent class \link{baseTemperatureType}.}
 #' } 
@@ -2978,9 +2978,9 @@ temperatureType <-
 #'   lowTemperature, ...)}
 #'   
 #' @section Fields: \describe{ 
-#'   \item{\code{highTemperature}}{\link[base]{double}. The highest temperature of
+#'   \item{\code{highTemperature}}{\link[checkmate]{checkNumber}. The highest temperature of
 #'   the gradient in degrees Celsius.}
-#'   \item{\code{lowTemperature}}{\link[base]{double}. The lowest temperature of
+#'   \item{\code{lowTemperature}}{\link[checkmate]{checkNumber}. The lowest temperature of
 #'   the gradient in degrees Celsius.}
 #' \item{\code{...}}{ Params of parent class \link{baseTemperatureType}. }}
 #'   
@@ -3032,10 +3032,10 @@ gradientType <-
 #'   temperature = NULL, gradient = NULL, loop = NULL, pause = NULL, lidOpen = 
 #'   NULL)}
 #'   
-#' @section Fields: \describe{ \item{\code{nr}}{\link[assertthat]{is.count}. The
+#' @section Fields: \describe{ \item{\code{nr}}{\link[checkmate]{checkCount}. The
 #'   incremental number of the step. First step should have value 1. The increment 
 #'   between steps should be constant and equivalent to 1.}
-#'   \item{\code{description}}{\link[assertthat]{is.string}.} 
+#'   \item{\code{description}}{\link[checkmate]{checkString}.} 
 #'   \item{\code{temperature}}{\link{temperatureType}.} 
 #'   \item{\code{gradient}}{\link{gradientType}.} 
 #'   \item{\code{loop}}{\link{loopType}.} \item{\code{pause}}{\link{pauseType}.}
@@ -3151,9 +3151,9 @@ stepType <-
 #'   experimenter = NULL, step)}
 #'   
 #' @section Fields: \describe{ \item{\code{id}}{\link{idType}.} 
-#'   \item{\code{description}}{\link[assertthat]{is.string}.} 
+#'   \item{\code{description}}{\link[checkmate]{checkString}.} 
 #'   \item{\code{documentation}}{\code{list} of \link{idReferencesType}.} 
-#'   \item{\code{lidTemperature}}{\link[base]{double}. The temperature in
+#'   \item{\code{lidTemperature}}{\link[checkmate]{checkNumber}. The temperature in
 #'   degrees Celsius of the lid during cycling. }
 #'   \item{\code{experimenter}}{\code{list} of \link{idReferencesType}.
 #'   Reference to the person who made or uses this protocol. }
