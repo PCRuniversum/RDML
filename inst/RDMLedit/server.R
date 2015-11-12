@@ -76,7 +76,7 @@ shinyServer(function(input, output, session) {
                         "mergeRdmlsSlct",
                         choices = names(values$RDMLs)[names(values$RDMLs) != input$rdmlFileSlct],
                         selected = NULL)
-      # clone selected too temp RDML 
+      # clone selected to temp RDML 
       values$rdml <- values$RDMLs[[input$rdmlFileSlct]]$clone(deep = TRUE)
       # update fields
       updateTextInput(session,
@@ -98,7 +98,6 @@ shinyServer(function(input, output, session) {
   observe({
     if (is.null(input$fromTables) || length(input$fromTables$name) != 2)
       return(NULL)
-    
     isolate({
       withProgress({
         tables <- lapply(input$fromTables$datapath,
@@ -198,6 +197,7 @@ shinyServer(function(input, output, session) {
   observe({
     if (is.null(values$rdml$id))
       return(NULL)
+    cat("Init ID\n")
     isolate({
       updateSelectizeInput(session,
                            "idSlct",
@@ -275,6 +275,7 @@ shinyServer(function(input, output, session) {
   observe({
     if (is.null(values$rdml$experimenter))
       return(NULL)
+    cat("Init Experimenter\n")
     isolate({
       updateSelectizeInput(session,
                            "experimenterSlct",
@@ -376,6 +377,7 @@ shinyServer(function(input, output, session) {
   observe({
     if (is.null(values$rdml$documentation))
       return(NULL)
+    cat("Init Documentation\n")
     isolate({
       updateSelectizeInput(session,
                            "documentationSlct",
@@ -467,6 +469,7 @@ shinyServer(function(input, output, session) {
   observe({
     if (is.null(values$rdml$dye))
       return(NULL)
+    cat("Init Dye\n")
     isolate({
       updateSelectizeInput(session,
                            "dyeSlct",
@@ -552,6 +555,7 @@ shinyServer(function(input, output, session) {
   observe({
     if (is.null(values$rdml$sample))
       return(NULL)
+    cat("Init Sample\n")
     isolate({
       updateSelectizeInput(session,
                            "sampleSlct",
@@ -564,6 +568,7 @@ shinyServer(function(input, output, session) {
     if (input$sampleSlct == "") {
       return(NULL)
     }
+    cat("on sampleSlct change\n")
     isolate({
       if (length(values$rdml$sample[[input$sampleSlct]]$annotation) == 0) {
         updateSelectizeInput(
@@ -622,7 +627,6 @@ shinyServer(function(input, output, session) {
         updateCheckboxInput(session,
                             "sampleCalibratorSampleChk",
                             value = sample$calibratorSample)
-        
         updateTextInput(session,
                         "sampleCsmEnzymeText",
                         value = testNull(sample$cdnaSynthesisMethod$enzyme))
@@ -669,7 +673,10 @@ shinyServer(function(input, output, session) {
         
         sampleTypeType$new(input$sampleTypeSlct),
         testEmptyInput(input$sampleInterRunCalibratorChk),
-        
+        if (input$sampleQuantityValueText == "") {
+          NULL
+        }
+        else {
         tryCatch({
           quantityType$new(as.numeric(input$sampleQuantityValueText),
                            quantityUnitType$new(input$sampleQuantityUnitText))
@@ -677,14 +684,26 @@ shinyServer(function(input, output, session) {
         error = function(e) {
           print(paste("sample quantity:", e$message))
           NULL}
-        ),
+        )},
         
         testEmptyInput(input$sampleCalibrationSampleChk),
         # NULL,
         tryCatch({
+          if (is.null(testEmptyInput(input$sampleCsmEnzymeText)) &&
+            input$sampleCsmPrimingMethodSlct == "" &&
+            input$sampleCsmDnaseTreatmentChk == FALSE &&
+            input$sampleCsmTccSlct == ""
+          ) {
+            NULL
+          } else {
           cdnaSynthesisMethodType$new(
             testEmptyInput(input$sampleCsmEnzymeText),
-            primingMethodType$new(input$sampleCsmPrimingMethodSlct),
+            {
+            if (input$sampleCsmPrimingMethodSlct == "")
+              NULL
+            else
+              primingMethodType$new(input$sampleCsmPrimingMethodSlct)
+            },
             testEmptyInput(input$sampleCsmDnaseTreatmentChk),
             {
               if (input$sampleCsmTccSlct == "")
@@ -693,19 +712,23 @@ shinyServer(function(input, output, session) {
                 idReferencesType$new(
                   testEmptyInput(input$sampleCsmTccSlct))
             })
+          }
         },
         error = function(e) {
-          print(paste("sample cdna :", e$message))
+          cat(paste("sample cdna :", e$message))
           NULL}
         ),
         
         tryCatch({
-          templateQuantityType$new(
-            testEmptyInput(as.numeric(input$sampleTemplateQuantityConcText)),
-            nucleotideType$new(testEmptyInput(input$sampleTemplateQuantityNucleotideSlct)))
+          if (input$sampleTemplateQuantityConcText == "")
+            NULL
+          else
+            templateQuantityType$new(
+              testEmptyInput(as.numeric(input$sampleTemplateQuantityConcText)),
+              nucleotideType$new(testEmptyInput(input$sampleTemplateQuantityNucleotideSlct)))
         },
         error = function(e) {
-          print(paste("sample tempalte quantity:", e$message))
+          cat(paste("sample template quantity:\n", e$message, "\n"))
           NULL}
         )
       )
@@ -887,6 +910,7 @@ shinyServer(function(input, output, session) {
   observe({
     if (is.null(values$rdml$target))
       return(NULL)
+    cat("Init Target\n")
     isolate({
       updateSelectizeInput(session,
                            "targetSlct",
@@ -1338,10 +1362,12 @@ shinyServer(function(input, output, session) {
   updTccRefs <- function() {
     updateSelectInput(session,
                       "sampleCsmTccSlct",
-                      choices = names(values$rdml$thermalCyclingConditions))
+                      choices = c("",
+                                  names(values$rdml$thermalCyclingConditions)))
     updateSelectInput(session,
                       "runTccSlct",
-                      choices = names(values$rdml$thermalCyclingConditions))
+                      choices = c("",
+                                  names(values$rdml$thermalCyclingConditions)))
   }
   
   # write to tcc
@@ -1513,6 +1539,7 @@ shinyServer(function(input, output, session) {
   observe({
     if (is.null(values$rdml$experiment))
       return(NULL)
+    cat("Init Experiment\n")
     isolate({
       updateSelectizeInput(session,
                            "experimentSlct",
@@ -1560,6 +1587,8 @@ shinyServer(function(input, output, session) {
                         "experimentIdText",
                         value = input$experimentSlct)
       }
+      
+      cat("update fields end\n")
     })
   })
   
@@ -1568,6 +1597,7 @@ shinyServer(function(input, output, session) {
     if (input$runSlct == "") {
       return(NULL)
     }
+    cat("On runSlct change\n")
     isolate({
       if (length(values$rdml$
                  experiment[[input$experimentSlct]]$
@@ -1753,6 +1783,7 @@ shinyServer(function(input, output, session) {
     if (is.null(testEmptyInput(input$experimentIdText))) {
       return(NULL)
     }
+    cat("Write to experiment")
     tryCatch({
       isolate({
         run <- values$rdml$
@@ -2026,6 +2057,7 @@ shinyServer(function(input, output, session) {
     if (is.null(values$rdml) || !(input$mainNavbar %in% c("adp",
                                                           "mdp")))
       return(NULL)
+    cat("Create rdmlTable")
     tbl <- values$rdml$AsTable() %>% 
       filter_(paste(input$mainNavbar, "TRUE", sep = "==")) %>% 
       select(-c(adp, mdp))
@@ -2038,6 +2070,7 @@ shinyServer(function(input, output, session) {
   fdata <- reactive({
     if (is.null(rdmlTable())) 
       return(NULL)
+    cat("Create fdata")
     tbl <- rdmlTable()
     if (!is.null(input$selectedRows)) {
       tbl <- 
@@ -2054,6 +2087,7 @@ shinyServer(function(input, output, session) {
   observe({
     if (is.null(fdata()) || input$mainNavbar == "mdp")
       return(NULL)
+    cat("Plot qPCR\n")
     ggvis(fdata(), ~cyc, ~fluor) %>%
       group_by(fdata.name) %>%
       layer_paths() %>% 
@@ -2078,6 +2112,7 @@ shinyServer(function(input, output, session) {
   observe({
     if (is.null(fdata()) || input$mainNavbar == "adp")
       return(NULL)
+    cat("Plot Melting\n")
     ggvis(fdata(), ~tmp, ~fluor) %>%
       group_by(fdata.name) %>%
       layer_paths() %>% 
@@ -2102,7 +2137,7 @@ shinyServer(function(input, output, session) {
   
   output$downloadRDML <- downloadHandler(
     filename = function() {
-      paste0(input$rdmlFileSlct, '.RDML')
+      paste(input$rdmlFileSlct, ".RDML", sep = "")
     },
     content = function(file) {
       values$rdml$AsXML(file)

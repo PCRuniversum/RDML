@@ -34,7 +34,7 @@ rdmlBaseType <-
           public = list(
             .asXMLnodes = function(node.name,
                                    namespaceDefinitions = NULL) {
-              subnodes <- names(private) %>% rev
+              subnodes <- names(private) # %>% rev
               newXMLNode(
                 name = node.name,
                 namespaceDefinitions = namespaceDefinitions,
