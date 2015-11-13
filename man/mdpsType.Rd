@@ -27,7 +27,7 @@ Inherits: \link{rdmlBaseType}.
 
 \section{Fields}{
  \describe{
-\item{\code{fpoints}}{\link[base]{matrix}. Matrix with amplification data points.}
+\item{\code{fpoints}}{\link[checkmate]{assertMatrix}. Matrix with amplification data points.}
   }
 }
 \keyword{datasets}

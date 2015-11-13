@@ -36,8 +36,8 @@ not display a column label.
 
 \section{Fields}{
  \describe{
-\item{\code{rows}}{\link[assertthat]{is.count}.}
-\item{\code{columns}}{\link[assertthat]{is.count}.}
+\item{\code{rows}}{\link[checkmate]{checkCount}.}
+\item{\code{columns}}{\link[checkmate]{checkCount}.}
 \item{\code{rowLabel}}{\link{labelFormatType}.}
 \item{\code{columnLabel}}{\link{labelFormatType}.}
   }

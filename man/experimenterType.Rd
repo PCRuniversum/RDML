@@ -19,11 +19,11 @@ Contact details of the experimenter. Inherits: \link{rdmlBaseType}.
 \section{Fields}{
  \describe{
 \item{\code{id}}{\link{idType}. Identificator.}
-\item{\code{firstName}}{\link[assertthat]{is.string}. First name.}
-\item{\code{lastName}}{\link[assertthat]{is.string}. Last name.}
-\item{\code{email}}{\link[assertthat]{is.string}. Email.}
-\item{\code{labName}}{\link[assertthat]{is.string}. Lab name.}
-\item{\code{labAddress}}{\link[assertthat]{is.string}. Lab address.}
+\item{\code{firstName}}{\link[checkmate]{checkString}. First name.}
+\item{\code{lastName}}{\link[checkmate]{checkString}. Last name.}
+\item{\code{email}}{\link[checkmate]{checkString}. Email.}
+\item{\code{labName}}{\link[checkmate]{checkString}. Lab name.}
+\item{\code{labAddress}}{\link[checkmate]{checkString}. Lab address.}
   }
 }
 \keyword{datasets}

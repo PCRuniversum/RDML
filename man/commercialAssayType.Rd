@@ -18,8 +18,8 @@ allows to describe commercial assays. Inherits: \link{rdmlBaseType}.
 
 \section{Fields}{
  \describe{
-\item{\code{company}}{\link[assertthat]{is.string}.}
-\item{\code{orderNumber}}{\link[assertthat]{is.string}.}
+\item{\code{company}}{\link[checkmate]{checkString}.}
+\item{\code{orderNumber}}{\link[checkmate]{checkString}.}
   }
 }
 \keyword{datasets}

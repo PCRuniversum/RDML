@@ -19,7 +19,7 @@ samples, targets or experiments. Inherits: \link{rdmlBaseType}.
 \section{Fields}{
  \describe{
 \item{\code{id}}{\link{idType}. Identificator.}
-\item{\code{text}}{\link[assertthat]{is.string}. Text.}
+\item{\code{text}}{\link[checkmate]{checkString}. Text.}
   }
 }
 \keyword{datasets}

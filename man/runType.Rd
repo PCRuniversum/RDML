@@ -23,18 +23,18 @@ one rotor, one array, one chip. Inherits: \link{rdmlBaseType}.
 \section{Fields}{
  \describe{
  \item{\code{id}}{\link{idType}.}
- \item{\code{description}}{\link[assertthat]{is.string}.}
+ \item{\code{description}}{\link[checkmate]{checkString}.}
  \item{\code{documentation}}{\code{list} of \link{idReferencesType}.}
  \item{\code{experimenter}}{\code{list} of \link{idReferencesType}.}
- \item{\code{instrument}}{\link[assertthat]{is.string}. Description of the
+ \item{\code{instrument}}{\link[checkmate]{checkString}. Description of the
   instrument used to aquire the data.}
  \item{\code{dataCollectionSoftware}}{\link{dataCollectionSoftwareType}.
   Description of the software used to analyze/collect the data.}
- \item{\code{backgroundDeterminationMethod}}{\link[base]{double}.
+ \item{\code{backgroundDeterminationMethod}}{\link[checkmate]{checkString}.
   Description of method used to determine the background. }
- \item{\code{cqDetectionMethod}}{\link[base]{double}. Description of method
+ \item{\code{cqDetectionMethod}}{\link{cqDetectionMethodType}. Description of method
   used to calculate the quantification cycle. }
- \item{\code{thermalCyclingConditions}}{\link[base]{double}. The program
+ \item{\code{thermalCyclingConditions}}{\link{idReferencesType}. The program
   used to aquire the data.}
  \item{\code{pcrFormat}}{\link{adpsType}.}
  \item{\code{runDate}}{\link{adpsType}. Time stamp of data acquisition.}

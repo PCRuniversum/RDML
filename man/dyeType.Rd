@@ -18,7 +18,7 @@ Detailed information about the dye. Inherits: \link{rdmlBaseType}.
 \section{Fields}{
  \describe{
 \item{\code{id}}{\link{idType}. Identificator.}
-\item{\code{description}}{ \link[assertthat]{is.string}. Description.
+\item{\code{description}}{ \link[checkmate]{checkString}. Description.
   }}
 }
 \keyword{datasets}

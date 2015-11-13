@@ -19,9 +19,9 @@ Details of the temperature gradient across the PCR block. Inherits:
 
 \section{Fields}{
  \describe{
-  \item{\code{highTemperature}}{\link[base]{double}. The highest temperature of
+  \item{\code{highTemperature}}{\link[checkmate]{checkNumber}. The highest temperature of
   the gradient in degrees Celsius.}
-  \item{\code{lowTemperature}}{\link[base]{double}. The lowest temperature of
+  \item{\code{lowTemperature}}{\link[checkmate]{checkNumber}. The lowest temperature of
   the gradient in degrees Celsius.}
 \item{\code{...}}{ Params of parent class \link{baseTemperatureType}. }}
 }

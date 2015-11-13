@@ -20,7 +20,7 @@ A qPCR experiment. It may contain several runs (\link{runType}). Inherits:
 \section{Fields}{
  \describe{
 \item{\code{id}}{\link{idType}.}
-\item{\code{description}}{\link[assertthat]{is.string}.}
+\item{\code{description}}{\link[checkmate]{checkString}.}
 \item{\code{documentation}}{\code{list} of \link{idReferencesType}.}
 \item{\code{run}}{\code{list} of \link{runType}.}
 }

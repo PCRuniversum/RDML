@@ -19,9 +19,9 @@ Inherits: \link{rdmlBaseType}.
 
 \section{Fields}{
  \describe{
-  \item{\code{publisher}}{\link[assertthat]{is.string}. RDML file publisher.}
-  \item{\code{serialNumber}}{\link[assertthat]{is.string}. Serial number.}
-  \item{\code{MD5Hash}}{\link[assertthat]{is.string}. An MD5Hash calculated
+  \item{\code{publisher}}{\link[checkmate]{checkString}. RDML file publisher.}
+  \item{\code{serialNumber}}{\link[checkmate]{checkString}. Serial number.}
+  \item{\code{MD5Hash}}{\link[checkmate]{checkString}. An MD5Hash calculated
   over the complete file after removing all rdmlIDTypes and all whitespaces
   between elements.}
   }

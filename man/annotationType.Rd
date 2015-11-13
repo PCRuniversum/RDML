@@ -14,8 +14,8 @@ sex could be a property with the possible values M or F. Inherits:
 \link{rdmlBaseType}.
 }
 \section{Fields}{
- \describe{ \item{property}{\link[assertthat]{is.string}.
-  Property name} \item{value}{\link[assertthat]{is.string}. Value} }
+ \describe{ \item{property}{\link[checkmate]{checkString}.
+  Property name} \item{value}{\link[checkmate]{checkString}. Value} }
 }
 \examples{
 #set sex property

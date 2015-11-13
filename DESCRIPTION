@@ -27,7 +27,8 @@ Imports:
     plyr (>= 1.8.1),
     dplyr (>= 0.4.1),
     tidyr (>= 0.2.0),
-    rlist (>= 0.4)
+    rlist (>= 0.4),
+    tools (>= 3.2)
 Collate:
     'RDML.types.R'
     'RDML.R'

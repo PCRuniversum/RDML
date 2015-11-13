@@ -18,10 +18,10 @@ Inherits: \link{rdmlBaseType}.
 }
 
 \section{Fields}{
- \describe{ \item{\code{nr}}{\link[assertthat]{is.count}. The
+ \describe{ \item{\code{nr}}{\link[checkmate]{checkCount}. The
   incremental number of the step. First step should have value 1. The increment
   between steps should be constant and equivalent to 1.}
-  \item{\code{description}}{\link[assertthat]{is.string}.}
+  \item{\code{description}}{\link[checkmate]{checkString}.}
   \item{\code{temperature}}{\link{temperatureType}.}
   \item{\code{gradient}}{\link{gradientType}.}
   \item{\code{loop}}{\link{loopType}.} \item{\code{pause}}{\link{pauseType}.}

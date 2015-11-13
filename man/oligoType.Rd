@@ -18,11 +18,11 @@ Inherits: \link{rdmlBaseType}.
 
 \section{Fields}{
  \describe{
-  \item{\code{threePrimeTag}}{\link[assertthat]{is.string}. Description of
+  \item{\code{threePrimeTag}}{\link[checkmate]{checkString}. Description of
   three prime modification (if present). }
-  \item{\code{fivePrimeTag}}{\link[assertthat]{is.string}. Description of
+  \item{\code{fivePrimeTag}}{\link[checkmate]{checkString}. Description of
   five prime modification (if present).}
-  \item{\code{sequence}}{\link[assertthat]{is.string}.}
+  \item{\code{sequence}}{\link[checkmate]{checkString}.}
   }
 }
 \keyword{datasets}

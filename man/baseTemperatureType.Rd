@@ -19,17 +19,17 @@ Parent class for inner usage. Inherits: \link{rdmlBaseType}.
 
 \section{Fields}{
  \describe{
-  \item{\code{duration}}{\link[assertthat]{is.count}. Duration of this
+  \item{\code{duration}}{\link[checkmate]{checkCount}. Duration of this
   step in seconds.}
-  \item{\code{temperatureChange}}{\link[base]{double}. Change
+  \item{\code{temperatureChange}}{\link[checkmate]{checkNumber}. Change
   of the temperature between two consecutive cycles: actual temperature
   = temperature + (temperatureChange * cycle counter)}
-  \item{\code{durationChange}}{\link[assertthat]{is.count}. Change of the
+  \item{\code{durationChange}}{\link[checkmate]{checkCount}. Change of the
   duration between two consecutive cycles: actual duration = duration +
   (durationChange * cycle counter)}
   \item{\code{measure}}{\link{measureType}. Indicates to make a measurement
   and store it as meltcurve or real-time data.}
-  \item{\code{ramp}}{\link[base]{double}. Allowed temperature
+  \item{\code{ramp}}{\link[checkmate]{checkNumber}. Allowed temperature
   change between two consecutive cycles in degrees Celsius per second. If unstated,
   the maximal change rate is assumed.}
   }

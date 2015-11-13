@@ -17,7 +17,7 @@ step in an amplification protocol. Inherits: \link{rdmlBaseType}.
 }
 
 \section{Fields}{
- \describe{ \item{\code{temperature}}{\link[base]{numeric}.
+ \describe{ \item{\code{temperature}}{\link[checkmate]{checkNumber}.
   The temperature in degrees Celsius maintained during the pause.}
   }
 }

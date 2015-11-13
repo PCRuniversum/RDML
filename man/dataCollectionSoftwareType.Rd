@@ -18,8 +18,8 @@ Software name and version used to collect and analyze the data. Inherits:
 
 \section{Fields}{
  \describe{
-\item{\code{name}}{\link[assertthat]{is.string}.}
-\item{\code{version}}{\link[assertthat]{is.string}.}
+\item{\code{name}}{\link[checkmate]{checkString}.}
+\item{\code{version}}{\link[checkmate]{checkString}.}
   }
 }
 \examples{

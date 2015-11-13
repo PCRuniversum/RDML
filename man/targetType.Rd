@@ -23,14 +23,14 @@ targets. Inherits:
 
 \section{Fields}{
  \describe{ \item{\code{id}}{\link{idType}.}
-  \item{\code{description}}{\link[assertthat]{is.string}.}
+  \item{\code{description}}{\link[checkmate]{checkString}.}
   \item{\code{documentation}}{\code{list} of \link{idReferencesType}.}
   \item{\code{xRef}}{\code{list} of \link{xRefType}.}
   \item{\code{type}}{\link{targetTypeType}.}
-  \item{\code{amplificationEfficiencyMethod}}{\link[assertthat]{is.string}.}
-  \item{\code{amplificationEfficiency}}{\link[base]{double}.}
-  \item{\code{amplificationEfficiencySE}}{\link[base]{double}.}
-  \item{\code{detectionLimit}}{\link[base]{double}.}
+  \item{\code{amplificationEfficiencyMethod}}{\link[checkmate]{checkString}.}
+  \item{\code{amplificationEfficiency}}{\link[checkmate]{checkNumber}.}
+  \item{\code{amplificationEfficiencySE}}{\link[checkmate]{checkNumber}.}
+  \item{\code{detectionLimit}}{\link[checkmate]{checkNumber}.}
   \item{\code{dyeId}}{\link{idReferencesType}.}
   \item{\code{sequences}}{\link{sequencesType}.}
   \item{\code{commercialAssay}}{\link{commercialAssayType}.} }

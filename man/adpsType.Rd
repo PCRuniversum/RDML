@@ -25,7 +25,7 @@ point was collected (every cycle must have unique number).}
 
 \section{Fields}{
  \describe{
-  \item{\code{fpoints}}{\link[base]{matrix}. Matrix with amplification data
+  \item{\code{fpoints}}{\link[checkmate]{assertMatrix}. Matrix with amplification data
   points.}
   }
 }

@@ -17,7 +17,7 @@ Contains id of another RDML object. Inherits: \link{idType}.
 
 \section{Fields}{
  \describe{
-\item{\code{id}}{\link[assertthat]{is.string}. Identificator.}
+\item{\code{id}}{\link[checkmate]{checkString}. Identificator.}
 }
 }
 \keyword{datasets}

@@ -30,12 +30,12 @@ Inherits: \link{rdmlBaseType}.
  \describe{
  \item{\code{id}}{\link{idType}. Concentration of the template in nanogram
  per microliter in the final reaction mix. }
- \item{\code{description}}{\link[assertthat]{is.string}.}
+ \item{\code{description}}{\link[checkmate]{checkString}.}
  \item{\code{documentation}}{\code{list} of \link{idReferencesType}.}
  \item{\code{xRef}}{\code{list} of \link{xRefType}.}
  \item{\code{annotation}}{\code{list} of \link{annotationType}.}
  \item{\code{type}}{\link{sampleTypeType}.}
- \item{\code{interRunCalibrator}}{\link[assertthat]{is.flag}. \code{TRUE}
+ \item{\code{interRunCalibrator}}{\link[checkmate]{checkFlag}. \code{TRUE}
  if this sample is used as inter run calibrator. }
  \item{\code{quantity}}{\link{quantityType}. Quantity - The reference
  quantity of this sample. It should be only used if the sample is part of a
@@ -45,7 +45,7 @@ Inherits: \link{rdmlBaseType}.
  The use of exponents (1, 2, 3, 4 or -1, -2, -3, -4) if forbidden,
  because it will not be interpreted as 10E1, 10E2, 10E3, 10E4 or 10E-1, 10E-2,
  10E-3, 10E-4. }
- \item{\code{calibratorSample}}{\link[assertthat]{is.flag}. \code{TRUE} if this
+ \item{\code{calibratorSample}}{\link[checkmate]{checkFlag}. \code{TRUE} if this
  sample is used as calibrator sample. }
  \item{\code{cdnaSynthesisMethod}}{\link{cdnaSynthesisMethodType}.}
  \item{\code{templateQuantity}}{\link{templateQuantityType}.}

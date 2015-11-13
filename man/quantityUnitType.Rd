@@ -28,7 +28,7 @@ Inherits: \link{enumType}.
 
 \section{Fields}{
  \describe{
-\item{\code{value}}{\link[assertthat]{is.string}. Value.}
+\item{\code{value}}{\link[checkmate]{checkString}. Value.}
   }
 }
 \keyword{datasets}

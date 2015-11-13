@@ -17,7 +17,7 @@ This step keeps a constant temperature on the heat block. Inherits:
 }
 
 \section{Fields}{
- \describe{ \item{\code{temperature}}{\link[base]{double}.
+ \describe{ \item{\code{temperature}}{\link[checkmate]{checkNumber}.
   The temperature of the step in  degrees Celsius.}
 \item{\code{...}}{ Params of parent class \link{baseTemperatureType}.}
 }

@@ -18,7 +18,7 @@ A quantity is always defined by its value and its unit. Inherits:
 
 \section{Fields}{
  \describe{
-\item{\code{value}}{\link[base]{is.double}. Value.}
+\item{\code{value}}{\link[checkmate]{checkNumber}. Value.}
 \item{\code{unit}}{\link{quantityUnitType}. Unit.}
   }
 }

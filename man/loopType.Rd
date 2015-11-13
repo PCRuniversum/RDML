@@ -19,9 +19,9 @@ the loop range, it must have "repeat" value "0". Inherits:
 }
 
 \section{Fields}{
- \describe{ \item{\code{goto}}{\link[base]{numeric}.  The
+ \describe{ \item{\code{goto}}{\link[checkmate]{assertCount}.  The
   step to go to to form the loop.}
-\item{\code{repeat.n}}{\link[base]{numeric}. Determines how many times the loop is
+\item{\code{repeat.n}}{\link[checkmate]{assertCount}. Determines how many times the loop is
   repeated. The first run through the loop is counted as 0, the last loop is
   "repeat" - 1.}}
 }

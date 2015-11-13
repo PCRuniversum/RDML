@@ -17,9 +17,9 @@ Inherits: \link{rdmlBaseType}.
 
 \section{Fields}{
  \describe{
-  \item{\code{name}}{\link[assertthat]{is.string}. Reference to an external
+  \item{\code{name}}{\link[checkmate]{checkString}. Reference to an external
   database, } for example "GenBank".
-  \item{\code{id}}{\link[assertthat]{is.string}. The ID of the entry within
+  \item{\code{id}}{\link[checkmate]{checkString}. The ID of the entry within
   the external database, for example "AJ832138".}
   }
 }

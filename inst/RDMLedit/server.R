@@ -8,6 +8,7 @@
 library(shiny)
 library(RDML)
 library(dplyr)
+library(tools)
 
 testEmptyInput <- function(val) {
   if(is.null(val) || is.na(val) || val == "")
@@ -34,8 +35,13 @@ shinyServer(function(input, output, session) {
     isolate({
       withProgress(
         for(i in 1:length(input$rdmlFiles$name)) {
+          newpath <- paste(input$rdmlFiles$datapath[i],
+                           file_ext(input$rdmlFiles$name[i]),
+                           sep = ".")
+          file.rename(input$rdmlFiles$datapath[i],
+                      newpath)
           values$RDMLs[[input$rdmlFiles$name[i]]] <-
-            RDML$new(input$rdmlFiles$datapath[i])
+            RDML$new(newpath)
           incProgress(1,
                       message = {
                         if (i != length(input$rdmlFiles$name))

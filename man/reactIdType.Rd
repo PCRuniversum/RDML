@@ -17,7 +17,7 @@ Contains identificator for reactType. Inherits: \link{rdmlBaseType}.
 
 \section{Fields}{
  \describe{
-\item{\code{id}}{\link[assertthat]{is.count}. Identificator.}
+\item{\code{id}}{\link[checkmate]{checkCount}. Identificator.}
 }
 }
 \keyword{datasets}

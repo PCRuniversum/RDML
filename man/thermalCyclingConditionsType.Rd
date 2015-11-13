@@ -19,9 +19,9 @@ A cycling program for PCR or to amplify cDNA. Inherits: \link{rdmlBaseType}.
 
 \section{Fields}{
  \describe{ \item{\code{id}}{\link{idType}.}
-  \item{\code{description}}{\link[assertthat]{is.string}.}
+  \item{\code{description}}{\link[checkmate]{checkString}.}
   \item{\code{documentation}}{\code{list} of \link{idReferencesType}.}
-  \item{\code{lidTemperature}}{\link[base]{double}. The temperature in
+  \item{\code{lidTemperature}}{\link[checkmate]{checkNumber}. The temperature in
   degrees Celsius of the lid during cycling. }
   \item{\code{experimenter}}{\code{list} of \link{idReferencesType}.
   Reference to the person who made or uses this protocol. }
