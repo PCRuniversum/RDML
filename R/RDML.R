@@ -188,13 +188,12 @@ RDML <- R6Class("RDML",
                   SetFData = function() { },
                   AsDendrogram = function() { },
                   AsXML = function(file.name) {
-                    tree <- self$.asXMLnodes("rdml",
-                                             "http://www.rdml.org")
-                    xmlAttrs(tree) <- c(version = 1.2)
+                    tree <- self$.asXMLnodes2("rdml") %>% 
+                      sub('>', ' xmlns="http://www.rdml.org" version="1.2">', .)
                     if(missing(file.name))
                       return(tree)
-                    saveXML(tree,
-                            "rdml_data.xml")
+                    cat(tree,
+                        file = "rdml_data.xml")
                     zip(file.name,
                         "rdml_data.xml")
                     unlink("rdml_data.xml")

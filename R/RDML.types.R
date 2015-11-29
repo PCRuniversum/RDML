@@ -33,67 +33,9 @@ rdmlBaseType <-
           # class = FALSE,
           public = list(
             .asXMLnodes = function(node.name,
-                                   namespaceDefinitions = NULL) {
-              subnodes <- names(private) # %>% rev
-              newXMLNode(
-                name = node.name,
-                namespaceDefinitions = namespaceDefinitions,
-                attrs = {
-                  get.attrs <- function() {
-                    for(name in subnodes) {
-                      if(class(private[[name]])[1] == "idType" ||
-                         class(private[[name]])[1] == "reactIdType") {
-                        subnodes <<- subnodes[subnodes != name]
-                        return(list(id = private[[name]]$id))
-                      }
-                    }
-                    NULL
-                  }
-                  get.attrs()
-                },
-                .children = {
-                  llply(subnodes,
-                        function(name) {
-                          subnode.name <- gsub("^\\.(.*)$",
-                                               "\\1", name)
-                          switch(
-                            typeof(private[[name]]),
-                            closure = NULL,
-                            list = 
-                              llply(private[[name]],
-                                    function(sublist)
-                                      sublist$.asXMLnodes(subnode.name))
-                            ,
-                            environment = {
-                              private[[name]]$.asXMLnodes(subnode.name)
-                            },
-                            {
-                              if (is.null(private[[name]]) ||
-                                  is.na(private[[name]]))
-                                NULL
-                              else
-                                newXMLNode(name = subnode.name,
-                                           text = {
-                                             switch(
-                                               typeof(private[[name]]),
-                                               logical = 
-                                                 ifelse(private[[name]],
-                                                        "true",
-                                                        "false"
-                                                 ),
-                                               private[[name]]
-                                             )
-                                           }
-                                )
-                            })
-                        }) %>% 
-                    compact
-                }
-              )
-            },
-            .asXMLnodes2 = function(node.name,
                                     namespaceDefinitions = NULL) {
-              subnodes <- names(private)[grepl("^\\..*$",names(private))] # %>% rev
+              subnodes <- names(private)[grepl("^\\..*$",
+                                               names(private))] %>% rev
               sprintf("<%s%s>%s</%s>",
                       node.name, #node name
                       # attribute
@@ -127,12 +69,12 @@ rdmlBaseType <-
                               list = 
                                 sapply(private[[name]],
                                        function(sublist)
-                                         sublist$.asXMLnodes2(subnode.name)) %>%
+                                         sublist$.asXMLnodes(subnode.name)) %>%
                                 # .[!sapply(., is.null)] %>% 
                                 paste0(collapse = "\n")
                               ,
                               environment = {
-                                private[[name]]$.asXMLnodes2(subnode.name)
+                                private[[name]]$.asXMLnodes(subnode.name)
                               },
                               {
                                 if (is.null(private[[name]]) ||
@@ -301,16 +243,14 @@ idType <-
               assertString(id)
               private$.id <- id
             },
-            .asXMLnodes = function(node.name,
-                                   namespaceDefinitions = NULL) {
-              newXMLNode(
-                name = node.name,
-                namespaceDefinitions = namespaceDefinitions,
-                attrs = list(id = private$.id)
-              )}
-            #             print = function(...) {
-            #               cat(private$.id)
-            #             }
+            .asXMLnodes = function(node.name) {
+              sprintf("<%s id = '%s'/>",
+                      node.name,
+                      private$.id)
+              }
+            #                         print = function(...) {
+            #                           cat(private$.id)
+            #                         }
           ),
           private = list(
             .id = NULL
@@ -895,16 +835,6 @@ enumType <-
               cat(private$.value)
             },
             .asXMLnodes = function(node.name,
-                                   namespaceDefinitions = NULL) {
-              if (is.null(private$.value) ||
-                  is.na(private$.value))
-                NULL
-              else
-                newXMLNode(name = node.name,
-                           namespaceDefinitions = namespaceDefinitions,
-                           text = private$.value)
-            },
-            .asXMLnodes2 = function(node.name,
                                    namespaceDefinitions = NULL) {
               if (is.null(private$.value) ||
                   is.na(private$.value))
@@ -1832,33 +1762,6 @@ adpsType <-
               private$.fpoints <- fpoints
             },
             .asXMLnodes = function(node.name) {
-              #               newXMLNode(
-              #                 name = node.name,
-              #                 .children = {
-              alply(private$.fpoints,
-                    1,
-                    function(fpoints.row) {
-                      newXMLNode(name = "adp",
-                                 .children = 
-                                   list(
-                                     newXMLNode(
-                                       name = "cyc",
-                                       text = fpoints.row["cyc"]),
-                                     {
-                                       if(!is.na(fpoints.row["tmp"]))
-                                         newXMLNode(
-                                           name = "tmp",
-                                           text = fpoints.row["tmp"])
-                                     },
-                                     newXMLNode(
-                                       name = "fluor",
-                                       text = fpoints.row["fluor"]
-                                     )
-                                   ))
-                    })
-              # })
-            },
-            .asXMLnodes2 = function(node.name) {
               apply(private$.fpoints,
                     1,
                     function(fpoints.row) {
@@ -1924,22 +1827,6 @@ mdpsType <-
               private$.fpoints <- fpoints
             },
             .asXMLnodes = function(node.name) {
-              alply(private$.fpoints,
-                    1,
-                    function(fpoints.row) {
-                      newXMLNode(name = "mdp",
-                                 .children = 
-                                   list(
-                                     newXMLNode(
-                                       name = "tmp",
-                                       text = fpoints.row["tmp"]),
-                                     newXMLNode(
-                                       name = "fluor",
-                                       text = fpoints.row["fluor"])
-                                   ))
-                    })
-            },
-            .asXMLnodes2 = function(node.name) {
               apply(private$.fpoints,
                     1,
                     function(fpoints.row) {
