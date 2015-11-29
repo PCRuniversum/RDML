@@ -91,6 +91,75 @@ rdmlBaseType <-
                 }
               )
             },
+            .asXMLnodes2 = function(node.name,
+                                    namespaceDefinitions = NULL) {
+              subnodes <- names(private)[grepl("^\\..*$",names(private))] # %>% rev
+              sprintf("<%s%s>%s</%s>",
+                      node.name, #node name
+                      # attribute
+                      {
+                        attrs <- NULL
+                        for (subnode in subnodes) {
+                          if (class(private[[subnode]])[1] == "idType" ||
+                              class(private[[subnode]])[1] == "reactIdType") {
+                            attrs <- c(attrs, subnode)
+                          }
+                        }
+                        if (length(attrs) == 0) {
+                          ""
+                        } else {
+                          subnodes <- 
+                            setdiff(subnodes, attrs)
+                          sprintf(" id = '%s'", private[[attrs[1]]]$id)
+                        }
+                        # "'attr'"
+                      },
+                      # value
+                      {
+                        sapply(
+                          subnodes,
+                          function(name) {
+                            subnode.name <- gsub("^\\.(.*)$",
+                                                 "\\1", name)
+                            switch(
+                              typeof(private[[name]]),
+                              closure = NULL,
+                              list = 
+                                sapply(private[[name]],
+                                       function(sublist)
+                                         sublist$.asXMLnodes2(subnode.name)) %>%
+                                # .[!sapply(., is.null)] %>% 
+                                paste0(collapse = "\n")
+                              ,
+                              environment = {
+                                private[[name]]$.asXMLnodes2(subnode.name)
+                              },
+                              {
+                                if (is.null(private[[name]]) ||
+                                    is.na(private[[name]])) {
+                                  NULL
+                                } else {
+                                  sprintf("<%s>%s</%s>\n",
+                                          subnode.name,
+                                          switch(
+                                            typeof(private[[name]]),
+                                            logical = 
+                                              ifelse(private[[name]],
+                                                     "true",
+                                                     "false"
+                                              ),
+                                            private[[name]]
+                                          ),
+                                          subnode.name
+                                  )
+                                }
+                              })
+                          }) %>%
+                          .[!sapply(., is.null)] %>% 
+                          paste0(collapse = "")
+                      }, 
+                      node.name)
+            },
             print = function(...) {
               elements <- names(private)[-which(names(private) == 
                                                   "deep_clone")] %>% rev
@@ -834,6 +903,17 @@ enumType <-
                 newXMLNode(name = node.name,
                            namespaceDefinitions = namespaceDefinitions,
                            text = private$.value)
+            },
+            .asXMLnodes2 = function(node.name,
+                                   namespaceDefinitions = NULL) {
+              if (is.null(private$.value) ||
+                  is.na(private$.value))
+                NULL
+              else
+                sprintf("<%s>%s</%s>",
+                        node.name,
+                        private$.value,
+                        node.name)
             }
           ),
           private = list(
@@ -1777,6 +1857,21 @@ adpsType <-
                                    ))
                     })
               # })
+            },
+            .asXMLnodes2 = function(node.name) {
+              apply(private$.fpoints,
+                    1,
+                    function(fpoints.row) {
+                      sprintf("<adp><cyc>%s</cyc>%s<fluor>%s</fluor></adp>",
+                              fpoints.row["cyc"],
+                              {
+                                if(!is.na(fpoints.row["tmp"]))
+                                  sprintf("<tmp>%s</tmp>",
+                                          fpoints.row["tmp"])
+                                else ""
+                              },
+                              fpoints.row["fluor"])
+                    }) %>% paste0(collapse = "")
             }
           ),
           private = list(
@@ -1843,6 +1938,15 @@ mdpsType <-
                                        text = fpoints.row["fluor"])
                                    ))
                     })
+            },
+            .asXMLnodes2 = function(node.name) {
+              apply(private$.fpoints,
+                    1,
+                    function(fpoints.row) {
+                      sprintf("<adp><tmp>%s</tmp><fluor>%s</fluor></adp>",
+                              fpoints.row["tmp"],
+                              fpoints.row["fluor"])
+                    }) %>% paste0(collapse = "")
             }
           ),
           private = list(
