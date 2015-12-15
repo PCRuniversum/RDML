@@ -49,3 +49,4 @@ Suggests:
     shiny,
     shinythemes
 VignetteBuilder: knitr
+RoxygenNote: 5.0.1

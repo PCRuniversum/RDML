@@ -42,9 +42,9 @@ GetIds <- function(l) {
 # dilution from XML for Roche
 GetDilutionsRoche <- function(uniq.folder)
 {
-  cat("\nParsing Roche standards data...")
+  # cat("\nParsing Roche standards data...")
   if(!file.exists(paste0(uniq.folder,"/calculated_data.xml"))) {
-    cat("NO SUCH FILE")
+    # cat("NO SUCH FILE")
     return(NA)
   }
   rdml.doc <- xmlParse(paste0(uniq.folder,"/calculated_data.xml"))
@@ -130,19 +130,19 @@ GetDilutionsRoche <- function(uniq.folder)
     concs.by.dye
   })
   if (length(dilutions) == 0) {
-    cat("NONE")
+    # cat("NONE")
     return(NULL)
   }
   names(dilutions) <- dyes
-  cat("OK")
+  # cat("OK")
   return(dilutions)
 }
 
 GetConditionsRoche <- function(uniq.folder)
 {
-  cat("\nParsing Roche conditions data...")
+  # cat("\nParsing Roche conditions data...")
   if(!file.exists(paste0(uniq.folder,"/app_data.xml"))) {
-    cat("NO SUCH FILE")
+    # cat("NO SUCH FILE")
     return(NA)
   }
   rdml.doc <- xmlParse(paste0(uniq.folder,"/app_data.xml"))
@@ -155,19 +155,19 @@ GetConditionsRoche <- function(uniq.folder)
   conditions <- sapply(nodes,
                        function(node)  xmlValue(node[["condition"]]))
   if (length(conditions) == 0) {
-    cat("NONE")
+    # cat("NONE")
     return(NULL)
   }
   names(conditions) <- reacts
-  cat("OK")
+  # cat("OK")
   return(conditions)
 }
 
 GetRefGenesRoche <- function(uniq.folder)
 {
-  cat("\nParsing Roche reference genes data...")
+  # cat("\nParsing Roche reference genes data...")
   if(!file.exists(paste0(uniq.folder,"/module_data.xml"))) {
-    cat("NO SUCH FILE")
+    # cat("NO SUCH FILE")
     return(NA)
   }
   rdml.doc <- xmlParse(paste0(uniq.folder,"/module_data.xml"))
@@ -178,11 +178,11 @@ GetRefGenesRoche <- function(uniq.folder)
     namespaces = c(ns = "http://www.roche.ch/LC96RelQuantGeneralDataModel"))
   
   if (length(ref) == 0) {
-    cat("NONE")
+    # cat("NONE")
     return(NULL)
   }
   
-  cat("OK")
+  # cat("OK")
   return(ref)
 }
 
@@ -200,6 +200,7 @@ GetRefGenesRoche <- function(uniq.folder)
 #'   against RDML data from devices: \emph{Bio-Rad CFX96}, \emph{Roche 
 #'   LightCycler 96} and \emph{Applied Biosystems StepOne}.
 #' @param filename \code{string} -- path to \code{RDML} or \code{xls} file
+#' @param show.progress \code{logical} -- show loading progress bar if \code{TRUE}
 #' @param conditions.sep separator for condition defined at sample name
 #' @author Konstantin A. Blagodatskikh <k.blag@@yandex.ru>, Stefan Roediger 
 #'   <stefan.roediger@@hs-lausitz.de>, Michal Burdukiewicz 
@@ -225,6 +226,8 @@ GetRefGenesRoche <- function(uniq.folder)
 #' lc96$AsDendrogram()
 #' }
 RDML$set("public", "initialize", function(filename,
+                                          show.progress = TRUE,
+                                          conditions.sep = NULL,
                                           dateMade = NULL,
                                           dateUpdated = NULL,
                                           id = NULL,
@@ -234,8 +237,7 @@ RDML$set("public", "initialize", function(filename,
                                           sample = NULL,
                                           target = NULL,
                                           thermalCyclingConditions = NULL,
-                                          experiment = NULL,
-                                          conditions.sep = NULL) {  
+                                          experiment = NULL) {  
   if(missing(filename)) {
     assert(checkNull(dateMade), checkString(dateMade))
     private$.dateMade <- dateMade
@@ -328,7 +330,7 @@ RDML$set("public", "initialize", function(filename,
   # Unique folder is needed to prevent file ovewriting
   # by parallel function usage.
   uniq.folder <- tempfile() #paste0(tempdir(), UUIDgenerate())
-  cat(sprintf("Unzipping %s...", filename))
+  # cat(sprintf("Unzipping %s...", filename))
   unzipped.rdml <- unzip(filename, exdir = uniq.folder)
   dilutions.r <- NULL
   ref.genes.r <- NULL
@@ -338,9 +340,9 @@ RDML$set("public", "initialize", function(filename,
     # One of the files store dilutions information.
     if(length(unzipped.rdml) > 1)
     {
-      cat("\nParsing Roche(?) data...")
+      # cat("\nParsing Roche(?) data...")
       rdml.doc <- xmlParse(paste0(uniq.folder,"/rdml_data.xml"))
-      cat("OK")
+      # cat("OK")
       dilutions.r <- GetDilutionsRoche(uniq.folder)
       conditions.r <- GetConditionsRoche(uniq.folder)
       ref.genes.r <- GetRefGenesRoche(uniq.folder)
@@ -348,7 +350,7 @@ RDML$set("public", "initialize", function(filename,
     }
     else
     {
-      cat("\nParsing data...")
+      # cat("\nParsing data...")
       rdml.doc <- xmlParse(unzipped.rdml)
       #     private$.dilutions <- GetDilutions(rdml.doc)
     }},
@@ -360,13 +362,13 @@ RDML$set("public", "initialize", function(filename,
   rdml.root <- xmlRoot(rdml.doc)
   rdml.namespace <- c(rdml = "http://www.rdml.org")
   
-  cat("\nGetting dateMade")
+  # cat("\nGetting dateMade")
   private$.dateMade <- xmlValue(rdml.root[["dateMade"]])
   
-  cat("\nGetting dateUpdated")
+  # cat("\nGetting dateUpdated")
   private$.dateUpdated <- xmlValue(rdml.root[["dateUpdated"]])
   
-  cat("\nGetting id")
+  # cat("\nGetting id")
   private$.id <- 
     llply(rdml.root["id"],
           function(id) {
@@ -378,7 +380,7 @@ RDML$set("public", "initialize", function(filename,
           }
     ) %>% 
     with.names(quote(.$publisher))
-  cat("\nGetting experementer")
+  # cat("\nGetting experementer")
   private$.experimenter <- {
     # experimenter.list <- 
     llply(rdml.root["experimenter"],
@@ -395,7 +397,7 @@ RDML$set("public", "initialize", function(filename,
       with.names(quote(.$id$id))
   }
   
-  cat("\nGetting documentation")
+  # cat("\nGetting documentation")
   private$.documentation <- {
     # documentation.list <- 
     llply(rdml.root["documentation"],
@@ -407,7 +409,7 @@ RDML$set("public", "initialize", function(filename,
       with.names(quote(.$id$id))
   }
   
-  cat("\nGetting dye")
+  # cat("\nGetting dye")
   private$.dye <-
     llply(rdml.root["dye"],
           function(el) {
@@ -418,7 +420,7 @@ RDML$set("public", "initialize", function(filename,
     with.names(quote(.$id$id))
   
   
-  cat("\nGetting sample")
+  # cat("\nGetting sample")
   private$.sample <- 
     llply(rdml.root["sample"],
           function(sample) {
@@ -505,7 +507,7 @@ RDML$set("public", "initialize", function(filename,
     compact %>% 
     with.names(quote(.$id$id))
   
-  cat("\nGetting target")
+  # cat("\nGetting target")
   private$.target <- 
     llply(rdml.root["target"],
           function(target) {
@@ -629,7 +631,7 @@ RDML$set("public", "initialize", function(filename,
     with.names(quote(.$id$id))
   
   
-  cat("\nGetting thermalCyclingConditions")
+  # cat("\nGetting thermalCyclingConditions")
   private$.thermalCyclingConditions <- 
     llply(rdml.root["thermalCyclingConditions"],
           function(tcc) {
@@ -766,11 +768,17 @@ RDML$set("public", "initialize", function(filename,
                                         namespaces = c(rdml = "http://www.rdml.org")))
         if(!is.null(fluor)) {
           if(length(tmp) != 0) {
+            tryCatch(
             adpsType$new(matrix(c(cyc, tmp, fluor), 
                                 byrow = FALSE,
                                 ncol = 3,
                                 dimnames = list(NULL,
-                                                c("cyc", "tmp", "fluor"))))
+                                                c("cyc", "tmp", "fluor")))),
+            warning = function(w) {
+              dat <<- list(cyc, tmp, fluor)
+              stop("warn")
+            }
+            )
           }
           else {
             adpsType$new(matrix(c(cyc, fluor), 
@@ -866,7 +874,8 @@ RDML$set("public", "initialize", function(filename,
   
   GetRun <- function(run, experiment.id) {
     run.id <-xmlAttrs(run, "id")
-    cat(sprintf("\nrun: %s\n", run.id))
+    if (show.progress)
+      cat(sprintf("\n\trun: %s\n", run.id))
     runType$new(
       id = idType$new(run.id), #xmlAttrs(run, "id"),
       description = xmlValue(run[["description"]]),
@@ -922,7 +931,7 @@ RDML$set("public", "initialize", function(filename,
                                        experiment.id,
                                        run.id),
               .parallel = FALSE,
-              .progress = ifelse(interactive(),
+              .progress = ifelse(interactive() & show.progress,
                                  "text",
                                  "none")
         ) %>% 
@@ -933,7 +942,8 @@ RDML$set("public", "initialize", function(filename,
   
   GetExperiment <- function(experiment) {
     experiment.id <- xmlAttrs(experiment, "id")
-    cat(sprintf("\nGetting experiment: %s", experiment.id))
+    if (show.progress)
+      cat(sprintf("\nLoading experiment: %s", experiment.id))
     experimentType$new(
       id = idType$new(experiment.id),
       description = xmlValue(experiment[["description"]]),
@@ -969,7 +979,7 @@ RDML$set("public", "initialize", function(filename,
     private$.sample <- with.names(private$.sample,
                                   quote(.$id$id))
     
-    cat("Adding Roche ref genes\n")
+    # cat("Adding Roche ref genes\n")
     if(!is.null(ref.genes.r) && length(ref.genes.r) != 0) {
       for(ref.gene in ref.genes.r) {
         geneName <- xmlValue(ref.gene[["geneName"]])
@@ -985,7 +995,7 @@ RDML$set("public", "initialize", function(filename,
     }
     # return()
     tbl <- self$AsTable()
-    cat("Adding Roche quantities\n")
+    # cat("Adding Roche quantities\n")
     for(target in dilutions.r %>% names) {
       for(r.id in dilutions.r[[target]] %>% names) {
         sample.name <- filter(tbl, react.id == r.id)$sample[1]
@@ -1004,7 +1014,7 @@ RDML$set("public", "initialize", function(filename,
       }
     }
     
-    cat("Adding Roche conditions\n")
+    # cat("Adding Roche conditions\n")
     for(r.id in conditions.r %>% names) {
       sample.name <- filter(tbl, react.id == r.id)$sample[1]
       private$.sample[[sample.name]]$annotation <- 

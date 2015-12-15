@@ -973,7 +973,7 @@ primingMethodType <-
 #' Type of nucleic acid used as a template in the experiment. May have following values:
 #' \describe{
 #' \item{DNA}{}
-#' \item{genomic-DNA}{}
+#' \item{genomic DNA}{}
 #' \item{cDNA}{}
 #' \item{RNA}{}
 #' }
@@ -995,7 +995,7 @@ nucleotideType <-
           inherit = enumType,
           private = list(
             .levels = c("DNA",
-                        "genomic-DNA",
+                        "genomic DNA",
                         "cDNA",
                         "RNA")
           )
@@ -1830,7 +1830,7 @@ mdpsType <-
               apply(private$.fpoints,
                     1,
                     function(fpoints.row) {
-                      sprintf("<adp><tmp>%s</tmp><fluor>%s</fluor></adp>",
+                      sprintf("<mdp><tmp>%s</tmp><fluor>%s</fluor></mdp>",
                               fpoints.row["tmp"],
                               fpoints.row["fluor"])
                     }) %>% paste0(collapse = "")

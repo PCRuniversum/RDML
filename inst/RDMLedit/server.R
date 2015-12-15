@@ -1,14 +1,9 @@
-
-# This is the server logic for a Shiny web application.
-# You can find out more about building applications with Shiny here:
-#
-# http://shiny.rstudio.com
-#
-
 library(shiny)
 library(RDML)
 library(dplyr)
 library(tools)
+
+
 
 testEmptyInput <- function(val) {
   if(is.null(val) || is.na(val) || val == "")
@@ -24,7 +19,17 @@ testNull <- function(val) {
 
 
 shinyServer(function(input, output, session) {
-  values <- reactiveValues(RDMLs = list())
+  values <- reactiveValues(RDMLs = list(),
+                           log = NULL)
+  updLog <- function(error.message) {
+    isolate({
+      error.message <- sprintf("[%s] %s",
+                               format(Sys.time(), "%H:%M:%S"),
+                               error.message)
+      cat(paste0(error.message, "\n"))
+      values$log <- c(values$log, error.message)
+    })
+  }
   
   # Files Tab ------------------------------------------------------------
   
@@ -163,7 +168,7 @@ shinyServer(function(input, output, session) {
       return(NULL)
     input$updateDendroPlot
     tryCatch(values$rdml$AsDendrogram(),
-             error = function(e) {print(e$message)}
+             error = function(e) {updLog(e$message)}
     )
   })
   
@@ -175,7 +180,7 @@ shinyServer(function(input, output, session) {
       values$rdml$dateMade <- testEmptyInput(input$dateMadeText)
       values$rdml$dateUpdated <- testEmptyInput(input$dateUpdatedText)
     },
-    error = function(e) print(e))
+    error = function(e) updLog(e$message))
   })
   
   # remove RDML 
@@ -203,7 +208,7 @@ shinyServer(function(input, output, session) {
   observe({
     if (is.null(values$rdml$id))
       return(NULL)
-    cat("Init ID\n")
+    # updLog("Init ID\n")
     isolate({
       updateSelectizeInput(session,
                            "idSlct",
@@ -260,7 +265,7 @@ shinyServer(function(input, output, session) {
         }
       })
     },
-    error = function(e) print(e$message)
+    error = function(e) updLog(e$message)
     )
   })
   
@@ -281,7 +286,7 @@ shinyServer(function(input, output, session) {
   observe({
     if (is.null(values$rdml$experimenter))
       return(NULL)
-    cat("Init Experimenter\n")
+    # updLog("Init Experimenter\n")
     isolate({
       updateSelectizeInput(session,
                            "experimenterSlct",
@@ -359,7 +364,7 @@ shinyServer(function(input, output, session) {
         updExperimenterRefs()
       })
     },
-    error = function(e) print(e$message)
+    error = function(e) updLog(e$message)
     )
   })
   
@@ -383,7 +388,7 @@ shinyServer(function(input, output, session) {
   observe({
     if (is.null(values$rdml$documentation))
       return(NULL)
-    cat("Init Documentation\n")
+    # updLog("Init Documentation\n")
     isolate({
       updateSelectizeInput(session,
                            "documentationSlct",
@@ -452,7 +457,7 @@ shinyServer(function(input, output, session) {
         updDocRefs()
       })
     },
-    error = function(e) print(e$message)
+    error = function(e) updLog(e$message)
     )
   })
   
@@ -475,7 +480,7 @@ shinyServer(function(input, output, session) {
   observe({
     if (is.null(values$rdml$dye))
       return(NULL)
-    cat("Init Dye\n")
+    # updLog("Init Dye\n")
     isolate({
       updateSelectizeInput(session,
                            "dyeSlct",
@@ -537,7 +542,7 @@ shinyServer(function(input, output, session) {
         
       })
     },
-    error = function(e) print(e$message)
+    error = function(e) updLog(e$message)
     )
   })
   
@@ -561,7 +566,7 @@ shinyServer(function(input, output, session) {
   observe({
     if (is.null(values$rdml$sample))
       return(NULL)
-    cat("Init Sample\n")
+    # updLog("Init Sample\n")
     isolate({
       updateSelectizeInput(session,
                            "sampleSlct",
@@ -574,7 +579,7 @@ shinyServer(function(input, output, session) {
     if (input$sampleSlct == "") {
       return(NULL)
     }
-    cat("on sampleSlct change\n")
+    # updLog("on sampleSlct change\n")
     isolate({
       if (length(values$rdml$sample[[input$sampleSlct]]$annotation) == 0) {
         updateSelectizeInput(
@@ -688,7 +693,7 @@ shinyServer(function(input, output, session) {
                            quantityUnitType$new(input$sampleQuantityUnitText))
         },
         error = function(e) {
-          print(paste("sample quantity:", e$message))
+          updLog(paste("sample quantity:", e$message))
           NULL}
         )},
         
@@ -721,7 +726,7 @@ shinyServer(function(input, output, session) {
           }
         },
         error = function(e) {
-          cat(paste("sample cdna :", e$message))
+          updLog(paste("sample cdna :", e$message))
           NULL}
         ),
         
@@ -734,7 +739,7 @@ shinyServer(function(input, output, session) {
               nucleotideType$new(testEmptyInput(input$sampleTemplateQuantityNucleotideSlct)))
         },
         error = function(e) {
-          cat(paste("sample template quantity:\n", e$message, "\n"))
+          updLog(paste("sample template quantity:\n", e$message, "\n"))
           NULL}
         )
       )
@@ -751,7 +756,7 @@ shinyServer(function(input, output, session) {
         updSampleRefs()
       })
     },
-    error = function(e) print(paste("sample quantity:", e$message))
+    error = function(e) updLog(paste("sample quantity:", e$message))
     )
   })
   
@@ -821,7 +826,7 @@ shinyServer(function(input, output, session) {
         }
       })
     },
-    error = function(e) print(e$message)
+    error = function(e) updLog(e$message)
     )
   })
   
@@ -891,7 +896,7 @@ shinyServer(function(input, output, session) {
         }
       })
     },
-    error = function(e) print(e$message)
+    error = function(e) updLog(e$message)
     )
   })
   
@@ -916,7 +921,7 @@ shinyServer(function(input, output, session) {
   observe({
     if (is.null(values$rdml$target))
       return(NULL)
-    cat("Init Target\n")
+    # updLog("Init Target\n")
     isolate({
       updateSelectizeInput(session,
                            "targetSlct",
@@ -1061,7 +1066,7 @@ shinyServer(function(input, output, session) {
               )
             },
             error = function(e) {
-              print(e$message)
+              updLog(e$message)
               NULL}
             )
           if (is.list(sequences)) {
@@ -1078,7 +1083,7 @@ shinyServer(function(input, output, session) {
           )
         },
         error = function(e) {
-          print(e$message)
+          updLog(e$message)
           NULL}
         )
       )
@@ -1095,7 +1100,7 @@ shinyServer(function(input, output, session) {
         # updTargetRefs()
       })
     },
-    error = function(e) print(paste("target:", e$message))
+    error = function(e) updLog(paste("target:", e$message))
     )
   })
   
@@ -1163,7 +1168,7 @@ shinyServer(function(input, output, session) {
         }
       })
     },
-    error = function(e) print(e$message)
+    error = function(e) updLog(e$message)
     )
   })
   
@@ -1410,7 +1415,7 @@ shinyServer(function(input, output, session) {
         updTccRefs()
       })},
       error = function(e) {
-        print(paste("tcc:", e$message))
+        updLog(paste("tcc:", e$message))
         NULL
       }
     )
@@ -1520,7 +1525,7 @@ shinyServer(function(input, output, session) {
         }
       })
     },
-    error = function(e) print(e$message)
+    error = function(e) updLog(e$message)
     )
   })
   
@@ -1545,7 +1550,7 @@ shinyServer(function(input, output, session) {
   observe({
     if (is.null(values$rdml$experiment))
       return(NULL)
-    cat("Init Experiment\n")
+    # updLog("Init Experiment\n")
     isolate({
       updateSelectizeInput(session,
                            "experimentSlct",
@@ -1594,7 +1599,7 @@ shinyServer(function(input, output, session) {
                         value = input$experimentSlct)
       }
       
-      cat("update fields end\n")
+      # updLog("update fields end\n")
     })
   })
   
@@ -1603,7 +1608,7 @@ shinyServer(function(input, output, session) {
     if (input$runSlct == "") {
       return(NULL)
     }
-    cat("On runSlct change\n")
+    # updLog("On runSlct change\n")
     isolate({
       if (length(values$rdml$
                  experiment[[input$experimentSlct]]$
@@ -1789,7 +1794,7 @@ shinyServer(function(input, output, session) {
     if (is.null(testEmptyInput(input$experimentIdText))) {
       return(NULL)
     }
-    cat("Write to experiment")
+    # updLog("Write to experiment")
     tryCatch({
       isolate({
         run <- values$rdml$
@@ -1816,7 +1821,7 @@ shinyServer(function(input, output, session) {
         }
       })},
       error = function(e) {
-        print(paste("experiment:", e$message))
+        updLog(paste("experiment:", e$message))
         NULL
       }
     )
@@ -1883,7 +1888,7 @@ shinyServer(function(input, output, session) {
         }
       })},
       error = function(e) {
-        print(paste("run:", e$message))
+        updLog(paste("run:", e$message))
         NULL
       }
     )
@@ -1932,7 +1937,7 @@ shinyServer(function(input, output, session) {
         }
       })},
       error = function(e) {
-        print(paste("react:", e$message))
+        updLog(paste("react:", e$message))
         NULL
       }
     )
@@ -1994,7 +1999,7 @@ shinyServer(function(input, output, session) {
         }
       })},
       error = function(e) {
-        print(paste("data:", e$message))
+        updLog(paste("data:", e$message))
         NULL
       }
     )
@@ -2063,7 +2068,7 @@ shinyServer(function(input, output, session) {
     if (is.null(values$rdml) || !(input$mainNavbar %in% c("adp",
                                                           "mdp")))
       return(NULL)
-    cat("Create rdmlTable")
+    # updLog("Create rdmlTable")
     tbl <- values$rdml$AsTable() %>% 
       filter_(paste(input$mainNavbar, "TRUE", sep = "==")) %>% 
       select(-c(adp, mdp))
@@ -2076,7 +2081,7 @@ shinyServer(function(input, output, session) {
   fdata <- reactive({
     if (is.null(rdmlTable())) 
       return(NULL)
-    cat("Create fdata")
+    # updLog("Create fdata")
     tbl <- rdmlTable()
     if (!is.null(input$selectedRows)) {
       tbl <- 
@@ -2093,7 +2098,8 @@ shinyServer(function(input, output, session) {
   observe({
     if (is.null(fdata()) || input$mainNavbar == "mdp")
       return(NULL)
-    cat("Plot qPCR\n")
+    # updLog("Plot qPCR\n")
+    fdt <- fdata()
     ggvis(fdata(), ~cyc, ~fluor) %>%
       group_by(fdata.name) %>%
       layer_paths() %>% 
@@ -2118,7 +2124,7 @@ shinyServer(function(input, output, session) {
   observe({
     if (is.null(fdata()) || input$mainNavbar == "adp")
       return(NULL)
-    cat("Plot Melting\n")
+    # updLog("Plot Melting\n")
     ggvis(fdata(), ~tmp, ~fluor) %>%
       group_by(fdata.name) %>%
       layer_paths() %>% 
@@ -2156,7 +2162,15 @@ shinyServer(function(input, output, session) {
   output$logText <- renderUI({
     if (is.null(values$log))
       return(NULL)
-    HTML(values$log)
+    print(paste(values$log, collapse = "<br>"))
+    HTML(paste(values$log, collapse = "<br>"))
+  })
+  
+  observe({
+    input$clearLogBtn
+    isolate({
+      values$log <- ""
+    })
   })
   
 })

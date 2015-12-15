@@ -30,13 +30,24 @@ MergeRDMLs <- function(to.merge) {
                      "thermalCyclingConditions",
                      "experiment"
     )) {
-      if (length(rdml[[element]]) != 0)
+      if (length(rdml[[element]]) != 0) {
         baseRDML[[element]] <- c(baseRDML[[element]],
                                  llply(rdml[[element]],
-                                  function(subelement) subelement$clone(
-                                    deep = TRUE
-                                  )))
+                                  function(subelement) 
+                                    subelement$clone(deep = TRUE)
+                                  ))
+      }
     }
+  }
+  # generate unique experiments names
+  i <- 1
+  for (exp in baseRDML$experiment) {
+    id <- exp$id$id
+    while (paste(id, i, sep = "_") %in% unique(names(baseRDML$experiment))) {
+      i = i + 1
+    }
+    exp$id <- idType$new(paste(id, i, sep = "_"))
+    baseRDML$experiment <- baseRDML$experiment
   }
   baseRDML
 }

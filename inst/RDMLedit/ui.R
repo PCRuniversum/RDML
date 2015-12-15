@@ -518,6 +518,11 @@ shinyUI(
                value = "mdp"),
       id = "mainNavbar"
     ),
-    uiOutput("logText")
+    wellPanel(
+      h4("Log:"),
+      actionButton("clearLogBtn",
+                   "Clear"),
+      uiOutput("logText")
+    )
   )
 )
