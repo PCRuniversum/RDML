@@ -55,9 +55,13 @@ RDML$set("public", "SetFData",
            #                                     "tmp")
            fdata.names <- colnames(fdata)[2:ncol(fdata)]
            
-           for(fdata.n in fdata.names) {
+           for (fdata.n in fdata.names) {
              descr.row <- description[description$fdata.name == fdata.n, ] %>% 
                unlist
+             if (length(descr.row) == 0) {
+               warning(paste("No such decription:", fdata.n))
+               next
+             }
              # adds unavailable subelements
              if (private$.experiment[[descr.row["exp.id"]]]$
                  run[[descr.row["run.id"]]]$

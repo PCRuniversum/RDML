@@ -2162,7 +2162,6 @@ shinyServer(function(input, output, session) {
   output$logText <- renderUI({
     if (is.null(values$log))
       return(NULL)
-    print(paste(values$log, collapse = "<br>"))
     HTML(paste(values$log, collapse = "<br>"))
   })
   
