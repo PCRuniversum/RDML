@@ -100,7 +100,15 @@ RDML$set("public", "SetFData",
                      is.null) {
                    self$sample <- c(
                      self$sample,
-                     sampleType$new(idType$new(descr.row["sample"]))
+                     sampleType$new(idType$new(descr.row["sample"]),
+                                    type = sampleTypeType$new(descr.row["type"]),
+                                    quantity = {
+                                      if (!is.null(descr.row["quantity"]) && !is.na(descr.row["quantity"]))
+                                          quantityType$new(as.numeric(descr.row["quantity"]),
+                                                           quantityUnitType$new("other"))
+                                      NULL
+                                    }
+                     )
                    )
                  }
                }

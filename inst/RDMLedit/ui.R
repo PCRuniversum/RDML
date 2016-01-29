@@ -10,12 +10,11 @@ shinyUI(
       title = "RDMLedit",
       theme = shinytheme("cerulean"),
       tabPanel("Files",
-               includeMarkdown("md/files.md"),
                fileInput("rdmlFiles",
-                         h4(HTML("Upload <b>.RDML</b>, <b>.lc96p</b>, <b>.xls</b> or <b>.xlsx</b> file(s):")),
+                         h4(HTML("Upload <b>.RDML</b>, <b>.csv</b>, <b>.lc96p</b>, <b>.xls</b> or <b>.xlsx</b> file(s):")),
                          multiple = TRUE),
                selectizeInput("rdmlFileSlct",
-                              "Show File",
+                              "View File",
                               choices = "",
                               options= list(
                                 create =TRUE
@@ -35,8 +34,8 @@ shinyUI(
                actionButton("updateRDMLBtn",
                             "Update"),
                downloadLink("downloadRDML", "Download RDML"),
-               actionButton("updateDendroPlot",
-                            "Update Dendrogram"),
+               # actionButton("updateDendroPlot",
+               #              "Update Dendrogram"),
                plotOutput("dendroRDMLplot")),
       navbarMenu("Metadata",
                  tabPanel("ID",
@@ -513,6 +512,8 @@ shinyUI(
                ggvisOutput("meltingPlot"),
                dataTableOutput("meltingDt"),
                value = "mdp"),
+      tabPanel("Help",
+               includeMarkdown("md/help.md")),
       id = "mainNavbar"
     ),
     wellPanel(

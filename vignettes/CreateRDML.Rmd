@@ -120,6 +120,7 @@ Now we can create empty **RDML** with our advanced class and set fluorescence da
 - `run.id` -- run name. In our case we have three runs.
 - `react.id` -- react ID. E.g., number of tube inside reaction plate.
 - `sample` -- sample name.
+- `type` -- sample type.
 - `target` -- target name. E.g., gene of interest name.
 - `target.dyeID` -- fluorescent dye used for detection.
 
@@ -132,6 +133,7 @@ description <- data.frame(
   run.id = c("run1", "run2", "run3"),
   react.id = c(1, 1, 1),
   sample = c("D1 - Stock cDNA", "D2 - 1/10 cDNA", "D3 - 1/100 cDNA"),
+  type = c("unkn", "unkn", "unkn"),
   target = c("MLC-2v", "MLC-2v", "MLC-2v"),
   target.dyeId = c("Cy5", "Cy5", "Cy5"),
   stringsAsFactors = FALSE

@@ -9,7 +9,7 @@
 #' \item{react.id}{react$id} 
 #' \item{position}{react$position} 
 #' \item{sample}{react$sample}
-#' \item{target}{data$id} \item{target.dyeId}{target[[data$id]]$dyeId} 
+#' \item{target}{data$tar$id} \item{target.dyeId}{target[[data$id]]$dyeId} 
 #' \item{sample.type}{sample[[react$sample]]$type} } You can overload default 
 #' columns list by parameter \code{.default} but note that columns 
 #' \preformatted{exp.id, run.id, react.id, target} are necessary for usage 

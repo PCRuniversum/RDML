@@ -256,36 +256,36 @@ RDML$set("public", "initialize", function(filename,
                                           # experiment = NULL
 ) {  
   if(missing(filename)) {
-  #   assert(checkNull(dateMade), checkString(dateMade))
-  #   private$.dateMade <- dateMade
-  #   assert(checkNull(dateUpdated), checkString(dateUpdated))
-  #   private$.dateUpdated <- dateUpdated
-  #   assert(checkNull(id), checkList(id, "rdmlIdType"))
-  #   private$.id <- id
-  #   assert(checkNull(experimenter), 
-  #          checkList(experimenter, 
-  #                    "experimenterType"))
-  #   private$.experimenter <- experimenter
-  #   assert(checkNull(documentation),
-  #          checkList(documentation, 
-  #                    "documentationType"))                    
-  #   private$.documentation <- documentation
-  #   assert(checkNull(dye),
-  #          checkList(dye, "dyeType"))
-  #   private$.dye <- dye
-  #   assert(checkNull(sample), 
-  #          checkList(sample, "sampleType"))
-  #   private$.sample <- sample
-  #   assert(checkNull(target), 
-  #          checkList(target, "targetType"))
-  #   private$.target <- target
-  #   assert(checkNull(thermalCyclingConditions), 
-  #          checkList(thermalCyclingConditions, "thermalCyclingConditionsType"))
-  #   private$.thermalCyclingConditions <- thermalCyclingConditions
-  #   assert(checkNull(experiment), 
-  #          checkList(experiment, "experimentType"))
-  #   private$.experiment <- experiment
-     return()
+    #   assert(checkNull(dateMade), checkString(dateMade))
+    #   private$.dateMade <- dateMade
+    #   assert(checkNull(dateUpdated), checkString(dateUpdated))
+    #   private$.dateUpdated <- dateUpdated
+    #   assert(checkNull(id), checkList(id, "rdmlIdType"))
+    #   private$.id <- id
+    #   assert(checkNull(experimenter), 
+    #          checkList(experimenter, 
+    #                    "experimenterType"))
+    #   private$.experimenter <- experimenter
+    #   assert(checkNull(documentation),
+    #          checkList(documentation, 
+    #                    "documentationType"))                    
+    #   private$.documentation <- documentation
+    #   assert(checkNull(dye),
+    #          checkList(dye, "dyeType"))
+    #   private$.dye <- dye
+    #   assert(checkNull(sample), 
+    #          checkList(sample, "sampleType"))
+    #   private$.sample <- sample
+    #   assert(checkNull(target), 
+    #          checkList(target, "targetType"))
+    #   private$.target <- target
+    #   assert(checkNull(thermalCyclingConditions), 
+    #          checkList(thermalCyclingConditions, "thermalCyclingConditionsType"))
+    #   private$.thermalCyclingConditions <- thermalCyclingConditions
+    #   assert(checkNull(experiment), 
+    #          checkList(experiment, "experimentType"))
+    #   private$.experiment <- experiment
+    return()
   }
   assertString(filename)
   
@@ -297,7 +297,6 @@ RDML$set("public", "initialize", function(filename,
     pcrdata <- read_excel(filename,
                           sheet = "Multicomponent Data",
                           skip = 7)
-    
     mydescr <- data.frame(
       fdata.name  = paste(descr$Well, descr$Reporter, sep = "_"),
       exp.id = "exp1",
@@ -327,21 +326,24 @@ RDML$set("public", "initialize", function(filename,
       as.data.frame
     mypcrdata <- mypcrdata[, colSums(is.na(mypcrdata)) != nrow(mypcrdata)]
     self$SetFData(mypcrdata, mydescr)
-    apply(filter(mydescr, !is.na(quantity)), 
-          1, 
-          function(descrrow) {
-            quantity <- as.numeric(descrrow["quantity"])
-            self$sample[[descrrow["sample"]]]$quantity <- 
-              quantityType$new(quantity,
-                               quantityUnitType$new("other"))
-          })
-    
-    apply(mydescr, 
-          1, 
-          function(descrrow) {
-            self$sample[[descrrow["sample"]]]$type <-
-              sampleTypeType$new(descrrow["type"])
-          })
+    # quantity.rows <- filter(mydescr, !is.na(quantity))
+    # if (nrow(filter(mydescr, !is.na(quantity))) != 0) {
+    #   apply(quantity.rows, 
+    #         1, 
+    #         function(descrrow) {
+    #           quantity <- as.numeric(descrrow["quantity"])
+    #           self$sample[[descrrow["sample"]]]$quantity <- 
+    #             quantityType$new(quantity,
+    #                              quantityUnitType$new("other"))
+    #         })
+    # }
+    # 
+    # apply(mydescr, 
+    #       1, 
+    #       function(descrrow) {
+    #         self$sample[[descrrow["sample"]]]$type <-
+    #           sampleTypeType$new(descrrow["type"])
+    #       })
   }
   
   # From Excel
@@ -462,8 +464,7 @@ RDML$set("public", "initialize", function(filename,
                 email = xmlValue(experimenter[["email"]]),
                 labName = xmlValue(experimenter[["labName"]]),
                 labAddress = xmlValue(experimenter[["labAddress"]])
-              )
-      ) %>% 
+              )) %>% 
         with.names(quote(.$id$id))
     }
     
@@ -1050,7 +1051,9 @@ RDML$set("public", "initialize", function(filename,
                                     quote(.$id$id))
       
       # cat("Adding Roche ref genes\n")
-      if(!is.null(ref.genes.r) && length(ref.genes.r) != 0) {
+      if(!is.null(ref.genes.r) &&
+         !is.na(ref.genes.r) &&
+         length(ref.genes.r) != 0) {
         for(ref.gene in ref.genes.r) {
           geneName <- xmlValue(ref.gene[["geneName"]])
           geneI <- grep(
