@@ -959,10 +959,13 @@ RDML$set("public", "initialize", function(filename,
                 function(doc)
                   idReferencesType$new(xmlAttrs(doc, "id"))),
         instrument = xmlValue(run[["instrument"]]),
-        dataCollectionSoftware = dataCollectionSoftwareType$new(
-          name = xmlValue(run[["dataCollectionSoftware"]][["name"]]),
-          version = xmlValue(run[["dataCollectionSoftware"]][["version"]])
-        ),
+        dataCollectionSoftware = 
+          tryCatch(
+            dataCollectionSoftwareType$new(
+              name = xmlValue(run[["dataCollectionSoftware"]][["name"]]),
+              version = xmlValue(run[["dataCollectionSoftware"]][["version"]])
+            ),
+            error = function(e) NULL),
         backgroundDeterminationMethod = 
           xmlValue(run[["backgroundDeterminationMethod"]]),
         cqDetectionMethod = 
