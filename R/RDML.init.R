@@ -1094,12 +1094,8 @@ RDML$set("public", "initialize", function(filename,
       format <- file_ext(filename)
     switch (
       format,
-      abi = {
+      eds = {
         fromABI()
-        return()
-      },
-      excel = {
-        fromExcel()
         return()
       },
       xlsx = {
@@ -1108,10 +1104,6 @@ RDML$set("public", "initialize", function(filename,
       },
       csv = {
         fromCSV()
-        return()
-      },
-      eds = {
-        fromABI()
         return()
       },
       {
