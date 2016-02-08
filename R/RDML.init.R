@@ -329,7 +329,7 @@ RDML$set("public", "initialize", function(filename,
       names(fdata) <- c("cyc", description$fdata.name)
       self$SetFData(fdata, description)
     },
-    error = function(e) { print(e) },
+    error = function(e) { e },
     finally = unlink(uniq.folder, recursive = TRUE))
   }
   
@@ -413,7 +413,7 @@ RDML$set("public", "initialize", function(filename,
           rdml.doc <- xmlParse(unzipped.rdml)
           #     private$.dilutions <- GetDilutions(rdml.doc)
         }},
-        error = function(e) { print(e) },
+        error = function(e) { e },
         finally = unlink(uniq.folder, recursive = TRUE)
       )
       ####
