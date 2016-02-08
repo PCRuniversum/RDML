@@ -169,5 +169,20 @@ RDML$set("public", "SetFData",
                  }
                }
            }
+           
+           # add concentrations 
+           if (!is.null(description$quantity)) {
+             for (sample.name in description$sample %>% unique) {
+               private$.sample[[sample.name]]$quantity <- 
+                 quantityType$new(
+                   value = unname(description %>% 
+                                    filter(sample == sample.name) %>% 
+                                    select(quantity) %>% 
+                                    .[1, 1]),
+                   unit = quantityUnitType$new("other")
+                 )
+             }
+           }
+           
          }
          , overwrite = TRUE)
