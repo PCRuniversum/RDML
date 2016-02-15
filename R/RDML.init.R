@@ -265,11 +265,19 @@ RDML$set("public", "initialize", function(filename,
     tryCatch({
       uniq.folder <- tempfile()
       unzipped <- unzip(filename, exdir = uniq.folder)
-      multicomponent.data <- paste0(uniq.folder, "\\apldbio\\sds\\multicomponent_data.txt") %>% 
-        read.delim(skip = 2, stringsAsFactors = FALSE) %>% 
-        filter(!is.na(WELL))
-      
-      ncycles <- multicomponent.data$CYCLE %>% max + 1
+      # multicomponent.data <- paste0(uniq.folder, "\\apldbio\\sds\\multicomponent_data.txt") %>% 
+      #   read.delim(skip = 2, stringsAsFactors = FALSE) %>% 
+      #   filter(!is.na(WELL))
+      data.file <- paste0(uniq.folder, "\\apldbio\\sds\\multicomponent_data.txt")
+      multicomponent.data <- readChar(data.file, file.info(data.file)$size) %>% 
+        str_match_all("([0-9]+)\\t([0-9]+)\\t([A-Z]+)\\t[0-9]+\\.?[0-9]*\\t([0-9]+\\.?[0-9]*)")
+      multicomponent.data <- as.data.frame(multicomponent.data[[1]], stringsAsFactors = FALSE)
+      names(multicomponent.data) <- c("_", "well", "cyc", "dye", "fluor")
+      multicomponent.data <- multicomponent.data %>% 
+        mutate(well = as.numeric(well),
+               cyc = as.numeric(cyc),
+               fluor = as.numeric(fluor))
+      ncycles <- multicomponent.data$cyc %>% max + 1
       
       plate.setup <- paste0(uniq.folder, "\\apldbio\\sds\\plate_setup.xml") %>%
         xmlParse %>% xmlRoot
@@ -319,12 +327,12 @@ RDML$set("public", "initialize", function(filename,
       description <- description %>%
         filter(IsOmit == FALSE)
       
-      fdata <- cbind(data.frame(multicomponent.data$CYCLE %>% unique + 1),
+      fdata <- cbind(data.frame(multicomponent.data$cyc %>% unique + 1),
                      apply(description, 1, 
                            function(r) {
-                             multicomponent.data %>% filter(WELL == as.integer(r["react.id"]) - 1,
-                                                            DYE.LIST == r["target.dyeId"]) %>% 
-                               .$SIGNAL.DATA
+                             multicomponent.data %>% filter(well == as.integer(r["react.id"]) - 1,
+                                                            dye == r["target.dyeId"]) %>% 
+                               .$fluor
                            }))
       names(fdata) <- c("cyc", description$fdata.name)
       self$SetFData(fdata, description)
