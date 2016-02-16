@@ -5,6 +5,10 @@ xmlValue <- function(val) {
   out
 }
 
+xmlAttrs <- function(...) {
+  XML::xmlAttrs(...) %>% iconv("UTF-8", "UTF-8")
+}
+
 as.logical <- function(val) {
   out <- base::as.logical(val)
   if (length(out) == 0)
