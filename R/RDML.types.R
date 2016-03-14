@@ -2063,7 +2063,11 @@ dataType <-
 #'   (\code{dp.type = "mdp"}) data points of all targets as one 
 #'   \code{data.frame}} \item{\code{Position(pcrformat)}}{Converts \code{react 
 #'   id} to thew human readable form (i.e. '13' -> 'B1'). \code{pcrFormat} is 
-#'   \code{pcrFormatType}. Only for 'ABC' '123' format!}}
+#'   \code{pcrFormatType}. Currently, only 'ABC' and '123' are supported as 
+#'   labels. For '123' '123' the \code{Position} will look like 'r01c01', for 
+#' 'ABC' '123' it will be 'A01' and for '123' 'ABC' it will be 01A. 'ABC' 'ABC' 
+#' is not currently supported. Note that 'ABC' will result in loss of 
+#' information if the experiment contains more than 26 rows!}}
 #'   
 #' @docType class
 #' @format An \code{\link{R6Class}} generator object.
@@ -2101,11 +2105,29 @@ reactType <-
             },
             Position = function(pcrFormat) {
               assertClass(pcrFormat, "pcrFormatType")
-              stopifnot(pcrFormat$rowLabel$value == "ABC",
-                        pcrFormat$columnLabel$value == "123")
-              sprintf("%s%02i",
-                      LETTERS[(private$.id$id - 1) %/% pcrFormat$columns + 1],
-                      as.integer((private$.id$id - 1) %% pcrFormat$columns + 1))
+              if (pcrFormat$rowLabel$value == "ABC" && pcrFormat$columnLabel$value == "123") {
+                if (pcrFormat$rows > length(LETTERS)) {
+                  stop("Too many rows for 'ABC' format")
+                } else {
+                  sprintf("%s%02i",
+                          LETTERS[(private$.id$id - 1) %/% pcrFormat$columns + 1],
+                          as.integer((private$.id$id - 1) %% pcrFormat$columns + 1))
+                }
+              } else if (pcrFormat$columnLabel$value == "ABC" && pcrFormat$rowLabel$value == "123") {
+                if (pcrFormat$columns > length(LETTERS)) {
+                  stop("Too many columns for 'ABC' format")
+                } else {
+                  sprintf("%02i%s",
+                          as.integer((private$.id$id - 1) %/% pcrFormat$columns + 1),
+                          LETTERS[(private$.id$id - 1) %% pcrFormat$columns + 1])
+                }
+              } else if (pcrFormat$rowLabel$value == "123" && pcrFormat$columnLabel$value == "123") {
+                sprintf("r%02ic%02i",
+                        as.integer((private$.id$id - 1) %/% pcrFormat$columns + 1),
+                        as.integer((private$.id$id - 1) %% pcrFormat$columns + 1))
+              } else {
+                stop("Unsupported PCR format.")
+              }
             }
           ),
           private = list(
