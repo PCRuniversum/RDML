@@ -21,6 +21,8 @@
 #' Experiment, run, react and data to which belongs each fluorescence data vector
 #' can be accessed by \code{experiment, run, react, data} (see Examples).
 #' 
+#' Result table does not contain data from experiments with ids starting with '.'!
+#' 
 #' @param .default \code{list} of default columns
 #' @param name.pattern expression to form \code{fdata.name} (see Examples)
 #' @param ... additional columns
@@ -98,19 +100,21 @@ RDML$set("public", "AsTable",
            # dilutions <- private$.dilutions
            # conditions <- private$.conditions
            
-           out<-data.frame()
-           for(experiment in private$.experiment) {                      
-             for(run in experiment$run) {                                    
-               for(react in run$react) {                          
-                 for(data in react$data){
-                   out<-rbind(out,
-                              data.frame(
-                                eval(substitute(list(
-                                  .default,
-                                  ...))),
-                                row.names = eval(substitute(name.pattern)),
-                                stringsAsFactors = FALSE
-                              ))
+           out <- data.frame()
+           for(experiment in private$.experiment) {
+             if (!grepl("^\\.", experiment$id$id)) {
+               for(run in experiment$run) {                                    
+                 for(react in run$react) {                          
+                   for(data in react$data){
+                     out <- rbind(out,
+                                  data.frame(
+                                    eval(substitute(list(
+                                      .default,
+                                      ...))),
+                                    row.names = eval(substitute(name.pattern)),
+                                    stringsAsFactors = FALSE
+                                  ))
+                   }
                  }
                }
              }
