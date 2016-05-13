@@ -17,7 +17,12 @@ as.logical <- function(val) {
 }
 
 as.numeric <- function(val) {
-  out <- base::as.numeric(val)
+  out <- tryCatch(
+    base::as.numeric(val),
+    warning = function(w) {
+      base::as.numeric(gsub(",", ".", val))
+    }
+  )
   if (length(out) == 0)
     return(NULL)
   out
