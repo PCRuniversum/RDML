@@ -396,7 +396,7 @@ RDML$set("public", "initialize", function(filename,
         self$SetFData(fdata, description)
         description$target <<- "NA"
       })
-    
+    self$id <- list(rdmlIdType$new("RotorGene" , "1"))
   }
   
   # From Excel
