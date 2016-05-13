@@ -382,10 +382,13 @@ RDML$set("public", "initialize", function(filename,
         description[description$fdata.name %in% ids, "target"] <<- group$Name
       })
     
+    original.targets <- description$target
     dat %>% 
       getNodeSet("/Experiment/RawChannels/RawChannel") %>% 
       list.iter(rawChannel ~ {
         description$target.dyeId <<- rawChannel[["Name"]] %>% xmlValue
+        description$target <<- paste(original.targets,
+                                     description$target.dyeId[1], sep = "#")
         fdata <- xpathApply(rawChannel, "//Reading",
                             xmlValue)[description$react.id] %>%
           list.map(x ~ {strsplit(x, " ") %>% .[[1]] %>% as.numeric %>% as.list}) %>%
@@ -394,7 +397,6 @@ RDML$set("public", "initialize", function(filename,
         colnames(fdata) <- description$react.id
         fdata <- cbind(cyc = 1:nrow(fdata), fdata)
         self$SetFData(fdata, description)
-        description$target <<- "NA"
       })
     self$id <- list(rdmlIdType$new("RotorGene" , "1"))
   }
