@@ -389,8 +389,13 @@ RDML$set("public", "initialize", function(filename,
         description$target.dyeId <<- rawChannel[["Name"]] %>% xmlValue
         description$target <<- paste(original.targets,
                                      description$target.dyeId[1], sep = "#")
-        fdata <- xpathApply(rawChannel, "//Reading",
-                            xmlValue)[description$react.id] %>%
+        fdata <- 
+          xpathApply(rawChannel,
+                     sprintf(
+                     "/Experiment/RawChannels/RawChannel/Name[text()='%s']/../Reading",
+                     description$target.dyeId[1]
+                     ),
+                     xmlValue)[description$react.id] %>%
           list.map(x ~ {strsplit(x, " ") %>% .[[1]] %>% as.numeric %>% as.list}) %>%
           list.stack %>% 
           t
