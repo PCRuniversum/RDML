@@ -22,7 +22,7 @@ By default input this function forms \code{data.frame} with following columns:
 \item{react.id}{react$id} 
 \item{position}{react$position} 
 \item{sample}{react$sample}
-\item{target}{data$id} \item{target.dyeId}{target[[data$id]]$dyeId} 
+\item{target}{data$tar$id} \item{target.dyeId}{target[[data$id]]$dyeId} 
 \item{sample.type}{sample[[react$sample]]$type} } You can overload default 
 columns list by parameter \code{.default} but note that columns 
 \preformatted{exp.id, run.id, react.id, target} are necessary for usage 
@@ -33,6 +33,8 @@ All default and additional columns accession expressions must be named.
 
 Experiment, run, react and data to which belongs each fluorescence data vector
 can be accessed by \code{experiment, run, react, data} (see Examples).
+
+Result table does not contain data from experiments with ids starting with '.'!
 }
 \examples{
 \dontrun{

@@ -51,7 +51,11 @@ be found below : todo... }
   (\code{dp.type = "mdp"}) data points of all targets as one 
   \code{data.frame}} \item{\code{Position(pcrformat)}}{Converts \code{react 
   id} to thew human readable form (i.e. '13' -> 'B1'). \code{pcrFormat} is 
-  \code{pcrFormatType}. Only for 'ABC' '123' format!}}
+  \code{pcrFormatType}. Currently, only 'ABC' and '123' are supported as 
+  labels. For '123' '123' the \code{Position} will look like 'r01c01', for 
+'ABC' '123' it will be 'A01' and for '123' 'ABC' it will be 01A. 'ABC' 'ABC' 
+is not currently supported. Note that 'ABC' will result in loss of 
+information if the experiment contains more than 26 rows!}}
 }
 \keyword{datasets}
 

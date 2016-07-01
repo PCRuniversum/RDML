@@ -237,6 +237,7 @@ GetRefGenesRoche <- function(uniq.folder)
 #' @importFrom tools file_ext
 #' @importFrom readxl read_excel
 #' @importFrom tidyr gather unite spread
+#' @importFrom stringr str_match_all
 #' @include RDML.R
 #' @examples
 #' \dontrun{
@@ -345,8 +346,9 @@ RDML$set("public", "initialize", function(filename,
                            }))
       names(fdata) <- c("cyc", description$fdata.name)
       self$SetFData(fdata, description)
+      self$id <- list(rdmlIdType$new("ABI" , "1"))
     },
-    error = function(e) { e },
+    error = function(e) { stop(e) },
     finally = unlink(uniq.folder, recursive = TRUE))
   }
   
