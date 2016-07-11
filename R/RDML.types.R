@@ -2,8 +2,8 @@ with.names <- function(l, id) {
   if (is.null(l))
     return(NULL)
   n <- list.select(l,
-                   eval(id)) %>% 
-    unlist
+                   eval(id)) %>>% 
+    unlist()
   if (is.null(n))
     return(l)
   names(l) <- n
