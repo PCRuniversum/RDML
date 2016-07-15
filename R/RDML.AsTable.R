@@ -25,7 +25,7 @@
 #' 
 #' @param .default \code{list} of default columns
 #' @param name.pattern expression to form \code{fdata.name} (see Examples)
-#' @param ... additional columns
+#' @param add.columns \code{list} of additional columns
 #' @author Konstantin A. Blagodatskikh <k.blag@@yandex.ru>, Stefan Roediger 
 #'   <stefan.roediger@@b-tu.de>, Michal Burdukiewicz 
 #'   <michalburdukiewicz@@gmail.com>
@@ -48,8 +48,8 @@
 #' ## positions
 #' tab <- stepone$AsTable(
 #'          name.pattern = paste(react$sample$id, react$position),
-#'          cq30 = if(data$cq >= 30) ">=30" else "<30",
-#'          quantity = as.factor(sample[[react$sample$id]]$quantity$value)
+#'          add.columns = list { cq30 = if(data$cq >= 30) ">=30" else "<30",
+#'          quantity = as.factor(sample[[react$sample$id]]$quantity$value) }
 #'          )
 #' ## Show cq30 and quantities
 #' tab[c("cq30", "quantity")]
@@ -73,7 +73,7 @@ RDML$set("public", "AsTable",
              exp.id = experiment$id$id,
              run.id = run$id$id,
              react.id = react$id$id,
-             position = react$Position(run$pcrFormat),
+             position = react$position,
              sample = react$sample$id,
              target = data$tar$id,
              target.dyeId = target[[data$tar$id]]$dyeId$id,
@@ -81,12 +81,12 @@ RDML$set("public", "AsTable",
              adp = !is.null(data$adp),
              mdp = !is.null(data$mdp)),
            name.pattern = paste(
-             react$Position(run$pcrFormat),
+             react$position,
              react$sample$id,
              private$.sample[[react$sample$id]]$type$value,
              data$tar$id,
-             sep = "_"),                    
-           ...) {
+             sep = "_"),
+           add.columns = list()) {
            # create short names
            dateMade <- private$.dateMade
            dateUpdated <- private$.dateUpdated
@@ -100,25 +100,56 @@ RDML$set("public", "AsTable",
            # dilutions <- private$.dilutions
            # conditions <- private$.conditions
            
-           out <- data.frame()
-           for(experiment in private$.experiment) {
+           nrows <- 0 
+           for (experiment in private$.experiment) {
              if (!grepl("^\\.", experiment$id$id)) {
-               for(run in experiment$run) {                                    
-                 for(react in run$react) {                          
-                   for(data in react$data){
-                     out <- rbind(out,
-                                  data.frame(
-                                    eval(substitute(list(
-                                      .default,
-                                      ...))),
-                                    row.names = eval(substitute(name.pattern)),
-                                    stringsAsFactors = FALSE
-                                  ))
+               for (run in experiment$run) {                                    
+                 for (react in run$react) {                          
+                   for (data in react$data){
+                     nrows <- nrows + 1
                    }
                  }
                }
              }
            }
-           cbind(fdata.name = rownames(out), out, stringsAsFactors = FALSE)
+           
+           result.names <- c(
+             "fdata.name", names(.default), names(add.columns))
+           
+           i <- 0L
+           for (experiment in private$.experiment) {
+             if (!grepl("^\\.", experiment$id$id)) {
+               for (run in experiment$run) {                                    
+                 for (react in run$react) {                          
+                   for (data in react$data) {
+                     i <- i + 1L
+                     result <- c(
+                       fdata.name = eval(substitute(name.pattern)),
+                       eval(substitute(.default)),
+                       eval(substitute(add.columns)))
+                     ifelse(i == 1L, 
+                            {
+                              # allocate memory for table
+                              out <- data.table(
+                                data.frame(
+                                  # fdata.name = rep("", nrows),
+                                  list.map(result.names,
+                                           name ~ rep(result[[name]], nrows)),
+                                  stringsAsFactors = FALSE))
+                            }, {
+                              list.iter(
+                                result.names, 
+                                name ~ {
+                                  set(out, i, .i, 
+                                      result[[name]])
+                                })
+                            })
+                   }
+                 }
+               }
+             }
+           }
+           setkey(out, "fdata.name")
+           out
          }, 
          overwrite = TRUE)

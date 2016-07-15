@@ -70,7 +70,7 @@
 #' @importFrom R6 R6Class
 #' @importFrom plyr alply llply ldply laply ddply compact .
 #' @importFrom tidyr spread
-#' @import dplyr checkmate
+#' @import dplyr checkmate data.table
 #' @include RDML.types.R
 #' @examples 
 #' ## EXAMPLE 1:

@@ -35,13 +35,14 @@ At the end of a row, the the next row. An example for this type of plate can
 be found below : todo... }
 }
 \section{Initialization}{
- \preformatted{reactType$new(id, sample, data = NULL)}
+ \preformatted{reactType$new(id, sample, data = NULL, pcrFormat = pcrFormatType$new(8, 12, labelFormatType$new("123"), labelFormatType$new("ABC")))}
   
   @section Fields: \describe{
   \item{\code{id}}{\link{reactIdType}. See 'Details'.} 
   \item{\code{sample}}{\link{idReferencesType}. SampleID - A reference to a
   sample.} 
   \item{\code{data}}{\code{list} of \link{dataType}.}
+  \item{\code{position}}{Human readable form of the \code{react id} (i.e. '13' -> 'B1')..}
   }
 }
 
@@ -49,8 +50,9 @@ be found below : todo... }
  \describe{\item{\code{AsDataFrame(dp.type = 
   "adp")}}{Represents amplification (\code{dp.type = "adp"}) or melting 
   (\code{dp.type = "mdp"}) data points of all targets as one 
-  \code{data.frame}} \item{\code{Position(pcrformat)}}{Converts \code{react 
-  id} to thew human readable form (i.e. '13' -> 'B1'). \code{pcrFormat} is 
+  \code{data.frame}} \item{\code{.recalcPosition(pcrformat)}}{Converts \code{react 
+  id} to the human readable form (i.e. '13' -> 'B1'). This converted value can be 
+  accessed by \code{position} field. \code{pcrFormat} is 
   \code{pcrFormatType}. Currently, only 'ABC' and '123' are supported as 
   labels. For '123' '123' the \code{Position} will look like 'r01c01', for 
 'ABC' '123' it will be 'A01' and for '123' 'ABC' it will be 01A. 'ABC' 'ABC' 

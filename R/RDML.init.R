@@ -1001,6 +1001,28 @@ RDML$set("public", "initialize", function(filename,
     # run -------------------------------------------------
     GetRun <- function(run, experiment.id) {
       run.id <- xml_attr(run, "id")
+      pcrFormat <- {
+        rows <- getIntegerValue(run, "./rdml:pcrFormat/rdml:rows")
+        # check for absent of pcrFormat
+        # like in StepOne
+        if (!is.null(rows) && !is.na(rows)) {
+          pcrFormatType$new(
+            rows = rows,
+            columns = getIntegerValue(run, "./rdml:pcrFormat/rdml:columns"),
+            rowLabel = labelFormatType$new(
+              getTextValue(run, "./rdml:pcrFormat/rdml:rowLabel")),
+            columnLabel = labelFormatType$new(
+              getTextValue(run, "./rdml:pcrFormat/rdml:columnLabel"))
+          )
+        } else {
+          pcrFormatType$new(
+            rows = 8,
+            columns = 12,
+            rowLabel = labelFormatType$new("ABC"),
+            columnLabel = labelFormatType$new("123")
+          )
+        }
+      }
       if (show.progress)
         cat(sprintf("\n\trun: %s\n", run.id))
       runType$new(
@@ -1034,29 +1056,7 @@ RDML$set("public", "initialize", function(filename,
               xml_find_first("rdml:thermalCyclingConditions", rdml.env$ns) %>>% 
               genIdRef(),
             error = function(e) NULL),
-        pcrFormat = 
-        {
-          rows <- getIntegerValue(run, "./rdml:pcrFormat/rdml:rows")
-          # check for absent of pcrFormat
-          # like in StepOne
-          if(!is.null(rows) && !is.na(rows)) {
-            pcrFormatType$new(
-              rows = rows,
-              columns = getIntegerValue(run, "./rdml:pcrFormat/rdml:columns"),
-              rowLabel = labelFormatType$new(
-                getTextValue(run, "./rdml:pcrFormat/rdml:rowLabel")),
-              columnLabel = labelFormatType$new(
-                getTextValue(run, "./rdml:pcrFormat/rdml:columnLabel"))
-            )
-          } else {
-            pcrFormatType$new(
-              rows = 12,
-              columns = 8,
-              rowLabel = labelFormatType$new("ABC"),
-              columnLabel = labelFormatType$new("123")
-            )
-          }
-        },
+        pcrFormat = pcrFormat,
         runDate = getTextValue(run, "./rdml:runDate"),
         react =
           list.map(run %>>%

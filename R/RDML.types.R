@@ -33,7 +33,7 @@ rdmlBaseType <-
           # class = FALSE,
           public = list(
             .asXMLnodes = function(node.name,
-                                    namespaceDefinitions = NULL) {
+                                   namespaceDefinitions = NULL) {
               subnodes <- names(private)[grepl("^\\..*$",
                                                names(private))] %>% rev
               sprintf("<%s%s>%s</%s>",
@@ -247,7 +247,7 @@ idType <-
               sprintf("<%s id = '%s'/>",
                       node.name,
                       private$.id)
-              }
+            }
             #                         print = function(...) {
             #                           cat(private$.id)
             #                         }
@@ -2049,20 +2049,22 @@ dataType <-
 #' At the end of a row, the the next row. An example for this type of plate can 
 #' be found below : todo... }
 #' 
-#' @section Initialization: \preformatted{reactType$new(id, sample, data = NULL)}
+#' @section Initialization: \preformatted{reactType$new(id, sample, data = NULL, pcrFormat = pcrFormatType$new(8, 12, labelFormatType$new("123"), labelFormatType$new("ABC")))}
 #'   
 #'   @section Fields: \describe{
 #'   \item{\code{id}}{\link{reactIdType}. See 'Details'.} 
 #'   \item{\code{sample}}{\link{idReferencesType}. SampleID - A reference to a
 #'   sample.} 
 #'   \item{\code{data}}{\code{list} of \link{dataType}.}
+#'   \item{\code{position}}{Human readable form of the \code{react id} (i.e. '13' -> 'B1')..}
 #'   }
 #'   
 #' @section Methods: \describe{\item{\code{AsDataFrame(dp.type = 
 #'   "adp")}}{Represents amplification (\code{dp.type = "adp"}) or melting 
 #'   (\code{dp.type = "mdp"}) data points of all targets as one 
-#'   \code{data.frame}} \item{\code{Position(pcrformat)}}{Converts \code{react 
-#'   id} to thew human readable form (i.e. '13' -> 'B1'). \code{pcrFormat} is 
+#'   \code{data.frame}} \item{\code{.recalcPosition(pcrformat)}}{Converts \code{react 
+#'   id} to the human readable form (i.e. '13' -> 'B1'). This converted value can be 
+#'   accessed by \code{position} field. \code{pcrFormat} is 
 #'   \code{pcrFormatType}. Currently, only 'ABC' and '123' are supported as 
 #'   labels. For '123' '123' the \code{Position} will look like 'r01c01', for 
 #' 'ABC' '123' it will be 'A01' and for '123' 'ABC' it will be 01A. 'ABC' 'ABC' 
@@ -2079,15 +2081,20 @@ reactType <-
           public = list(
             initialize = function(id,
                                   sample,
-                                  data = NULL) {
+                                  data = NULL,
+                                  pcrFormat = NULL) {
               assertClass(id, "reactIdType")
               assertClass(sample, "idReferencesType")
               assert(checkNull(data),
                      checkList(data, "dataType"))
+              assert(checkNull(pcrFormat),
+                     assertClass(pcrFormat, "pcrFormatType"))
               private$.id <- id
               private$.sample <- sample
               private$.data <- with.names(data,
                                           quote(.$tar$id))
+              if (!is.null(pcrFormat))
+                self$.recalcPosition(pcrFormat)
             },
             AsDataFrame = function(dp.type = "adp",
                                    long.table = FALSE) {
@@ -2099,41 +2106,43 @@ reactType <-
                     cbind(tar = data$tar$id),
                   .id = "tar")
               
-              if (long.table == FALSE) out <- out %>% spread(tar,
-                                                             fluor) 
+              if (long.table == FALSE) out <- out %>>% spread(tar,
+                                                              fluor)
               out
             },
-            Position = function(pcrFormat) {
+            .recalcPosition = function(pcrFormat) {
               assertClass(pcrFormat, "pcrFormatType")
-              if (pcrFormat$rowLabel$value == "ABC" && pcrFormat$columnLabel$value == "123") {
-                if (pcrFormat$rows > length(LETTERS)) {
-                  stop("Too many rows for 'ABC' format")
-                } else {
-                  sprintf("%s%02i",
-                          LETTERS[(private$.id$id - 1) %/% pcrFormat$columns + 1],
-                          as.integer((private$.id$id - 1) %% pcrFormat$columns + 1))
-                }
-              } else if (pcrFormat$columnLabel$value == "ABC" && pcrFormat$rowLabel$value == "123") {
-                if (pcrFormat$columns > length(LETTERS)) {
-                  stop("Too many columns for 'ABC' format")
-                } else {
-                  sprintf("%02i%s",
+              private$calced.position <- 
+                if (pcrFormat$rowLabel$value == "ABC" && pcrFormat$columnLabel$value == "123") {
+                  if (pcrFormat$rows > length(LETTERS)) {
+                    stop("Too many rows for 'ABC' format")
+                  } else {
+                    sprintf("%s%02i",
+                            LETTERS[(private$.id$id - 1) %/% pcrFormat$columns + 1],
+                            as.integer((private$.id$id - 1) %% pcrFormat$columns + 1))
+                  }
+                } else if (pcrFormat$columnLabel$value == "ABC" && pcrFormat$rowLabel$value == "123") {
+                  if (pcrFormat$columns > length(LETTERS)) {
+                    stop("Too many columns for 'ABC' format")
+                  } else {
+                    sprintf("%02i%s",
+                            as.integer((private$.id$id - 1) %/% pcrFormat$columns + 1),
+                            LETTERS[(private$.id$id - 1) %% pcrFormat$columns + 1])
+                  }
+                } else  if (pcrFormat$rowLabel$value == "123" && pcrFormat$columnLabel$value == "123") {
+                  sprintf("r%02ic%02i",
                           as.integer((private$.id$id - 1) %/% pcrFormat$columns + 1),
-                          LETTERS[(private$.id$id - 1) %% pcrFormat$columns + 1])
+                          as.integer((private$.id$id - 1) %% pcrFormat$columns + 1))
+                } else {
+                  stop("Unsupported PCR format.")
                 }
-              } else if (pcrFormat$rowLabel$value == "123" && pcrFormat$columnLabel$value == "123") {
-                sprintf("r%02ic%02i",
-                        as.integer((private$.id$id - 1) %/% pcrFormat$columns + 1),
-                        as.integer((private$.id$id - 1) %% pcrFormat$columns + 1))
-              } else {
-                stop("Unsupported PCR format.")
-              }
             }
           ),
           private = list(
             .id = NULL,
             .sample = NULL,
-            .data = NULL
+            .data = NULL,
+            calced.position = NULL
           ),
           active = list(
             id = function(id) {
@@ -2155,6 +2164,9 @@ reactType <-
                      checkList(data, "dataType"))
               private$.data <- with.names(data,
                                           quote(.$tar$id))
+            },
+            position = function() {
+              private$calced.position
             }
           ))
 
@@ -2459,6 +2471,8 @@ runType <-
               private$.runDate <- runDate
               private$.react <- with.names(react,
                                            quote(.$id$id))
+              list.iter(self$react,
+                        react ~ react$.recalcPosition(self$pcrFormat))
             },
             AsDataFrame = function(dp.type = "adp",
                                    long.table = FALSE) {
@@ -2571,6 +2585,8 @@ runType <-
                 return(private$.pcrFormat)
               assertClass(pcrFormat, "pcrFormatType")
               private$.pcrFormat <- pcrFormat
+              list.iter(self$react,
+                        react ~ react$.recalcPosition(self$pcrFormat))
             },
             runDate = function(runDate) {
               if (missing(runDate))
