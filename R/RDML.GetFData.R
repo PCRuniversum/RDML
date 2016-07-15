@@ -4,8 +4,6 @@
 #' of experiment.
 #' 
 #' @param request Output from AsTable method(\link{RDML.AsTable})
-#' @param limits range of cycles or temperature. If range is wider than range of 
-#' data, NA will be introduced.
 #' @param dp.type Type of fluorescence data (i.e. 'adp' for qPCR or 'mdp' for
 #'   melting)
 #' @param long.table Output table is ready for ggplot (See \link{RDML.AsTable}
@@ -42,31 +40,17 @@ RDML$set("public", "GetFData",
                   limits = NULL,
                   dp.type = "adp",
                   long.table = FALSE) {
+           if (length(unique(request$fdata.name)) != length(request$fdata.name)) {
+             warning("fdata.name column has duplicates! Generating new by exp.id, run.id, react.id and target")
+             request[, fdata.name := paste(exp.id, run.id, react.id, target, sep = "_"),
+                     by = .(exp.id, run.id, react.id, target)]
+           }
            out <- 
-             ddply(request, .(fdata.name), function(el) {
-               private$.experiment[[el$exp.id]]$run[[el$run.id]]$react[[as.character(
-                 el$react.id)]]$data[[el$target]]$AsDataFrame(dp.type = dp.type) %>% 
-                 cbind(fdata.name = el$fdata.name)
-             },
-             .id = "fdata.name"
-             )
-           ## Asserts for limits
-           if (!is.null(limits)) {
-             out <- out[out[, 1] >= limits[1] & out[, 1] <= limits[2], ]
-           }
-           if (long.table == FALSE) {
-             out <- out %>%
-               spread(fdata.name,
-                      fluor)
-           } else {
-             rownames(request) <- request$fdata.name
-             for(param in colnames(request)[-1]) {
-               for(fn in request$fdata.name) {
-                 out[out$fdata.name == fn,
-                     param] <- request[fn, param]
-               }
-             }
-           }
-           out
+             request[, self$experiment[[exp.id]]$run[[run.id]]$react[[as.character(
+               react.id)]]$data[[target]]$GetFData(), by = .(fdata.name)]
+           ifelse(long.table == FALSE,
+             return(dcast(out, cyc ~ fdata.name, value.var = "fluor")),
+             return(merge(request, out, by = "fdata.name"))
+           )
          }, 
          overwrite = TRUE)

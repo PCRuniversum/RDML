@@ -899,11 +899,8 @@ RDML$set("public", "initialize", function(filename,
           if (!is.null(fluor)) {
             if (!is.null(tmp)) {
               # tryCatch(
-                adpsType$new(matrix(c(cyc, tmp, fluor), 
-                                    byrow = FALSE,
-                                    ncol = 3,
-                                    dimnames = list(NULL,
-                                                    c("cyc", "tmp", "fluor"))))
+                adpsType$new(
+                  data.table(cyc = cyc, tmp = tmp, fluor = fluor))
               # ,
               #   warning = function(w) {
               #     dat <<- list(cyc, tmp, fluor)
@@ -911,11 +908,8 @@ RDML$set("public", "initialize", function(filename,
               #   }
               # )
             } else {
-              adpsType$new(matrix(c(cyc, fluor), 
-                                  byrow = FALSE,
-                                  ncol = 2,
-                                  dimnames = list(NULL,
-                                                  c("cyc", "fluor"))))
+              adpsType$new(
+                data.table(cyc = cyc, fluor = fluor))
             }
           } else {
             #           matrix(ncol = 2,
@@ -935,11 +929,7 @@ RDML$set("public", "initialize", function(filename,
             #                                                                c("tmp", "fluor"))) %>% 
             #             typeof %>% print
             #           NULL
-            mdpsType$new(matrix(c(tmp, fluor), 
-                                byrow = FALSE,
-                                ncol = 2,
-                                dimnames = list(NULL,
-                                                c("tmp", "fluor"))))
+            mdpsType$new(data.table(tmp = tmp, fluor = fluor))
           } else {
             #           matrix(ncol = 2,
             #                  dimnames = list(NULL,

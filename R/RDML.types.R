@@ -1755,26 +1755,29 @@ adpsType <-
           inherit = rdmlBaseType,
           public = list(
             initialize = function(fpoints) {
+              assert(checkDataFrame(fpoints))
               assert(
-                length(setdiff(colnames(fpoints), c("cyc", "tmp", "fluor"))) == 0||
+                length(setdiff(colnames(fpoints), c("cyc", "tmp", "fluor"))) == 0 ||
                   length(setdiff(colnames(fpoints), c("cyc", "fluor"))) == 0)
-              assertMatrix(fpoints, mode = "numeric")
-              private$.fpoints <- fpoints
+              private$.fpoints <- {
+                if (checkDataTable(fpoints))
+                  fpoints
+                else
+                  data.table(fpoints)
+              }
             },
             .asXMLnodes = function(node.name) {
-              apply(private$.fpoints,
-                    1,
-                    function(fpoints.row) {
-                      sprintf("<adp><cyc>%s</cyc>%s<fluor>%s</fluor></adp>",
-                              fpoints.row["cyc"],
-                              {
-                                if(!is.na(fpoints.row["tmp"]))
-                                  sprintf("<tmp>%s</tmp>",
-                                          fpoints.row["tmp"])
-                                else ""
-                              },
-                              fpoints.row["fluor"])
-                    }) %>% paste0(collapse = "")
+              (ifelse("tmp" %in% colnames(private$.fpoints),
+                      return(
+                        private$.fpoints[, sprintf("<adp><cyc>%s</cyc><tmp>%s</tmp><fluor>%s</fluor></adp>",
+                                                   cyc, tmp, fluor)]
+                      ),
+                      return(
+                        private$.fpoints[, sprintf("<adp><cyc>%s</cyc><fluor>%s</fluor></adp>",
+                                                   cyc, fluor)]
+                      ))
+               )() %>>% 
+                paste0(collapse = "")
             }
           ),
           private = list(
@@ -1784,11 +1787,16 @@ adpsType <-
             fpoints = function(fpoints) {
               if (missing(fpoints))
                 return(private$.fpoints)
+              assert(checkDataFrame(fpoints))
               assert(
-                length(setdiff(colnames(fpoints), c("cyc", "tmp", "fluor"))) == 0||
+                length(setdiff(colnames(fpoints), c("cyc", "tmp", "fluor"))) == 0 ||
                   length(setdiff(colnames(fpoints), c("cyc", "fluor"))) == 0)
-              assertMatrix(fpoints, mode = "numeric")
-              private$.fpoints <- fpoints
+              private$.fpoints <- {
+                if (checkDataTable(fpoints))
+                  fpoints
+                else
+                  data.table(fpoints)
+              }
             }
           ))
 
@@ -1822,18 +1830,19 @@ mdpsType <-
           inherit = rdmlBaseType,
           public = list(
             initialize = function(fpoints) {
+              assert(checkDataFrame(fpoints))
               assert(length(setdiff(colnames(fpoints), c("tmp", "fluor"))) == 0)
-              assertMatrix(fpoints, mode = "numeric")
-              private$.fpoints <- fpoints
+              private$.fpoints <- {
+                if (checkDataTable(fpoints))
+                  fpoints
+                else
+                  data.table(fpoints)
+              }
             },
             .asXMLnodes = function(node.name) {
-              apply(private$.fpoints,
-                    1,
-                    function(fpoints.row) {
-                      sprintf("<mdp><tmp>%s</tmp><fluor>%s</fluor></mdp>",
-                              fpoints.row["tmp"],
-                              fpoints.row["fluor"])
-                    }) %>% paste0(collapse = "")
+              private$.fpoints[, sprintf("<mdp><tmp>%s</tmp><fluor>%s</fluor></mdp>",
+                                         tmp, fluor)] %>>% 
+                paste0(collapse = "")
             }
           ),
           private = list(
@@ -1843,9 +1852,14 @@ mdpsType <-
             fpoints = function(fpoints) {
               if (missing(fpoints))
                 return(private$.fpoints)
+              assert(checkDataFrame(fpoints))
               assert(length(setdiff(colnames(fpoints), c("tmp", "fluor"))) == 0)
-              assertMatrix(fpoints, mode = "numeric")
-              private$.fpoints <- fpoints
+              private$.fpoints <- {
+                if (checkDataTable(fpoints))
+                  fpoints
+                else
+                  data.table(fpoints)
+              }
             }
           ))
 
@@ -1936,13 +1950,10 @@ dataType <-
               private$.bgFluorSlp <- bgFluorSlp
               private$.quantFluor <- quantFluor
             },
-            AsDataFrame = function(dp.type = "adp") {
-              self[[dp.type]]$fpoints %>% 
-                as.data.frame %>% 
-                select(ifelse(dp.type == "adp",
-                              cyc,
-                              tmp),
-                       fluor)
+            GetFData = function(dp.type = "adp") {
+              ifelse(dp.type == "adp",
+                     return(self[[dp.type]]$fpoints[, .(cyc, fluor)]),
+                     return(self[[dp.type]]$fpoints[, .(tmp, fluor)]))
             }
           ),
           private = list(
@@ -2096,19 +2107,22 @@ reactType <-
               if (!is.null(pcrFormat))
                 self$.recalcPosition(pcrFormat)
             },
-            AsDataFrame = function(dp.type = "adp",
+            GetFData = function(dp.type = "adp",
                                    long.table = FALSE) {
               assertString(dp.type)
-              out <-
-                private$.data %>% 
-                ldply(function(data)
-                  data$AsDataFrame(dp.type) %>% 
-                    cbind(tar = data$tar$id),
-                  .id = "tar")
-              
-              if (long.table == FALSE) out <- out %>>% spread(tar,
-                                                              fluor)
-              out
+              assertFlag(long.table)
+              out <- 
+                list.map(private$.data,
+                         data ~ {
+                           fdata <- data$GetFData(dp.type)
+                           set(fdata, , 
+                               "tar", data$tar$id)
+                           fdata
+                           }) %>>% 
+                rbindlist()
+              ifelse(long.table,
+                     return(out),
+                     return(dcast(out, cyc ~ tar, value.var = "fluor")))
             },
             .recalcPosition = function(pcrFormat) {
               assertClass(pcrFormat, "pcrFormatType")
@@ -2474,33 +2488,30 @@ runType <-
               list.iter(self$react,
                         react ~ react$.recalcPosition(self$pcrFormat))
             },
-            AsDataFrame = function(dp.type = "adp",
-                                   long.table = FALSE) {
+            GetFData = function(dp.type = "adp",
+                                long.table = FALSE) {
               assertString(dp.type)
-              out <- 
-                private$.react %>% 
-                ldply(function(react)
-                  
-                  react$AsDataFrame(
-                    dp.type = dp.type,
-                    long.table = TRUE) %>% 
-                    cbind(.,
-                          sname = 
-                            sprintf("%s_%s",
-                                    react$id$id,
-                                    react$sample$id)
-                    ),
-                  .id = ifelse(dp.type == "adp",
-                               "cyc",
-                               "tmp"))
+              assertFlag(long.table)
               
-              if (long.table == FALSE) out <- out %>% 
-                tidyr::unite(sname_tar, sname, tar, sep = "_") %>% 
-                tidyr::spread(sname_tar, fluor) #%>% 
-              #                   arrange(ifelse(dp.type == "adp",
-              #                                  cyc,
-              #                                  tmp))
-              out
+              out <- 
+                list.map(private$.react,
+                         react ~ {
+                           fdata <- react$GetFData(
+                             dp.type = dp.type,
+                             long.table = TRUE)
+                           set(fdata, , 
+                               c("react.id", "react.sample"), 
+                               list(react$id$id,
+                                    react$sample$id))
+                           fdata
+                         }) %>>% 
+                rbindlist()
+              
+              ifelse(long.table == FALSE,
+                return(dcast(out, cyc ~ react.id + react.sample + tar,
+                             value.var = "fluor")),
+                return(out)
+              )
             }
           ),
           private = list(
@@ -2654,25 +2665,29 @@ experimentType <-
               private$.run <- with.names(run,
                                          quote(.$id$id))
             },
-            AsDataFrame = function(dp.type = "adp",
-                                   long.table = FALSE) {
+            GetFData = function(dp.type = "adp",
+                                long.table = FALSE) {
               assertString(dp.type)
               assertFlag(long.table)
-              out <-
-                private$.run %>% 
-                ldply(function(run)
-                  run$AsDataFrame(
-                    dp.type = dp.type,
-                    long.table = TRUE) %>% 
-                    cbind(.,  run = run$id$id,
-                          row.names = NULL),
-                  .id = ifelse(dp.type == "adp",
-                               "cyc",
-                               "tmp"))
-              if (long.table == FALSE) out <- out %>%
-                tidyr::unite(run_sname_tar, run, sname, tar, sep = "_") %>% 
-                tidyr::spread(run_sname_tar, fluor)
-              out
+              
+              out <- 
+                list.map(private$.run,
+                         run ~ {
+                           fdata <- run$GetFData(
+                             dp.type = dp.type,
+                             long.table = TRUE)
+                           set(fdata, , 
+                               "run", run$id$id)
+                           fdata
+                         }) %>>% 
+                rbindlist()
+              
+              ifelse(long.table == FALSE,
+                     return(dcast(out,
+                                  cyc ~ react.id + react.sample + tar + run,
+                                  value.var = "fluor")),
+                     return(out)
+              )
             }
           ),
           private = list(

@@ -116,6 +116,13 @@ RDML$set("public", "AsTable",
            result.names <- c(
              "fdata.name", names(.default), names(add.columns))
            
+           out <- matrix(ncol = length(result.names),
+                         nrow = nrows,
+                         dimnames = list(
+                           rows = NULL,
+                           columns = result.names
+                         )) %>>% 
+             data.table()
            i <- 0L
            for (experiment in private$.experiment) {
              if (!grepl("^\\.", experiment$id$id)) {
@@ -127,15 +134,12 @@ RDML$set("public", "AsTable",
                        fdata.name = eval(substitute(name.pattern)),
                        eval(substitute(.default)),
                        eval(substitute(add.columns)))
-                     ifelse(i == 1L, 
+                     ifelse(i == 1L,
                             {
-                              # allocate memory for table
-                              out <- data.table(
-                                data.frame(
-                                  # fdata.name = rep("", nrows),
-                                  list.map(result.names,
-                                           name ~ rep(result[[name]], nrows)),
-                                  stringsAsFactors = FALSE))
+                              # set columns type
+                              list.iter(result.names,
+                                        name ~ set(out, , .i,
+                                                   rep(result[[name]], nrows)))
                             }, {
                               list.iter(
                                 result.names, 

@@ -154,18 +154,10 @@ RDML$set("public", "SetFData",
                data[[descr.row["target"]]][[fdata.type]] <- {
                  if(fdata.type == "adp") {
                    adpsType$new(
-                     matrix(c(fdata[, 1], fdata[, fdata.n]),
-                            byrow = FALSE,
-                            ncol = 2,
-                            dimnames = list(NULL,
-                                            c("cyc", "fluor"))))
+                     data.table(cyc = fdata[, 1], fluor = fdata[, fdata.n]))
                  } else {
                    mdpsType$new(
-                     matrix(c(fdata[, 1], fdata[, fdata.n]), 
-                            byrow = FALSE,
-                            ncol = 2,
-                            dimnames = list(NULL,
-                                            c("tmp", "fluor"))))
+                     data.table(tmp = fdata[, 1], fluor = fdata[, fdata.n]))
                  }
                }
            }
