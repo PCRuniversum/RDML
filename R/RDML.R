@@ -66,11 +66,8 @@
 #' @docType class
 #' @format An \code{\link{R6Class}} generator object.
 #' @export
-#' @import rlist
 #' @importFrom R6 R6Class
-#' @importFrom plyr alply llply ldply laply ddply compact .
-#' @importFrom tidyr spread
-#' @import dplyr checkmate data.table
+#' @import checkmate data.table rlist pipeR
 #' @include RDML.types.R
 #' @examples 
 #' ## EXAMPLE 1:
@@ -190,7 +187,7 @@ RDML <- R6Class("RDML",
                   AsXML = function(file.name) {
                     tree <- self$.asXMLnodes("rdml") %>% 
                       sub('>', ' xmlns="http://www.rdml.org" version="1.2">', .)
-                    if(missing(file.name))
+                    if (missing(file.name))
                       return(tree)
                     cat(tree,
                         file = "rdml_data.xml")
@@ -213,21 +210,21 @@ RDML <- R6Class("RDML",
                 ),
                 active = list(
                   dateMade = function(date.made) {
-                    if(missing(date.made))
+                    if (missing(date.made))
                       return(private$.dateMade)
                     assert(checkNull(date.made), checkString(date.made))
                     private$.dateMade <- date.made
                   },
                   
                   dateUpdated = function(date.updated) {
-                    if(missing(date.updated))
+                    if (missing(date.updated))
                       return(private$.dateUpdated)
                     assert(checkNull(date.updated), checkString(date.updated))
                     private$.dateUpdated <- date.updated
                   },
                   
                   id = function(id) {
-                    if(missing(id))
+                    if (missing(id))
                       return(private$.id)                    
                     assertList(id, "rdmlIdType")
                     private$.id <- 
@@ -236,7 +233,7 @@ RDML <- R6Class("RDML",
                   },
                   
                   experimenter = function(experimenter) {
-                    if(missing(experimenter))
+                    if (missing(experimenter))
                       return(private$.experimenter)
                     assertList(experimenter, "experimenterType")
                     private$.experimenter <- 
@@ -245,7 +242,7 @@ RDML <- R6Class("RDML",
                   },
                   
                   documentation = function(documentation) {
-                    if(missing(documentation))
+                    if (missing(documentation))
                       return(private$.documentation)
                     assertList(documentation, "documentationType")                    
                     private$.documentation <- 
@@ -254,7 +251,7 @@ RDML <- R6Class("RDML",
                   },
                   
                   dye = function(dye) {
-                    if(missing(dye))
+                    if (missing(dye))
                       return(private$.dye)
                     assertList(dye, "dyeType")
                     private$.dye <- 
@@ -263,7 +260,7 @@ RDML <- R6Class("RDML",
                   },
                   
                   sample = function(sample) {
-                    if(missing(sample))
+                    if (missing(sample))
                       return(private$.sample)
                     assertList(sample, "sampleType")
                     private$.sample <- 
@@ -272,7 +269,7 @@ RDML <- R6Class("RDML",
                   },
                   
                   target = function(target) {
-                    if(missing(target))
+                    if (missing(target))
                       return(private$.target)
                     assertList(target, "targetType")
                     private$.target <- 
@@ -281,7 +278,7 @@ RDML <- R6Class("RDML",
                   },
                   
                   thermalCyclingConditions = function(thermalCyclingConditions) {
-                    if(missing(thermalCyclingConditions))
+                    if (missing(thermalCyclingConditions))
                       return(private$.thermalCyclingConditions)
                     assertList(thermalCyclingConditions, "thermalCyclingConditionsType")
                     private$.thermalCyclingConditions <- 
@@ -290,7 +287,7 @@ RDML <- R6Class("RDML",
                   },
                   
                   experiment = function(experiment) {
-                    if(missing(experiment))
+                    if (missing(experiment))
                       return(private$.experiment)
                     assertList(experiment, "experimentType")
                     private$.experiment <- with.names(experiment,

@@ -7,9 +7,6 @@
 \arguments{
 \item{request}{Output from AsTable method(\link{RDML.AsTable})}
 
-\item{limits}{range of cycles or temperature. If range is wider than range of 
-data, NA will be introduced.}
-
 \item{dp.type}{Type of fluorescence data (i.e. 'adp' for qPCR or 'mdp' for
 melting)}
 

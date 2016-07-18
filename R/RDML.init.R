@@ -61,7 +61,7 @@ xmlValue <- function(val) {
 }
 
 # xmlAttrs <- function(...) {
-#   XML::xmlAttrs(...) %>% iconv("UTF-8", "UTF-8")
+#   XML::xmlAttrs(...) %>>% iconv("UTF-8", "UTF-8")
 # }
 
 # as.logical <- function(val) {
@@ -241,11 +241,8 @@ GetRefGenesRoche <- function(uniq.folder)
 #' @name new
 #' @aliases RDML.new
 #' @rdname new-method
-#' @import xml2
-#' @import pipeR
 #' @importFrom tools file_ext
 #' @importFrom readxl read_excel
-#' @importFrom tidyr gather unite spread
 #' @importFrom stringr str_match_all
 #' @include RDML.R
 #' @examples
@@ -284,56 +281,56 @@ RDML$set("public", "initialize", function(filename,
     tryCatch({
       uniq.folder <- tempfile()
       unzipped <- unzip(filename, exdir = uniq.folder)
-      # multicomponent.data <- paste0(uniq.folder, "\\apldbio\\sds\\multicomponent_data.txt") %>% 
-      #   read.delim(skip = 2, stringsAsFactors = FALSE) %>% 
+      # multicomponent.data <- paste0(uniq.folder, "\\apldbio\\sds\\multicomponent_data.txt") %>>% 
+      #   read.delim(skip = 2, stringsAsFactors = FALSE) %>>% 
       #   filter(!is.na(WELL))
       data.file <- paste0(uniq.folder, "\\apldbio\\sds\\multicomponent_data.txt")
-      multicomponent.data <- readChar(data.file, file.info(data.file)$size) %>% 
+      multicomponent.data <- readChar(data.file, file.info(data.file)$size) %>>% 
         str_match_all("([0-9]+)\\t([0-9]+)\\t([A-Z]+)\\t[0-9]+\\.?[0-9]*\\t([0-9]+\\.?[0-9]*)")
       multicomponent.data <- as.data.frame(multicomponent.data[[1]], stringsAsFactors = FALSE)
       names(multicomponent.data) <- c("_", "well", "cyc", "dye", "fluor")
-      multicomponent.data <- multicomponent.data %>% 
+      multicomponent.data <- multicomponent.data %>>% 
         mutate(well = as.numeric(well),
                cyc = as.numeric(cyc),
                fluor = as.numeric(fluor))
-      ncycles <- multicomponent.data$cyc %>% max + 1
+      ncycles <- multicomponent.data$cyc %>>% max + 1
       
-      plate.setup <- paste0(uniq.folder, "\\apldbio\\sds\\plate_setup.xml") %>%
-        xmlParse %>% xmlRoot
+      plate.setup <- paste0(uniq.folder, "\\apldbio\\sds\\plate_setup.xml") %>>%
+        xmlParse() %>>% xmlRoot()
       
       snames <- xpathSApply(plate.setup,
                             "/Plate/FeatureMap/Feature[Id='sample']/../FeatureValue/FeatureItem/Sample/Name",
                             xmlValue)
       names(snames) <- xpathSApply(plate.setup,
                                    "/Plate/FeatureMap/Feature[Id='sample']/../FeatureValue/Index",
-                                   xmlValue) %>% as.integer + 1
+                                   xmlValue) %>>% as.integer + 1
       
       description <- data.frame()
       list.iter(getNodeSet(plate.setup,
                            "/Plate/FeatureMap/Feature[Id='detector-task']/../FeatureValue"), {
-                             index <- .[["Index"]] %>% xmlValue() %>% as.integer + 1
+                             index <- .[["Index"]] %>>% xmlValue() %>>% as.integer + 1
                              
                              #only one task allowed!
-                             task <- .[["FeatureItem"]][["DetectorTaskList"]][[1]][["Task"]] %>%
-                               xmlValue %>% 
+                             task <- .[["FeatureItem"]][["DetectorTaskList"]][[1]][["Task"]] %>>%
+                               xmlValue %>>% 
                                switch (
                                  UNKNOWN = "unkn",
                                  NTC = "ntc",
                                  STANDARD = "std"
                                )
-                             size <- .[["FeatureItem"]][["DetectorTaskList"]] %>% xmlSize
+                             size <- .[["FeatureItem"]][["DetectorTaskList"]] %>>% xmlSize
                              list.iter(.[["FeatureItem"]][["DetectorTaskList"]][1:size], {
                                description <<- rbind(description, 
-                                                     data.frame(fdata.name = paste(index, .[["Detector"]][["Reporter"]] %>% xmlValue),
+                                                     data.frame(fdata.name = paste(index, .[["Detector"]][["Reporter"]] %>>% xmlValue),
                                                                 exp.id = "exp1",
                                                                 run.id = "run1",
                                                                 react.id = index,
                                                                 sample = ifelse(is.na(snames[as.character(index)]),
-                                                                                "unnamed", snames[as.character(index)]) %>% unname,
+                                                                                "unnamed", snames[as.character(index)]) %>>% unname,
                                                                 type = task,
-                                                                target = .[["Detector"]][["Name"]] %>% xmlValue,
-                                                                target.dyeId = .[["Detector"]][["Reporter"]] %>% xmlValue,
-                                                                quantity = .[["Concentration"]] %>% xmlValue %>% as.numeric,
+                                                                target = .[["Detector"]][["Name"]] %>>% xmlValue,
+                                                                target.dyeId = .[["Detector"]][["Reporter"]] %>>% xmlValue,
+                                                                quantity = .[["Concentration"]] %>>% xmlValue %>>% as.numeric,
                                                                 IsOmit = FALSE,
                                                                 stringsAsFactors = FALSE))
                              })})
@@ -341,16 +338,16 @@ RDML$set("public", "initialize", function(filename,
       
       omitted.i <- xpathSApply(plate.setup,
                                "/Plate/Wells/Well[IsOmit='true']/Index",
-                               xmlValue) %>% as.integer + 1
+                               xmlValue) %>>% as.integer + 1
       description[description$react.id == omitted.i, "IsOmit"] <- TRUE
-      description <- description %>%
+      description <- description %>>%
         filter(IsOmit == FALSE)
       
-      fdata <- cbind(data.frame(multicomponent.data$cyc %>% unique + 1),
+      fdata <- cbind(data.frame(multicomponent.data$cyc %>>% unique + 1),
                      apply(description, 1, 
                            function(r) {
-                             multicomponent.data %>% filter(well == as.integer(r["react.id"]) - 1,
-                                                            dye == r["target.dyeId"]) %>% 
+                             multicomponent.data %>>% filter(well == as.integer(r["react.id"]) - 1,
+                                                            dye == r["target.dyeId"]) %>>% 
                                .$fluor
                            }))
       names(fdata) <- c("cyc", description$fdata.name)
@@ -363,12 +360,12 @@ RDML$set("public", "initialize", function(filename,
   
   # RotorGene -----------------------------------------------------------------
   fromRotorGene <- function() {
-    dat <- filename %>% 
-      xmlParse %>% xmlRoot
+    dat <- filename %>>% 
+      xmlParse %>>% xmlRoot
     
-    description <- dat %>% 
-      getNodeSet("/Experiment/Samples/Page/Sample/Name/text()[1]/../..") %>% 
-      list.map(xmlToList(.)) %>% 
+    description <- dat %>>% 
+      getNodeSet("/Experiment/Samples/Page/Sample/Name/text()[1]/../..") %>>% 
+      list.map(xmlToList(.)) %>>% 
       list.map(list(
         fdata.name = ID,
         exp.id = "exp1",
@@ -381,23 +378,23 @@ RDML$set("public", "initialize", function(filename,
                       "1" = "std",
                       "unkn"),
         quantity = GivenConc
-      ))  %>% 
-      list.stack %>% 
-      mutate(react.id = react.id %>% as.numeric,
-             quantity = quantity %>% as.numeric)
+      ))  %>>% 
+      list.stack %>>% 
+      mutate(react.id = react.id %>>% as.numeric,
+             quantity = quantity %>>% as.numeric)
     
-    dat[["Samples"]][["Groups"]] %>% 
-      xmlToList %>% 
+    dat[["Samples"]][["Groups"]] %>>% 
+      xmlToList %>>% 
       list.iter(group ~ {
-        ids <- group[-c(1, 2)] %>% list.mapv(Tube)
+        ids <- group[-c(1, 2)] %>>% list.mapv(Tube)
         description[description$fdata.name %in% ids, "target"] <<- group$Name
       })
     
     original.targets <- description$target
-    dat %>% 
-      getNodeSet("/Experiment/RawChannels/RawChannel") %>% 
+    dat %>>% 
+      getNodeSet("/Experiment/RawChannels/RawChannel") %>>% 
       list.iter(rawChannel ~ {
-        description$target.dyeId <<- rawChannel[["Name"]] %>% xmlValue
+        description$target.dyeId <<- rawChannel[["Name"]] %>>% xmlValue
         description$target <<- paste(original.targets,
                                      description$target.dyeId[1], sep = "#")
         fdata <- 
@@ -406,9 +403,9 @@ RDML$set("public", "initialize", function(filename,
                      "/Experiment/RawChannels/RawChannel/Name[text()='%s']/../Reading",
                      description$target.dyeId[1]
                      ),
-                     xmlValue)[description$react.id] %>%
-          list.map(x ~ {strsplit(x, " ") %>% .[[1]] %>% as.numeric %>% as.list}) %>%
-          list.stack %>% 
+                     xmlValue)[description$react.id] %>>%
+          list.map(x ~ {strsplit(x, " ") %>>% .[[1]] %>>% as.numeric %>>% as.list}) %>>%
+          list.stack %>>% 
           t
         colnames(fdata) <- description$react.id
         fdata <- cbind(cyc = 1:nrow(fdata), fdata)
@@ -423,16 +420,16 @@ RDML$set("public", "initialize", function(filename,
                         sheet = "description")
     adp_data <- tryCatch({
       read_excel(filename,
-                 sheet = "adp") %>% 
-        sapply(as.numeric) %>% 
+                 sheet = "adp") %>>% 
+        sapply(as.numeric) %>>% 
         as.data.frame
     },
     error = function(e) NULL)
     
     mdp_data <- tryCatch({
       read_excel(filename,
-                 sheet = "mdp") %>% 
-        sapply(as.numeric) %>% 
+                 sheet = "mdp") %>>% 
+        sapply(as.numeric) %>>% 
         as.data.frame
     },
     error = function(e) NULL)
@@ -647,7 +644,7 @@ RDML$set("public", "initialize", function(filename,
                      )
                  )
                }) %>>% 
-      compact() %>>% 
+      list.filter(!is.null(.)) %>>% 
       with.names(quote(.$id$id))
     
     # target -----------------------------------------------------------------
@@ -860,7 +857,7 @@ RDML$set("public", "initialize", function(filename,
                              }
                 )
               )
-            }) %>% 
+            }) %>>% 
       with.names(quote(.$id$id))
     #     names(tcc.list) <- GetIds(tcc.list)
     #     tcc.list
@@ -926,8 +923,8 @@ RDML$set("public", "initialize", function(filename,
             #                                                byrow = FALSE,
             #                                                ncol = 2,
             #                                                dimnames = list(NULL,
-            #                                                                c("tmp", "fluor"))) %>% 
-            #             typeof %>% print
+            #                                                                c("tmp", "fluor"))) %>>% 
+            #             typeof %>>% print
             #           NULL
             mdpsType$new(data.table(tmp = tmp, fluor = fluor))
           } else {
@@ -1054,7 +1051,7 @@ RDML$set("public", "initialize", function(filename,
                    react ~ GetReact(react, 
                                     experiment.id,
                                     run.id)) %>>% 
-          compact()
+          list.filter(!is.null(.))
       )
       
     }                      
@@ -1086,7 +1083,7 @@ RDML$set("public", "initialize", function(filename,
                  xml_find_all("./rdml:experiment", rdml.env$ns),
                experiment ~ GetExperiment(experiment)
       ) %>>% 
-      with.names(quote(.$id$id))
+      list.names(.$id$id)
     
     # return()
     # private$.recalcPositions()

@@ -1,8 +1,9 @@
 with.names <- function(l, id) {
   if (is.null(l))
     return(NULL)
+  id <- substitute(id)
   n <- list.select(l,
-                   eval(id)) %>>% 
+                 eval(id)) %>>% 
     unlist()
   if (is.null(n))
     return(l)
@@ -35,7 +36,7 @@ rdmlBaseType <-
             .asXMLnodes = function(node.name,
                                    namespaceDefinitions = NULL) {
               subnodes <- names(private)[grepl("^\\..*$",
-                                               names(private))] %>% rev
+                                               names(private))] %>>% rev()
               sprintf("<%s%s>%s</%s>",
                       node.name, #node name
                       # attribute
@@ -69,8 +70,8 @@ rdmlBaseType <-
                               list = 
                                 sapply(private[[name]],
                                        function(sublist)
-                                         sublist$.asXMLnodes(subnode.name)) %>%
-                                # .[!sapply(., is.null)] %>% 
+                                         sublist$.asXMLnodes(subnode.name)) %>>%
+                                # .[!sapply(., is.null)] %>>% 
                                 paste0(collapse = "\n")
                               ,
                               environment = {
@@ -96,15 +97,15 @@ rdmlBaseType <-
                                   )
                                 }
                               })
-                          }) %>%
-                          .[!sapply(., is.null)] %>% 
+                          }) %>>%
+                          .[!sapply(., is.null)] %>>% 
                           paste0(collapse = "")
                       }, 
                       node.name)
             },
             print = function(...) {
               elements <- names(private)[-which(names(private) == 
-                                                  "deep_clone")] %>% rev
+                                                  "deep_clone")] %>>% rev
               sapply(elements,
                      function(name) {
                        sprintf(
@@ -115,7 +116,7 @@ rdmlBaseType <-
                            typeof(private[[name]]),
                            closure = NULL,
                            list = sprintf("[%s]",
-                                          names(private[[name]]) %>% 
+                                          names(private[[name]]) %>>% 
                                             paste(collapse = ", ")),
                            environment = {
                              sprintf("~ %s",
@@ -129,21 +130,21 @@ rdmlBaseType <-
                              else
                                sprintf("%s", private[[name]])
                            }))
-                     }) %>% 
-                paste(sep = "\n", collapse = "\n") %>% 
+                     }) %>>% 
+                paste(sep = "\n", collapse = "\n") %>>% 
                 cat
             }
           ),
           private = list(
             deep_clone = function(name, value) {
-              if (value %>% is.null)
+              if (value %>>% is.null)
                 return(NULL)
-              if (value %>%
-                  class %>% 
+              if (value %>>%
+                  class %>>% 
                   tail(1) != "R6") {
                 if (is.list(value)) {
-                  llply(value,
-                        function(el) el$clone(deep = TRUE))
+                  list.map(value,
+                        el ~ el$clone(deep = TRUE))
                 } else {
                   value
                 }
