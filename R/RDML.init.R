@@ -45,6 +45,14 @@ getIntegerValue <- function(tree, path, ns = rdml.env$ns) {
          as.integer(xml_text(node)))
 }
 
+getIntegerVector <- function(tree, path, ns = rdml.env$ns) {
+  node.set <- xml_find_all(tree, path, ns)
+  if (length(node.set) == 0)
+    return(NULL)
+  list.mapv(node.set,
+            as.integer(xml_text(.)))
+}
+
 genId <- function(node) {
   idType$new(xml_attr(node, "id"))
 }
@@ -115,26 +123,28 @@ GetDilutionsRoche <- function(uniq.folder)
     return(NA)
   }
   rdml.doc <- read_xml(paste0(uniq.folder,"/calculated_data.xml"))
-  xml_ns_strip(rdml.doc)
-  concs <- getNumericVector(rdml.doc, "//absQuantDataSource/standard")
-  concs.guids <- 
-    getTextVector(rdml.doc, "//absQuantDataSource/standard/../graphId")
+  rdml.env$ns <- xml_ns_rename(xml_ns(rdml.doc), d1 = "calc", d2 = "analys", d3 = "quant")
+  # xml_ns_strip(rdml.doc)
+  concs <- getNumericVector(rdml.doc, "//quant:absQuantDataSource/quant:standard")
   if (length(concs) == 0) {
-    concs <- getNumericVector(rdml.doc, "//relQuantDataSource/standard")
+    concs <- getNumericVector(rdml.doc, "//quant:relQuantDataSource/quant:standard")
     concs.guids <- 
-      getTextVector(rdml.doc, "//relQuantDataSource/standard/../graphId")
+      getTextVector(rdml.doc, "//quant:relQuantDataSource/standard/../quant:graphId")
+  } else {
+    concs.guids <- 
+      getTextVector(rdml.doc, "//quant:absQuantDataSource/quant:standard/../quant:graphId")
   }
   names(concs) <- concs.guids
   concs <- sort(concs, decreasing = TRUE)
   positions <- 
     getTextVector(rdml.doc, 
-                  "//standardPoints/standardPoint/position")
+                  "//quant:standardPoints/quant:standardPoint/quant:position")
   positions <- sapply(positions, FromPositionToId)
   dye.names <- getTextVector(rdml.doc, 
-                             "//standardPoints/standardPoint/dyeName")
+                             "//quant:standardPoints/quant:standardPoint/quant:dyeName")
   positions.guids <- 
     getTextVector(rdml.doc, 
-                  "//standardPoints/standardPoint/graphIds/guid")
+                  "//quant:standardPoints/quant:standardPoint/quant:graphIds/quant:guid")
   positions.table <- matrix(c(dye.names,
                               positions),
                             ncol = length(positions),
@@ -169,11 +179,12 @@ GetConditionsRoche <- function(uniq.folder)
     return(NA)
   }
   rdml.doc <- read_xml(paste0(uniq.folder, "/app_data.xml"))
-  xml_ns_strip(rdml.doc)
+  rdml.env$ns <- xml_ns_rename(xml_ns(rdml.doc), d1 = "lc96")
   nodes <- xml_find_all(rdml.doc,
-                      "/rocheLC96AppExtension/experiment/run/react/condition/..")
+                        "/lc96:rocheLC96AppExtension/lc96:experiment/lc96:run/lc96:react/lc96:condition/..",
+                        ns = rdml.env$ns)
   reacts <- xml_attr(nodes, "id")
-  conditions <- getTextVector(nodes, "./condition")
+  conditions <- getTextVector(nodes, "./lc96:condition")
   if (length(conditions) == 0) {
     # cat("NONE")
     return(NULL)
@@ -191,15 +202,14 @@ GetRefGenesRoche <- function(uniq.folder)
     return(NA)
   }
   rdml.doc <- read_xml(paste0(uniq.folder, "/module_data.xml"))
+  rdml.env$ns <- xml_ns_rename(xml_ns(rdml.doc), d3 = "rel")
   ref <- xml_find_all(rdml.doc,
-                      "//d3:geneSettings/d3:relQuantGeneSettings")
-    # namespaces = c(ns = "http://www.roche.ch/LC96RelQuantGeneralDataModel"))
-  
+                      "//rel:geneSettings/rel:relQuantGeneSettings",
+                      ns = rdml.env$ns)
   if (length(ref) == 0) {
     # cat("NONE")
     return(NULL)
   }
-  xml_ns_strip(ref)
   return(ref)
 }
 
@@ -289,66 +299,71 @@ RDML$set("public", "initialize", function(filename,
         str_match_all("([0-9]+)\\t([0-9]+)\\t([A-Z]+)\\t[0-9]+\\.?[0-9]*\\t([0-9]+\\.?[0-9]*)")
       multicomponent.data <- as.data.frame(multicomponent.data[[1]], stringsAsFactors = FALSE)
       names(multicomponent.data) <- c("_", "well", "cyc", "dye", "fluor")
-      multicomponent.data <- multicomponent.data %>>% 
-        mutate(well = as.numeric(well),
-               cyc = as.numeric(cyc),
-               fluor = as.numeric(fluor))
+      multicomponent.data <- multicomponent.data %>>%
+        data.table()
+      multicomponent.data[, c("well", "cyc", "fluor") := list(as.numeric(well),
+                                                              as.numeric(cyc),
+                                                              as.numeric(fluor))]
       ncycles <- multicomponent.data$cyc %>>% max + 1
       
       plate.setup <- paste0(uniq.folder, "\\apldbio\\sds\\plate_setup.xml") %>>%
-        xmlParse() %>>% xmlRoot()
+        read_xml()
       
-      snames <- xpathSApply(plate.setup,
-                            "/Plate/FeatureMap/Feature[Id='sample']/../FeatureValue/FeatureItem/Sample/Name",
-                            xmlValue)
-      names(snames) <- xpathSApply(plate.setup,
-                                   "/Plate/FeatureMap/Feature[Id='sample']/../FeatureValue/Index",
-                                   xmlValue) %>>% as.integer + 1
+      rdml.env$ns <- xml_ns(plate.setup)
+      snames <- getTextVector(plate.setup,
+                              "/Plate/FeatureMap/Feature[Id='sample']/../FeatureValue/FeatureItem/Sample/Name")
+      names(snames) <- 
+        getIntegerVector(plate.setup,
+                         "/Plate/FeatureMap/Feature[Id='sample']/../FeatureValue/Index") + 1
       
       description <- data.frame()
-      list.iter(getNodeSet(plate.setup,
-                           "/Plate/FeatureMap/Feature[Id='detector-task']/../FeatureValue"), {
-                             index <- .[["Index"]] %>>% xmlValue() %>>% as.integer + 1
-                             
-                             #only one task allowed!
-                             task <- .[["FeatureItem"]][["DetectorTaskList"]][[1]][["Task"]] %>>%
-                               xmlValue %>>% 
-                               switch (
-                                 UNKNOWN = "unkn",
-                                 NTC = "ntc",
-                                 STANDARD = "std"
-                               )
-                             size <- .[["FeatureItem"]][["DetectorTaskList"]] %>>% xmlSize
-                             list.iter(.[["FeatureItem"]][["DetectorTaskList"]][1:size], {
-                               description <<- rbind(description, 
-                                                     data.frame(fdata.name = paste(index, .[["Detector"]][["Reporter"]] %>>% xmlValue),
-                                                                exp.id = "exp1",
-                                                                run.id = "run1",
-                                                                react.id = index,
-                                                                sample = ifelse(is.na(snames[as.character(index)]),
-                                                                                "unnamed", snames[as.character(index)]) %>>% unname,
-                                                                type = task,
-                                                                target = .[["Detector"]][["Name"]] %>>% xmlValue,
-                                                                target.dyeId = .[["Detector"]][["Reporter"]] %>>% xmlValue,
-                                                                quantity = .[["Concentration"]] %>>% xmlValue %>>% as.numeric,
-                                                                IsOmit = FALSE,
-                                                                stringsAsFactors = FALSE))
-                             })})
+      list.iter(xml_find_all(plate.setup,
+                             "/Plate/FeatureMap/Feature[Id='detector-task']/../FeatureValue"), 
+                el ~ {
+                  index <- getIntegerValue(el, "./Index") + 1
+                  
+                  #only one task allowed!
+                  task <- getTextValue(el, "./FeatureItem/DetectorTaskList/*[1]/Task") %>>% 
+                    switch (
+                      UNKNOWN = "unkn",
+                      NTC = "ntc",
+                      STANDARD = "std"
+                    )
+                  # size <- .[["FeatureItem"]][["DetectorTaskList"]] %>>% xmlSize
+                  list.iter(xml_find_all(el, "./FeatureItem/DetectorTaskList"), 
+                            sub.el ~ {
+                              description <<- 
+                                rbind(description, 
+                                      data.frame(fdata.name = 
+                                                   paste(index,
+                                                         getTextValue(sub.el,
+                                                                      "./DetectorTask/Detector/Reporter")),
+                                                 exp.id = "exp1",
+                                                 run.id = "run1",
+                                                 react.id = index,
+                                                 sample = ifelse(is.na(snames[as.character(index)]),
+                                                                 "unnamed",
+                                                                 snames[as.character(index)]) %>>% unname(),
+                                                 type = task,
+                                                 target = getTextValue(sub.el, "./DetectorTask/Detector/Name"),
+                                                 target.dyeId = getTextValue(sub.el, "./DetectorTask/Detector/Reporter"),
+                                                 quantity = getNumericValue(sub.el, "./DetectorTask/Concentration"),
+                                                 IsOmit = FALSE,
+                                                 stringsAsFactors = FALSE))
+                            })})
       
+      description <- data.table(description)
+      omitted.i <- getIntegerVector(plate.setup,
+                                    "/Plate/Wells/Well[IsOmit='true']/Index") + 1
+      description[react.id == omitted.i, IsOmit := TRUE]
+      description <- description[IsOmit == FALSE]
       
-      omitted.i <- xpathSApply(plate.setup,
-                               "/Plate/Wells/Well[IsOmit='true']/Index",
-                               xmlValue) %>>% as.integer + 1
-      description[description$react.id == omitted.i, "IsOmit"] <- TRUE
-      description <- description %>>%
-        filter(IsOmit == FALSE)
-      
-      fdata <- cbind(data.frame(multicomponent.data$cyc %>>% unique + 1),
+      fdata <- cbind(data.frame(multicomponent.data$cyc %>>% unique() + 1),
                      apply(description, 1, 
                            function(r) {
-                             multicomponent.data %>>% filter(well == as.integer(r["react.id"]) - 1,
-                                                            dye == r["target.dyeId"]) %>>% 
-                               .$fluor
+                             multicomponent.data[well == as.integer(r["react.id"]) - 1 &
+                                                   dye == r["target.dyeId"],
+                                                 fluor]
                            }))
       names(fdata) <- c("cyc", description$fdata.name)
       self$SetFData(fdata, description)
@@ -361,54 +376,63 @@ RDML$set("public", "initialize", function(filename,
   # RotorGene -----------------------------------------------------------------
   fromRotorGene <- function() {
     dat <- filename %>>% 
-      xmlParse %>>% xmlRoot
-    
+      read_xml()
     description <- dat %>>% 
-      getNodeSet("/Experiment/Samples/Page/Sample/Name/text()[1]/../..") %>>% 
-      list.map(xmlToList(.)) %>>% 
-      list.map(list(
-        fdata.name = ID,
-        exp.id = "exp1",
-        run.id = "run1",
-        react.id = TubePosition,
-        sample = Name,
-        type = switch(Type,
-                      "5" = "pos",
-                      "3" = "ntc",
-                      "1" = "std",
-                      "unkn"),
-        quantity = GivenConc
-      ))  %>>% 
-      list.stack %>>% 
-      mutate(react.id = react.id %>>% as.numeric,
-             quantity = quantity %>>% as.numeric)
-    
-    dat[["Samples"]][["Groups"]] %>>% 
-      xmlToList %>>% 
+      xml_find_all("/Experiment/Samples/Page/Sample/Name/text()[1]/../..") %>>% 
+      list.map(el ~ {
+        el <- list.flatten(as_list(el))
+        list(
+          fdata.name = el$ID,
+          exp.id = "exp1",
+          run.id = "run1",
+          react.id = el$TubePosition %>>% as.numeric(),
+          sample = el$Name,
+          type = switch(el$Type,
+                        "5" = "pos",
+                        "3" = "ntc",
+                        "1" = "std",
+                        "unkn"),
+          quantity = el$GivenConc %>>% as.numeric()
+        )}) %>>% 
+      list.stack()
+    # %>>% 
+    #   data.table() %>>% 
+    #   set(,)
+    #   mutate(react.id = react.id %>>% as.numeric,
+    #          quantity = quantity %>>% as.numeric)
+    dat %>>% 
+      xml_find_all("/Experiment/Samples/Groups/Group") %>>% 
       list.iter(group ~ {
+        group <- as_list(group)
         ids <- group[-c(1, 2)] %>>% list.mapv(Tube)
         description[description$fdata.name %in% ids, "target"] <<- group$Name
       })
+    rdml.env$ns <- xml_ns(dat)
     
     original.targets <- description$target
+    
     dat %>>% 
-      getNodeSet("/Experiment/RawChannels/RawChannel") %>>% 
+      xml_find_all("/Experiment/RawChannels/RawChannel") %>>% 
       list.iter(rawChannel ~ {
-        description$target.dyeId <<- rawChannel[["Name"]] %>>% xmlValue
+        # rawChannel <- as_list(rawChannel)
+        description$target.dyeId <<- getTextValue(rawChannel, "./Name")#  %>>% xmlValue
         description$target <<- paste(original.targets,
                                      description$target.dyeId[1], sep = "#")
         fdata <- 
-          xpathApply(rawChannel,
-                     sprintf(
-                     "/Experiment/RawChannels/RawChannel/Name[text()='%s']/../Reading",
-                     description$target.dyeId[1]
-                     ),
-                     xmlValue)[description$react.id] %>>%
-          list.map(x ~ {strsplit(x, " ") %>>% .[[1]] %>>% as.numeric %>>% as.list}) %>>%
-          list.stack %>>% 
-          t
+          getTextVector(rawChannel,
+                        sprintf(
+                          "./Name[text()='%s']/../Reading",
+                          description$target.dyeId[1]
+                        ))[description$react.id] %>>%
+          list.map(x ~ {strsplit(x, " ")[[1]] %>>%
+              as.numeric() %>>%
+              as.list()}) %>>%
+          list.stack() %>>% 
+          t()
         colnames(fdata) <- description$react.id
         fdata <- cbind(cyc = 1:nrow(fdata), fdata)
+        fdat <<- fdata
+        descr <<- description
         self$SetFData(fdata, description)
       })
     self$id <- list(rdmlIdType$new("RotorGene" , "1"))
@@ -476,29 +500,29 @@ RDML$set("public", "initialize", function(filename,
     dilutions.r <- NULL
     ref.genes.r <- NULL
     
-    tryCatch({
+    # tryCatch({
       # Roche use more than one file at RDML zip.
       # One of the files store dilutions information.
-      if (length(unzipped.rdml) > 1)
-      {
+      if (length(unzipped.rdml) > 1) {
         # cat("\nParsing Roche(?) data...")
         rdml.doc <- read_xml(paste0(uniq.folder,"/rdml_data.xml"))
-        rdml.env$ns <- xml_ns_rename(xml_ns(rdml.doc), "d1" = "rdml")
         dilutions.r <- GetDilutionsRoche(uniq.folder)
         conditions.r <- GetConditionsRoche(uniq.folder)
         ref.genes.r <- GetRefGenesRoche(uniq.folder)
-        # private$.dilutions <- dilutions.r
-      }
-      else
-      {
+        rdml.env$ns <- xml_ns_rename(xml_ns(rdml.doc), "d1" = "rdml")
+      } else {
         # cat("\nParsing data...")
         rdml.doc <- read_xml(unzipped.rdml)
         rdml.env$ns <- xml_ns(rdml.doc)
-        #     private$.dilutions <- GetDilutions(rdml.doc)
-      }},
-      error = function(e) { stop(e) },
-      finally = unlink(uniq.folder, recursive = TRUE)
-    )
+        if (!("rdml" %in% names(rdml.env$ns))) {
+          rdml.env$ns <- xml_ns_rename(xml_ns(rdml.doc), d1 = "rdml")
+        }
+      }
+    # },
+    # error = function(e) { stop(e) },
+    # finally = unlink(uniq.folder, recursive = TRUE)
+    # )
+    unlink(uniq.folder, recursive = TRUE)
     
     # dateMade -----------------------------------------------------------------
     # cat("\nGetting dateMade")
@@ -519,7 +543,7 @@ RDML$set("public", "initialize", function(filename,
                    MD5Hash = getTextValue(tree = id, path = "./rdml:MD5Hash")
                  )
       ) %>>%  
-      with.names(quote(.$publisher))
+      list.names(.$publisher)
     # cat("\nGetting experementer")
     private$.experimenter <- {
       # experimenter.list <- 
@@ -534,7 +558,7 @@ RDML$set("public", "initialize", function(filename,
                    labName = getTextValue(experimenter, "./rdml:labName"),
                    labAddress = getTextValue(experimenter, "./rdml:labAddress")
                  )) %>>% 
-        with.names(quote(.$id$id))
+        list.names(.$id$id)
     }
     
     # documentation -----------------------------------------------------------------
@@ -548,7 +572,7 @@ RDML$set("public", "initialize", function(filename,
                    id = genId(documentation),
                    text = getTextValue(documentation, "./rdml:text")
                  )) %>>% 
-        with.names(quote(.$id$id))
+        list.names(.$id$id)
     }
     
     # dye -----------------------------------------------------------------
@@ -560,7 +584,7 @@ RDML$set("public", "initialize", function(filename,
                  id = genId(dye),
                  description = getTextValue(dye, "./rdml:description")
                )) %>>% 
-        with.names(quote(.$id$id))
+        list.names(.$id$id)
     }
     
     # sample -----------------------------------------------------------------
@@ -576,9 +600,9 @@ RDML$set("public", "initialize", function(filename,
                  if(type == "ntp")
                    return(NULL)
                  
-                 # id <- xmlAttrs(sample, "id")
+                 id <- xml_attr(sample, "id")
                  sampleType$new(
-                   id = genId(sample),
+                   id = idType$new(id),
                    description = getTextValue(sample, "./rdml:description"),
                    documentation = 
                      list.map(sample %>>% 
@@ -595,8 +619,8 @@ RDML$set("public", "initialize", function(filename,
                      list.map(sample %>>% 
                                 xml_find_all("./rdml:annotation", rdml.env$ns),
                               annotation ~ annotationType$new(
-                               property = getTextValue(annotation, "./rdml:property"),
-                               value = getTextValue(annotation, "./rdml:value")
+                                property = getTextValue(annotation, "./rdml:property"),
+                                value = getTextValue(annotation, "./rdml:value")
                               )),                  
                      if (!is.null(conditions.sep)) {
                        val <- gsub(sprintf("^.*%s(.*)$",
@@ -621,8 +645,7 @@ RDML$set("public", "initialize", function(filename,
                      ),
                    calibratorSample = 
                      getLogicalValue(sample, "./rdml:calibaratorSample"),
-                   cdnaSynthesisMethod = 
-                     cdnaSynthesisMethodType$new(
+                   cdnaSynthesisMethod = cdnaSynthesisMethodType$new(
                        enzyme = getTextValue(sample, "./rdml:cdnaSynthesisMethod/rdml:enzyme"),
                        primingMethod =
                          primingMethodType$new(getTextValue(sample, 
@@ -630,10 +653,12 @@ RDML$set("public", "initialize", function(filename,
                        dnaseTreatment = getLogicalValue(sample, "./rdml:cdnaSynthesisMethod/rdml:dnaseTreatment"),
                        thermalCyclingConditions = 
                          tryCatch(
-                           genIdRef(xml_find_first(sample, "./rdml:cdnaSynthesisMethod/rdml:thermalCyclingConditions")),
+                           genIdRef(xml_find_first(sample,
+                                                   "./rdml:cdnaSynthesisMethod/rdml:thermalCyclingConditions",
+                                                   ns = rdml.env$ns)),
                            error = function(e) NULL)
                      ),
-                   templateQuantity =
+                   templateQuantity = 
                      tryCatch(
                        templateQuantityType$new(
                          conc = getNumericValue(sample, "./rdml:templateQuantity/rdml:conc"),
@@ -645,129 +670,129 @@ RDML$set("public", "initialize", function(filename,
                  )
                }) %>>% 
       list.filter(!is.null(.)) %>>% 
-      with.names(quote(.$id$id))
+      list.names(.$id$id)
     
     # target -----------------------------------------------------------------
     # cat("\nGetting target")
     private$.target <- 
       list.map(rdml.doc %>>% 
                  xml_find_all("/rdml:rdml/rdml:target", rdml.env$ns),
-            target ~ {
-              targetType$new(
-                id = xml_attr(target, "id") %>>% 
-                  (id ~ idType$new( 
-                    ifelse(length(unzipped.rdml) > 1 &&
-                             length(private$.id) != 0 &&
-                             private$.id[[1]]$publisher == "Roche Diagnostics",
-                           {
-                             gsub("@(.+)$", "\\1", 
-                                  regmatches(id, gregexpr("@(.+)$", id))[[1]])
-                           },
-                           id))),
-                description = getTextValue(target, "./rdml:description"),
-                documentation = 
-                  list.map(target %>>% 
-                             xml_find_all("./rdml:documentation", rdml.env$ns),
-                        doc ~ genIdRef(doc)
-                  ),
-                xRef = 
-                  list.map(target %>>% 
-                             xml_find_all("./rdml:xRef", rdml.env$ns),
-                           xRef ~
-                          xRefType$new(
-                            name = getTextValue(xRef, "./rdml:name"),
-                            id = getTextValue(xRef, "./rdml:id")
-                          )),
-                type = targetTypeType$new(getTextValue(target, "./rdml:type")),
-                amplificationEfficiencyMethod = 
-                  getTextValue(target, "./rdml:amplificationEfficiencyMethod"),
-                amplificationEfficiency = 
-                  getNumericValue(target, "./rdml:amplificationEfficiency"),
-                amplificationEfficiencySE = 
-                  getNumericValue(target, "./rdml:amplificationEfficiencySE"),
-                detectionLimit = 
-                  getNumericValue(target, "./rdml:detectionLimit"),
-                dyeId =
-                  tryCatch(
-                    target %>>% 
-                      xml_find_first("./rdml:dyeId", rdml.env$ns) %>>% 
-                      genIdRef(),
-                    # StepOne stores dyeId as xmlValue 
-                    error = function(e)
-                      idReferencesType$new(getTextValue(target, "./rdml:dyeId"))
-                  ),
-                # dyeId = NA,
-                
-                sequences = sequencesType$new(
-                  forwardPrimer = 
-                    tryCatch(
-                      oligoType$new(
-                        threePrimeTag = 
-                          getTextValue(target, "./rdml:sequences/rdml:forwardPrimer/rdml:threePrimeTag"),
-                        fivePrimeTag = 
-                          getTextValue(target, "./rdml:sequences/rdml:forwardPrimer/rdml:fivePrimeTag"),
-                        sequence = 
-                          getTextValue(target, "./rdml:sequences/rdml:forwardPrimer/rdml:sequence")),
-                      error = function(e) NULL
-                    ),
-                  reversePrimer = 
-                    tryCatch(
-                      oligoType$new(
-                        threePrimeTag = 
-                          getTextValue(target, "./rdml:sequences/rdml:reversePrimer/rdml:threePrimeTag"),
-                        fivePrimeTag = 
-                          getTextValue(target, "./rdml:sequences/rdml:reversePrimer/rdml:fivePrimeTag"),
-                        sequence = 
-                          getTextValue(target, "./rdml:sequences/rdml:reversePrimer/rdml:sequence")),
-                      error = function(e) NULL
-                    ),
-                  probe1 =
-                    tryCatch(
-                      oligoType$new(
-                        threePrimeTag = 
-                          getTextValue(target, "./rdml:sequences/rdml:probe1/rdml:threePrimeTag"),
-                        fivePrimeTag = 
-                          getTextValue(target, "./rdml:sequences/rdml:probe1/rdml:fivePrimeTag"),
-                        sequence = 
-                          getTextValue(target, "./rdml:sequences/rdml:probe1/rdml:sequence")),
-                      error = function(e) NULL
-                    ),
-                  probe2 = 
-                    tryCatch(
-                    oligoType$new(
-                      threePrimeTag = 
-                        getTextValue(target, "./rdml:sequences/rdml:probe2/rdml:threePrimeTag"),
-                      fivePrimeTag = 
-                        getTextValue(target, "./rdml:sequences/rdml:probe2/rdml:fivePrimeTag"),
-                      sequence = 
-                        getTextValue(target, "./rdml:sequences/rdml:probe2/rdml:sequence")),
-                    error = function(e) NULL
-                  ),
-                  amplicon = 
-                    tryCatch(
-                      oligoType$new(
-                        threePrimeTag = 
-                          getTextValue(target, "./rdml:sequences/rdml:amplicon/rdml:threePrimeTag"),
-                        fivePrimeTag = 
-                          getTextValue(target, "./rdml:sequences/rdml:amplicon/rdml:fivePrimeTag"),
-                        sequence = 
-                          getTextValue(target, "./rdml:sequences/rdml:amplicon/rdml:sequence")),
-                      error = function(e) NULL
-                    )),
-                commercialAssay = 
-                  tryCatch(
-                    commercialAssayType$new(
-                      company = 
-                        getTextValue(target, "./rdml:commercialAssay/rdml:company"),
-                      orderNumber = 
-                        getTextValue(target, "./rdml:commercialAssay/rdml:orderNumber"))
-                    ,
-                    error = function(e) NULL
-                  )
-              )
-            }
+               target ~ {
+                 targetType$new(
+                   id = xml_attr(target, "id") %>>% 
+                     (id ~ idType$new( 
+                       ifelse(length(unzipped.rdml) > 1 &&
+                                length(private$.id) != 0 &&
+                                private$.id[[1]]$publisher == "Roche Diagnostics",
+                              {
+                                gsub("@(.+)$", "\\1", 
+                                     regmatches(id, gregexpr("@(.+)$", id))[[1]])
+                              },
+                              id))),
+                   description = getTextValue(target, "./rdml:description"),
+                   documentation = 
+                     list.map(target %>>% 
+                                xml_find_all("./rdml:documentation", rdml.env$ns),
+                              doc ~ genIdRef(doc)
+                     ),
+                   xRef = 
+                     list.map(target %>>% 
+                                xml_find_all("./rdml:xRef", rdml.env$ns),
+                              xRef ~
+                                xRefType$new(
+                                  name = getTextValue(xRef, "./rdml:name"),
+                                  id = getTextValue(xRef, "./rdml:id")
+                                )),
+                   type = targetTypeType$new(getTextValue(target, "./rdml:type")),
+                   amplificationEfficiencyMethod = 
+                     getTextValue(target, "./rdml:amplificationEfficiencyMethod"),
+                   amplificationEfficiency = 
+                     getNumericValue(target, "./rdml:amplificationEfficiency"),
+                   amplificationEfficiencySE = 
+                     getNumericValue(target, "./rdml:amplificationEfficiencySE"),
+                   detectionLimit = 
+                     getNumericValue(target, "./rdml:detectionLimit"),
+                   dyeId =
+                     tryCatch(
+                       target %>>% 
+                         xml_find_first("./rdml:dyeId", rdml.env$ns) %>>% 
+                         genIdRef(),
+                       # StepOne stores dyeId as xmlValue 
+                       error = function(e)
+                         idReferencesType$new(getTextValue(target, "./rdml:dyeId"))
+                     ),
+                   # dyeId = NA,
+                   
+                   sequences = sequencesType$new(
+                     forwardPrimer = 
+                       tryCatch(
+                         oligoType$new(
+                           threePrimeTag = 
+                             getTextValue(target, "./rdml:sequences/rdml:forwardPrimer/rdml:threePrimeTag"),
+                           fivePrimeTag = 
+                             getTextValue(target, "./rdml:sequences/rdml:forwardPrimer/rdml:fivePrimeTag"),
+                           sequence = 
+                             getTextValue(target, "./rdml:sequences/rdml:forwardPrimer/rdml:sequence")),
+                         error = function(e) NULL
+                       ),
+                     reversePrimer = 
+                       tryCatch(
+                         oligoType$new(
+                           threePrimeTag = 
+                             getTextValue(target, "./rdml:sequences/rdml:reversePrimer/rdml:threePrimeTag"),
+                           fivePrimeTag = 
+                             getTextValue(target, "./rdml:sequences/rdml:reversePrimer/rdml:fivePrimeTag"),
+                           sequence = 
+                             getTextValue(target, "./rdml:sequences/rdml:reversePrimer/rdml:sequence")),
+                         error = function(e) NULL
+                       ),
+                     probe1 =
+                       tryCatch(
+                         oligoType$new(
+                           threePrimeTag = 
+                             getTextValue(target, "./rdml:sequences/rdml:probe1/rdml:threePrimeTag"),
+                           fivePrimeTag = 
+                             getTextValue(target, "./rdml:sequences/rdml:probe1/rdml:fivePrimeTag"),
+                           sequence = 
+                             getTextValue(target, "./rdml:sequences/rdml:probe1/rdml:sequence")),
+                         error = function(e) NULL
+                       ),
+                     probe2 = 
+                       tryCatch(
+                         oligoType$new(
+                           threePrimeTag = 
+                             getTextValue(target, "./rdml:sequences/rdml:probe2/rdml:threePrimeTag"),
+                           fivePrimeTag = 
+                             getTextValue(target, "./rdml:sequences/rdml:probe2/rdml:fivePrimeTag"),
+                           sequence = 
+                             getTextValue(target, "./rdml:sequences/rdml:probe2/rdml:sequence")),
+                         error = function(e) NULL
+                       ),
+                     amplicon = 
+                       tryCatch(
+                         oligoType$new(
+                           threePrimeTag = 
+                             getTextValue(target, "./rdml:sequences/rdml:amplicon/rdml:threePrimeTag"),
+                           fivePrimeTag = 
+                             getTextValue(target, "./rdml:sequences/rdml:amplicon/rdml:fivePrimeTag"),
+                           sequence = 
+                             getTextValue(target, "./rdml:sequences/rdml:amplicon/rdml:sequence")),
+                         error = function(e) NULL
+                       )),
+                   commercialAssay = 
+                     tryCatch(
+                       commercialAssayType$new(
+                         company = 
+                           getTextValue(target, "./rdml:commercialAssay/rdml:company"),
+                         orderNumber = 
+                           getTextValue(target, "./rdml:commercialAssay/rdml:orderNumber"))
+                       ,
+                       error = function(e) NULL
+                     )
+                 )
+               }
       ) %>>% 
-      with.names(quote(.$id$id))
+      list.names(.$id$id)
     
     # thermalCyclingConditions -------------------------------------------------
     # cat("\nGetting thermalCyclingConditions")
@@ -775,93 +800,92 @@ RDML$set("public", "initialize", function(filename,
       list.map(rdml.doc %>>% 
                  xml_find_all("/rdml:rdml/rdml:thermalCyclingConditions", rdml.env$ns),
                tcc ~ {
-              thermalCyclingConditionsType$new(
-                id = genId(tcc),
-                description = getTextValue(tcc, "./rdml:description"),
-                documentation = 
-                  list.map(tcc %>>% 
-                             xml_find_all("./rdml:documentation", rdml.env$ns),
-                           doc ~ genIdRef(doc)
-                  ),
-                lidTemperature = 
-                  getNumericValue(tcc, "./rdml:lidTemperature"),
-                
-                experimenter = 
-                  list.map(tcc %>>% 
-                             xml_find_all("./rdml:experimenter", rdml.env$ns),
-                           experimenter ~ genIdRef(experimenter)
-                  ),
-                
-                step = list.map(tcc %>>% 
-                                  xml_find_all("./rdml:step", rdml.env$ns),
-                             step ~ {
-                               stepType$new(
-                                 nr = getIntegerValue(step, "./rdml:nr"),
-                                 description = getTextValue(step, "./rdml:description"),
-                                 temperature = {
-                                   tryCatch(
-                                     temperatureType$new(
-                                       temperature = 
-                                         getNumericValue(step, "./rdml:temperature/rdml:temperature"),
-                                       duration = 
-                                         getIntegerValue(step, "./rdml:temperature/rdml:duration"),
-                                       temperatureChange = 
-                                         getNumericValue(step, "./rdml:temperature/rdml:temperatureChange"),
-                                       durationChange = 
-                                         getIntegerValue(step, "./rdml:temperature/rdml:durationChange"),
-                                       measure = measureType$new(
-                                         getTextValue(step, "./rdml:temperature/rdml:measure")),
-                                       ramp = 
-                                         getNumericValue(step, "./rdml:temperature/rdml:ramp")
-                                     ),
-                                     error = function(e) NULL)},
-                                 gradient = {
-                                   tryCatch(
-                                     gradientType$new(
-                                       highTemperature = 
-                                         getNumericValue(step, "./rdml:gradient/rdml:highTemperature"),
-                                       lowTemperature = 
-                                         getNumericValue(step, "./rdml:gradient/rdml:lowTemperature"),
-                                       duration = 
-                                         getIntegerValue(step, "./rdml:gradient/rdml:duration"),
-                                       temperatureChange = 
-                                         getNumericValue(step, "./rdml:gradient/rdml:temperatureChange"),
-                                       durationChange = 
-                                         getIntegerValue(step, "./rdml:gradient/rdml:durationChange"),
-                                       measure = measureType$new(
-                                         getTextValue(step, "./rdml:gradient/rdml:measure")),
-                                       ramp = 
-                                         getNumericValue(step, "./rdml:gradient/rdml:ramp")), 
-                                   error = function(e) NULL)
-                                 },
-                                 loop = {
-                                   tryCatch(
-                                     loopType$new(
-                                       goto = getIntegerValue(step, "./rdml:loop/rdml:goto"),
-                                       # should be called "repeat" but this is reserved word
-                                       repeat.n = getIntegerValue(step, "./rdml:loop/rdml:repeat")),
-                                     error = function(e) NULL)},
-                                 pause = {
-                                   tryCatch(
-                                     pauseType$new(
-                                       temperature = 
-                                         getNumericValue(step, "./rdml:pause/rdml:temperature")),
-                                     error = function(e) NULL)},
-                                 lidOpen = {
-                                   if(is.null(step[["lidOpen"]]))
-                                     NULL
-                                   else
-                                     lidOpenType$new()
-                                 }
-                               )
-                             }
-                )
-              )
-            }) %>>% 
-      with.names(quote(.$id$id))
+                 thermalCyclingConditionsType$new(
+                   id = genId(tcc),
+                   description = getTextValue(tcc, "./rdml:description"),
+                   documentation = 
+                     list.map(tcc %>>% 
+                                xml_find_all("./rdml:documentation", rdml.env$ns),
+                              doc ~ genIdRef(doc)
+                     ),
+                   lidTemperature = 
+                     getNumericValue(tcc, "./rdml:lidTemperature"),
+                   
+                   experimenter = 
+                     list.map(tcc %>>% 
+                                xml_find_all("./rdml:experimenter", rdml.env$ns),
+                              experimenter ~ genIdRef(experimenter)
+                     ),
+                   
+                   step = list.map(tcc %>>% 
+                                     xml_find_all("./rdml:step", rdml.env$ns),
+                                   step ~ {
+                                     stepType$new(
+                                       nr = getIntegerValue(step, "./rdml:nr"),
+                                       description = getTextValue(step, "./rdml:description"),
+                                       temperature = {
+                                         tryCatch(
+                                           temperatureType$new(
+                                             temperature = 
+                                               getNumericValue(step, "./rdml:temperature/rdml:temperature"),
+                                             duration = 
+                                               getIntegerValue(step, "./rdml:temperature/rdml:duration"),
+                                             temperatureChange = 
+                                               getNumericValue(step, "./rdml:temperature/rdml:temperatureChange"),
+                                             durationChange = 
+                                               getIntegerValue(step, "./rdml:temperature/rdml:durationChange"),
+                                             measure = measureType$new(
+                                               getTextValue(step, "./rdml:temperature/rdml:measure")),
+                                             ramp = 
+                                               getNumericValue(step, "./rdml:temperature/rdml:ramp")
+                                           ),
+                                           error = function(e) NULL)},
+                                       gradient = {
+                                         tryCatch(
+                                           gradientType$new(
+                                             highTemperature = 
+                                               getNumericValue(step, "./rdml:gradient/rdml:highTemperature"),
+                                             lowTemperature = 
+                                               getNumericValue(step, "./rdml:gradient/rdml:lowTemperature"),
+                                             duration = 
+                                               getIntegerValue(step, "./rdml:gradient/rdml:duration"),
+                                             temperatureChange = 
+                                               getNumericValue(step, "./rdml:gradient/rdml:temperatureChange"),
+                                             durationChange = 
+                                               getIntegerValue(step, "./rdml:gradient/rdml:durationChange"),
+                                             measure = measureType$new(
+                                               getTextValue(step, "./rdml:gradient/rdml:measure")),
+                                             ramp = 
+                                               getNumericValue(step, "./rdml:gradient/rdml:ramp")), 
+                                           error = function(e) NULL)
+                                       },
+                                       loop = {
+                                         tryCatch(
+                                           loopType$new(
+                                             goto = getIntegerValue(step, "./rdml:loop/rdml:goto"),
+                                             # should be called "repeat" but this is reserved word
+                                             repeat.n = getIntegerValue(step, "./rdml:loop/rdml:repeat")),
+                                           error = function(e) NULL)},
+                                       pause = {
+                                         tryCatch(
+                                           pauseType$new(
+                                             temperature = 
+                                               getNumericValue(step, "./rdml:pause/rdml:temperature")),
+                                           error = function(e) NULL)},
+                                       lidOpen = {
+                                         if(is.null(step[["lidOpen"]]))
+                                           NULL
+                                         else
+                                           lidOpenType$new()
+                                       }
+                                     )
+                                   }
+                   )
+                 )
+               }) %>>% 
+      list.names(.$id$id)
     #     names(tcc.list) <- GetIds(tcc.list)
     #     tcc.list
-    
     # data -------------------------------------------------
     GetData <- function(data, experiment.id, run.id, react.id) {
       tar.id <- 
@@ -896,8 +920,8 @@ RDML$set("public", "initialize", function(filename,
           if (!is.null(fluor)) {
             if (!is.null(tmp)) {
               # tryCatch(
-                adpsType$new(
-                  data.table(cyc = cyc, tmp = tmp, fluor = fluor))
+              adpsType$new(
+                data.table(cyc = cyc, tmp = tmp, fluor = fluor))
               # ,
               #   warning = function(w) {
               #     dat <<- list(cyc, tmp, fluor)
@@ -1072,7 +1096,7 @@ RDML$set("public", "initialize", function(filename,
         run = 
           list.map(experiment %>>% 
                      xml_find_all("./rdml:run", rdml.env$ns),
-                run ~ GetRun(run, experiment.id)
+                   run ~ GetRun(run, experiment.id)
           )
       )
     }
@@ -1096,32 +1120,38 @@ RDML$set("public", "initialize", function(filename,
       for(i in 1:length(private$.sample)) {
         private$.sample[[i]]$id <- idType$new(private$.sample[[i]]$description)
       }
-      private$.sample <- with.names(private$.sample,
-                                    quote(.$id$id))
+      private$.sample <- list.names(private$.sample,
+                                    .$id$id)
       
       # cat("Adding Roche ref genes\n")
       if (!is.null(ref.genes.r) &&
           !is.na(ref.genes.r) &&
           length(ref.genes.r) != 0) {
+        ns <- xml_ns_rename(xml_ns(ref.genes.r), d3 = "rel")
         list.iter(ref.genes.r,
                   ref.gene ~ {
-                    geneName <- getTextValue(ref.gene, "./geneName")
+                    geneName <- getTextValue(ref.gene, "./rel:geneName",
+                                             ns = ns)
                     geneI <- grep(
                       sprintf("^%s$", geneName),
                       names(private$.target))
                     private$.target[[geneI]]$type <-
                       targetTypeType$new(
-                        ifelse(getLogicalValue(ref.gene, "./isReference"),
+                        ifelse(getLogicalValue(ref.gene, "./rel:isReference",
+                                               ns = ns),
                                "ref",
                                "toi"))
                   })
       }
       # return()
-      tbl <- self$AsTable()
+      tbl <- self$AsTable() %>>% 
+        setkey(react.id)
+      tbll <<- tbl
+      dil <<- dilutions.r
       # cat("Adding Roche quantities\n")
       for (target in dilutions.r %>>% names()) {
         for (r.id in dilutions.r[[target]] %>>% names()) {
-          sample.name <- filter(tbl, react.id == r.id)$sample[1]
+          sample.name <- tbl[as.integer(r.id), sample, mult = "first"]
           private$.sample[[sample.name]]$quantity <- 
             quantityType$new(
               value = unname(dilutions.r[[1]][r.id]),
@@ -1139,7 +1169,8 @@ RDML$set("public", "initialize", function(filename,
       
       # cat("Adding Roche conditions\n")
       for (r.id in conditions.r %>>% names()) {
-        sample.name <- filter(tbl, react.id == r.id)$sample[1]
+        sample.name <- tbl[as.integer(r.id), sample,
+                           mult = "first"]
         private$.sample[[sample.name]]$annotation <- 
           c(private$.sample[[sample.name]]$annotation,
             annotationType$new(

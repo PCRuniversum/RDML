@@ -185,7 +185,7 @@ RDML <- R6Class("RDML",
                   SetFData = function() { },
                   AsDendrogram = function() { },
                   AsXML = function(file.name) {
-                    tree <- self$.asXMLnodes("rdml") %>% 
+                    tree <- self$.asXMLnodes("rdml") %>>% 
                       sub('>', ' xmlns="http://www.rdml.org" version="1.2">', .)
                     if (missing(file.name))
                       return(tree)
@@ -228,8 +228,8 @@ RDML <- R6Class("RDML",
                       return(private$.id)                    
                     assertList(id, "rdmlIdType")
                     private$.id <- 
-                      with.names(id,
-                                 quote(.$publisher))
+                      list.names(id,
+                                 .$publisher)
                   },
                   
                   experimenter = function(experimenter) {
@@ -237,8 +237,8 @@ RDML <- R6Class("RDML",
                       return(private$.experimenter)
                     assertList(experimenter, "experimenterType")
                     private$.experimenter <- 
-                      with.names(experimenter,
-                                 quote(.$id$id))
+                      list.names(experimenter,
+                                 .$id$id)
                   },
                   
                   documentation = function(documentation) {
@@ -246,8 +246,8 @@ RDML <- R6Class("RDML",
                       return(private$.documentation)
                     assertList(documentation, "documentationType")                    
                     private$.documentation <- 
-                      with.names(documentation,
-                                 quote(.$id$id))
+                      list.names(documentation,
+                                 .$id$id)
                   },
                   
                   dye = function(dye) {
@@ -255,8 +255,8 @@ RDML <- R6Class("RDML",
                       return(private$.dye)
                     assertList(dye, "dyeType")
                     private$.dye <- 
-                      with.names(dye,
-                                 quote(.$id$id))
+                      list.names(dye,
+                                 .$id$id)
                   },
                   
                   sample = function(sample) {
@@ -264,8 +264,8 @@ RDML <- R6Class("RDML",
                       return(private$.sample)
                     assertList(sample, "sampleType")
                     private$.sample <- 
-                      with.names(sample,
-                                 quote(.$id$id))
+                      list.names(sample,
+                                 .$id$id)
                   },
                   
                   target = function(target) {
@@ -273,8 +273,8 @@ RDML <- R6Class("RDML",
                       return(private$.target)
                     assertList(target, "targetType")
                     private$.target <- 
-                      with.names(target,
-                                 quote(.$id$id))
+                      list.names(target,
+                                 .$id$id)
                   },
                   
                   thermalCyclingConditions = function(thermalCyclingConditions) {
@@ -282,16 +282,16 @@ RDML <- R6Class("RDML",
                       return(private$.thermalCyclingConditions)
                     assertList(thermalCyclingConditions, "thermalCyclingConditionsType")
                     private$.thermalCyclingConditions <- 
-                      with.names(thermalCyclingConditions,
-                                 quote(.$id$id))
+                      list.names(thermalCyclingConditions,
+                                 .$id$id)
                   },
                   
                   experiment = function(experiment) {
                     if (missing(experiment))
                       return(private$.experiment)
                     assertList(experiment, "experimentType")
-                    private$.experiment <- with.names(experiment,
-                                                      quote(.$id$id))
+                    private$.experiment <- list.names(experiment,
+                                                      .$id$id)
                   }
                   
                 )

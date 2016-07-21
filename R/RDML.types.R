@@ -1,14 +1,14 @@
-with.names <- function(l, id) {
-  if (is.null(l))
+# rlist::list.names with correct .data=NULL
+list.names <- function(.data, expr) {
+  if (is.null(.data))
     return(NULL)
-  id <- substitute(id)
-  n <- list.select(l,
-                 eval(id)) %>>% 
-    unlist()
-  if (is.null(n))
-    return(l)
-  names(l) <- n
-  l
+  if (missing(expr)) 
+    return(names(.data))
+  expr <- substitute(expr)
+  if (is.null(expr)) 
+    return(setnames(.data, NULL))
+  values <- rlist:::list.map.internal(.data, expr, parent.frame())
+  rlist:::setnames(.data, values)
 }
 
 # rdmlBaseType ------------------------------------------------------------
@@ -1089,8 +1089,8 @@ sampleType <-
               private$.description <- description
               private$.documentation <- documentation
               private$.xRef <- xRef
-              private$.annotation <- with.names(annotation,
-                                                quote(.$property))
+              private$.annotation <- list.names(annotation,
+                                                .$property)
               private$.type <- type
               private$.interRunCalibrator <- interRunCalibrator
               private$.quantity <- quantity
@@ -1145,8 +1145,8 @@ sampleType <-
                 return(private$.annotation)
               assert(checkNull(annotation),
                      checkList(annotation, "annotationType"))
-              private$.annotation <- with.names(annotation,
-                                                quote(.$property))
+              private$.annotation <- list.names(annotation,
+                                                .$property)
             },
             type = function(type) {
               if (missing(type))
@@ -2094,17 +2094,20 @@ reactType <-
             initialize = function(id,
                                   sample,
                                   data = NULL,
-                                  pcrFormat = NULL) {
+                                  pcrFormat = 
+                                    pcrFormatType$new(8, 12, 
+                                                      labelFormatType$new("ABC"),
+                                                      labelFormatType$new("123"))) {
               assertClass(id, "reactIdType")
               assertClass(sample, "idReferencesType")
               assert(checkNull(data),
                      checkList(data, "dataType"))
               assert(checkNull(pcrFormat),
-                     assertClass(pcrFormat, "pcrFormatType"))
+                     checkClass(pcrFormat, "pcrFormatType"))
               private$.id <- id
               private$.sample <- sample
-              private$.data <- with.names(data,
-                                          quote(.$tar$id))
+              private$.data <- list.names(data,
+                                          .$tar$id)
               if (!is.null(pcrFormat))
                 self$.recalcPosition(pcrFormat)
             },
@@ -2177,8 +2180,8 @@ reactType <-
                 return(private$.data)
               assert(checkNull(data),
                      checkList(data, "dataType"))
-              private$.data <- with.names(data,
-                                          quote(.$tar$id))
+              private$.data <- list.names(data,
+                                          .$tar$id)
             },
             position = function() {
               private$calced.position
@@ -2484,10 +2487,9 @@ runType <-
               private$.thermalCyclingConditions <- thermalCyclingConditions
               private$.pcrFormat <- pcrFormat
               private$.runDate <- runDate
-              private$.react <- with.names(react,
-                                           quote(.$id$id))
-              list.iter(self$react,
-                        react ~ react$.recalcPosition(self$pcrFormat))
+              private$.react <- list.names(react,
+                                           .$id$id)
+              self$UpdateReactsPosition()
             },
             GetFData = function(dp.type = "adp",
                                 long.table = FALSE) {
@@ -2513,6 +2515,10 @@ runType <-
                              value.var = "fluor")),
                 return(out)
               )
+            },
+            UpdateReactsPosition = function() {
+              list.iter(self$react,
+                        react ~ react$.recalcPosition(self$pcrFormat))
             }
           ),
           private = list(
@@ -2597,8 +2603,7 @@ runType <-
                 return(private$.pcrFormat)
               assertClass(pcrFormat, "pcrFormatType")
               private$.pcrFormat <- pcrFormat
-              list.iter(self$react,
-                        react ~ react$.recalcPosition(self$pcrFormat))
+              self$UpdateReactsPosition()
             },
             runDate = function(runDate) {
               if (missing(runDate))
@@ -2612,8 +2617,8 @@ runType <-
                 return(private$.react)
               assert(checkNull(react),
                      checkList(react, "reactType"))
-              private$.react <- with.names(react,
-                                           quote(.$id$id))
+              private$.react <- list.names(react,
+                                           .$id$id)
             }
           ))
 
@@ -2663,8 +2668,8 @@ experimentType <-
               private$.id <- id
               private$.description <- description
               private$.documentation <- documentation
-              private$.run <- with.names(run,
-                                         quote(.$id$id))
+              private$.run <- list.names(run,
+                                         .$id$id)
             },
             GetFData = function(dp.type = "adp",
                                 long.table = FALSE) {
@@ -2723,8 +2728,8 @@ experimentType <-
                 return(private$.run)
               assert(checkNull(run),
                      checkList(run, "runType"))
-              private$.run <- with.names(run,
-                                         quote(.$id$id))
+              private$.run <- list.names(run,
+                                         .$id$id)
             }
           ))
 
@@ -3239,8 +3244,8 @@ thermalCyclingConditionsType <-
               private$.documentation <- documentation
               private$.lidTemperature <- lidTemperature
               private$.experimenter <- experimenter
-              private$.step <- with.names(step,
-                                          quote(.$nr))
+              private$.step <- list.names(step,
+                                          .$nr)
               
             }
           ),
@@ -3292,7 +3297,7 @@ thermalCyclingConditionsType <-
                 return(private$.step)
               assert(checkNull(step),
                      checkList(step, "stepType"))
-              private$.step <- with.names(step,
-                                          quote(.$nr))
+              private$.step <- list.names(step,
+                                          .$nr)
             }
           ))

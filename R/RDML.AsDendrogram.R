@@ -40,49 +40,42 @@ RDML$set("public", "AsDendrogram",
            tree <- list()
            attributes(tree) <- list(members = 0, height = 5)
            class(tree) <- "dendrogram"
-           for(exper.id in unique(total.table$exp.id)) {
+           for (exper.id in unique(total.table$exp.id)) {
              
              tree[[exper.id]] <- list()
              attributes(tree[[exper.id]]) <- list(members = 0,
                                                   height = 4,
                                                   edgetext = cut.text(exper.id))
-             for(r.id in total.table %>% 
-                 filter(exp.id == exper.id) %>% 
-                 .$run.id %>% unique) {
+             for (r.id in total.table[exp.id == exper.id, run.id] %>>% unique()) {
                tree[[exper.id]][[r.id]] <- list()
                attributes(tree[[exper.id]][[r.id]]) <- 
                  list(members = 0,
                       height = 3,
                       edgetext = cut.text(r.id))
-               for(trgt in total.table %>% 
-                   filter(exp.id == exper.id,
-                          run.id == r.id) %>% 
-                   .$target %>% unique) {
+               for (trgt in total.table[exp.id == exper.id &
+                                        run.id == r.id, target] %>>% unique()) {
                  tree[[exper.id]][[r.id]][[trgt]] <- list()
                  
                  attributes(tree[[exper.id]][[r.id]][[trgt]]) <- 
                    list(members = 0,
                         height = 2,
                         edgetext = cut.text(trgt))
-                 for(stype in total.table %>% 
-                     filter(exp.id == exper.id,
-                            run.id == r.id,
-                            target == trgt) %>% 
-                     .$sample.type %>% unique) {
+                 for (stype in total.table[exp.id == exper.id &
+                                           run.id == r.id &
+                                           target == trgt, sample.type] %>>% unique()) {
                    tree[[exper.id]][[r.id]][[trgt]][[stype]] <- list()
                    attributes(tree[[exper.id]][[r.id]][[trgt]][[stype]]) <- 
                      list(members = 0,
                           height = 1,
                           edgetext = cut.text(stype))
-                   for(exp.type in c("adp", "mdp")) {
-                     n.rows <- total.table %>% 
-                       filter(exp.id == exper.id,
-                              run.id == r.id,
-                              target == trgt,
-                              sample.type == stype) %>% 
-                       filter_(sprintf("%s == TRUE", exp.type)) %>% 
-                       nrow
-                     if(n.rows == 0) next()
+                   for (exp.type in c("adp", "mdp")) {
+                     n.rows <-  total.table[exp.id == exper.id &
+                                              run.id == r.id &
+                                              target == trgt &
+                                              sample.type == stype &
+                                              eval(as.name(exp.type)) == TRUE] %>>% 
+                       nrow()
+                     if (n.rows == 0) next()
                      tree[[exper.id]][[r.id]][[trgt]][[stype]][[exp.type]] <- list()
                      attributes(tree[[exper.id]][[r.id]][[trgt]][[stype]][[exp.type]]) <- 
                        list(members = 1,
@@ -110,18 +103,18 @@ RDML$set("public", "AsDendrogram",
                }
              }
            }
-           if(plot.dendrogram) {
+           if (plot.dendrogram) {
              suppressWarnings(plot(rev(tree),
-                                  center=TRUE,
-                                  horiz=TRUE,
-                                  yaxt="n"))
-             xtick<-seq(0, 5, by=0.5)
-             axis(side=1,
-                  at=xtick,
+                                   center = TRUE,
+                                   horiz = TRUE,
+                                   yaxt = "n"))
+             xtick<-seq(0, 5, by = 0.5)
+             axis(side = 1,
+                  at = xtick,
                   lty = "blank",
                   las = 2,
                   labels = FALSE)
-             text(seq(0, 5, by=0.5),
+             text(seq(0, 5, by = 0.5),
                   par("usr")[3] - 0.2,
                   labels = c("Number\nof reacts",
                              "Data type",

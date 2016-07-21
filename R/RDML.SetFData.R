@@ -53,11 +53,12 @@ RDML$set("public", "SetFData",
            #            first.col.name <- ifelse(fdata.type == "adp",
            #                                     "cyc",
            #                                     "tmp")
+           description <- data.table(description)
            fdata.names <- colnames(fdata)[2:ncol(fdata)]
            
            for (fdata.n in fdata.names) {
-             descr.row <- description[description$fdata.name == fdata.n, ] %>% 
-               unlist
+             descr.row <- description[description$fdata.name == fdata.n, ] %>>% 
+               unlist()
              if (length(descr.row) == 0) {
                warning(paste("No such decription:", fdata.n))
                next
@@ -66,16 +67,16 @@ RDML$set("public", "SetFData",
              if (private$.experiment[[descr.row["exp.id"]]]$
                  run[[descr.row["run.id"]]]$
                  react[[descr.row["react.id"]]]$
-                 data[[descr.row["target"]]] %>% is.null) {
-               if (private$.experiment[[descr.row["exp.id"]]] %>% 
-                   is.null) {
+                 data[[descr.row["target"]]] %>>% is.null()) {
+               if (private$.experiment[[descr.row["exp.id"]]] %>>% 
+                   is.null()) {
                  self$experiment <- 
                    c(private$.experiment,
                      experimentType$new(idType$new(descr.row["exp.id"])))
                }
                if (private$.experiment[[descr.row["exp.id"]]]$
-                   run[[descr.row["run.id"]]] %>% 
-                   is.null) {
+                   run[[descr.row["run.id"]]] %>>% 
+                   is.null()) {
                  private$.experiment[[descr.row["exp.id"]]]$run <- 
                    c(private$.experiment[[descr.row["exp.id"]]]$run,
                      runType$new(
@@ -87,17 +88,17 @@ RDML$set("public", "SetFData",
                }
                if (private$.experiment[[descr.row["exp.id"]]]$
                    run[[descr.row["run.id"]]]$
-                   react[[descr.row["react.id"]]] %>% 
-                   is.null) {
+                   react[[descr.row["react.id"]]] %>>% 
+                   is.null()) {
                  private$.experiment[[descr.row["exp.id"]]]$
                    run[[descr.row["run.id"]]]$react <- 
                    c(private$.experiment[[descr.row["exp.id"]]]$
                        run[[descr.row["run.id"]]]$react,
                      reactType$new(
-                       reactIdType$new(descr.row["react.id"] %>% as.integer),
+                       reactIdType$new(descr.row["react.id"] %>>% as.integer()),
                        sample = idReferencesType$new(descr.row["sample"])))
-                 if (private$.sample[[descr.row["sample"]]] %>% 
-                     is.null) {
+                 if (private$.sample[[descr.row["sample"]]] %>>% 
+                     is.null()) {
                    self$sample <- c(
                      self$sample,
                      sampleType$new(idType$new(descr.row["sample"]),
@@ -115,8 +116,8 @@ RDML$set("public", "SetFData",
                if (private$.experiment[[descr.row["exp.id"]]]$
                    run[[descr.row["run.id"]]]$
                    react[[descr.row["react.id"]]]$
-                   data[[descr.row["target"]]] %>% 
-                   is.null) {
+                   data[[descr.row["target"]]] %>>% 
+                   is.null()) {
                  private$.experiment[[descr.row["exp.id"]]]$
                    run[[descr.row["run.id"]]]$
                    react[[descr.row["react.id"]]]$
@@ -128,8 +129,8 @@ RDML$set("public", "SetFData",
                      dataType$new(idReferencesType$new(
                          descr.row["target"])
                        ))
-                 if (private$.target[[descr.row["target"]]] %>% 
-                     is.null) {
+                 if (private$.target[[descr.row["target"]]] %>>% 
+                     is.null()) {
                    self$target <- c(
                      self$target,
                      targetType$new(idType$new(descr.row["target"]),
@@ -139,8 +140,8 @@ RDML$set("public", "SetFData",
                                     ))
                    )
                  }
-                 if (private$.dye[[descr.row["target.dyeId"]]] %>% 
-                     is.null) {
+                 if (private$.dye[[descr.row["target.dyeId"]]] %>>% 
+                     is.null()) {
                    self$dye <- c(
                      self$dye,
                      dyeType$new(idType$new(descr.row["target.dyeId"]))
@@ -162,15 +163,14 @@ RDML$set("public", "SetFData",
                }
            }
            
+           
+           
            # add concentrations 
            if (!is.null(description$quantity)) {
-             for (sample.name in description$sample %>% unique) {
+             for (sample.name in description$sample %>>% unique()) {
                private$.sample[[sample.name]]$quantity <- 
                  quantityType$new(
-                   value = unname(description %>% 
-                                    filter(sample == sample.name) %>% 
-                                    select(quantity) %>% 
-                                    .[1, 1]),
+                   value = unname(description[sample == sample.name, quantity][1]),
                    unit = quantityUnitType$new("other")
                  )
              }
