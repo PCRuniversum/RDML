@@ -253,7 +253,6 @@ GetRefGenesRoche <- function(uniq.folder)
 #' @rdname new-method
 #' @importFrom tools file_ext
 #' @importFrom readxl read_excel
-#' @importFrom stringr str_match_all
 #' @include RDML.R
 #' @examples
 #' \dontrun{
@@ -462,6 +461,91 @@ RDML$set("public", "initialize", function(filename,
       self$SetFData(adp_data, descr)
     if (!is.null(mdp_data))
       self$SetFData(mdp_data, descr, fdata.type = "mdp")
+  }
+  
+  # From DTprime dna-technology ------------------------------------------------------
+  fromDTprime <- function() {
+    lns <- readLines(con <- file(filename)) %>>% 
+      str_replace_all("\\t", " ")
+    close(con)
+    # lns <- stri_encode(lns, "", "UTF-8")
+    lnss <<- lns
+    tubes.info <- lns[(which(grepl("\\$Information about tubes:\\$", lns)) + 1):
+                        (which(lns == "$MultiChannel:$ ") - 2)] %>>% 
+      str_split(" ")
+    concentrations <- lns[(which(lns == "$MultiChannel:$ ") + 1):
+                            (which(grepl("\\$Device", lns)) - 3)] %>>% 
+      str_split(" ")
+    kits <- lns[(which(lns == "$Information about TESTs:$ ") + 1):
+                  (which(lns == "$Parameters MutationMC:$ ") - 1)] %>>% 
+      str_split(" ")
+    
+    fdata.raw <- lns[(which(lns == "$Results of optical measurements:$ ") + 1):
+                       length(lns)] %>>% 
+      str_split("\\s+") %>>% 
+      transpose() %>>% 
+      setDT() %>>% 
+      setnames(c("dye", "x1", "x2", "x3", "cycle", "exposition", "background",
+                 paste("tube", 0:95, sep = "_"),
+                 "?"))
+    
+    fdata.raw.nrow <- nrow(fdata.raw)
+    expositions <- c(fdata.raw[1, exposition],
+                     fdata.raw[2, exposition])
+    fdata <- data.table(cyc = 1:(fdata.raw.nrow / 10))
+    description <- data.table()
+    list.iter(tubes.info, 
+              tube ~ {
+                tube.name <- tube[10]
+                if (tube.name != "-") {
+                  list.iter(c("FAM", "HEX", "ROX", "Cy5", "Cy5.5"),
+                            dye ~ {
+                              tube.id <- sprintf("tube_%s", tube[2])
+                              if (fdata.raw[(.i - 1) * 2 + 1, get(tube.id)] != "1") {
+                                dye.i <- .i
+                                list.iter(expositions,
+                                          exposition ~ {
+                                            fdata.dye <- 
+                                              fdata.raw[seq((dye.i - 1) * 2 + .i,
+                                                            fdata.raw.nrow, by = 10), 
+                                                        as.numeric(get(tube.id))] -
+                                              fdata.raw[seq((dye.i - 1) * 2 + .i,
+                                                            fdata.raw.nrow, by = 10), 
+                                                        as.numeric(background)]
+                                            set(fdata, ,
+                                                sprintf("%s_%s_%s", tube.name, dye,
+                                                        exposition),
+                                                fdata.dye)
+                                            description <<- 
+                                              rbind(description,
+                                                    list(
+                                                      fdata.name = sprintf("%s_%s_%s", tube.name, dye,
+                                                                           exposition),
+                                                      exp.id = "exp1",
+                                                      run.id = exposition,
+                                                      react.id = as.integer(tube[2]) + 1,
+                                                      sample = tube.name,
+                                                      target = sprintf("%s#%s",
+                                                                       list.filter(kits,
+                                                                                   kit ~ kit[2] == tube[9])[[1]][3],
+                                                                       dye),
+                                                      target.dyeId = dye,
+                                                      sample.type = "unkn",
+                                                      # only FAM quantity
+                                                      quantity = tryCatch(list.filter(concentrations,
+                                                                                      conc ~ conc[2] == tube[2])[[1]][4] %>>% 
+                                                                            as.numeric(),
+                                                                          error = function(e) NA)
+                                                    ))
+                                            
+                                          }
+                                )
+                              }
+                            })
+                }
+              })
+    # self$SetFData(fdata, stri_encode(description, "", "UTF-8"))
+    self$SetFData(fdata, description)
   }
   
   # From CSV -----------------------------------------------------------------
@@ -1200,6 +1284,10 @@ RDML$set("public", "initialize", function(filename,
     },
     rex = {
       fromRotorGene()
+      return()
+    },
+    r96 = {
+      fromDTprime()
       return()
     },
     {

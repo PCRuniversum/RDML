@@ -50,8 +50,8 @@ stepone <- RDML$new(filename)
 ## positions
 tab <- stepone$AsTable(
          name.pattern = paste(react$sample$id, react$position),
-         add.columns = list { cq30 = if(data$cq >= 30) ">=30" else "<30",
-         quantity = as.factor(sample[[react$sample$id]]$quantity$value) }
+         add.columns = list(cq30 = if(data$cq >= 30) ">=30" else "<30",
+         quantity = as.factor(sample[[react$sample$id]]$quantity$value))
          )
 ## Show cq30 and quantities
 tab[c("cq30", "quantity")]

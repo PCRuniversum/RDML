@@ -42,6 +42,8 @@ RDML$set("public", "GetFData",
                   long.table = FALSE) {
            if (missing(request))
              request <- self$AsTable()
+           else
+             request <- data.table(request)
            if (length(unique(request$fdata.name)) != length(request$fdata.name)) {
              warning("fdata.name column has duplicates! Generating new by exp.id, run.id, react.id and target")
              request[, fdata.name := paste(exp.id, run.id, react.id, target, sep = "_"),

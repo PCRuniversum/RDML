@@ -67,7 +67,7 @@
 #' @format An \code{\link{R6Class}} generator object.
 #' @export
 #' @importFrom R6 R6Class
-#' @import checkmate data.table rlist pipeR
+#' @import checkmate data.table rlist pipeR stringr xml2
 #' @include RDML.types.R
 #' @examples 
 #' ## EXAMPLE 1:

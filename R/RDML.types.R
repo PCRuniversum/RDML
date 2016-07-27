@@ -133,18 +133,22 @@ rdmlBaseType <-
                      }) %>>% 
                 paste(sep = "\n", collapse = "\n") %>>% 
                 cat
+              cat("\n")
             }
           ),
           private = list(
             deep_clone = function(name, value) {
-              if (value %>>% is.null)
+              if (is.null(value))
                 return(NULL)
-              if (value %>>%
-                  class %>>% 
-                  tail(1) != "R6") {
-                if (is.list(value)) {
+              if (tail(class(value), 1) != "R6") {
+                if (is.list(value) && !is.data.table(value)) {
                   list.map(value,
-                        el ~ el$clone(deep = TRUE))
+                        el ~ {
+                          if (tail(class(el), 1) == "R6")
+                            el$clone(deep = TRUE)
+                          else
+                            el
+                        })
                 } else {
                   value
                 }
@@ -1756,7 +1760,7 @@ adpsType <-
           inherit = rdmlBaseType,
           public = list(
             initialize = function(fpoints) {
-              assert(checkDataFrame(fpoints))
+              assert(checkDataFrame(fpoints, types = c("numeric")))
               assert(
                 length(setdiff(colnames(fpoints), c("cyc", "tmp", "fluor"))) == 0 ||
                   length(setdiff(colnames(fpoints), c("cyc", "fluor"))) == 0)
@@ -1831,7 +1835,7 @@ mdpsType <-
           inherit = rdmlBaseType,
           public = list(
             initialize = function(fpoints) {
-              assert(checkDataFrame(fpoints))
+              assert(checkDataFrame(fpoints, types = c("numeric")))
               assert(length(setdiff(colnames(fpoints), c("tmp", "fluor"))) == 0)
               private$.fpoints <- {
                 if (checkDataTable(fpoints))
