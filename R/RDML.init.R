@@ -465,6 +465,7 @@ RDML$set("public", "initialize", function(filename,
   
   # From DTprime dna-technology ------------------------------------------------------
   fromDTprime <- function() {
+    DT96_OVERLOAD_SIGNAL <- 15000 # ??
     lns <- readLines(con <- file(filename)) %>>% 
       str_replace_all("\\t", " ")
     close(con)
@@ -503,49 +504,89 @@ RDML$set("public", "initialize", function(filename,
                               tube.id <- sprintf("tube_%s", tube[2])
                               if (fdata.raw[(.i - 1) * 2 + 1, get(tube.id)] != "1") {
                                 dye.i <- .i
-                                list.iter(expositions,
-                                          exposition ~ {
-                                            fdata.dye <- 
-                                              fdata.raw[seq((dye.i - 1) * 2 + .i,
-                                                            fdata.raw.nrow, by = 10), 
-                                                        as.numeric(get(tube.id))] -
-                                              fdata.raw[seq((dye.i - 1) * 2 + .i,
-                                                            fdata.raw.nrow, by = 10), 
-                                                        as.numeric(background)]
-                                            set(fdata, ,
-                                                sprintf("%s_%s_%s", tube.name, dye,
-                                                        exposition),
-                                                fdata.dye)
-                                            description <<- 
-                                              rbind(description,
-                                                    list(
-                                                      fdata.name = sprintf("%s_%s_%s", tube.name, dye,
-                                                                           exposition),
-                                                      exp.id = "exp1",
-                                                      run.id = exposition,
-                                                      react.id = as.integer(tube[2]) + 1,
-                                                      sample = tube.name,
-                                                      target = sprintf("%s#%s",
-                                                                       list.filter(kits,
-                                                                                   kit ~ kit[2] == tube[9])[[1]][3],
-                                                                       dye),
-                                                      target.dyeId = dye,
-                                                      sample.type = "unkn",
-                                                      # only FAM quantity
-                                                      quantity = tryCatch(list.filter(concentrations,
-                                                                                      conc ~ conc[2] == tube[2])[[1]][4] %>>% 
-                                                                            as.numeric(),
-                                                                          error = function(e) NA)
-                                                    ))
-                                            
-                                          }
+                                fdata.dye.2000 <- 
+                                  fdata.raw[seq((dye.i - 1) * 2 + 1,
+                                                fdata.raw.nrow, by = 10), 
+                                            as.numeric(get(tube.id))] -
+                                  fdata.raw[seq((dye.i - 1) * 2 + 1,
+                                                fdata.raw.nrow, by = 10), 
+                                            as.numeric(background)]
+                                fdata.dye.400 <- 
+                                  fdata.raw[seq((dye.i - 1) * 2 + 2,
+                                                fdata.raw.nrow, by = 10), 
+                                            as.numeric(get(tube.id))] -
+                                  fdata.raw[seq((dye.i - 1) * 2 + 2,
+                                                fdata.raw.nrow, by = 10), 
+                                            as.numeric(background)]
+                                fdata.dye.comb <- {
+                                  if (all(fdata.dye.2000 < DT96_OVERLOAD_SIGNAL)) {
+                                    fdata.dye.2000
+                                  } else {
+                                    fdata.dye.400 * 5
+                                  }
+                                }
+                                
+                                set(fdata, ,
+                                    sprintf("%s_%s_%s", tube.name, dye,
+                                            "2000"),
+                                    fdata.dye.2000)
+                                set(fdata, ,
+                                    sprintf("%s_%s_%s", tube.name, dye,
+                                            "400"),
+                                    fdata.dye.400)
+                                set(fdata, ,
+                                    sprintf("%s_%s_%s", tube.name, dye,
+                                            "comb"),
+                                    fdata.dye.comb)
+                                descr.2000 <- list(
+                                  fdata.name = sprintf("%s_%s_%s", tube.name, dye,
+                                                       "2000"),
+                                  exp.id = ".2000",
+                                  run.id = "run1",
+                                  react.id = as.integer(tube[2]) + 1,
+                                  sample = tube.name,
+                                  target = sprintf("%s#%s",
+                                                   list.filter(kits,
+                                                               kit ~ kit[2] == tube[9])[[1]][3],
+                                                   dye),
+                                  target.dyeId = dye,
+                                  sample.type = "unkn",
+                                  # only FAM quantity
+                                  quantity = tryCatch(list.filter(concentrations,
+                                                                  conc ~ conc[2] == tube[2])[[1]][4] %>>% 
+                                                        as.numeric(),
+                                                      error = function(e) NA)
                                 )
+                                descr.400 <- descr.2000 %>>% 
+                                  (dt ~ {
+                                    dt$fdata.name <- sprintf("%s_%s_%s", tube.name, dye,
+                                                              "400")
+                                    dt$exp.id <- ".400"
+                                    dt
+                                  })
+                                descr.comb <- descr.2000 %>>% 
+                                  (dt ~ {
+                                    dt$fdata.name <- sprintf("%s_%s_%s", tube.name, dye,
+                                                             "comb")
+                                    dt$exp.id <- "combined"
+                                    dt
+                                  })
+                                description <<- 
+                                  rbind(description,
+                                        descr.2000)
+                                description <<- 
+                                  rbind(description,
+                                        descr.400)
+                                description <<- 
+                                  rbind(description,
+                                        descr.comb)
                               }
                             })
                 }
               })
     # self$SetFData(fdata, stri_encode(description, "", "UTF-8"))
     self$SetFData(fdata, description)
+    self$id <- list(rdmlIdType$new("DTprime" , "1"))
   }
   
   # From CSV -----------------------------------------------------------------
