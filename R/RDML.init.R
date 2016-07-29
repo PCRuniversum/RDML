@@ -303,6 +303,7 @@ RDML$set("public", "initialize", function(filename,
       multicomponent.data[, c("well", "cyc", "fluor") := list(as.numeric(well),
                                                               as.numeric(cyc),
                                                               as.numeric(fluor))]
+      
       ncycles <- multicomponent.data$cyc %>>% max + 1
       
       plate.setup <- paste0(uniq.folder, "\\apldbio\\sds\\plate_setup.xml") %>>%
@@ -335,7 +336,7 @@ RDML$set("public", "initialize", function(filename,
                                 rbind(description, 
                                       data.frame(fdata.name = 
                                                    paste(index,
-                                                         getTextValue(sub.el,
+                                                         getTextVector(sub.el,
                                                                       "./DetectorTask/Detector/Reporter")),
                                                  exp.id = "exp1",
                                                  run.id = "run1",
@@ -343,10 +344,10 @@ RDML$set("public", "initialize", function(filename,
                                                  sample = ifelse(is.na(snames[as.character(index)]),
                                                                  "unnamed",
                                                                  snames[as.character(index)]) %>>% unname(),
-                                                 type = task,
-                                                 target = getTextValue(sub.el, "./DetectorTask/Detector/Name"),
-                                                 target.dyeId = getTextValue(sub.el, "./DetectorTask/Detector/Reporter"),
-                                                 quantity = getNumericValue(sub.el, "./DetectorTask/Concentration"),
+                                                 sample.type = task,
+                                                 target = getTextVector(sub.el, "./DetectorTask/Detector/Name"),
+                                                 target.dyeId = getTextVector(sub.el, "./DetectorTask/Detector/Reporter"),
+                                                 quantity = getNumericVector(sub.el, "./DetectorTask/Concentration"),
                                                  IsOmit = FALSE,
                                                  stringsAsFactors = FALSE))
                             })})
@@ -430,8 +431,6 @@ RDML$set("public", "initialize", function(filename,
           t()
         colnames(fdata) <- description$react.id
         fdata <- cbind(cyc = 1:nrow(fdata), fdata)
-        fdat <<- fdata
-        descr <<- description
         self$SetFData(fdata, description)
       })
     self$id <- list(rdmlIdType$new("RotorGene" , "1"))
@@ -470,7 +469,6 @@ RDML$set("public", "initialize", function(filename,
       str_replace_all("\\t", " ")
     close(con)
     # lns <- stri_encode(lns, "", "UTF-8")
-    lnss <<- lns
     tubes.info <- lns[(which(grepl("\\$Information about tubes:\\$", lns)) + 1):
                         (which(lns == "$MultiChannel:$ ") - 2)] %>>% 
       str_split(" ")
@@ -607,7 +605,7 @@ RDML$set("public", "initialize", function(filename,
       sample = fdata.names,
       target = "unkn",
       target.dyeId = "unkn",
-      type = "unkn",
+      sample.type = "unkn",
       stringsAsFactors = FALSE
     )
     self$SetFData(pcrdata, descr, fdata.type = data.type)
@@ -1271,8 +1269,6 @@ RDML$set("public", "initialize", function(filename,
       # return()
       tbl <- self$AsTable() %>>% 
         setkey(react.id)
-      tbll <<- tbl
-      dil <<- dilutions.r
       # cat("Adding Roche quantities\n")
       for (target in dilutions.r %>>% names()) {
         for (r.id in dilutions.r[[target]] %>>% names()) {
