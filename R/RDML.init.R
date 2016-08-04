@@ -387,11 +387,11 @@ RDML$set("public", "initialize", function(filename,
           run.id = "run1",
           react.id = el$TubePosition %>>% as.numeric(),
           sample = el$Name,
-          type = switch(el$Type,
-                        "5" = "pos",
-                        "3" = "ntc",
-                        "1" = "std",
-                        "unkn"),
+          sample.type = switch(el$Type,
+                               "5" = "pos",
+                               "3" = "ntc",
+                               "1" = "std",
+                               "unkn"),
           quantity = el$GivenConc %>>% as.numeric()
         )}) %>>% 
       list.stack()

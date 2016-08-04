@@ -51,9 +51,13 @@ RDML$set("public", "GetFData",
            }
            out <- 
              request[, self$experiment[[exp.id]]$run[[run.id]]$react[[as.character(
-               react.id)]]$data[[target]]$GetFData(), by = .(fdata.name)]
+               react.id)]]$data[[target]]$GetFData(dp.type = dp.type), by = .(fdata.name)]
            ifelse(long.table == FALSE,
-             return(dcast(out, cyc ~ fdata.name, value.var = "fluor")),
+             return(dcast(out,
+                          as.formula(sprintf("%s ~ fdata.name",
+                                             ifelse(dp.type == "adp",
+                                                    "cyc", "tmp"))),
+                          value.var = "fluor")),
              return(merge(request, out, by = "fdata.name"))
            )
          }, 
