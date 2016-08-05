@@ -1956,9 +1956,13 @@ dataType <-
               private$.quantFluor <- quantFluor
             },
             GetFData = function(dp.type = "adp") {
-              ifelse(dp.type == "adp",
-                     return(self[[dp.type]]$fpoints[, .(cyc, fluor)]),
-                     return(self[[dp.type]]$fpoints[, .(tmp, fluor)]))
+              assertString(dp.type)
+              out <- self[[dp.type]]
+              assert(checkClass(out, "adpsType"),
+                     checkClass(out, "mdpsType"))
+              ifelse(testClass(out, "adpsType"),
+                     return(out$fpoints[, .(cyc, fluor)]),
+                     return(out$fpoints[, .(tmp, fluor)]))
             }
           ),
           private = list(
@@ -2132,8 +2136,7 @@ reactType <-
                      return(out),
                      return(dcast(out,
                                   as.formula(sprintf("%s ~ tar",
-                                                     ifelse(dp.type == "adp",
-                                                            "cyc", "tmp"))),
+                                                     colnames(out)[1])),
                                   value.var = "fluor")))
             },
             .recalcPosition = function(pcrFormat) {
@@ -2521,8 +2524,7 @@ runType <-
               ifelse(long.table == FALSE,
                      return(dcast(out,
                                   as.formula(sprintf("%s ~ react.id + react.sample + tar",
-                                                     ifelse(dp.type == "adp",
-                                                            "cyc", "tmp"))),
+                                                     colnames(out)[1])),
                                   value.var = "fluor")),
                      return(out)
               )
@@ -2702,8 +2704,7 @@ experimentType <-
               ifelse(long.table == FALSE,
                      return(dcast(out,
                                   as.formula(sprintf("%s ~ react.id + react.sample + tar + run",
-                                                     ifelse(dp.type == "adp",
-                                                            "cyc", "tmp"))),
+                                                     colnames(out)[1])),
                                   value.var = "fluor")),
                      return(out)
               )
