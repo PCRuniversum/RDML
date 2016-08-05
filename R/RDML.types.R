@@ -2,10 +2,10 @@
 list.names <- function(.data, expr) {
   if (is.null(.data))
     return(NULL)
-  if (missing(expr)) 
+  if (missing(expr))
     return(names(.data))
   expr <- substitute(expr)
-  if (is.null(expr)) 
+  if (is.null(expr))
     return(setnames(.data, NULL))
   values <- rlist:::list.map.internal(.data, expr, parent.frame())
   rlist:::setnames(.data, values)
@@ -14,19 +14,19 @@ list.names <- function(.data, expr) {
 # rdmlBaseType ------------------------------------------------------------
 
 #' Base R6 class for RDML package.
-#' 
-#' Most classes from RDML package inherit this class. It is designed for internal 
+#'
+#' Most classes from RDML package inherit this class. It is designed for internal
 #' usage and should not be directly accessed.
-#' 
+#'
 #' @section Initialization: \preformatted{rdmlBaseType$new()}
-#'   
+#'
 #' @section Methods: \describe{
 #' \item{\code{.asXMLnodes(node.name)}}{Represents
 #'   object as XML nodes. Should not be called directly. \code{node.name} --
 #'   name of the root node for the generated XML
 #'   tree.}
 #' \item{\code{print(...)}}{prints object}}
-#'   
+#'
 #' @docType class
 #' @format An \code{\link{R6Class}} generator object.
 rdmlBaseType <-
@@ -51,7 +51,7 @@ rdmlBaseType <-
                         if (length(attrs) == 0) {
                           ""
                         } else {
-                          subnodes <- 
+                          subnodes <-
                             setdiff(subnodes, attrs)
                           sprintf(" id = '%s'", private[[attrs[1]]]$id)
                         }
@@ -67,11 +67,11 @@ rdmlBaseType <-
                             switch(
                               typeof(private[[name]]),
                               closure = NULL,
-                              list = 
+                              list =
                                 sapply(private[[name]],
                                        function(sublist)
                                          sublist$.asXMLnodes(subnode.name)) %>>%
-                                # .[!sapply(., is.null)] %>>% 
+                                # .[!sapply(., is.null)] %>>%
                                 paste0(collapse = "\n")
                               ,
                               environment = {
@@ -86,7 +86,7 @@ rdmlBaseType <-
                                           subnode.name,
                                           switch(
                                             typeof(private[[name]]),
-                                            logical = 
+                                            logical =
                                               ifelse(private[[name]],
                                                      "true",
                                                      "false"
@@ -98,13 +98,13 @@ rdmlBaseType <-
                                 }
                               })
                           }) %>>%
-                          .[!sapply(., is.null)] %>>% 
+                          .[!sapply(., is.null)] %>>%
                           paste0(collapse = "")
-                      }, 
+                      },
                       node.name)
             },
             print = function(...) {
-              elements <- names(private)[-which(names(private) == 
+              elements <- names(private)[-which(names(private) ==
                                                   "deep_clone")] %>>% rev
               sapply(elements,
                      function(name) {
@@ -116,7 +116,7 @@ rdmlBaseType <-
                            typeof(private[[name]]),
                            closure = NULL,
                            list = sprintf("[%s]",
-                                          names(private[[name]]) %>>% 
+                                          names(private[[name]]) %>>%
                                             paste(collapse = ", ")),
                            environment = {
                              sprintf("~ %s",
@@ -130,8 +130,8 @@ rdmlBaseType <-
                              else
                                sprintf("%s", private[[name]])
                            }))
-                     }) %>>% 
-                paste(sep = "\n", collapse = "\n") %>>% 
+                     }) %>>%
+                paste(sep = "\n", collapse = "\n") %>>%
                 cat
               cat("\n")
             }
@@ -162,25 +162,25 @@ rdmlBaseType <-
 # rdmlIdType ------------------------------------------------------------
 
 #' rdmlIdType R6 class.
-#' 
-#' This element can be used to assign a publisher and id to the RDML file.\cr 
+#'
+#' This element can be used to assign a publisher and id to the RDML file.\cr
 #' Inherits: \link{rdmlBaseType}.
-#' 
+#'
 #' @section Initialization: \preformatted{rdmlIdType$new(publisher, serialNumber,
 #'   MD5Hash = NULL)}
-#'   
-#' @section Fields: \describe{  
+#'
+#' @section Fields: \describe{
 #'   \item{\code{publisher}}{\link[checkmate]{checkString}. RDML file publisher.}
-#'   \item{\code{serialNumber}}{\link[checkmate]{checkString}. Serial number.} 
+#'   \item{\code{serialNumber}}{\link[checkmate]{checkString}. Serial number.}
 #'   \item{\code{MD5Hash}}{\link[checkmate]{checkString}. An MD5Hash calculated
 #'   over the complete file after removing all rdmlIDTypes and all whitespaces
 #'   between elements.}
 #'   }
-#'   
+#'
 #' @docType class
 #' @format An \code{\link{R6Class}} generator object.
 #' @export
-rdmlIdType <- 
+rdmlIdType <-
   R6Class("rdmlIdType",
           # class = FALSE,
           inherit = rdmlBaseType,
@@ -227,19 +227,19 @@ rdmlIdType <-
 # idType ------------------------------------------------------------
 
 #' idType R6 class.
-#' 
+#'
 #' Contains identificator for varius RDML types. Inherits: \link{rdmlBaseType}.
-#' 
+#'
 #' @section Initialization: \preformatted{idType$new(id)}
 #'
-#'   @section Fields: \describe{     
+#'   @section Fields: \describe{
 #' \item{\code{id}}{\link[checkmate]{checkString}. Identificator.}
 #' }
-#'   
+#'
 #' @docType class
 #' @format An \code{\link{R6Class}} generator object.
 #' @export
-idType <- 
+idType <-
   R6Class("idType",
           # class = FALSE,
           inherit = rdmlBaseType,
@@ -272,19 +272,19 @@ idType <-
 # reactIdType ------------------------------------------------------------
 
 #' reactIdType R6 class.
-#' 
+#'
 #' Contains identificator for reactType. Inherits: \link{rdmlBaseType}.
-#' 
+#'
 #' @section Initialization: \preformatted{reactIdType$new(id)}
 #'
-#'   @section Fields: \describe{     
+#'   @section Fields: \describe{
 #' \item{\code{id}}{\link[checkmate]{checkCount}. Identificator.}
 #' }
-#' 
+#'
 #' @docType class
 #' @format An \code{\link{R6Class}} generator object.
 #' @export
-reactIdType <- 
+reactIdType <-
   R6Class("reactIdType",
           # class = FALSE,
           inherit = idType,
@@ -312,19 +312,19 @@ reactIdType <-
 # idReferencesType ------------------------------------------------------------
 
 #' idReferencesType R6 class.
-#' 
+#'
 #' Contains id of another RDML object. Inherits: \link{idType}.
-#' 
+#'
 #' @section Initialization: \preformatted{idReferencesType$new(id)}
-#' 
-#' @section Fields: \describe{  
+#'
+#' @section Fields: \describe{
 #' \item{\code{id}}{\link[checkmate]{checkString}. Identificator.}
 #' }
-#'         
+#'
 #' @docType class
 #' @format An \code{\link{R6Class}} generator object.
 #' @export
-idReferencesType <- 
+idReferencesType <-
   R6Class("idReferencesType",
           # class = FALSE,
           inherit = idType)
@@ -332,13 +332,13 @@ idReferencesType <-
 # experimenterType ------------------------------------------------------------
 
 #' experimenterType R6 class.
-#' 
+#'
 #' Contact details of the experimenter. Inherits: \link{rdmlBaseType}.
-#' 
+#'
 #' @section Initialization: \preformatted{experimenterType$new(id, firstName, lastName,
 #'   email = NULL, labName = NULL, labAddress = NULL)}
-#'  
-#'   @section Fields: \describe{   
+#'
+#'   @section Fields: \describe{
 #' \item{\code{id}}{\link{idType}. Identificator.}
 #' \item{\code{firstName}}{\link[checkmate]{checkString}. First name.}
 #' \item{\code{lastName}}{\link[checkmate]{checkString}. Last name.}
@@ -346,11 +346,11 @@ idReferencesType <-
 #' \item{\code{labName}}{\link[checkmate]{checkString}. Lab name.}
 #' \item{\code{labAddress}}{\link[checkmate]{checkString}. Lab address.}
 #'   }
-#'   
+#'
 #' @docType class
 #' @format An \code{\link{R6Class}} generator object.
 #' @export
-experimenterType <- 
+experimenterType <-
   R6Class("experimenterType",
           # class = FALSE,
           inherit = rdmlBaseType,
@@ -431,21 +431,21 @@ experimenterType <-
 # documentationType ------------------------------------------------------------
 
 #' documentationType R6 class.
-#' 
+#'
 #' These elements should be used if the same description applies to many
 #' samples, targets or experiments. Inherits: \link{rdmlBaseType}.
-#' 
+#'
 #' @section Initialization: \preformatted{documentationType$new(id, text = NULL)}
-#'   
-#'   @section Fields: \describe{  
+#'
+#'   @section Fields: \describe{
 #' \item{\code{id}}{\link{idType}. Identificator.}
 #' \item{\code{text}}{\link[checkmate]{checkString}. Text.}
 #'   }
-#'   
+#'
 #' @docType class
 #' @format An \code{\link{R6Class}} generator object.
 #' @export
-documentationType <- 
+documentationType <-
   R6Class("documentationType",
           # class = FALSE,
           inherit = rdmlBaseType,
@@ -482,20 +482,20 @@ documentationType <-
 # dyeType ------------------------------------------------------------
 
 #' dyeType R6 class.
-#' 
+#'
 #' Detailed information about the dye. Inherits: \link{rdmlBaseType}.
-#' 
+#'
 #' @section Initialization: \preformatted{dyeType$new(id, description = NULL)}
-#'   
-#'   @section Fields: \describe{  
+#'
+#'   @section Fields: \describe{
 #' \item{\code{id}}{\link{idType}. Identificator.}
 #' \item{\code{description}}{ \link[checkmate]{checkString}. Description.
 #'   }}
-#'   
+#'
 #' @docType class
 #' @format An \code{\link{R6Class}} generator object.
 #' @export
-dyeType <- 
+dyeType <-
   R6Class("dyeType",
           # class = FALSE,
           inherit = rdmlBaseType,
@@ -532,22 +532,22 @@ dyeType <-
 # xRefType ------------------------------------------------------------
 
 #' xRefType R6 class.
-#' 
+#'
 #' Inherits: \link{rdmlBaseType}.
-#' 
+#'
 #' @section Initialization: \preformatted{xRefType$new(name = NULL, id = NULL)}
-#'   
-#'   @section Fields: \describe{  
+#'
+#'   @section Fields: \describe{
 #'   \item{\code{name}}{\link[checkmate]{checkString}. Reference to an external
-#'   database, } for example "GenBank". 
+#'   database, } for example "GenBank".
 #'   \item{\code{id}}{\link[checkmate]{checkString}. The ID of the entry within
 #'   the external database, for example "AJ832138".}
 #'   }
-#'   
+#'
 #' @docType class
 #' @format An \code{\link{R6Class}} generator object.
 #' @export
-xRefType <- 
+xRefType <-
   R6Class("xRefType",
           # class = FALSE,
           inherit = rdmlBaseType,
@@ -586,21 +586,21 @@ xRefType <-
 # annotationType ------------------------------------------------------------
 
 #' annotationType R6 class.
-#' 
-#' Annotate samples by setting a property and its value. For example, 
+#'
+#' Annotate samples by setting a property and its value. For example,
 #' sex could be a property with the possible values M or F. Inherits:
 #' \link{rdmlBaseType}.
-#' 
+#'
 #' @section Fields: \describe{ \item{property}{\link[checkmate]{checkString}.
 #'   Property name} \item{value}{\link[checkmate]{checkString}. Value} }
-#'   
+#'
 #' @docType class
 #' @format An \code{\link{R6Class}} generator object.
 #' @export
 #' @examples
 #' #set sex property
 #' annotationType$new(property = "sex", value = "M")
-annotationType <- 
+annotationType <-
   R6Class("annotationType",
           # class = FALSE,
           inherit = rdmlBaseType,
@@ -635,21 +635,21 @@ annotationType <-
 # quantityType ------------------------------------------------------------
 
 #' quantityType R6 class.
-#' 
+#'
 #' A quantity is always defined by its value and its unit. Inherits:
 #' \link{rdmlBaseType}.
-#' 
+#'
 #' @section Initialization: \preformatted{quantityType$new(value, unit)}
-#' 
-#'   @section Fields: \describe{    
+#'
+#'   @section Fields: \describe{
 #' \item{\code{value}}{\link[checkmate]{checkNumber}. Value.}
 #' \item{\code{unit}}{\link{quantityUnitType}. Unit.}
 #'   }
-#'   
+#'
 #' @docType class
 #' @format An \code{\link{R6Class}} generator object.
 #' @export
-quantityType <- 
+quantityType <-
   R6Class("quantityType",
           # class = FALSE,
           inherit = rdmlBaseType,
@@ -684,27 +684,27 @@ quantityType <-
 # cdnaSynthesisMethodType ------------------------------------------------------------
 
 #' cdnaSynthesisMethodType R6 class.
-#' 
+#'
 #' Description of the cDNA synthesis method. Inherits: \link{rdmlBaseType}.
-#' 
-#' @section 
-#' Initialization: \preformatted{cdnaSynthesisMethodType$new(enzyme = NULL, 
-#'   primingMethod = NULL, dnaseTreatment = NULL, thermalCyclingConditions = 
+#'
+#' @section
+#' Initialization: \preformatted{cdnaSynthesisMethodType$new(enzyme = NULL,
+#'   primingMethod = NULL, dnaseTreatment = NULL, thermalCyclingConditions =
 #'   NULL)}
-#'   
-#'   @section Fields: \describe{  
-#'   \item{\code{enzyme}}{\link[checkmate]{checkString}. Name of the enzyme used for 
-#'   reverse transcription.} 
-#'   \item{\code{primingMethod}}{\link{primingMethodType}.} 
+#'
+#'   @section Fields: \describe{
+#'   \item{\code{enzyme}}{\link[checkmate]{checkString}. Name of the enzyme used for
+#'   reverse transcription.}
+#'   \item{\code{primingMethod}}{\link{primingMethodType}.}
 #'   \item{\code{dnaseTreatment}}{\link[checkmate]{checkFlag} if \code{TRUE}RNA was
 #'   DNAse treated prior cDNA synthesis.}
 #'   \item{\code{thermalCyclingConditions}}{\link{idReferencesType}.}
 #'   }
-#'   
+#'
 #' @docType class
 #' @format An \code{\link{R6Class}} generator object.
 #' @export
-cdnaSynthesisMethodType <- 
+cdnaSynthesisMethodType <-
   R6Class("cdnaSynthesisMethodType",
           # class = FALSE,
           inherit = rdmlBaseType,
@@ -767,12 +767,12 @@ cdnaSynthesisMethodType <-
 # templateQuantityType ------------------------------------------------------------
 
 #' templateQuantityType R6 class.
-#' 
+#'
 #' Inherits: \link{rdmlBaseType}.
-#' 
+#'
 #' @section Initialization: \preformatted{templateQuantityType$new(conc, nucleotide)}
-#'   
-#'   @section Fields: \describe{  
+#'
+#'   @section Fields: \describe{
 #' \item{\code{conc}}{\link[checkmate]{checkNumber}. Concentration of the template in nanogram}
 #'   per microliter in the final reaction mix.
 #' \item{\code{nucleotide}}{\link{nucleotideType}.}
@@ -781,7 +781,7 @@ cdnaSynthesisMethodType <-
 #' @docType class
 #' @format An \code{\link{R6Class}} generator object.
 #' @export
-templateQuantityType <- 
+templateQuantityType <-
   R6Class("templateQuantityType",
           # class = FALSE,
           inherit = rdmlBaseType,
@@ -816,18 +816,18 @@ templateQuantityType <-
 # enumType ------------------------------------------------------------
 
 #' enumType R6 class.
-#' 
+#'
 #' Generic class for creating objects thet can take limited list of values. \cr
 #' Inherits: \link{rdmlBaseType}.
-#' 
+#'
 #' @section Initialization: \preformatted{enumType$new(value)}
-#'   @section Fields: \describe{  
+#'   @section Fields: \describe{
 #' \item{\code{value}}{\link[checkmate]{checkString}. Value.}
 #'   }
-#'   
+#'
 #' @docType class
 #' @format An \code{\link{R6Class}} generator object.
-enumType <- 
+enumType <-
   R6Class("enumType",
           # class = FALSE,
           inherit = rdmlBaseType,
@@ -866,7 +866,7 @@ enumType <-
 # sampleTypeType ------------------------------------------------------------
 
 #' sampleTypeType R6 class.
-#' 
+#'
 #' Can take values:
 #' \describe{
 #' \item{unkn}{unknown sample}
@@ -877,19 +877,19 @@ enumType <-
 #' \item{nrt}{minusRT}
 #' \item{pos}{positive control}
 #' \item{opt}{optical calibrator sample}}
-#' 
+#'
 #' Inherits: \link{enumType}.
-#' 
+#'
 #' @section Initialization: \preformatted{sampleTypeType$new(value)}
-#'  
-#'   @section Fields: \describe{   
+#'
+#'   @section Fields: \describe{
 #' \item{\code{value}}{\link[checkmate]{checkString}. Value.}
 #'   }
-#'   
+#'
 #' @docType class
 #' @format An \code{\link{R6Class}} generator object.
 #' @export
-sampleTypeType <- 
+sampleTypeType <-
   R6Class("sampleTypeType",
           # class = FALSE,
           inherit = enumType,
@@ -903,7 +903,7 @@ sampleTypeType <-
 # quantityUnitType ------------------------------------------------------------
 
 #' quantityUnitType R6 class.
-#' 
+#'
 #' The unit the quantity. Can take values:
 #' \describe{
 #' \item{cop}{copies per microliter  }
@@ -913,19 +913,19 @@ sampleTypeType <-
 #' \item{ng}{nanogram per microliter }
 #' \item{other}{other unit (must be linear, no exponents or logarithms allowed) }
 #' }
-#' 
+#'
 #' Inherits: \link{enumType}.
-#' 
+#'
 #' @section Initialization: \preformatted{quantityUnitType$new(value)}
-#'   
-#'   @section Fields: \describe{  
+#'
+#'   @section Fields: \describe{
 #' \item{\code{value}}{\link[checkmate]{checkString}. Value.}
 #'   }
-#'   
+#'
 #' @docType class
 #' @format An \code{\link{R6Class}} generator object.
 #' @export
-quantityUnitType <- 
+quantityUnitType <-
   R6Class("quantityUnitType",
           # class = FALSE,
           inherit = enumType,
@@ -937,28 +937,28 @@ quantityUnitType <-
 # primingMethodType ------------------------------------------------------------
 
 #' primingMethodType R6 class.
-#' 
+#'
 #' The primers used in the reverse transcription. Can take values:
 #' \describe{
 #' \item{oligo-dt}{}
 #' \item{random}{}
 #' \item{target-specific}{}
 #' \item{oligo-dt and random}{}
-#' \item{other}{} 
+#' \item{other}{}
 #' }
-#' 
+#'
 #' Inherits: \link{enumType}.
-#' 
+#'
 #' @section Initialization: \preformatted{primingMethodType$new(value)}
-#'   
-#'   @section Fields: \describe{  
+#'
+#'   @section Fields: \describe{
 #' \item{\code{value}}{\link[checkmate]{checkString}. Value.}
 #'   }
-#'   
+#'
 #' @docType class
 #' @format An \code{\link{R6Class}} generator object.
 #' @export
-primingMethodType <- 
+primingMethodType <-
   R6Class("primingMethodType",
           # class = FALSE,
           inherit = enumType,
@@ -974,7 +974,7 @@ primingMethodType <-
 # nucleotideType ------------------------------------------------------------
 
 #' nucleotideType R6 class.
-#' 
+#'
 #' Type of nucleic acid used as a template in the experiment. May have following values:
 #' \describe{
 #' \item{DNA}{}
@@ -982,19 +982,19 @@ primingMethodType <-
 #' \item{cDNA}{}
 #' \item{RNA}{}
 #' }
-#' 
+#'
 #' Inherits: \link{enumType}.
-#' 
+#'
 #' @section Initialization: \preformatted{nucleotideType$new(value)}
-#'   
-#'   @section Fields: \describe{  
+#'
+#'   @section Fields: \describe{
 #' \item{\code{value}}{\link[checkmate]{checkString}. Value.}
 #'   }
-#'   
+#'
 #' @docType class
 #' @format An \code{\link{R6Class}} generator object.
 #' @export
-nucleotideType <- 
+nucleotideType <-
   R6Class("nucleotideType",
           # class = FALSE,
           inherit = enumType,
@@ -1010,49 +1010,49 @@ nucleotideType <-
 
 #'sampleType R6 class.
 #'
-#' A sample is a template solution with defined concentation. Since dilutions 
-#' of the same material differ in concentration, they are considered different 
-#' samples. A technical replicate samples should contain the same name (reactions 
-#' are performed on the same material), and biological replicates should contain 
-#' different names (the template derived from the different biological replicates 
-#' is are divergent). Serial dilutions in a standard curve must have different 
-#' names (preferably stating their dillution). 
+#' A sample is a template solution with defined concentation. Since dilutions
+#' of the same material differ in concentration, they are considered different
+#' samples. A technical replicate samples should contain the same name (reactions
+#' are performed on the same material), and biological replicates should contain
+#' different names (the template derived from the different biological replicates
+#' is are divergent). Serial dilutions in a standard curve must have different
+#' names (preferably stating their dillution).
 #' Inherits: \link{rdmlBaseType}.
 #'
-#'@section Initialization: \preformatted{sampleType$new(id, description = NULL, 
-#'  documentation = NULL, xRef =  NULL, annotation = NULL, type = 
-#'  sampleTypeType$new("unkn"), interRunCalibrator = FALSE, quantity = NULL, 
-#'  calibratorSample = FALSE, cdnaSynthesisMethod = NULL, templateQuantity = 
+#'@section Initialization: \preformatted{sampleType$new(id, description = NULL,
+#'  documentation = NULL, xRef =  NULL, annotation = NULL, type =
+#'  sampleTypeType$new("unkn"), interRunCalibrator = FALSE, quantity = NULL,
+#'  calibratorSample = FALSE, cdnaSynthesisMethod = NULL, templateQuantity =
 #'  NULL)}
-#'  
-#'  @section Fields: \describe{  
+#'
+#'  @section Fields: \describe{
 #'  \item{\code{id}}{\link{idType}. Concentration of the template in nanogram
 #'  per microliter in the final reaction mix. }
-#'  \item{\code{description}}{\link[checkmate]{checkString}.} 
-#'  \item{\code{documentation}}{\code{list} of \link{idReferencesType}.} 
-#'  \item{\code{xRef}}{\code{list} of \link{xRefType}.} 
-#'  \item{\code{annotation}}{\code{list} of \link{annotationType}.} 
-#'  \item{\code{type}}{\link{sampleTypeType}.} 
-#'  \item{\code{interRunCalibrator}}{\link[checkmate]{checkFlag}. \code{TRUE} 
+#'  \item{\code{description}}{\link[checkmate]{checkString}.}
+#'  \item{\code{documentation}}{\code{list} of \link{idReferencesType}.}
+#'  \item{\code{xRef}}{\code{list} of \link{xRefType}.}
+#'  \item{\code{annotation}}{\code{list} of \link{annotationType}.}
+#'  \item{\code{type}}{\link{sampleTypeType}.}
+#'  \item{\code{interRunCalibrator}}{\link[checkmate]{checkFlag}. \code{TRUE}
 #'  if this sample is used as inter run calibrator. }
 #'  \item{\code{quantity}}{\link{quantityType}. Quantity - The reference
 #'  quantity of this sample. It should be only used if the sample is part of a
 #'  standard curve. The provided value will be used to quantify unknown samples
-#'  in absolute quantification assays. Only the use of positive integers (like 1, 
-#'  10, 100, 1000) and fractions (e.g. 1, 0.1, 0.01, 0.001) is acceptable. 
-#'  The use of exponents (1, 2, 3, 4 or -1, -2, -3, -4) if forbidden, 
-#'  because it will not be interpreted as 10E1, 10E2, 10E3, 10E4 or 10E-1, 10E-2, 
+#'  in absolute quantification assays. Only the use of positive integers (like 1,
+#'  10, 100, 1000) and fractions (e.g. 1, 0.1, 0.01, 0.001) is acceptable.
+#'  The use of exponents (1, 2, 3, 4 or -1, -2, -3, -4) if forbidden,
+#'  because it will not be interpreted as 10E1, 10E2, 10E3, 10E4 or 10E-1, 10E-2,
 #'  10E-3, 10E-4. }
 #'  \item{\code{calibratorSample}}{\link[checkmate]{checkFlag}. \code{TRUE} if this
 #'  sample is used as calibrator sample. }
-#'  \item{\code{cdnaSynthesisMethod}}{\link{cdnaSynthesisMethodType}.} 
+#'  \item{\code{cdnaSynthesisMethod}}{\link{cdnaSynthesisMethodType}.}
 #'  \item{\code{templateQuantity}}{\link{templateQuantityType}.}
 #'  }
-#'  
+#'
 #'@docType class
 #'@format An \code{\link{R6Class}} generator object.
 #'@export
-sampleType <- 
+sampleType <-
   R6Class("sampleType",
           # class = FALSE,
           inherit = rdmlBaseType,
@@ -1088,7 +1088,7 @@ sampleType <-
                      checkClass(cdnaSynthesisMethod, "cdnaSynthesisMethodType"))
               assert(checkNull(templateQuantity),
                      checkClass(templateQuantity, "templateQuantityType"))
-              
+
               private$.id <- id
               private$.description <- description
               private$.documentation <- documentation
@@ -1198,24 +1198,24 @@ sampleType <-
 # oligoType ------------------------------------------------------------
 
 #' oligoType R6 class.
-#' 
+#'
 #' Inherits: \link{rdmlBaseType}.
-#' 
-#' @section Initialization: \preformatted{oligoType$new(threePrimeTag = NULL, 
+#'
+#' @section Initialization: \preformatted{oligoType$new(threePrimeTag = NULL,
 #'   fivePrimeTag = NULL, sequence)}
-#'   
-#'   @section Fields: \describe{  
+#'
+#'   @section Fields: \describe{
 #'   \item{\code{threePrimeTag}}{\link[checkmate]{checkString}. Description of
 #'   three prime modification (if present). }
 #'   \item{\code{fivePrimeTag}}{\link[checkmate]{checkString}. Description of
 #'   five prime modification (if present).}
 #'   \item{\code{sequence}}{\link[checkmate]{checkString}.}
 #'   }
-#'   
+#'
 #' @docType class
 #' @format An \code{\link{R6Class}} generator object.
 #' @export
-oligoType <- 
+oligoType <-
   R6Class("oligoType",
           # class = FALSE,
           inherit = rdmlBaseType,
@@ -1264,24 +1264,24 @@ oligoType <-
 # sequencesType ------------------------------------------------------------
 
 #' sequencesType R6 class.
-#' 
+#'
 #' Inherits: \link{rdmlBaseType}.
-#' 
-#' @section Initialization: \preformatted{sequencesType$new(forwardPrimer = NULL, 
+#'
+#' @section Initialization: \preformatted{sequencesType$new(forwardPrimer = NULL,
 #' reversePrimer = NULL, probe1 = NULL, probe2 = NULL, amplicon = NULL)}
-#'   
-#'   @section Fields: \describe{  
+#'
+#'   @section Fields: \describe{
 #' \item{\code{forwardPrimer}}{\link{oligoType}.}
 #' \item{\code{reversePrimer}}{\link{oligoType}.}
 #' \item{\code{probe1}}{\link{oligoType}.}
 #' \item{\code{probe2}}{\link{oligoType}.}
 #' \item{\code{amplicon}}{\link{oligoType}.}
 #'   }
-#'   
+#'
 #' @docType class
 #' @format An \code{\link{R6Class}} generator object.
 #' @export
-sequencesType <- 
+sequencesType <-
   R6Class("sequencesType",
           # class = FALSE,
           inherit = rdmlBaseType,
@@ -1356,21 +1356,21 @@ sequencesType <-
 # commercialAssayType ------------------------------------------------------------
 
 #' commercialAssayType R6 class.
-#' 
-#' For some commercial assays, the primer sequences may be unknown. This element 
+#'
+#' For some commercial assays, the primer sequences may be unknown. This element
 #' allows to describe commercial assays. Inherits: \link{rdmlBaseType}.
-#' 
+#'
 #' @section Initialization: \preformatted{commercialAssayType$new(company, orderNumber)}
-#'   
-#'   @section Fields: \describe{  
+#'
+#'   @section Fields: \describe{
 #' \item{\code{company}}{\link[checkmate]{checkString}.}
 #' \item{\code{orderNumber}}{\link[checkmate]{checkString}.}
 #'   }
-#'   
+#'
 #' @docType class
 #' @format An \code{\link{R6Class}} generator object.
 #' @export
-commercialAssayType <- 
+commercialAssayType <-
   R6Class("commercialAssayType",
           # class = FALSE,
           inherit = rdmlBaseType,
@@ -1405,24 +1405,24 @@ commercialAssayType <-
 # targetTypeType ------------------------------------------------------------
 
 #' targetTypeType R6 class.
-#' 
+#'
 #' Can take values:
 #' \describe{
 #' \item{ref}{reference target}
 #' \item{toi}{target of interest}
-#' } 
+#' }
 #' Inherits: \link{enumType}.
-#' 
+#'
 #' @section Initialization: \preformatted{targetTypeType$new(value)}
-#' 
-#'   @section Fields: \describe{  
+#'
+#'   @section Fields: \describe{
 #' \item{\code{value}}{\link[checkmate]{checkString}.}
 #' }
-#'  
+#'
 #' @docType class
 #' @format An \code{\link{R6Class}} generator object.
 #' @export
-targetTypeType <- 
+targetTypeType <-
   R6Class("targetTypeType",
           # class = FALSE,
           inherit = enumType,
@@ -1435,34 +1435,34 @@ targetTypeType <-
 # targetType ------------------------------------------------------------
 
 #' targetType R6 class.
-#' 
-#' A target is a PCR reaction with defined set of primers. PCR reactions 
-#' for the same gene with distinct primer sequences are considered different 
-#' targets. Inherits: 
+#'
+#' A target is a PCR reaction with defined set of primers. PCR reactions
+#' for the same gene with distinct primer sequences are considered different
+#' targets. Inherits:
 #' \link{rdmlBaseType}.
-#' 
-#' @section Initialization: \preformatted{targetType$new(id, description = NULL, 
-#'   documentation = NULL, xRef = NULL, type, amplificationEfficiencyMethod = 
-#'   NULL, amplificationEfficiency = NULL, amplificationEfficiencySE = NULL, 
+#'
+#' @section Initialization: \preformatted{targetType$new(id, description = NULL,
+#'   documentation = NULL, xRef = NULL, type, amplificationEfficiencyMethod =
+#'   NULL, amplificationEfficiency = NULL, amplificationEfficiencySE = NULL,
 #'   detectionLimit = NULL, dyeId, sequences = NULL, commercialAssay = NULL)}
-#'   
-#' @section Fields: \describe{ \item{\code{id}}{\link{idType}.} 
-#'   \item{\code{description}}{\link[checkmate]{checkString}.} 
-#'   \item{\code{documentation}}{\code{list} of \link{idReferencesType}.} 
-#'   \item{\code{xRef}}{\code{list} of \link{xRefType}.} 
-#'   \item{\code{type}}{\link{targetTypeType}.} 
-#'   \item{\code{amplificationEfficiencyMethod}}{\link[checkmate]{checkString}.} 
-#'   \item{\code{amplificationEfficiency}}{\link[checkmate]{checkNumber}.} 
-#'   \item{\code{amplificationEfficiencySE}}{\link[checkmate]{checkNumber}.} 
-#'   \item{\code{detectionLimit}}{\link[checkmate]{checkNumber}.} 
-#'   \item{\code{dyeId}}{\link{idReferencesType}.} 
-#'   \item{\code{sequences}}{\link{sequencesType}.} 
+#'
+#' @section Fields: \describe{ \item{\code{id}}{\link{idType}.}
+#'   \item{\code{description}}{\link[checkmate]{checkString}.}
+#'   \item{\code{documentation}}{\code{list} of \link{idReferencesType}.}
+#'   \item{\code{xRef}}{\code{list} of \link{xRefType}.}
+#'   \item{\code{type}}{\link{targetTypeType}.}
+#'   \item{\code{amplificationEfficiencyMethod}}{\link[checkmate]{checkString}.}
+#'   \item{\code{amplificationEfficiency}}{\link[checkmate]{checkNumber}.}
+#'   \item{\code{amplificationEfficiencySE}}{\link[checkmate]{checkNumber}.}
+#'   \item{\code{detectionLimit}}{\link[checkmate]{checkNumber}.}
+#'   \item{\code{dyeId}}{\link{idReferencesType}.}
+#'   \item{\code{sequences}}{\link{sequencesType}.}
 #'   \item{\code{commercialAssay}}{\link{commercialAssayType}.} }
-#'   
+#'
 #' @docType class
 #' @format An \code{\link{R6Class}} generator object.
 #' @export
-targetType <- 
+targetType <-
   R6Class("targetType",
           # class = FALSE,
           inherit = rdmlBaseType,
@@ -1500,7 +1500,7 @@ targetType <-
                      checkClass(sequences, "sequencesType"))
               assert(checkNull(commercialAssay),
                      checkClass(commercialAssay, "commercialAssayType"))
-              
+
               private$.id <- id
               private$.description <- description
               private$.documentation <- documentation
@@ -1563,7 +1563,7 @@ targetType <-
               assertClass(type, "targetTypeType")
               private$.type <- type
             },
-            amplificationEfficiencyMethod = 
+            amplificationEfficiencyMethod =
               function(amplificationEfficiencyMethod) {
                 if (missing(amplificationEfficiencyMethod))
                   return(private$.amplificationEfficiencyMethod)
@@ -1615,7 +1615,7 @@ targetType <-
           ))
 
 # # dpAmpCurveType ------------------------------------------------------------
-# dpAmpCurveType <- 
+# dpAmpCurveType <-
 #   R6Class("dpAmpCurveType",
 #           # class = FALSE,
 #           inherit = rdmlBaseType,
@@ -1666,10 +1666,10 @@ targetType <-
 #               private$.fluor <- fluor
 #             }
 #           ))
-# 
+#
 
 # # dpMeltingCurveType ------------------------------------------------------------
-# dpMeltingCurveType <- 
+# dpMeltingCurveType <-
 #   R6Class("dpMeltingCurveType",
 #           # class = FALSE,
 #           inherit = rdmlBaseType,
@@ -1709,52 +1709,52 @@ targetType <-
 # adpsType ------------------------------------------------------------
 
 #' adpsType R6 class.
-#' 
-#' @details 
-#' Contains \code{matrix} of amplification data. Must have three columns: \describe{ 
-#' \item{cyc}{PCR cycle at which data 
-#' point was collected (every cycle must have unique number).} 
-#' \item{tmp}{temperature in degrees Celsius at the time of measurement (optional).} 
-#' \item{fluor}{raw fluorescence intensity measured.}} Inherits: 
+#'
+#' @details
+#' Contains \code{matrix} of amplification data. Must have three columns: \describe{
+#' \item{cyc}{PCR cycle at which data
+#' point was collected (every cycle must have unique number).}
+#' \item{tmp}{temperature in degrees Celsius at the time of measurement (optional).}
+#' \item{fluor}{raw fluorescence intensity measured.}} Inherits:
 #' \link{rdmlBaseType}.
-#' 
+#'
 #' @section Initialization: \preformatted{adpsType$new(fpoints)}
-#' 
-#' @section Fields: \describe{    
+#'
+#' @section Fields: \describe{
 #'   \item{\code{fpoints}}{\link[checkmate]{assertMatrix}. Matrix with amplification data
 #'   points.}
 #'   }
-#'   
+#'
 #' @docType class
 #' @format An \code{\link{R6Class}} generator object.
 #' @export
-#' @examples 
+#' @examples
 #' #cycles
-#' cyc <- c(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 
-#' 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 
+#' cyc <- c(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17,
+#' 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33,
 #' 34, 35, 36, 37, 38, 39, 40)
 #' #fluorescence
-#' fluo <- c(2.0172, 2.0131, 2.0035, 2, 2.0024, 2.0056, 2.0105, 2.0179, 
-#' 2.0272, 2.0488, 2.0922, 2.1925, 2.3937, 2.7499, 3.3072, 4.0966, 
-#' 5.0637, 6.0621, 7.0239, 7.8457, 8.5449, 9.1282, 9.6022, 9.9995, 
-#' 10.2657, 10.4989, 10.6813, 10.8209, 10.9158, 10.9668, 11.0053, 
-#' 11.0318, 11.0446, 11.044, 11.0052, 10.9671, 10.9365, 10.9199, 
+#' fluo <- c(2.0172, 2.0131, 2.0035, 2, 2.0024, 2.0056, 2.0105, 2.0179,
+#' 2.0272, 2.0488, 2.0922, 2.1925, 2.3937, 2.7499, 3.3072, 4.0966,
+#' 5.0637, 6.0621, 7.0239, 7.8457, 8.5449, 9.1282, 9.6022, 9.9995,
+#' 10.2657, 10.4989, 10.6813, 10.8209, 10.9158, 10.9668, 11.0053,
+#' 11.0318, 11.0446, 11.044, 11.0052, 10.9671, 10.9365, 10.9199,
 #' 10.897, 10.8316)
 #' #temperature
-#' temp <- c(55, 55, 55, 55, 54, 54, 55, 55, 55, 55, 55, 55, 55, 55, 55, 
-#' 55, 55, 55, 55, 55, 55, 55, 55, 56, 55, 55, 55, 55, 55, 55, 55, 
+#' temp <- c(55, 55, 55, 55, 54, 54, 55, 55, 55, 55, 55, 55, 55, 55, 55,
+#' 55, 55, 55, 55, 55, 55, 55, 55, 56, 55, 55, 55, 55, 55, 55, 55,
 #' 55, 55, 55, 55, 55, 55, 55, 55, 55)
-#' 
+#'
 #' #combine all variables into a proper object
 #' data <- matrix(c(cyc, temp, fluo), ncol = 3)
 #' colnames(data) <- c("cyc", "tmp", "fluor")
-#' 
+#'
 #' #create adps object
 #' adpsType$new(data)
-#' 
+#'
 #' #create adps object without temperature data
 #' adpsType$new(data[, -2])
-adpsType <- 
+adpsType <-
   R6Class("adpsType",
           # class = FALSE,
           inherit = rdmlBaseType,
@@ -1765,7 +1765,7 @@ adpsType <-
                 length(setdiff(colnames(fpoints), c("cyc", "tmp", "fluor"))) == 0 ||
                   length(setdiff(colnames(fpoints), c("cyc", "fluor"))) == 0)
               private$.fpoints <- {
-                if (checkDataTable(fpoints))
+                if (testDataTable(fpoints))
                   fpoints
                 else
                   data.table(fpoints)
@@ -1781,7 +1781,7 @@ adpsType <-
                         private$.fpoints[, sprintf("<adp><cyc>%s</cyc><fluor>%s</fluor></adp>",
                                                    cyc, fluor)]
                       ))
-               )() %>>% 
+               )() %>>%
                 paste0(collapse = "")
             }
           ),
@@ -1797,7 +1797,7 @@ adpsType <-
                 length(setdiff(colnames(fpoints), c("cyc", "tmp", "fluor"))) == 0 ||
                   length(setdiff(colnames(fpoints), c("cyc", "fluor"))) == 0)
               private$.fpoints <- {
-                if (checkDataTable(fpoints))
+                if (testDataTable(fpoints))
                   fpoints
                 else
                   data.table(fpoints)
@@ -1808,28 +1808,28 @@ adpsType <-
 # mdpsType ------------------------------------------------------------
 
 #' mdpsType R6 class.
-#' 
+#'
 #' Contains \code{matrix} of melting data points (single data points measured
-#' during amplification). 
-#' 
-#' Columns: \describe{ 
-#' \item{tmp}{(temperature in degrees Celsius at the time of measurement. 
-#' Every point must have unique value.} 
-#' \item{fluor}{fluorescence intensity measured without any correction 
-#' (including baselining).}} 
-#' 
+#' during amplification).
+#'
+#' Columns: \describe{
+#' \item{tmp}{(temperature in degrees Celsius at the time of measurement.
+#' Every point must have unique value.}
+#' \item{fluor}{fluorescence intensity measured without any correction
+#' (including baselining).}}
+#'
 #' Inherits: \link{rdmlBaseType}.
-#' 
+#'
 #' @section Initialization: \preformatted{mdpsType$new(fpoints)}
-#'   
-#'   @section Fields: \describe{  
+#'
+#'   @section Fields: \describe{
 #' \item{\code{fpoints}}{\link[checkmate]{assertMatrix}. Matrix with amplification data points.}
 #'   }
-#'   
+#'
 #' @docType class
 #' @format An \code{\link{R6Class}} generator object.
 #' @export
-mdpsType <- 
+mdpsType <-
   R6Class("mdpsType",
           # class = FALSE,
           inherit = rdmlBaseType,
@@ -1838,7 +1838,7 @@ mdpsType <-
               assert(checkDataFrame(fpoints, types = c("numeric")))
               assert(length(setdiff(colnames(fpoints), c("tmp", "fluor"))) == 0)
               private$.fpoints <- {
-                if (checkDataTable(fpoints))
+                if (testDataTable(fpoints))
                   fpoints
                 else
                   data.table(fpoints)
@@ -1846,7 +1846,7 @@ mdpsType <-
             },
             .asXMLnodes = function(node.name) {
               private$.fpoints[, sprintf("<mdp><tmp>%s</tmp><fluor>%s</fluor></mdp>",
-                                         tmp, fluor)] %>>% 
+                                         tmp, fluor)] %>>%
                 paste0(collapse = "")
             }
           ),
@@ -1860,7 +1860,7 @@ mdpsType <-
               assert(checkDataFrame(fpoints))
               assert(length(setdiff(colnames(fpoints), c("tmp", "fluor"))) == 0)
               private$.fpoints <- {
-                if (checkDataTable(fpoints))
+                if (testDataTable(fpoints))
                   fpoints
                 else
                   data.table(fpoints)
@@ -1871,49 +1871,49 @@ mdpsType <-
 # dataType ------------------------------------------------------------
 
 #' dataType R6 class.
-#' 
+#'
 #' Inherits: \link{rdmlBaseType}.
-#' 
-#' @section Initialization: \preformatted{dataType$new(tar, cq = NULL, excl = NULL, 
-#' adp = NULL, mdp = NULL, endPt = NULL, bgFluor = NULL, bgFluorSlp = NULL, 
+#'
+#' @section Initialization: \preformatted{dataType$new(tar, cq = NULL, excl = NULL,
+#' adp = NULL, mdp = NULL, endPt = NULL, bgFluor = NULL, bgFluorSlp = NULL,
 #' quantFluor = NULL)}
-#'   
-#' @section Fields: \describe{ 
-#' \item{\code{tar}}{\link{idReferencesType}. 
-#'   TargetID - A reference to a target.} 
-#'   \item{\code{cq}}{\link[checkmate]{checkNumber}. 
-#'   Calculated fractional PCR cycle used for downstream quantification. 
-#'   Negative values express following condition: Not Available: -1.0 } 
+#'
+#' @section Fields: \describe{
+#' \item{\code{tar}}{\link{idReferencesType}.
+#'   TargetID - A reference to a target.}
+#'   \item{\code{cq}}{\link[checkmate]{checkNumber}.
+#'   Calculated fractional PCR cycle used for downstream quantification.
+#'   Negative values express following condition: Not Available: -1.0 }
 #'   \item{\code{excl}}{\link[checkmate]{checkString}. Excluded. If \code{excl}
-#'   is present, this entry should not be evaluated. Do not set this element 
-#'   to \code{FALSE} if the entry is valid. Instead, leave the entire \code{excl} 
-#'   element out instead. It may contain a string with a reason for the exclusion. 
-#'   Several reasons for exclusion should be 
-#'   seperated by semicolons ";".} 
-#'   \item{\code{adp}}{\link{adpsType}.} 
-#'   \item{\code{mdp}}{\link{mdpsType}.} 
-#'   \item{\code{endPt}}{\link[checkmate]{checkNumber}}. Value of the endpoint measurement. 
-#'   \item{\code{bgFluor}}{\link[checkmate]{checkNumber}. Background 
+#'   is present, this entry should not be evaluated. Do not set this element
+#'   to \code{FALSE} if the entry is valid. Instead, leave the entire \code{excl}
+#'   element out instead. It may contain a string with a reason for the exclusion.
+#'   Several reasons for exclusion should be
+#'   seperated by semicolons ";".}
+#'   \item{\code{adp}}{\link{adpsType}.}
+#'   \item{\code{mdp}}{\link{mdpsType}.}
+#'   \item{\code{endPt}}{\link[checkmate]{checkNumber}}. Value of the endpoint measurement.
+#'   \item{\code{bgFluor}}{\link[checkmate]{checkNumber}. Background
 #'   fluorescence (the y-intercept of the baseline trend based on the estimated
-#'   background fluorescence). } 
-#'   \item{\code{bgFluorSlp}}{\link[checkmate]{checkNumber}. 
-#'   Background fluorescence slope - The slope of the baseline trend based on 
-#'   the estimated background fluorescence. The element should be absent to 
-#'   indicate a slope of 0.0; If this element is present without the \code{bgFluor} 
-#'   element it should be ignored. } 
+#'   background fluorescence). }
+#'   \item{\code{bgFluorSlp}}{\link[checkmate]{checkNumber}.
+#'   Background fluorescence slope - The slope of the baseline trend based on
+#'   the estimated background fluorescence. The element should be absent to
+#'   indicate a slope of 0.0; If this element is present without the \code{bgFluor}
+#'   element it should be ignored. }
 #'   \item{\code{quantFluor}}{\link[checkmate]{checkNumber}. Quantification flourescence -
 #'   The fluorescence value corresponding to the treshold line.} }
-#'   
+#'
 #' @section Methods: \describe{
-#' \item{\code{AsDataFrame(dp.type = "adp")}}{Represents amplification 
-#' (\preformatted{dp.type = "adp"}) or melting (\code{dp.type = "mdp"}) data 
+#' \item{\code{AsDataFrame(dp.type = "adp")}}{Represents amplification
+#' (\preformatted{dp.type = "adp"}) or melting (\code{dp.type = "mdp"}) data
 #' points as \code{data.frame}}
 #' }
-#'   
+#'
 #' @docType class
 #' @format An \code{\link{R6Class}} generator object.
 #' @export
-dataType <- 
+dataType <-
   R6Class("dataType",
           # class = FALSE,
           inherit = rdmlBaseType,
@@ -1944,13 +1944,13 @@ dataType <-
                      checkNumber(bgFluorSlp))
               assert(checkNull(quantFluor),
                      checkNumber(quantFluor))
-              
+
               private$.tar <- tar
               private$.cq <- cq
               private$.excl <- excl
               private$.adp <- adp
               private$.mdp <- mdp
-              private$.endPt <- endPt 
+              private$.endPt <- endPt
               private$.bgFluor <- bgFluor
               private$.bgFluorSlp <- bgFluorSlp
               private$.quantFluor <- quantFluor
@@ -2040,57 +2040,57 @@ dataType <-
 # reactType ------------------------------------------------------------
 
 #' reactType R6 class.
-#' 
+#'
 #' A reaction is an independent chemical reaction corresponding for example to a
-#' well in a 96 well plate, a capillary in a rotor, a through-hole on an array, 
+#' well in a 96 well plate, a capillary in a rotor, a through-hole on an array,
 #' etc. Inherits: \link{rdmlBaseType}.
-#' 
+#'
 #' The ID of this reaction
-#' 
+#'
 #' Schemas : \itemize{ \item rotor : assign IDs according to the position of the
-#' sample on the rotor (1 for the 1st sample, 2 for the 2nd, ...) \item plate 
-#' (96/384/1536 well) : the IDs are assigned in a row-first/column-second 
-#' manner. For each row, the samples are numbered according to the increasing 
-#' column number. At the end of a row, the numbering starts at the first column 
-#' of the next row. An example for this type of plate can be found below : 
+#' sample on the rotor (1 for the 1st sample, 2 for the 2nd, ...) \item plate
+#' (96/384/1536 well) : the IDs are assigned in a row-first/column-second
+#' manner. For each row, the samples are numbered according to the increasing
+#' column number. At the end of a row, the numbering starts at the first column
+#' of the next row. An example for this type of plate can be found below :
 #' \tabular{lllll}{ \tab 1  \tab 2  \tab 3 \tab ... \cr A   \tab 1  \tab 2  \tab
-#' 3 \tab     \cr B   \tab 13 \tab 14 \tab   \tab     \cr ... \tab    \tab \tab 
-#' \tab    } or \tabular{lllll}{ \tab 1  \tab 2  \tab 3 \tab ... \cr 1 \tab 1 
-#' \tab 2  \tab 3 \tab     \cr 2   \tab 13 \tab 14 \tab   \tab     \cr ... \tab 
+#' 3 \tab     \cr B   \tab 13 \tab 14 \tab   \tab     \cr ... \tab    \tab \tab
+#' \tab    } or \tabular{lllll}{ \tab 1  \tab 2  \tab 3 \tab ... \cr 1 \tab 1
+#' \tab 2  \tab 3 \tab     \cr 2   \tab 13 \tab 14 \tab   \tab     \cr ... \tab
 #' \tab    \tab   \tab    }
-#' 
-#' \item multi-array plate (BioTrove) : the IDs are assigned in a 
-#' row-first/column-second manner, ignoring the organisation of sub-arrays. For 
+#'
+#' \item multi-array plate (BioTrove) : the IDs are assigned in a
+#' row-first/column-second manner, ignoring the organisation of sub-arrays. For
 #' each row, the samples are numbered according to the increasing column number.
-#' At the end of a row, the the next row. An example for this type of plate can 
+#' At the end of a row, the the next row. An example for this type of plate can
 #' be found below : todo... }
-#' 
+#'
 #' @section Initialization: \preformatted{reactType$new(id, sample, data = NULL, pcrFormat = pcrFormatType$new(8, 12, labelFormatType$new("123"), labelFormatType$new("ABC")))}
-#'   
+#'
 #'   @section Fields: \describe{
-#'   \item{\code{id}}{\link{reactIdType}. See 'Details'.} 
+#'   \item{\code{id}}{\link{reactIdType}. See 'Details'.}
 #'   \item{\code{sample}}{\link{idReferencesType}. SampleID - A reference to a
-#'   sample.} 
+#'   sample.}
 #'   \item{\code{data}}{\code{list} of \link{dataType}.}
 #'   \item{\code{position}}{Human readable form of the \code{react id} (i.e. '13' -> 'B1')..}
 #'   }
-#'   
-#' @section Methods: \describe{\item{\code{AsDataFrame(dp.type = 
-#'   "adp")}}{Represents amplification (\code{dp.type = "adp"}) or melting 
-#'   (\code{dp.type = "mdp"}) data points of all targets as one 
-#'   \code{data.frame}} \item{\code{.recalcPosition(pcrformat)}}{Converts \code{react 
-#'   id} to the human readable form (i.e. '13' -> 'B1'). This converted value can be 
-#'   accessed by \code{position} field. \code{pcrFormat} is 
-#'   \code{pcrFormatType}. Currently, only 'ABC' and '123' are supported as 
-#'   labels. For '123' '123' the \code{Position} will look like 'r01c01', for 
-#' 'ABC' '123' it will be 'A01' and for '123' 'ABC' it will be 01A. 'ABC' 'ABC' 
-#' is not currently supported. Note that 'ABC' will result in loss of 
+#'
+#' @section Methods: \describe{\item{\code{AsDataFrame(dp.type =
+#'   "adp")}}{Represents amplification (\code{dp.type = "adp"}) or melting
+#'   (\code{dp.type = "mdp"}) data points of all targets as one
+#'   \code{data.frame}} \item{\code{.recalcPosition(pcrformat)}}{Converts \code{react
+#'   id} to the human readable form (i.e. '13' -> 'B1'). This converted value can be
+#'   accessed by \code{position} field. \code{pcrFormat} is
+#'   \code{pcrFormatType}. Currently, only 'ABC' and '123' are supported as
+#'   labels. For '123' '123' the \code{Position} will look like 'r01c01', for
+#' 'ABC' '123' it will be 'A01' and for '123' 'ABC' it will be 01A. 'ABC' 'ABC'
+#' is not currently supported. Note that 'ABC' will result in loss of
 #' information if the experiment contains more than 26 rows!}}
-#'   
+#'
 #' @docType class
 #' @format An \code{\link{R6Class}} generator object.
 #' @export
-reactType <- 
+reactType <-
   R6Class("reactType",
           # class = FALSE,
           inherit = rdmlBaseType,
@@ -2098,8 +2098,8 @@ reactType <-
             initialize = function(id,
                                   sample,
                                   data = NULL,
-                                  pcrFormat = 
-                                    pcrFormatType$new(8, 12, 
+                                  pcrFormat =
+                                    pcrFormatType$new(8, 12,
                                                       labelFormatType$new("ABC"),
                                                       labelFormatType$new("123"))) {
               assertClass(id, "reactIdType")
@@ -2119,22 +2119,26 @@ reactType <-
                                    long.table = FALSE) {
               assertString(dp.type)
               assertFlag(long.table)
-              out <- 
+              out <-
                 list.map(private$.data,
                          data ~ {
                            fdata <- data$GetFData(dp.type)
-                           set(fdata, , 
+                           set(fdata, ,
                                "tar", data$tar$id)
                            fdata
-                           }) %>>% 
+                           }) %>>%
                 rbindlist()
               ifelse(long.table,
                      return(out),
-                     return(dcast(out, cyc ~ tar, value.var = "fluor")))
+                     return(dcast(out,
+                                  as.formula(sprintf("%s ~ tar",
+                                                     ifelse(dp.type == "adp",
+                                                            "cyc", "tmp"))),
+                                  value.var = "fluor")))
             },
             .recalcPosition = function(pcrFormat) {
               assertClass(pcrFormat, "pcrFormatType")
-              private$calced.position <- 
+              private$calced.position <-
                 if (pcrFormat$rowLabel$value == "ABC" && pcrFormat$columnLabel$value == "123") {
                   if (pcrFormat$rows > length(LETTERS)) {
                     stop("Too many rows for 'ABC' format")
@@ -2195,24 +2199,24 @@ reactType <-
 # dataCollectionSoftwareType ------------------------------------------------------------
 
 #' dataCollectionSoftwareType R6 class.
-#' 
-#' Software name and version used to collect and analyze the data. Inherits: 
+#'
+#' Software name and version used to collect and analyze the data. Inherits:
 #' \link{rdmlBaseType}.
-#' 
+#'
 #' @section Initialization: \preformatted{dataCollectionSoftwareType$new(name, version)}
 #'
-#'   @section Fields: \describe{   
+#'   @section Fields: \describe{
 #' \item{\code{name}}{\link[checkmate]{checkString}.}
 #' \item{\code{version}}{\link[checkmate]{checkString}.}
 #'   }
-#'   
+#'
 #' @docType class
 #' @format An \code{\link{R6Class}} generator object.
 #' @export
-#' @examples 
-#' dataCollectionSoftwareType$new(name = "ExampleSoft", 
+#' @examples
+#' dataCollectionSoftwareType$new(name = "ExampleSoft",
 #'                                version = "1.0")
-dataCollectionSoftwareType <- 
+dataCollectionSoftwareType <-
   R6Class("dataCollectionSoftwareType",
           # class = FALSE,
           inherit = rdmlBaseType,
@@ -2247,7 +2251,7 @@ dataCollectionSoftwareType <-
 # cqDetectionMethodType ------------------------------------------------------------
 
 #' cqDetectionMethodType R6 class.
-#' 
+#'
 #' The method used to determine the Cq value.
 #' Can take values:
 #' \describe{
@@ -2255,19 +2259,19 @@ dataCollectionSoftwareType <-
 #' \item{"manual threshold and baseline settings"}{}
 #' \item{"second derivative maximum"}{}
 #' \item{"other"}{}
-#' }  
+#' }
 #' Inherits: \link{enumType}.
-#' 
+#'
 #' @section Initialization: \preformatted{cqDetectionMethodType$new(value)}
-#'   
+#'
 #'   @section Fields: \describe{
 #' \item{\code{value}}{\link[checkmate]{checkString}.}
 #'   }
-#'   
+#'
 #' @docType class
 #' @format An \code{\link{R6Class}} generator object.
 #' @export
-cqDetectionMethodType <- 
+cqDetectionMethodType <-
   R6Class("cqDetectionMethodType",
           # class = FALSE,
           inherit = enumType,
@@ -2282,26 +2286,26 @@ cqDetectionMethodType <-
 # labelFormatType ------------------------------------------------------------
 
 #' labelFormatType R6 class.
-#' 
+#'
 #' Label used for \link{pcrFormatType}.
 #' Can take values:
 #' \describe{
 #' \item{ABC}{}
 #' \item{123}{}
 #' \item{A1a1}{}
-#' }  
+#' }
 #' Inherits: \link{enumType}.
-#' 
+#'
 #' @section Initialization: \preformatted{labelFormatType$new(value)}
-#'   
+#'
 #'   @section Fields: \describe{
 #' \item{\code{value}}{\link[checkmate]{checkString}.}
 #'   }
-#'   
+#'
 #' @docType class
 #' @format An \code{\link{R6Class}} generator object.
 #' @export
-labelFormatType <- 
+labelFormatType <-
   R6Class("labelFormatType",
           # class = FALSE,
           inherit = enumType,
@@ -2315,40 +2319,40 @@ labelFormatType <-
 # pcrFormatType ------------------------------------------------------------
 
 #' pcrFormatType R6 class.
-#' 
-#' The display format of the PCR, analogous to the the qPCR instrument run format. 
+#'
+#' The display format of the PCR, analogous to the the qPCR instrument run format.
 #' Inherits: \link{rdmlBaseType}.
-#' 
-#' Rotor formats always have 1 column; rows correspond to the number of places 
+#'
+#' Rotor formats always have 1 column; rows correspond to the number of places
 #' in the rotor. Values for common formats are: \tabular{lllll}{ Format \tab
-#' rows \tab columns \tab rowLabel \tab columnLabel \cr single-well \tab 1   
+#' rows \tab columns \tab rowLabel \tab columnLabel \cr single-well \tab 1
 #' \tab 1       \tab 123      \tab 123         \cr 48-well plate \tab 6    \tab
-#' 8       \tab ABC      \tab 123         \cr 96-well plate \tab 8    \tab 12   
+#' 8       \tab ABC      \tab 123         \cr 96-well plate \tab 8    \tab 12
 #' \tab ABC      \tab 123         \cr 384-well plate \tab 16   \tab 24      \tab
 #' ABC      \tab 123         \cr 1536-well plate \tab 32   \tab 48      \tab ABC
-#' \tab 123         \cr 3072-well array \tab 32   \tab 96      \tab A1a1    
+#' \tab 123         \cr 3072-well array \tab 32   \tab 96      \tab A1a1
 #' \tab A1a1        \cr 5184-well chip \tab 72   \tab 72      \tab ABC      \tab
-#' 123         \cr 32-well rotor \tab 32   \tab 1       \tab 123      \tab 123  
+#' 123         \cr 32-well rotor \tab 32   \tab 1       \tab 123      \tab 123
 #' \cr 72-well rotor \tab 72   \tab 1       \tab 123      \tab 123         \cr
 #' 100-well rotor \tab 100  \tab 1       \tab 123      \tab 123         \cr free
 #' format \tab -1   \tab 1       \tab 123      \tab 123 } If rows field has value -1,
 #' the function will not try to reconstruct a plate and just display all run
-#' data in a single column. If the columns field has value 1 then the function will 
+#' data in a single column. If the columns field has value 1 then the function will
 #' not display a column label.
-#' 
+#'
 #' @section Initialization: \preformatted{pcrFormatType$new(rows, columns, rowLabel, columnLabel)}
-#'   
+#'
 #'   @section Fields: \describe{
 #' \item{\code{rows}}{\link[checkmate]{checkCount}.}
 #' \item{\code{columns}}{\link[checkmate]{checkCount}.}
 #' \item{\code{rowLabel}}{\link{labelFormatType}.}
 #' \item{\code{columnLabel}}{\link{labelFormatType}.}
 #'   }
-#'   
+#'
 #' @docType class
 #' @format An \code{\link{R6Class}} generator object.
 #' @export
-pcrFormatType <- 
+pcrFormatType <-
   R6Class("pcrFormatType",
           # class = FALSE,
           inherit = rdmlBaseType,
@@ -2403,44 +2407,44 @@ pcrFormatType <-
 # runType ------------------------------------------------------------
 
 #' runType R6 class.
-#' 
-#' A run is a set of reactions performed in one "run", for example one plate, 
+#'
+#' A run is a set of reactions performed in one "run", for example one plate,
 #' one rotor, one array, one chip. Inherits: \link{rdmlBaseType}.
-#' 
-#' @section Initialization: \preformatted{runType$new(id, description = NULL, 
-#'   documentation = NULL, experimenter = NULL, instrument = NULL, 
-#'   dataCollectionSoftware = NULL, backgroundDeterminationMethod = NULL, 
-#'   cqDetectionMethod = NULL, thermalCyclingConditions = NULL, pcrFormat, 
+#'
+#' @section Initialization: \preformatted{runType$new(id, description = NULL,
+#'   documentation = NULL, experimenter = NULL, instrument = NULL,
+#'   dataCollectionSoftware = NULL, backgroundDeterminationMethod = NULL,
+#'   cqDetectionMethod = NULL, thermalCyclingConditions = NULL, pcrFormat,
 #'   runDate = NULL, react = NULL)}
-#'   
-#' @section Fields: \describe{ 
-#'  \item{\code{id}}{\link{idType}.} 
-#'  \item{\code{description}}{\link[checkmate]{checkString}.} 
-#'  \item{\code{documentation}}{\code{list} of \link{idReferencesType}.} 
-#'  \item{\code{experimenter}}{\code{list} of \link{idReferencesType}.} 
-#'  \item{\code{instrument}}{\link[checkmate]{checkString}. Description of the 
-#'   instrument used to aquire the data.} 
-#'  \item{\code{dataCollectionSoftware}}{\link{dataCollectionSoftwareType}. 
-#'   Description of the software used to analyze/collect the data.} 
-#'  \item{\code{backgroundDeterminationMethod}}{\link[checkmate]{checkString}. 
-#'   Description of method used to determine the background. } 
-#'  \item{\code{cqDetectionMethod}}{\link{cqDetectionMethodType}. Description of method 
-#'   used to calculate the quantification cycle. } 
-#'  \item{\code{thermalCyclingConditions}}{\link{idReferencesType}. The program 
-#'   used to aquire the data.} 
-#'  \item{\code{pcrFormat}}{\link{adpsType}.} 
-#'  \item{\code{runDate}}{\link{adpsType}. Time stamp of data acquisition.} 
+#'
+#' @section Fields: \describe{
+#'  \item{\code{id}}{\link{idType}.}
+#'  \item{\code{description}}{\link[checkmate]{checkString}.}
+#'  \item{\code{documentation}}{\code{list} of \link{idReferencesType}.}
+#'  \item{\code{experimenter}}{\code{list} of \link{idReferencesType}.}
+#'  \item{\code{instrument}}{\link[checkmate]{checkString}. Description of the
+#'   instrument used to aquire the data.}
+#'  \item{\code{dataCollectionSoftware}}{\link{dataCollectionSoftwareType}.
+#'   Description of the software used to analyze/collect the data.}
+#'  \item{\code{backgroundDeterminationMethod}}{\link[checkmate]{checkString}.
+#'   Description of method used to determine the background. }
+#'  \item{\code{cqDetectionMethod}}{\link{cqDetectionMethodType}. Description of method
+#'   used to calculate the quantification cycle. }
+#'  \item{\code{thermalCyclingConditions}}{\link{idReferencesType}. The program
+#'   used to aquire the data.}
+#'  \item{\code{pcrFormat}}{\link{adpsType}.}
+#'  \item{\code{runDate}}{\link{adpsType}. Time stamp of data acquisition.}
 #'  \item{\code{react}}{\code{list} of \link{adpsType}.} }
-#'   
+#'
 #' @section Methods: \describe{
-#'  \item{\code{AsDataFrame(dp.type = "adp")}}{Represents amplification 
-#'  (\code{dp.type = "adp"}) or melting (\code{dp.type = "mdp"}) data 
+#'  \item{\code{AsDataFrame(dp.type = "adp")}}{Represents amplification
+#'  (\code{dp.type = "adp"}) or melting (\code{dp.type = "mdp"}) data
 #'  points as \code{data.frame}}}
-#'   
+#'
 #' @docType class
 #' @format An \code{\link{R6Class}} generator object.
 #' @export
-runType <- 
+runType <-
   R6Class("runType",
           # class = FALSE,
           inherit = rdmlBaseType,
@@ -2479,7 +2483,7 @@ runType <-
                      checkString(runDate)) # date time
               assert(checkNull(react),
                      checkList(react, "reactType"))
-              
+
               private$.id <- id
               private$.description <- description
               private$.documentation <- documentation
@@ -2499,25 +2503,28 @@ runType <-
                                 long.table = FALSE) {
               assertString(dp.type)
               assertFlag(long.table)
-              
-              out <- 
+
+              out <-
                 list.map(private$.react,
                          react ~ {
                            fdata <- react$GetFData(
                              dp.type = dp.type,
                              long.table = TRUE)
-                           set(fdata, , 
-                               c("react.id", "react.sample"), 
+                           set(fdata, ,
+                               c("react.id", "react.sample"),
                                list(react$id$id,
                                     react$sample$id))
                            fdata
-                         }) %>>% 
+                         }) %>>%
                 rbindlist()
-              
+
               ifelse(long.table == FALSE,
-                return(dcast(out, cyc ~ react.id + react.sample + tar,
-                             value.var = "fluor")),
-                return(out)
+                     return(dcast(out,
+                                  as.formula(sprintf("%s ~ react.id + react.sample + tar",
+                                                     ifelse(dp.type == "adp",
+                                                            "cyc", "tmp"))),
+                                  value.var = "fluor")),
+                     return(out)
               )
             },
             UpdateReactsPosition = function() {
@@ -2629,30 +2636,30 @@ runType <-
 # experimentType ------------------------------------------------------------
 
 #' experimentType R6 class.
-#' 
-#' A qPCR experiment. It may contain several runs (\link{runType}). Inherits: 
+#'
+#' A qPCR experiment. It may contain several runs (\link{runType}). Inherits:
 #' \link{rdmlBaseType}.
-#' 
+#'
 #' @section Initialization: \preformatted{experimentType$new(id, description = NULL,
 #'   documentation = NULL, run = NULL)}
 #'
-#'   @section Fields: \describe{   
+#'   @section Fields: \describe{
 #' \item{\code{id}}{\link{idType}.}
 #' \item{\code{description}}{\link[checkmate]{checkString}.}
 #' \item{\code{documentation}}{\code{list} of \link{idReferencesType}.}
 #' \item{\code{run}}{\code{list} of \link{runType}.}
 #' }
-#'   
-#' @section Methods: \describe{\item{\code{AsDataFrame(dp.type = "adp", 
-#'   long.table = FALSE)}}{Represents amplification (\code{dp.type = "adp"}) or 
-#'   melting (\code{dp.type = "mdp"}) data points as \code{data.frame}. 
-#'   \code{long.table = TRUE} means that fluorescence data for all runs and 
+#'
+#' @section Methods: \describe{\item{\code{AsDataFrame(dp.type = "adp",
+#'   long.table = FALSE)}}{Represents amplification (\code{dp.type = "adp"}) or
+#'   melting (\code{dp.type = "mdp"}) data points as \code{data.frame}.
+#'   \code{long.table = TRUE} means that fluorescence data for all runs and
 #'   reacts will be at one collumn.}}
-#'   
+#'
 #' @docType class
 #' @format An \code{\link{R6Class}} generator object.
 #' @export
-experimentType <- 
+experimentType <-
   R6Class("experimentType",
           # class = FALSE,
           inherit = rdmlBaseType,
@@ -2668,7 +2675,7 @@ experimentType <-
                      checkList(documentation, "idReferencesType"))
               assert(checkNull(run),
                      checkList(run, "runType"))
-              
+
               private$.id <- id
               private$.description <- description
               private$.documentation <- documentation
@@ -2679,22 +2686,24 @@ experimentType <-
                                 long.table = FALSE) {
               assertString(dp.type)
               assertFlag(long.table)
-              
-              out <- 
+
+              out <-
                 list.map(private$.run,
                          run ~ {
                            fdata <- run$GetFData(
                              dp.type = dp.type,
                              long.table = TRUE)
-                           set(fdata, , 
+                           set(fdata, ,
                                "run", run$id$id)
                            fdata
-                         }) %>>% 
+                         }) %>>%
                 rbindlist()
-              
+
               ifelse(long.table == FALSE,
                      return(dcast(out,
-                                  cyc ~ react.id + react.sample + tar + run,
+                                  as.formula(sprintf("%s ~ react.id + react.sample + tar + run",
+                                                     ifelse(dp.type == "adp",
+                                                            "cyc", "tmp"))),
                                   value.var = "fluor")),
                      return(out)
               )
@@ -2740,19 +2749,19 @@ experimentType <-
 # lidOpenType ------------------------------------------------------------
 
 #' lidOpenType R6 class.
-#' 
-#' This step waits for the user to open the lid and continues afterwards. It 
-#' allows to stop the program and to wait for the user to add for example 
-#' enzymes and continue the program afterwards. The temperature of the previous 
+#'
+#' This step waits for the user to open the lid and continues afterwards. It
+#' allows to stop the program and to wait for the user to add for example
+#' enzymes and continue the program afterwards. The temperature of the previous
 #' step is maintained. Inherits: \link{rdmlBaseType}.
-#' 
+#'
 #' @section Initialization: \preformatted{lidOpenType$new()}
-#'   
-#'   
+#'
+#'
 #' @docType class
 #' @format An \code{\link{R6Class}} generator object.
 #' @export
-lidOpenType <- 
+lidOpenType <-
   R6Class("lidOpenType",
           # class = FALSE,
           inherit = rdmlBaseType,
@@ -2766,20 +2775,20 @@ lidOpenType <-
 # pauseType ------------------------------------------------------------
 
 #' pauseType R6 class.
-#' 
-#' This step allows to pause at a certain temperature. It is typically the last 
+#'
+#' This step allows to pause at a certain temperature. It is typically the last
 #' step in an amplification protocol. Inherits: \link{rdmlBaseType}.
-#' 
+#'
 #' @section Initialization: \preformatted{pauseType$new(temperature)}
-#'   
+#'
 #' @section Fields: \describe{ \item{\code{temperature}}{\link[checkmate]{checkNumber}.
 #'   The temperature in degrees Celsius maintained during the pause.}
 #'   }
-#'   
+#'
 #' @docType class
 #' @format An \code{\link{R6Class}} generator object.
 #' @export
-pauseType <- 
+pauseType <-
   R6Class("pauseType",
           # class = FALSE,
           inherit = rdmlBaseType,
@@ -2805,24 +2814,24 @@ pauseType <-
 # loopType ------------------------------------------------------------
 
 #' loopType R6 class.
-#' 
-#' This step allows to form a loop or to exclude some steps. It allows to jump 
-#' to a certain "goto" step for "repeat" times. If the "goto" step is outside of 
-#' the loop range, it must have "repeat" value "0". Inherits: 
+#'
+#' This step allows to form a loop or to exclude some steps. It allows to jump
+#' to a certain "goto" step for "repeat" times. If the "goto" step is outside of
+#' the loop range, it must have "repeat" value "0". Inherits:
 #' \link{rdmlBaseType}.
-#' 
+#'
 #' @section Initialization: \preformatted{loopType$new(goto, repeat.n)}
-#'   
+#'
 #' @section Fields: \describe{ \item{\code{goto}}{\link[checkmate]{assertCount}.  The
 #'   step to go to to form the loop.}
-#' \item{\code{repeat.n}}{\link[checkmate]{assertCount}. Determines how many times the loop is 
-#'   repeated. The first run through the loop is counted as 0, the last loop is 
+#' \item{\code{repeat.n}}{\link[checkmate]{assertCount}. Determines how many times the loop is
+#'   repeated. The first run through the loop is counted as 0, the last loop is
 #'   "repeat" - 1.}}
-#'   
+#'
 #' @docType class
 #' @format An \code{\link{R6Class}} generator object.
 #' @export
-loopType <- 
+loopType <-
   R6Class("loopType",
           # class = FALSE,
           inherit = rdmlBaseType,
@@ -2857,24 +2866,24 @@ loopType <-
 # measureType ------------------------------------------------------------
 
 #' measureType R6 class.
-#' 
+#'
 #' Can take values:
 #' \describe{
 #' \item{real time}{}
 #' \item{meltcurve}{}
-#' }  
+#' }
 #' Inherits: \link{enumType}.
-#' 
+#'
 #' @section Initialization: \preformatted{measureType$new(value)}
-#' 
-#'   @section Fields: \describe{ 
+#'
+#'   @section Fields: \describe{
 #' \item{\code{value}}{\link[checkmate]{checkString}.}
 #' }
-#'   
+#'
 #' @docType class
 #' @format An \code{\link{R6Class}} generator object.
 #' @export
-measureType <- 
+measureType <-
   R6Class("measureType",
           # class = FALSE,
           inherit = enumType,
@@ -2887,32 +2896,32 @@ measureType <-
 # baseTemperatureType ------------------------------------------------------------
 
 #' baseTemperatureType R6 class.
-#' 
+#'
 #' Parent class for inner usage. Inherits: \link{rdmlBaseType}.
-#' 
-#' @section Initialization: \preformatted{baseTemperatureType$new(duration, 
-#'   temperatureChange = NULL, durationChange = NULL, measure = NULL, ramp = 
+#'
+#' @section Initialization: \preformatted{baseTemperatureType$new(duration,
+#'   temperatureChange = NULL, durationChange = NULL, measure = NULL, ramp =
 #'   NULL)}
-#'   
-#' @section Fields: \describe{ 
+#'
+#' @section Fields: \describe{
 #'   \item{\code{duration}}{\link[checkmate]{checkCount}. Duration of this
 #'   step in seconds.}
-#'   \item{\code{temperatureChange}}{\link[checkmate]{checkNumber}. Change 
+#'   \item{\code{temperatureChange}}{\link[checkmate]{checkNumber}. Change
 #'   of the temperature between two consecutive cycles: actual temperature
 #'   = temperature + (temperatureChange * cycle counter)}
 #'   \item{\code{durationChange}}{\link[checkmate]{checkCount}. Change of the
 #'   duration between two consecutive cycles: actual duration = duration +
 #'   (durationChange * cycle counter)}
-#'   \item{\code{measure}}{\link{measureType}. Indicates to make a measurement 
+#'   \item{\code{measure}}{\link{measureType}. Indicates to make a measurement
 #'   and store it as meltcurve or real-time data.}
 #'   \item{\code{ramp}}{\link[checkmate]{checkNumber}. Allowed temperature
 #'   change between two consecutive cycles in degrees Celsius per second. If unstated,
 #'   the maximal change rate is assumed.}
 #'   }
-#'   
+#'
 #' @docType class
 #' @format An \code{\link{R6Class}} generator object.
-baseTemperatureType <- 
+baseTemperatureType <-
   R6Class("baseTemperatureType",
           # class = FALSE,
           inherit = rdmlBaseType,
@@ -2931,7 +2940,7 @@ baseTemperatureType <-
                      checkClass(measure, "measureType"))
               assert(checkNull(ramp),
                      checkNumber(ramp))
-              
+
               private$.duration <- duration
               private$.temperatureChange <- temperatureChange
               private$.durationChange <- durationChange
@@ -2986,21 +2995,21 @@ baseTemperatureType <-
 # temperatureType ------------------------------------------------------------
 
 #' temperatureType R6 class.
-#' 
-#' This step keeps a constant temperature on the heat block. Inherits: 
+#'
+#' This step keeps a constant temperature on the heat block. Inherits:
 #' \link{baseTemperatureType}.
-#' 
+#'
 #' @section Initialization: \preformatted{temperatureType$new(temperature, ...)}
-#'   
+#'
 #' @section Fields: \describe{ \item{\code{temperature}}{\link[checkmate]{checkNumber}.
 #'   The temperature of the step in  degrees Celsius.}
 #' \item{\code{...}}{ Params of parent class \link{baseTemperatureType}.}
-#' } 
-#'   
+#' }
+#'
 #' @docType class
 #' @format An \code{\link{R6Class}} generator object.
 #' @export
-temperatureType <- 
+temperatureType <-
   R6Class("temperatureType",
           # class = FALSE,
           inherit = baseTemperatureType,
@@ -3026,24 +3035,24 @@ temperatureType <-
 # gradientType ------------------------------------------------------------
 
 #' gradientType R6 class.
-#' 
-#' Details of the temperature gradient across the PCR block. Inherits: 
+#'
+#' Details of the temperature gradient across the PCR block. Inherits:
 #' \link{baseTemperatureType}.
-#' 
-#' @section Initialization: \preformatted{gradientType$new(highTemperature, 
+#'
+#' @section Initialization: \preformatted{gradientType$new(highTemperature,
 #'   lowTemperature, ...)}
-#'   
-#' @section Fields: \describe{ 
+#'
+#' @section Fields: \describe{
 #'   \item{\code{highTemperature}}{\link[checkmate]{checkNumber}. The highest temperature of
 #'   the gradient in degrees Celsius.}
 #'   \item{\code{lowTemperature}}{\link[checkmate]{checkNumber}. The lowest temperature of
 #'   the gradient in degrees Celsius.}
 #' \item{\code{...}}{ Params of parent class \link{baseTemperatureType}. }}
-#'   
+#'
 #' @docType class
 #' @format An \code{\link{R6Class}} generator object.
 #' @export
-gradientType <- 
+gradientType <-
   R6Class("gradientType",
           # class = FALSE,
           inherit = baseTemperatureType,
@@ -3081,27 +3090,27 @@ gradientType <-
 # stepType ------------------------------------------------------------
 
 #' stepType R6 class.
-#' 
+#'
 #' Inherits: \link{rdmlBaseType}.
-#' 
-#' @section Initialization: \preformatted{stepType$new(nr, description = NULL, 
-#'   temperature = NULL, gradient = NULL, loop = NULL, pause = NULL, lidOpen = 
+#'
+#' @section Initialization: \preformatted{stepType$new(nr, description = NULL,
+#'   temperature = NULL, gradient = NULL, loop = NULL, pause = NULL, lidOpen =
 #'   NULL)}
-#'   
+#'
 #' @section Fields: \describe{ \item{\code{nr}}{\link[checkmate]{checkCount}. The
-#'   incremental number of the step. First step should have value 1. The increment 
+#'   incremental number of the step. First step should have value 1. The increment
 #'   between steps should be constant and equivalent to 1.}
-#'   \item{\code{description}}{\link[checkmate]{checkString}.} 
-#'   \item{\code{temperature}}{\link{temperatureType}.} 
-#'   \item{\code{gradient}}{\link{gradientType}.} 
+#'   \item{\code{description}}{\link[checkmate]{checkString}.}
+#'   \item{\code{temperature}}{\link{temperatureType}.}
+#'   \item{\code{gradient}}{\link{gradientType}.}
 #'   \item{\code{loop}}{\link{loopType}.} \item{\code{pause}}{\link{pauseType}.}
 #'   \item{\code{lidOpen}}{\link{lidOpenType}.}
 #'   }
-#'   
+#'
 #' @docType class
 #' @format An \code{\link{R6Class}} generator object.
 #' @export
-stepType <- 
+stepType <-
   R6Class("stepType",
           # class = FALSE,
           inherit = rdmlBaseType,
@@ -3126,7 +3135,7 @@ stepType <-
                      checkClass(pause, "pauseType"))
               assert(checkNull(lidOpen),
                      checkClass(lidOpen, "lidOpenType"))
-              
+
               private$.nr <- nr
               private$.description <- description
               private$.temperature <- temperature
@@ -3199,16 +3208,16 @@ stepType <-
 # thermalCyclingConditionsType ------------------------------------------------------------
 
 #' thermalCyclingConditionsType R6 class.
-#' 
+#'
 #' A cycling program for PCR or to amplify cDNA. Inherits: \link{rdmlBaseType}.
-#' 
-#' @section Initialization: \preformatted{thermalCyclingConditionsType$new(id, 
-#'   description = NULL, documentation = NULL, lidTemperature = NULL, 
+#'
+#' @section Initialization: \preformatted{thermalCyclingConditionsType$new(id,
+#'   description = NULL, documentation = NULL, lidTemperature = NULL,
 #'   experimenter = NULL, step)}
-#'   
-#' @section Fields: \describe{ \item{\code{id}}{\link{idType}.} 
-#'   \item{\code{description}}{\link[checkmate]{checkString}.} 
-#'   \item{\code{documentation}}{\code{list} of \link{idReferencesType}.} 
+#'
+#' @section Fields: \describe{ \item{\code{id}}{\link{idType}.}
+#'   \item{\code{description}}{\link[checkmate]{checkString}.}
+#'   \item{\code{documentation}}{\code{list} of \link{idReferencesType}.}
 #'   \item{\code{lidTemperature}}{\link[checkmate]{checkNumber}. The temperature in
 #'   degrees Celsius of the lid during cycling. }
 #'   \item{\code{experimenter}}{\code{list} of \link{idReferencesType}.
@@ -3216,11 +3225,11 @@ stepType <-
 #'   \item{\code{step}}{\code{list} of \link{stepType}. The steps a protocol
 #'   runs through to amplify DNA.}
 #'   }
-#'   
+#'
 #' @docType class
 #' @format An \code{\link{R6Class}} generator object.
 #' @export
-thermalCyclingConditionsType <- 
+thermalCyclingConditionsType <-
   R6Class("thermalCyclingConditionsType",
           # class = FALSE,
           inherit = rdmlBaseType,
@@ -3242,7 +3251,7 @@ thermalCyclingConditionsType <-
                      checkList(experimenter, "idReferencesType"))
               assert(checkNull(step),
                      checkList(step, "stepType"))
-              
+
               private$.id <- id
               private$.description <- description
               private$.documentation <- documentation
@@ -3250,7 +3259,7 @@ thermalCyclingConditionsType <-
               private$.experimenter <- experimenter
               private$.step <- list.names(step,
                                           .$nr)
-              
+
             }
           ),
           private = list(
