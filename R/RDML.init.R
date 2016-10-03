@@ -295,7 +295,7 @@ RDML$set("public", "initialize", function(filename,
       #   filter(!is.na(WELL))
       data.file <- paste0(uniq.folder, "\\apldbio\\sds\\multicomponent_data.txt")
       multicomponent.data <- readChar(data.file, file.info(data.file)$size) %>>% 
-        str_match_all("([0-9]+)\\t([0-9]+)\\t([A-Z]+)\\t[0-9]+\\.?[0-9]*\\t([0-9]+\\.?[0-9]*)")
+        str_match_all("([0-9]+)\\t([0-9]+)\\t([A-Z]+)\\t[0-9E\\-]+\\.?[0-9E\\-]*\\t([0-9E\\-]+\\.?[0-9E\\-]*)")
       multicomponent.data <- as.data.frame(multicomponent.data[[1]], stringsAsFactors = FALSE)
       names(multicomponent.data) <- c("_", "well", "cyc", "dye", "fluor")
       multicomponent.data <- multicomponent.data %>>%
@@ -303,7 +303,6 @@ RDML$set("public", "initialize", function(filename,
       multicomponent.data[, c("well", "cyc", "fluor") := list(as.numeric(well),
                                                               as.numeric(cyc),
                                                               as.numeric(fluor))]
-      
       ncycles <- multicomponent.data$cyc %>>% max + 1
       
       plate.setup <- paste0(uniq.folder, "\\apldbio\\sds\\plate_setup.xml") %>>%
@@ -357,7 +356,6 @@ RDML$set("public", "initialize", function(filename,
                                     "/Plate/Wells/Well[IsOmit='true']/Index") + 1
       description[react.id == omitted.i, IsOmit := TRUE]
       description <- description[IsOmit == FALSE]
-      
       fdata <- cbind(data.frame(multicomponent.data$cyc %>>% unique() + 1),
                      apply(description, 1, 
                            function(r) {
