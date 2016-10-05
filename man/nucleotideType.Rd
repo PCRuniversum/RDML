@@ -22,8 +22,8 @@ Inherits: \link{enumType}.
 }
 \section{Initialization}{
  \preformatted{nucleotideType$new(value)}
-  
-  @section Fields: \describe{  
+
+  @section Fields: \describe{
 \item{\code{value}}{\link[checkmate]{checkString}. Value.}
   }
 }

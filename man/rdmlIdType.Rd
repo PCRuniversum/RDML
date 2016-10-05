@@ -9,7 +9,7 @@
 rdmlIdType
 }
 \description{
-This element can be used to assign a publisher and id to the RDML file.\cr 
+This element can be used to assign a publisher and id to the RDML file.\cr
 Inherits: \link{rdmlBaseType}.
 }
 \section{Initialization}{
@@ -18,9 +18,9 @@ Inherits: \link{rdmlBaseType}.
 }
 
 \section{Fields}{
- \describe{  
+ \describe{
   \item{\code{publisher}}{\link[checkmate]{checkString}. RDML file publisher.}
-  \item{\code{serialNumber}}{\link[checkmate]{checkString}. Serial number.} 
+  \item{\code{serialNumber}}{\link[checkmate]{checkString}. Serial number.}
   \item{\code{MD5Hash}}{\link[checkmate]{checkString}. An MD5Hash calculated
   over the complete file after removing all rdmlIDTypes and all whitespaces
   between elements.}

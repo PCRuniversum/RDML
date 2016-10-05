@@ -19,7 +19,7 @@
 #'   viewed at RDML v1.2 file description. Names of fields are first level of 
 #'   XML tree.
 #' @section Methods: \describe{
-#' \item{new}{creates new instance of \code{RDML} class object (see \link{RDML.new})} 
+#' \item{new}{creates a new instance of \code{RDML} class object (see \link{RDML.new})} 
 #' \item{AsTable}{represent RDML data as \code{data.frame} (see \link{RDML.AsTable})}
 #' \item{GetFData}{gets fluorescence data (see \link{RDML.GetFData})}
 #' \item{SetFData}{sets fluorescence data (see \link{RDML.SetFData})}

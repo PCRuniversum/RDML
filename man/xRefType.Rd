@@ -13,10 +13,10 @@ Inherits: \link{rdmlBaseType}.
 }
 \section{Initialization}{
  \preformatted{xRefType$new(name = NULL, id = NULL)}
-  
-  @section Fields: \describe{  
+
+  @section Fields: \describe{
   \item{\code{name}}{\link[checkmate]{checkString}. Reference to an external
-  database, } for example "GenBank". 
+  database, } for example "GenBank".
   \item{\code{id}}{\link[checkmate]{checkString}. The ID of the entry within
   the external database, for example "AJ832138".}
   }

@@ -9,19 +9,19 @@
 dataCollectionSoftwareType
 }
 \description{
-Software name and version used to collect and analyze the data. Inherits: 
+Software name and version used to collect and analyze the data. Inherits:
 \link{rdmlBaseType}.
 }
 \section{Initialization}{
  \preformatted{dataCollectionSoftwareType$new(name, version)}
 
-  @section Fields: \describe{   
+  @section Fields: \describe{
 \item{\code{name}}{\link[checkmate]{checkString}.}
 \item{\code{version}}{\link[checkmate]{checkString}.}
   }
 }
 \examples{
-dataCollectionSoftwareType$new(name = "ExampleSoft", 
+dataCollectionSoftwareType$new(name = "ExampleSoft",
                                version = "1.0")
 }
 \keyword{datasets}

@@ -14,7 +14,7 @@ Inherits: \link{rdmlBaseType}.
 }
 \section{Initialization}{
  \preformatted{enumType$new(value)}
-  @section Fields: \describe{  
+  @section Fields: \describe{
 \item{\code{value}}{\link[checkmate]{checkString}. Value.}
   }
 }

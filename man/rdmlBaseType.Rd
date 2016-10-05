@@ -9,7 +9,7 @@
 rdmlBaseType
 }
 \description{
-Most classes from RDML package inherit this class. It is designed for internal 
+Most classes from RDML package inherit this class. It is designed for internal
 usage and should not be directly accessed.
 }
 \section{Initialization}{

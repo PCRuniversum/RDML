@@ -18,7 +18,7 @@ knitr::opts_chunk$set(collapse = T, comment = "#>")
 
 This vignette describes how to create **RDML** object from user provided data and calculate Cq values with custom **RDML** class method. Our aim is to a real-world example for the use of the **RDML** package.
 
-For the this purpose we used data from the _VideoScan_ platform. The _VideoScan_ platform is a highly versatile fluorescence microscope based imaging platform for the real-time analysis of biomolecular interactions. _VideoScan_ has been been extended by a heating/cooling-unit, which can be used for DNA melting curve analysis [@roediger_RJ_2013], real-time quantitative PCR [@roediger_highly_2013] and quantitative isothermal amplification [@spiess_impact_2014]. In this example we focus on qPCR data obtained from the amplification of the human gene *mlc-2v* [@sheikh_2015]. The experimental details (e.g., primer sequences, amplification conditions) are described in [@roediger_highly_2013].
+For this purpose we used data from the _VideoScan_ platform. The _VideoScan_ platform is a highly versatile fluorescence microscope based imaging platform for the real-time analysis of biomolecular interactions. _VideoScan_ has been extended by a heating/cooling-unit, which can be used for DNA melting curve analysis [@roediger_RJ_2013], real-time quantitative PCR [@roediger_highly_2013] and quantitative isothermal amplification [@spiess_impact_2014]. In this example we focus on qPCR data obtained from the amplification of the human gene *mlc-2v* [@sheikh_2015]. The experimental details (e.g., primer sequences, amplification conditions) are described in [@roediger_highly_2013; @george_development_2016].
 
 In detail, this dataset contains three amplification curves collected by three runs monitored with TaqMan qPCR chemistry. Similar to other experimental platforms has the _VideoScan_ systems an output as *csv* file (comma separated value). In general, *csv* is format that is sufficient for in house usage. However, the exchange with other scientists is demanding.
 
@@ -38,7 +38,7 @@ library(ggplot2)
 data(C54)
 ```
 
-We can see that our data is data.frame with cycle numbers in first column and fluorescence points in other columns. Such format is ready to use with **RDML** package and does not need any conversion.
+We can see that our data is data.frame with cycle numbers in the first column and fluorescence points in other columns. Such format is ready to use with **RDML** package and does not need any conversion.
 
 ```{r}
 str(C54)

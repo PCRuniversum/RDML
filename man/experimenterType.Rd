@@ -14,8 +14,8 @@ Contact details of the experimenter. Inherits: \link{rdmlBaseType}.
 \section{Initialization}{
  \preformatted{experimenterType$new(id, firstName, lastName,
   email = NULL, labName = NULL, labAddress = NULL)}
- 
-  @section Fields: \describe{   
+
+  @section Fields: \describe{
 \item{\code{id}}{\link{idType}. Identificator.}
 \item{\code{firstName}}{\link[checkmate]{checkString}. First name.}
 \item{\code{lastName}}{\link[checkmate]{checkString}. Last name.}

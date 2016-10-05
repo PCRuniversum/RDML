@@ -9,16 +9,16 @@
 gradientType
 }
 \description{
-Details of the temperature gradient across the PCR block. Inherits: 
+Details of the temperature gradient across the PCR block. Inherits:
 \link{baseTemperatureType}.
 }
 \section{Initialization}{
- \preformatted{gradientType$new(highTemperature, 
+ \preformatted{gradientType$new(highTemperature,
   lowTemperature, ...)}
 }
 
 \section{Fields}{
- \describe{ 
+ \describe{
   \item{\code{highTemperature}}{\link[checkmate]{checkNumber}. The highest temperature of
   the gradient in degrees Celsius.}
   \item{\code{lowTemperature}}{\link[checkmate]{checkNumber}. The lowest temperature of

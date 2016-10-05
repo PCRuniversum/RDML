@@ -9,9 +9,9 @@
 lidOpenType
 }
 \description{
-This step waits for the user to open the lid and continues afterwards. It 
-allows to stop the program and to wait for the user to add for example 
-enzymes and continue the program afterwards. The temperature of the previous 
+This step waits for the user to open the lid and continues afterwards. It
+allows to stop the program and to wait for the user to add for example
+enzymes and continue the program afterwards. The temperature of the previous
 step is maintained. Inherits: \link{rdmlBaseType}.
 }
 \section{Initialization}{

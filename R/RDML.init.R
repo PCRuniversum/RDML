@@ -245,7 +245,7 @@ GetRefGenesRoche <- function(uniq.folder)
 #'   \code{auto}, \code{rdml}, \code{abi}, \code{excel}, \code{csv}. See
 #'   Details.
 #' @author Konstantin A. Blagodatskikh <k.blag@@yandex.ru>, Stefan Roediger
-#'   <stefan.roediger@@hs-lausitz.de>, Michal Burdukiewicz
+#'   <stefan.roediger@@b-tu.de>, Michal Burdukiewicz
 #'   <michalburdukiewicz@@gmail.com>
 #' @docType methods
 #' @name new

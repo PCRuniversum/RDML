@@ -13,18 +13,18 @@ Contains \code{matrix} of melting data points (single data points measured
 during amplification).
 }
 \details{
-Columns: \describe{ 
-\item{tmp}{(temperature in degrees Celsius at the time of measurement. 
-Every point must have unique value.} 
-\item{fluor}{fluorescence intensity measured without any correction 
+Columns: \describe{
+\item{tmp}{(temperature in degrees Celsius at the time of measurement.
+Every point must have unique value.}
+\item{fluor}{fluorescence intensity measured without any correction
 (including baselining).}}
 
 Inherits: \link{rdmlBaseType}.
 }
 \section{Initialization}{
  \preformatted{mdpsType$new(fpoints)}
-  
-  @section Fields: \describe{  
+
+  @section Fields: \describe{
 \item{\code{fpoints}}{\link[checkmate]{assertMatrix}. Matrix with amplification data points.}
   }
 }

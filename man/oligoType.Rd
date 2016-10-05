@@ -12,10 +12,10 @@ oligoType
 Inherits: \link{rdmlBaseType}.
 }
 \section{Initialization}{
- \preformatted{oligoType$new(threePrimeTag = NULL, 
+ \preformatted{oligoType$new(threePrimeTag = NULL,
   fivePrimeTag = NULL, sequence)}
-  
-  @section Fields: \describe{  
+
+  @section Fields: \describe{
   \item{\code{threePrimeTag}}{\link[checkmate]{checkString}. Description of
   three prime modification (if present). }
   \item{\code{fivePrimeTag}}{\link[checkmate]{checkString}. Description of

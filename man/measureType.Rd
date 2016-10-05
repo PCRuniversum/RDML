@@ -13,13 +13,13 @@ Can take values:
 \describe{
 \item{real time}{}
 \item{meltcurve}{}
-}  
+}
 Inherits: \link{enumType}.
 }
 \section{Initialization}{
  \preformatted{measureType$new(value)}
 
-  @section Fields: \describe{ 
+  @section Fields: \describe{
 \item{\code{value}}{\link[checkmate]{checkString}.}
 }
 }

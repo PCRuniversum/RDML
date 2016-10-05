@@ -12,14 +12,14 @@ cdnaSynthesisMethodType
 Description of the cDNA synthesis method. Inherits: \link{rdmlBaseType}.
 }
 \section{Initialization}{
- \preformatted{cdnaSynthesisMethodType$new(enzyme = NULL, 
-  primingMethod = NULL, dnaseTreatment = NULL, thermalCyclingConditions = 
+ \preformatted{cdnaSynthesisMethodType$new(enzyme = NULL,
+  primingMethod = NULL, dnaseTreatment = NULL, thermalCyclingConditions =
   NULL)}
-  
-  @section Fields: \describe{  
-  \item{\code{enzyme}}{\link[checkmate]{checkString}. Name of the enzyme used for 
-  reverse transcription.} 
-  \item{\code{primingMethod}}{\link{primingMethodType}.} 
+
+  @section Fields: \describe{
+  \item{\code{enzyme}}{\link[checkmate]{checkString}. Name of the enzyme used for
+  reverse transcription.}
+  \item{\code{primingMethod}}{\link{primingMethodType}.}
   \item{\code{dnaseTreatment}}{\link[checkmate]{checkFlag} if \code{TRUE}RNA was
   DNAse treated prior cDNA synthesis.}
   \item{\code{thermalCyclingConditions}}{\link{idReferencesType}.}

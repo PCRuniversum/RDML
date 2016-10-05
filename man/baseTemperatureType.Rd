@@ -12,22 +12,22 @@ baseTemperatureType
 Parent class for inner usage. Inherits: \link{rdmlBaseType}.
 }
 \section{Initialization}{
- \preformatted{baseTemperatureType$new(duration, 
-  temperatureChange = NULL, durationChange = NULL, measure = NULL, ramp = 
+ \preformatted{baseTemperatureType$new(duration,
+  temperatureChange = NULL, durationChange = NULL, measure = NULL, ramp =
   NULL)}
 }
 
 \section{Fields}{
- \describe{ 
+ \describe{
   \item{\code{duration}}{\link[checkmate]{checkCount}. Duration of this
   step in seconds.}
-  \item{\code{temperatureChange}}{\link[checkmate]{checkNumber}. Change 
+  \item{\code{temperatureChange}}{\link[checkmate]{checkNumber}. Change
   of the temperature between two consecutive cycles: actual temperature
   = temperature + (temperatureChange * cycle counter)}
   \item{\code{durationChange}}{\link[checkmate]{checkCount}. Change of the
   duration between two consecutive cycles: actual duration = duration +
   (durationChange * cycle counter)}
-  \item{\code{measure}}{\link{measureType}. Indicates to make a measurement 
+  \item{\code{measure}}{\link{measureType}. Indicates to make a measurement
   and store it as meltcurve or real-time data.}
   \item{\code{ramp}}{\link[checkmate]{checkNumber}. Allowed temperature
   change between two consecutive cycles in degrees Celsius per second. If unstated,

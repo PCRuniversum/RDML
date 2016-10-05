@@ -10,53 +10,53 @@ reactType
 }
 \description{
 A reaction is an independent chemical reaction corresponding for example to a
-well in a 96 well plate, a capillary in a rotor, a through-hole on an array, 
+well in a 96 well plate, a capillary in a rotor, a through-hole on an array,
 etc. Inherits: \link{rdmlBaseType}.
 }
 \details{
 The ID of this reaction
 
 Schemas : \itemize{ \item rotor : assign IDs according to the position of the
-sample on the rotor (1 for the 1st sample, 2 for the 2nd, ...) \item plate 
-(96/384/1536 well) : the IDs are assigned in a row-first/column-second 
-manner. For each row, the samples are numbered according to the increasing 
-column number. At the end of a row, the numbering starts at the first column 
-of the next row. An example for this type of plate can be found below : 
+sample on the rotor (1 for the 1st sample, 2 for the 2nd, ...) \item plate
+(96/384/1536 well) : the IDs are assigned in a row-first/column-second
+manner. For each row, the samples are numbered according to the increasing
+column number. At the end of a row, the numbering starts at the first column
+of the next row. An example for this type of plate can be found below :
 \tabular{lllll}{ \tab 1  \tab 2  \tab 3 \tab ... \cr A   \tab 1  \tab 2  \tab
-3 \tab     \cr B   \tab 13 \tab 14 \tab   \tab     \cr ... \tab    \tab \tab 
-\tab    } or \tabular{lllll}{ \tab 1  \tab 2  \tab 3 \tab ... \cr 1 \tab 1 
-\tab 2  \tab 3 \tab     \cr 2   \tab 13 \tab 14 \tab   \tab     \cr ... \tab 
+3 \tab     \cr B   \tab 13 \tab 14 \tab   \tab     \cr ... \tab    \tab \tab
+\tab    } or \tabular{lllll}{ \tab 1  \tab 2  \tab 3 \tab ... \cr 1 \tab 1
+\tab 2  \tab 3 \tab     \cr 2   \tab 13 \tab 14 \tab   \tab     \cr ... \tab
 \tab    \tab   \tab    }
 
-\item multi-array plate (BioTrove) : the IDs are assigned in a 
-row-first/column-second manner, ignoring the organisation of sub-arrays. For 
+\item multi-array plate (BioTrove) : the IDs are assigned in a
+row-first/column-second manner, ignoring the organisation of sub-arrays. For
 each row, the samples are numbered according to the increasing column number.
-At the end of a row, the the next row. An example for this type of plate can 
+At the end of a row, the the next row. An example for this type of plate can
 be found below : todo... }
 }
 \section{Initialization}{
  \preformatted{reactType$new(id, sample, data = NULL, pcrFormat = pcrFormatType$new(8, 12, labelFormatType$new("123"), labelFormatType$new("ABC")))}
-  
+
   @section Fields: \describe{
-  \item{\code{id}}{\link{reactIdType}. See 'Details'.} 
+  \item{\code{id}}{\link{reactIdType}. See 'Details'.}
   \item{\code{sample}}{\link{idReferencesType}. SampleID - A reference to a
-  sample.} 
+  sample.}
   \item{\code{data}}{\code{list} of \link{dataType}.}
   \item{\code{position}}{Human readable form of the \code{react id} (i.e. '13' -> 'B1')..}
   }
 }
 
 \section{Methods}{
- \describe{\item{\code{AsDataFrame(dp.type = 
-  "adp")}}{Represents amplification (\code{dp.type = "adp"}) or melting 
-  (\code{dp.type = "mdp"}) data points of all targets as one 
-  \code{data.frame}} \item{\code{.recalcPosition(pcrformat)}}{Converts \code{react 
-  id} to the human readable form (i.e. '13' -> 'B1'). This converted value can be 
-  accessed by \code{position} field. \code{pcrFormat} is 
-  \code{pcrFormatType}. Currently, only 'ABC' and '123' are supported as 
-  labels. For '123' '123' the \code{Position} will look like 'r01c01', for 
-'ABC' '123' it will be 'A01' and for '123' 'ABC' it will be 01A. 'ABC' 'ABC' 
-is not currently supported. Note that 'ABC' will result in loss of 
+ \describe{\item{\code{AsDataFrame(dp.type =
+  "adp")}}{Represents amplification (\code{dp.type = "adp"}) or melting
+  (\code{dp.type = "mdp"}) data points of all targets as one
+  \code{data.frame}} \item{\code{.recalcPosition(pcrformat)}}{Converts \code{react
+  id} to the human readable form (i.e. '13' -> 'B1'). This converted value can be
+  accessed by \code{position} field. \code{pcrFormat} is
+  \code{pcrFormatType}. Currently, only 'ABC' and '123' are supported as
+  labels. For '123' '123' the \code{Position} will look like 'r01c01', for
+'ABC' '123' it will be 'A01' and for '123' 'ABC' it will be 01A. 'ABC' 'ABC'
+is not currently supported. Note that 'ABC' will result in loss of
 information if the experiment contains more than 26 rows!}}
 }
 \keyword{datasets}

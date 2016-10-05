@@ -9,7 +9,7 @@
 annotationType
 }
 \description{
-Annotate samples by setting a property and its value. For example, 
+Annotate samples by setting a property and its value. For example,
 sex could be a property with the possible values M or F. Inherits:
 \link{rdmlBaseType}.
 }

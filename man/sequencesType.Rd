@@ -12,10 +12,10 @@ sequencesType
 Inherits: \link{rdmlBaseType}.
 }
 \section{Initialization}{
- \preformatted{sequencesType$new(forwardPrimer = NULL, 
+ \preformatted{sequencesType$new(forwardPrimer = NULL,
 reversePrimer = NULL, probe1 = NULL, probe2 = NULL, amplicon = NULL)}
-  
-  @section Fields: \describe{  
+
+  @section Fields: \describe{
 \item{\code{forwardPrimer}}{\link{oligoType}.}
 \item{\code{reversePrimer}}{\link{oligoType}.}
 \item{\code{probe1}}{\link{oligoType}.}
