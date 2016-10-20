@@ -13,8 +13,8 @@ Detailed information about the dye. Inherits: \link{rdmlBaseType}.
 }
 \section{Initialization}{
  \preformatted{dyeType$new(id, description = NULL)}
-  
-  @section Fields: \describe{  
+
+  @section Fields: \describe{
 \item{\code{id}}{\link{idType}. Identificator.}
 \item{\code{description}}{ \link[checkmate]{checkString}. Description.
   }}

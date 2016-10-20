@@ -16,12 +16,12 @@ Can take values:
 \item{"manual threshold and baseline settings"}{}
 \item{"second derivative maximum"}{}
 \item{"other"}{}
-}  
+}
 Inherits: \link{enumType}.
 }
 \section{Initialization}{
  \preformatted{cqDetectionMethodType$new(value)}
-  
+
   @section Fields: \describe{
 \item{\code{value}}{\link[checkmate]{checkString}.}
   }

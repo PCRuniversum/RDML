@@ -16,7 +16,7 @@ Contains id of another RDML object. Inherits: \link{idType}.
 }
 
 \section{Fields}{
- \describe{  
+ \describe{
 \item{\code{id}}{\link[checkmate]{checkString}. Identificator.}
 }
 }

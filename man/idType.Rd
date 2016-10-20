@@ -14,7 +14,7 @@ Contains identificator for varius RDML types. Inherits: \link{rdmlBaseType}.
 \section{Initialization}{
  \preformatted{idType$new(id)}
 
-  @section Fields: \describe{     
+  @section Fields: \describe{
 \item{\code{id}}{\link[checkmate]{checkString}. Identificator.}
 }
 }

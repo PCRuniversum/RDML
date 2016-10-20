@@ -15,7 +15,7 @@ A quantity is always defined by its value and its unit. Inherits:
 \section{Initialization}{
  \preformatted{quantityType$new(value, unit)}
 
-  @section Fields: \describe{    
+  @section Fields: \describe{
 \item{\code{value}}{\link[checkmate]{checkNumber}. Value.}
 \item{\code{unit}}{\link{quantityUnitType}. Unit.}
   }

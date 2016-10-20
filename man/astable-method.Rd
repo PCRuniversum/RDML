@@ -10,25 +10,27 @@
 \item{name.pattern}{expression to form \code{fdata.name} (see Examples)}
 
 \item{add.columns}{\code{list} of additional columns}
+
+\item{...}{additional columns}
 }
 \description{
-Formats particular fields of \code{RDML} object as \code{data.frame}s, 
-filters or passes them to \code{\link{RDML.GetFData}} and \code{RDML.SetFData} 
+Formats particular fields of \code{RDML} object as \code{data.frame}s,
+filters or passes them to \code{\link{RDML.GetFData}} and \code{RDML.SetFData}
 functions.
 }
 \details{
-By default input this function forms \code{data.frame} with following columns: 
-\describe{ \item{exp.id}{experiment$id} \item{run.id}{run$id} 
-\item{react.id}{react$id} 
-\item{position}{react$position} 
+By default input this function forms \code{data.frame} with following columns:
+\describe{ \item{exp.id}{experiment$id} \item{run.id}{run$id}
+\item{react.id}{react$id}
+\item{position}{react$position}
 \item{sample}{react$sample}
-\item{target}{data$tar$id} \item{target.dyeId}{target[[data$id]]$dyeId} 
-\item{sample.type}{sample[[react$sample]]$type} } You can overload default 
-columns list by parameter \code{.default} but note that columns 
-\preformatted{exp.id, run.id, react.id, target} are necessary for usage 
-\code{AsTable} output as 
-input for \code{GetFData} and \code{SetFData}. \cr Additional columns can be 
-introduced by specifying them at input parameter \code{...} (see Examples). 
+\item{target}{data$tar$id} \item{target.dyeId}{target[[data$id]]$dyeId}
+\item{sample.type}{sample[[react$sample]]$type} } You can overload default
+columns list by parameter \code{.default} but note that columns
+\preformatted{exp.id, run.id, react.id, target} are necessary for usage
+\code{AsTable} output as
+input for \code{GetFData} and \code{SetFData}. \cr Additional columns can be
+introduced by specifying them at input parameter \code{...} (see Examples).
 All default and additional columns accession expressions must be named.
 
 Experiment, run, react and data to which belongs each fluorescence data vector
@@ -45,8 +47,8 @@ PATH <- path.package("RDML")
 filename <- paste(PATH, "/extdata/", "stepone_std.rdml", sep ="")
 stepone <- RDML$new(filename)
 ## Mark fluorescense data which Cq > 30 and add quantities to
-## AsTable output. 
-## Names for fluorescense data will contain sample name and react 
+## AsTable output.
+## Names for fluorescense data will contain sample name and react
 ## positions
 tab <- stepone$AsTable(
          name.pattern = paste(react$sample$id, react$position),
@@ -55,7 +57,7 @@ tab <- stepone$AsTable(
          )
 ## Show cq30 and quantities
 tab[c("cq30", "quantity")]
-## Get fluorescence values for 'std' type samples 
+## Get fluorescence values for 'std' type samples
 ## in format ready for ggplot function
 library(dplyr)
 fdata <- stepone$GetFData(
@@ -71,8 +73,8 @@ ggplot(fdata, aes(x = cyc, y = fluor,
 }
 }
 \author{
-Konstantin A. Blagodatskikh <k.blag@yandex.ru>, Stefan Roediger 
-  <stefan.roediger@b-tu.de>, Michal Burdukiewicz 
+Konstantin A. Blagodatskikh <k.blag@yandex.ru>, Stefan Roediger
+  <stefan.roediger@b-tu.de>, Michal Burdukiewicz
   <michalburdukiewicz@gmail.com>
 }
 \keyword{manip}

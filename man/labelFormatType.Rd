@@ -15,12 +15,12 @@ Can take values:
 \item{ABC}{}
 \item{123}{}
 \item{A1a1}{}
-}  
+}
 Inherits: \link{enumType}.
 }
 \section{Initialization}{
  \preformatted{labelFormatType$new(value)}
-  
+
   @section Fields: \describe{
 \item{\code{value}}{\link[checkmate]{checkString}.}
   }

@@ -9,43 +9,43 @@
 sampleType
 }
 \description{
-A sample is a template solution with defined concentation. Since dilutions 
-of the same material differ in concentration, they are considered different 
-samples. A technical replicate samples should contain the same name (reactions 
-are performed on the same material), and biological replicates should contain 
-different names (the template derived from the different biological replicates 
-is are divergent). Serial dilutions in a standard curve must have different 
-names (preferably stating their dillution). 
+A sample is a template solution with defined concentation. Since dilutions
+of the same material differ in concentration, they are considered different
+samples. A technical replicate samples should contain the same name (reactions
+are performed on the same material), and biological replicates should contain
+different names (the template derived from the different biological replicates
+is are divergent). Serial dilutions in a standard curve must have different
+names (preferably stating their dillution).
 Inherits: \link{rdmlBaseType}.
 }
 \section{Initialization}{
- \preformatted{sampleType$new(id, description = NULL, 
- documentation = NULL, xRef =  NULL, annotation = NULL, type = 
- sampleTypeType$new("unkn"), interRunCalibrator = FALSE, quantity = NULL, 
- calibratorSample = FALSE, cdnaSynthesisMethod = NULL, templateQuantity = 
+ \preformatted{sampleType$new(id, description = NULL,
+ documentation = NULL, xRef =  NULL, annotation = NULL, type =
+ sampleTypeType$new("unkn"), interRunCalibrator = FALSE, quantity = NULL,
+ calibratorSample = FALSE, cdnaSynthesisMethod = NULL, templateQuantity =
  NULL)}
- 
- @section Fields: \describe{  
+
+ @section Fields: \describe{
  \item{\code{id}}{\link{idType}. Concentration of the template in nanogram
  per microliter in the final reaction mix. }
- \item{\code{description}}{\link[checkmate]{checkString}.} 
- \item{\code{documentation}}{\code{list} of \link{idReferencesType}.} 
- \item{\code{xRef}}{\code{list} of \link{xRefType}.} 
- \item{\code{annotation}}{\code{list} of \link{annotationType}.} 
- \item{\code{type}}{\link{sampleTypeType}.} 
- \item{\code{interRunCalibrator}}{\link[checkmate]{checkFlag}. \code{TRUE} 
+ \item{\code{description}}{\link[checkmate]{checkString}.}
+ \item{\code{documentation}}{\code{list} of \link{idReferencesType}.}
+ \item{\code{xRef}}{\code{list} of \link{xRefType}.}
+ \item{\code{annotation}}{\code{list} of \link{annotationType}.}
+ \item{\code{type}}{\link{sampleTypeType}.}
+ \item{\code{interRunCalibrator}}{\link[checkmate]{checkFlag}. \code{TRUE}
  if this sample is used as inter run calibrator. }
  \item{\code{quantity}}{\link{quantityType}. Quantity - The reference
  quantity of this sample. It should be only used if the sample is part of a
  standard curve. The provided value will be used to quantify unknown samples
- in absolute quantification assays. Only the use of positive integers (like 1, 
- 10, 100, 1000) and fractions (e.g. 1, 0.1, 0.01, 0.001) is acceptable. 
- The use of exponents (1, 2, 3, 4 or -1, -2, -3, -4) if forbidden, 
- because it will not be interpreted as 10E1, 10E2, 10E3, 10E4 or 10E-1, 10E-2, 
+ in absolute quantification assays. Only the use of positive integers (like 1,
+ 10, 100, 1000) and fractions (e.g. 1, 0.1, 0.01, 0.001) is acceptable.
+ The use of exponents (1, 2, 3, 4 or -1, -2, -3, -4) if forbidden,
+ because it will not be interpreted as 10E1, 10E2, 10E3, 10E4 or 10E-1, 10E-2,
  10E-3, 10E-4. }
  \item{\code{calibratorSample}}{\link[checkmate]{checkFlag}. \code{TRUE} if this
  sample is used as calibrator sample. }
- \item{\code{cdnaSynthesisMethod}}{\link{cdnaSynthesisMethodType}.} 
+ \item{\code{cdnaSynthesisMethod}}{\link{cdnaSynthesisMethodType}.}
  \item{\code{templateQuantity}}{\link{templateQuantityType}.}
  }
 }

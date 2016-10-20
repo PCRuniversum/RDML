@@ -14,7 +14,7 @@ Contains identificator for reactType. Inherits: \link{rdmlBaseType}.
 \section{Initialization}{
  \preformatted{reactIdType$new(id)}
 
-  @section Fields: \describe{     
+  @section Fields: \describe{
 \item{\code{id}}{\link[checkmate]{checkCount}. Identificator.}
 }
 }

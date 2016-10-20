@@ -70,9 +70,9 @@ RDML$set("public", "ProcessVideoScan",
          function(last.cycle,
                   bg.range) {
            # Get curves description
-           tab <- self$AsTable()
+           tab <- as.data.frame(self$AsTable())
            # Get fluorescent point
-           dat <- self$GetFData(tab)
+           dat <- as.data.frame(self$GetFData(tab))
            # Give new names to runs
            # Preprocess amplification curve raw data as described in 
            # R&ouml;diger et al. (2015) Bioinformatics. Note that the dataset
@@ -92,7 +92,7 @@ RDML$set("public", "ProcessVideoScan",
              # give name to fluorescence points columns as before preprocessing
              dat_CPP <- cbind(dat[1:last.cycle[i - 1], 1],
                               preprocessed)
-             colnames(dat_CPP)[2] <- rownames(tab)[i - 1]
+             colnames(dat_CPP)[2] <- tab$fdata.name[i - 1]
              # Set preprocessed data with new description (new run names)
              self$SetFData(dat_CPP, tab)
              # Calculate and set Cq
@@ -102,7 +102,7 @@ RDML$set("public", "ProcessVideoScan",
              # (R&ouml;diger et al. (2013), The R Journal) was used to calculate the
              # Cq values of each amplificaion curve.
              cq <- diffQ2(dat_CPP, inder = TRUE)[["xTm1.2.D2"]][1]
-             video.scan$experiment[[tab[i - 1, "exp.id"]]]$
+             self$experiment[[tab[i - 1, "exp.id"]]]$
                run[[tab[i - 1, "run.id"]]]$
                react[[tab[i - 1, "react.id"]]]$
                data[[tab[i - 1, "target"]]]$cq <- cq
@@ -133,7 +133,7 @@ description <- data.frame(
   run.id = c("run1", "run2", "run3"),
   react.id = c(1, 1, 1),
   sample = c("D1 - Stock cDNA", "D2 - 1/10 cDNA", "D3 - 1/100 cDNA"),
-  type = c("unkn", "unkn", "unkn"),
+  sample.type = c("unkn", "unkn", "unkn"),
   target = c("MLC-2v", "MLC-2v", "MLC-2v"),
   target.dyeId = c("Cy5", "Cy5", "Cy5"),
   stringsAsFactors = FALSE
@@ -277,7 +277,7 @@ After creating **RDML** object and setting data we can use our method `$ProcessV
 ```{r, message = FALSE}
 # Process VideoScan data
 video.scan$ProcessVideoScan(last.cycle = c(35, 45, 55),
-                            bg.range =list(c(1,8),
+                            bg.range = list(c(1,8),
                                            NULL,
                                            NULL))
 ```
@@ -294,9 +294,13 @@ And plot preprocessed curves indicating Cq values:
 ```{r, results = "hide", fig.width = 6, fig.height = 4}
 ## Visualise preprocessed data with Cq values as vertical dashed lines
 # Add custom column that contains calculated Cq
-tab <- video.scan$AsTable(cq = ifelse(is.null(data$cq),
-                                      NA,
-                                      data$cq))
+tab <- video.scan$AsTable(cq = {
+                 cq <- data$cq
+                 if (is.null(cq) || is.na(cq))
+                   NULL
+                 else
+                   cq
+               })
 # Get preprocessed data in 'long.table' format
 dat <- video.scan$GetFData(tab[grepl("_CPP", tab[["run.id"]]), ],
                            long.table = TRUE)

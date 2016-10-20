@@ -9,14 +9,14 @@
 experimentType
 }
 \description{
-A qPCR experiment. It may contain several runs (\link{runType}). Inherits: 
+A qPCR experiment. It may contain several runs (\link{runType}). Inherits:
 \link{rdmlBaseType}.
 }
 \section{Initialization}{
  \preformatted{experimentType$new(id, description = NULL,
   documentation = NULL, run = NULL)}
 
-  @section Fields: \describe{   
+  @section Fields: \describe{
 \item{\code{id}}{\link{idType}.}
 \item{\code{description}}{\link[checkmate]{checkString}.}
 \item{\code{documentation}}{\code{list} of \link{idReferencesType}.}
@@ -25,10 +25,10 @@ A qPCR experiment. It may contain several runs (\link{runType}). Inherits:
 }
 
 \section{Methods}{
- \describe{\item{\code{AsDataFrame(dp.type = "adp", 
-  long.table = FALSE)}}{Represents amplification (\code{dp.type = "adp"}) or 
-  melting (\code{dp.type = "mdp"}) data points as \code{data.frame}. 
-  \code{long.table = TRUE} means that fluorescence data for all runs and 
+ \describe{\item{\code{AsDataFrame(dp.type = "adp",
+  long.table = FALSE)}}{Represents amplification (\code{dp.type = "adp"}) or
+  melting (\code{dp.type = "mdp"}) data points as \code{data.frame}.
+  \code{long.table = TRUE} means that fluorescence data for all runs and
   reacts will be at one collumn.}}
 }
 \keyword{datasets}

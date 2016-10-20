@@ -13,8 +13,8 @@ Inherits: \link{rdmlBaseType}.
 }
 \section{Initialization}{
  \preformatted{templateQuantityType$new(conc, nucleotide)}
-  
-  @section Fields: \describe{  
+
+  @section Fields: \describe{
 \item{\code{conc}}{\link[checkmate]{checkNumber}. Concentration of the template in nanogram}
   per microliter in the final reaction mix.
 \item{\code{nucleotide}}{\link{nucleotideType}.}

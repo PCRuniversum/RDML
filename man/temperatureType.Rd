@@ -9,7 +9,7 @@
 temperatureType
 }
 \description{
-This step keeps a constant temperature on the heat block. Inherits: 
+This step keeps a constant temperature on the heat block. Inherits:
 \link{baseTemperatureType}.
 }
 \section{Initialization}{

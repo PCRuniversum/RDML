@@ -13,13 +13,13 @@ Can take values:
 \describe{
 \item{ref}{reference target}
 \item{toi}{target of interest}
-} 
+}
 Inherits: \link{enumType}.
 }
 \section{Initialization}{
  \preformatted{targetTypeType$new(value)}
 
-  @section Fields: \describe{  
+  @section Fields: \describe{
 \item{\code{value}}{\link[checkmate]{checkString}.}
 }
 }

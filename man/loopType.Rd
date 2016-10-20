@@ -9,9 +9,9 @@
 loopType
 }
 \description{
-This step allows to form a loop or to exclude some steps. It allows to jump 
-to a certain "goto" step for "repeat" times. If the "goto" step is outside of 
-the loop range, it must have "repeat" value "0". Inherits: 
+This step allows to form a loop or to exclude some steps. It allows to jump
+to a certain "goto" step for "repeat" times. If the "goto" step is outside of
+the loop range, it must have "repeat" value "0". Inherits:
 \link{rdmlBaseType}.
 }
 \section{Initialization}{
@@ -21,8 +21,8 @@ the loop range, it must have "repeat" value "0". Inherits:
 \section{Fields}{
  \describe{ \item{\code{goto}}{\link[checkmate]{assertCount}.  The
   step to go to to form the loop.}
-\item{\code{repeat.n}}{\link[checkmate]{assertCount}. Determines how many times the loop is 
-  repeated. The first run through the loop is counted as 0, the last loop is 
+\item{\code{repeat.n}}{\link[checkmate]{assertCount}. Determines how many times the loop is
+  repeated. The first run through the loop is counted as 0, the last loop is
   "repeat" - 1.}}
 }
 \keyword{datasets}

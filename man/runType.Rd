@@ -9,42 +9,42 @@
 runType
 }
 \description{
-A run is a set of reactions performed in one "run", for example one plate, 
+A run is a set of reactions performed in one "run", for example one plate,
 one rotor, one array, one chip. Inherits: \link{rdmlBaseType}.
 }
 \section{Initialization}{
- \preformatted{runType$new(id, description = NULL, 
-  documentation = NULL, experimenter = NULL, instrument = NULL, 
-  dataCollectionSoftware = NULL, backgroundDeterminationMethod = NULL, 
-  cqDetectionMethod = NULL, thermalCyclingConditions = NULL, pcrFormat, 
+ \preformatted{runType$new(id, description = NULL,
+  documentation = NULL, experimenter = NULL, instrument = NULL,
+  dataCollectionSoftware = NULL, backgroundDeterminationMethod = NULL,
+  cqDetectionMethod = NULL, thermalCyclingConditions = NULL, pcrFormat,
   runDate = NULL, react = NULL)}
 }
 
 \section{Fields}{
- \describe{ 
- \item{\code{id}}{\link{idType}.} 
- \item{\code{description}}{\link[checkmate]{checkString}.} 
- \item{\code{documentation}}{\code{list} of \link{idReferencesType}.} 
- \item{\code{experimenter}}{\code{list} of \link{idReferencesType}.} 
- \item{\code{instrument}}{\link[checkmate]{checkString}. Description of the 
-  instrument used to aquire the data.} 
- \item{\code{dataCollectionSoftware}}{\link{dataCollectionSoftwareType}. 
-  Description of the software used to analyze/collect the data.} 
- \item{\code{backgroundDeterminationMethod}}{\link[checkmate]{checkString}. 
-  Description of method used to determine the background. } 
- \item{\code{cqDetectionMethod}}{\link{cqDetectionMethodType}. Description of method 
-  used to calculate the quantification cycle. } 
- \item{\code{thermalCyclingConditions}}{\link{idReferencesType}. The program 
-  used to aquire the data.} 
- \item{\code{pcrFormat}}{\link{adpsType}.} 
- \item{\code{runDate}}{\link{adpsType}. Time stamp of data acquisition.} 
+ \describe{
+ \item{\code{id}}{\link{idType}.}
+ \item{\code{description}}{\link[checkmate]{checkString}.}
+ \item{\code{documentation}}{\code{list} of \link{idReferencesType}.}
+ \item{\code{experimenter}}{\code{list} of \link{idReferencesType}.}
+ \item{\code{instrument}}{\link[checkmate]{checkString}. Description of the
+  instrument used to aquire the data.}
+ \item{\code{dataCollectionSoftware}}{\link{dataCollectionSoftwareType}.
+  Description of the software used to analyze/collect the data.}
+ \item{\code{backgroundDeterminationMethod}}{\link[checkmate]{checkString}.
+  Description of method used to determine the background. }
+ \item{\code{cqDetectionMethod}}{\link{cqDetectionMethodType}. Description of method
+  used to calculate the quantification cycle. }
+ \item{\code{thermalCyclingConditions}}{\link{idReferencesType}. The program
+  used to aquire the data.}
+ \item{\code{pcrFormat}}{\link{adpsType}.}
+ \item{\code{runDate}}{\link{adpsType}. Time stamp of data acquisition.}
  \item{\code{react}}{\code{list} of \link{adpsType}.} }
 }
 
 \section{Methods}{
  \describe{
- \item{\code{AsDataFrame(dp.type = "adp")}}{Represents amplification 
- (\code{dp.type = "adp"}) or melting (\code{dp.type = "mdp"}) data 
+ \item{\code{AsDataFrame(dp.type = "adp")}}{Represents amplification
+ (\code{dp.type = "adp"}) or melting (\code{dp.type = "mdp"}) data
  points as \code{data.frame}}}
 }
 \keyword{datasets}

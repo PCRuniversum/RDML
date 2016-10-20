@@ -14,8 +14,8 @@ samples, targets or experiments. Inherits: \link{rdmlBaseType}.
 }
 \section{Initialization}{
  \preformatted{documentationType$new(id, text = NULL)}
-  
-  @section Fields: \describe{  
+
+  @section Fields: \describe{
 \item{\code{id}}{\link{idType}. Identificator.}
 \item{\code{text}}{\link[checkmate]{checkString}. Text.}
   }
