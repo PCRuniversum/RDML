@@ -1,6 +1,6 @@
 #' Merges \code{RDML} objects
 #' 
-#' Merges list of \code{RDML} objects. First object in list becomes base object.
+#' Merges list of \code{RDML} objects. The first object in the list becomes base object.
 #' 
 #' @param to.merge \code{RDML} objects that should be merged.
 #' 

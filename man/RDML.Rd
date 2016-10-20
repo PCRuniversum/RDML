@@ -31,7 +31,7 @@ method, which extracts gets fluorescence data for specified samples.
 
 \section{Methods}{
  \describe{
-\item{new}{creates new instance of \code{RDML} class object (see \link{RDML.new})} 
+\item{new}{creates a new instance of \code{RDML} class object (see \link{RDML.new})} 
 \item{AsTable}{represent RDML data as \code{data.frame} (see \link{RDML.AsTable})}
 \item{GetFData}{gets fluorescence data (see \link{RDML.GetFData})}
 \item{SetFData}{sets fluorescence data (see \link{RDML.SetFData})}
