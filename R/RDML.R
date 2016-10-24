@@ -68,6 +68,7 @@
 #' @export
 #' @importFrom R6 R6Class
 #' @import checkmate data.table rlist pipeR stringr xml2
+#' @importFrom XML xmlValue xmlAttrs
 #' @include RDML.types.R
 #' @examples 
 #' ## EXAMPLE 1:
@@ -297,3 +298,5 @@ RDML <- R6Class("RDML",
                   
                 )
 )
+
+utils::globalVariables(c("."))
