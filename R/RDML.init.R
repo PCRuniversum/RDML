@@ -720,15 +720,14 @@ RDML$set("public", "initialize", function(filename,
                  # remove Roche omitted ('ntp') samples
                  if(type == "ntp")
                    return(NULL)
-
                  id <- xml_attr(sample, "id")
                  sampleType$new(
                    id = idType$new(id),
                    description = getTextValue(sample, "./rdml:description"),
                    documentation =
-                     list.map(sample %>>%
+                     lapply(sample %>>%
                                 xml_find_all("./rdml:documentation", rdml.env$ns),
-                              doc ~ genIdRef(doc)),
+                            function(doc) genIdRef(doc)),
                    xRef =
                      list.map(sample %>>%
                                 xml_find_all("./rdml:xRef", rdml.env$ns),
@@ -812,10 +811,9 @@ RDML$set("public", "initialize", function(filename,
                               id))),
                    description = getTextValue(target, "./rdml:description"),
                    documentation =
-                     list.map(target %>>%
-                                xml_find_all("./rdml:documentation", rdml.env$ns),
-                              doc ~ genIdRef(doc)
-                     ),
+                     lapply(target %>>%
+                              xml_find_all("./rdml:documentation", rdml.env$ns),
+                            function(doc) genIdRef(doc)),
                    xRef =
                      list.map(target %>>%
                                 xml_find_all("./rdml:xRef", rdml.env$ns),
@@ -925,10 +923,9 @@ RDML$set("public", "initialize", function(filename,
                    id = genId(tcc),
                    description = getTextValue(tcc, "./rdml:description"),
                    documentation =
-                     list.map(tcc %>>%
-                                xml_find_all("./rdml:documentation", rdml.env$ns),
-                              doc ~ genIdRef(doc)
-                     ),
+                     lapply(tcc %>>%
+                              xml_find_all("./rdml:documentation", rdml.env$ns),
+                            function(doc) genIdRef(doc)),
                    lidTemperature =
                      getNumericValue(tcc, "./rdml:lidTemperature"),
 
@@ -1167,10 +1164,9 @@ RDML$set("public", "initialize", function(filename,
         id = idType$new(run.id), #xmlAttrs(run, "id"),
         description = getTextValue(run, "./rdml:description"),
         documentation =
-          list.map(run %>>%
-                     xml_find_all("./rdml:documentation", rdml.env$ns),
-                   doc ~ genIdRef(doc)
-          ),
+          lapply(run %>>%
+                   xml_find_all("./rdml:documentation", rdml.env$ns),
+                 function(doc) genIdRef(doc)),
         experimenter =
           list.map(run %>>%
                      xml_find_all("./rdml:experimenter", rdml.env$ns),
@@ -1216,10 +1212,9 @@ RDML$set("public", "initialize", function(filename,
         id = idType$new(experiment.id),
         description = getTextValue(experiment, "./rdml:description"),
         documentation =
-          list.map(experiment %>>%
-                     xml_find_all("./rdml:documentation", rdml.env$ns),
-                   doc ~ genIdRef(doc)
-          ),
+          lapply(experiment %>>%
+                   xml_find_all("./rdml:documentation", rdml.env$ns),
+                 function(doc) genIdRef(doc)),
         run =
           list.map(experiment %>>%
                      xml_find_all("./rdml:run", rdml.env$ns),

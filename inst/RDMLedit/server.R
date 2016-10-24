@@ -2152,7 +2152,7 @@ shinyServer(function(input, output, session) {
       paste(input$rdmlFileSlct, ".RDML", sep = "")
     },
     content = function(file) {
-      values$rdml$AsXML(file)
+      output <- values$rdml$AsXML(file)
     }
   )
   
