@@ -29,8 +29,7 @@ Imports:
     R6 (>= 2.0.1),
     stringr,
     tools (>= 3.2),
-    xml2 (>= 1.0),
-    XML
+    xml2 (>= 1.0)
 Collate:
     'RDML.types.R'
     'RDML.R'

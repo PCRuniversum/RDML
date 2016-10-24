@@ -61,24 +61,6 @@ genIdRef <- function(node) {
   idReferencesType$new(xml_attr(node, "id"))
 }
 
-xmlValue <- function(val) {
-  out <- xmlValue(val)
-  if (is.na(out))
-    return(NULL)
-  out
-}
-
-# xmlAttrs <- function(...) {
-#   XML::xmlAttrs(...) %>>% iconv("UTF-8", "UTF-8")
-# }
-
-# as.logical <- function(val) {
-#   out <- base::as.logical(val)
-#   if (length(out) == 0)
-#     return(NULL)
-#   out
-# }
-
 as.numeric <- function(val) {
   out <- tryCatch(
     base::as.numeric(val),
@@ -413,7 +395,7 @@ RDML$set("public", "initialize", function(filename,
       xml_find_all("/Experiment/RawChannels/RawChannel") %>>%
       list.iter(rawChannel ~ {
         # rawChannel <- as_list(rawChannel)
-        description$target.dyeId <<- getTextValue(rawChannel, "./Name")#  %>>% xmlValue
+        description$target.dyeId <<- getTextValue(rawChannel, "./Name")
         description$target <<- paste(original.targets,
                                      description$target.dyeId[1], sep = "#")
         fdata <-
@@ -836,7 +818,7 @@ RDML$set("public", "initialize", function(filename,
                        target %>>%
                          xml_find_first("./rdml:dyeId", rdml.env$ns) %>>%
                          genIdRef(),
-                       # StepOne stores dyeId as xmlValue
+                       # StepOne stores dyeId as xml value
                        error = function(e)
                          idReferencesType$new(getTextValue(target, "./rdml:dyeId"))
                      ),
@@ -1161,7 +1143,7 @@ RDML$set("public", "initialize", function(filename,
       if (show.progress)
         cat(sprintf("\n\trun: %s\n", run.id))
       runType$new(
-        id = idType$new(run.id), #xmlAttrs(run, "id"),
+        id = idType$new(run.id),
         description = getTextValue(run, "./rdml:description"),
         documentation =
           lapply(run %>>%

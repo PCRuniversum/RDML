@@ -1,4 +1,4 @@
-# # rlist::list.names with correct .data=NULL
+# rlist::list.names with correct .data=NULL
 list.names <- function(data, ...) {
   if (is.null(data))
     return(NULL)
