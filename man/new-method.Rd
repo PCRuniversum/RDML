@@ -55,11 +55,7 @@ lc96$AsDendrogram()
 }
 \author{
 Konstantin A. Blagodatskikh <k.blag@yandex.ru>, Stefan Roediger
-<<<<<<< HEAD
-  <stefan.roediger@hs-lausitz.de>, Michal Burdukiewicz
-=======
   <stefan.roediger@b-tu.de>, Michal Burdukiewicz
->>>>>>> f97cd0a4cb8afa4b7e4dcf5f20eb1d0619235bac
   <michalburdukiewicz@gmail.com>
 }
 

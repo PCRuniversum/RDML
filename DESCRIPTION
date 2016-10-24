@@ -21,13 +21,16 @@ URL: https://github.com/kablag/RDML
 Depends:
     R (>= 3.2.0)
 Imports:
-    R6 (>= 2.0.1),
     checkmate (>= 1.6.2),
-    dplyr (>= 0.4.1),
-    tidyr (>= 0.2.0),
+    data.table,
+    pipeR,
+    readxl,
     rlist (>= 0.4),
+    R6 (>= 2.0.1),
+    stringr,
+    tools (>= 3.2),
     xml2 (>= 1.0),
-    tools (>= 3.2)
+    XML
 Collate:
     'RDML.types.R'
     'RDML.R'
@@ -40,6 +43,7 @@ Collate:
     'functional_wrappers.R'
 Suggests:
     chipPCR,
+    dplyr,
     ggplot2,
     knitr,
     kfigr,

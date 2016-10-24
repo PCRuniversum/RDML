@@ -62,7 +62,7 @@ genIdRef <- function(node) {
 }
 
 xmlValue <- function(val) {
-  out <- XML::xmlValue(val)
+  out <- xmlValue(val)
   if (is.na(out))
     return(NULL)
   out

@@ -47,8 +47,7 @@ temp <- c(55, 55, 55, 55, 54, 54, 55, 55, 55, 55, 55, 55, 55, 55, 55,
 55, 55, 55, 55, 55, 55, 55, 55, 55)
 
 #combine all variables into a proper object
-data <- matrix(c(cyc, temp, fluo), ncol = 3)
-colnames(data) <- c("cyc", "tmp", "fluor")
+data <- data.frame(cyc = cyc, tmp = temp, fluor = fluo)
 
 #create adps object
 adpsType$new(data)
