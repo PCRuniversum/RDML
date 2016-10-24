@@ -33,8 +33,7 @@ rdmlBaseType <-
   R6Class("rdmlBaseType",
           # class = FALSE,
           public = list(
-            .asXMLnodes = function(node.name,
-                                   namespaceDefinitions = NULL) {
+            .asXMLnodes = function(node.name) {
               subnodes <- names(private)[grepl("^\\..*$",
                                                names(private))] %>>% rev()
               sprintf("<%s%s>%s</%s>",
@@ -98,7 +97,7 @@ rdmlBaseType <-
                                 }
                               })
                           }) %>>%
-                          .[!sapply(., is.null)] %>>%
+                          (vals ~ vals[!sapply(vals, is.null)]) %>>%
                           paste0(collapse = "")
                       },
                       node.name)
@@ -839,8 +838,7 @@ enumType <-
             print = function(...) {
               cat(private$.value)
             },
-            .asXMLnodes = function(node.name,
-                                   namespaceDefinitions = NULL) {
+            .asXMLnodes = function(node.name) {
               if (is.null(private$.value) ||
                   is.na(private$.value))
                 NULL

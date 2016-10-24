@@ -186,7 +186,8 @@ RDML <- R6Class("RDML",
                   AsDendrogram = function() { },
                   AsXML = function(file.name) {
                     tree <- self$.asXMLnodes("rdml") %>>% 
-                      sub('>', ' xmlns="http://www.rdml.org" version="1.2">', .)
+                      (text ~ 
+                         sub('>', ' xmlns="http://www.rdml.org" version="1.2">', text))
                     if (missing(file.name))
                       return(tree)
                     cat(tree,
