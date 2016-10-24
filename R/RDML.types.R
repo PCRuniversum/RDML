@@ -1,14 +1,8 @@
-# rlist::list.names with correct .data=NULL
-list.names <- function(.data, expr) {
-  if (is.null(.data))
+# # rlist::list.names with correct .data=NULL
+list.names <- function(data, ...) {
+  if (is.null(data))
     return(NULL)
-  if (missing(expr))
-    return(names(.data))
-  expr <- substitute(expr)
-  if (is.null(expr))
-    return(setnames(.data, NULL))
-  values <- rlist:::list.map.internal(.data, expr, parent.frame())
-  rlist:::setnames(.data, values)
+  rlist::list.names(data, ...)
 }
 
 # rdmlBaseType ------------------------------------------------------------
