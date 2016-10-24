@@ -10,7 +10,7 @@
 #' @include RDML.R
 #' @export
 AsTable <- function(obj, ...) {
-  assert_that(is.type(obj, RDML))
+  assertClass(obj, "RDML")
   obj$AsTable(...)
 }
 
@@ -26,7 +26,7 @@ AsTable <- function(obj, ...) {
 #' @include RDML.R
 #' @export
 SetFData <- function(obj, ...) {
-  assert_that(is.type(obj, RDML))
+  assertClass(obj, "RDML")
   obj$SetFData(...)
 }
 
@@ -42,7 +42,7 @@ SetFData <- function(obj, ...) {
 #' @include RDML.R
 #' @export
 GetFData <- function(obj, ...) {
-  assert_that(is.type(obj, RDML))
+  assertClass(obj, "RDML")
   obj$GetFData(...)
 }
 
@@ -58,6 +58,6 @@ GetFData <- function(obj, ...) {
 #' @include RDML.R
 #' @export
 AsDendrogram <- function(obj, ...) {
-  assert_that(is.type(obj, RDML))
+  assertClass(obj, "RDML")
   obj$AsDendrogram(...)
 }
