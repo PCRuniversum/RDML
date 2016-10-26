@@ -40,6 +40,7 @@ Collate:
     'RDML.SetFData.R'
     'RDML.init.R'
     'functional_wrappers.R'
+    'rdmlEdit.R'
 Suggests:
     chipPCR,
     dplyr,

@@ -19,6 +19,10 @@ testNull <- function(val) {
 
 
 shinyServer(function(input, output, session) {
+  session$onSessionEnded(function() {
+    stopApp()
+  })
+  
   values <- reactiveValues(RDMLs = list(),
                            log = NULL)
   updLog <- function(error.message) {
@@ -199,6 +203,7 @@ shinyServer(function(input, output, session) {
       if (is.null(values$rdml))
         return(NULL)
       values$RDMLs[[input$rdmlFileSlct]] <- values$rdml$clone(deep = TRUE)
+      rdmml <<- values$RDMLs[[input$rdmlFileSlct]]
     })
   })
   
@@ -627,14 +632,12 @@ shinyServer(function(input, output, session) {
         updateCheckboxInput(session,
                             "sampleInterRunCalibratorChk",
                             value = sample$interRunCalibrator)
-        
         updateTextInput(session,
                         "sampleQuantityValueText",
                         value = testNull(sample$quantity$value))
         updateTextInput(session,
                         "sampleQuantityUnitText",
                         value = testNull(sample$quantity$unit$value))
-        
         updateCheckboxInput(session,
                             "sampleCalibratorSampleChk",
                             value = sample$calibratorSample)
@@ -650,6 +653,13 @@ shinyServer(function(input, output, session) {
         updateSelectInput(session,
                           "sampleCsmTccSlct",
                           selected = sample$cdnaSynthesisMethod$thermalCyclingConditions)
+        updateTextInput(session,
+                            "sampleTemplateQuantityConcText",
+                            value = sample$templateQuantity$conc)
+        updateSelectInput(session,
+                          "sampleTemplateQuantityNucleotideSlct",
+                          selected = sample$templateQuantity$nucleotide$value)
+        
       } else {
         updateTextInput(session,
                         "sampleIdText",
@@ -675,73 +685,78 @@ shinyServer(function(input, output, session) {
         annotation <- values$rdml$sample[[input$sampleSlct]]$annotation
       })
       sample <- sampleType$new(
-        idType$new(testEmptyInput(input$sampleIdText)),
-        testEmptyInput(input$sampleDescriptionText),
-        lapply(input$sampleDocumentationSlct,
-               function(doc) idReferencesType$new(doc)),
-        xRef,
-        annotation,
-        
-        sampleTypeType$new(input$sampleTypeSlct),
-        testEmptyInput(input$sampleInterRunCalibratorChk),
-        if (input$sampleQuantityValueText == "") {
-          NULL
-        }
-        else {
-        tryCatch({
-          quantityType$new(as.numeric(input$sampleQuantityValueText),
-                           quantityUnitType$new(input$sampleQuantityUnitText))
-        },
-        error = function(e) {
-          updLog(paste("sample quantity:", e$message))
-          NULL}
-        )},
-        
-        testEmptyInput(input$sampleCalibrationSampleChk),
-        # NULL,
-        tryCatch({
-          if (is.null(testEmptyInput(input$sampleCsmEnzymeText)) &&
-            input$sampleCsmPrimingMethodSlct == "" &&
-            input$sampleCsmDnaseTreatmentChk == FALSE &&
-            input$sampleCsmTccSlct == ""
-          ) {
+        id = idType$new(testEmptyInput(input$sampleIdText)),
+        description = testEmptyInput(input$sampleDescriptionText),
+        documentation = 
+          lapply(input$sampleDocumentationSlct,
+                 function(doc) idReferencesType$new(doc)),
+        xRef = xRef,
+        annotation = annotation,
+        type = 
+          sampleTypeType$new(input$sampleTypeSlct),
+        interRunCalibrator = testEmptyInput(input$sampleInterRunCalibratorChk),
+        quantity = {
+          if (input$sampleQuantityValueText == "") {
             NULL
-          } else {
-          cdnaSynthesisMethodType$new(
-            testEmptyInput(input$sampleCsmEnzymeText),
-            {
-            if (input$sampleCsmPrimingMethodSlct == "")
+          }
+          else {
+            tryCatch({
+              quantityType$new(as.numeric(input$sampleQuantityValueText),
+                               quantityUnitType$new(input$sampleQuantityUnitText))
+            },
+            error = function(e) {
+              updLog(paste("sample quantity:", e$message))
+              NULL}
+            )}},
+        calibratorSample = 
+          testEmptyInput(input$sampleCalibratorSampleChk),
+        # NULL,
+        cdnaSynthesisMethod = {
+          tryCatch({
+            if (is.null(testEmptyInput(input$sampleCsmEnzymeText)) &&
+                input$sampleCsmPrimingMethodSlct == "" &&
+                input$sampleCsmDnaseTreatmentChk == FALSE &&
+                input$sampleCsmTccSlct == ""
+            ) {
+              NULL
+            } else {
+              cdnaSynthesisMethodType$new(
+                testEmptyInput(input$sampleCsmEnzymeText),
+                {
+                  if (input$sampleCsmPrimingMethodSlct == "")
+                    NULL
+                  else
+                    primingMethodType$new(input$sampleCsmPrimingMethodSlct)
+                },
+                testEmptyInput(input$sampleCsmDnaseTreatmentChk),
+                {
+                  if (input$sampleCsmTccSlct == "")
+                    NULL
+                  else
+                    idReferencesType$new(
+                      testEmptyInput(input$sampleCsmTccSlct))
+                })
+            }
+          },
+          error = function(e) {
+            updLog(paste("sample cdna :", e$message))
+            NULL}
+          )
+        },
+        templateQuantity = {
+          tryCatch({
+            if (input$sampleTemplateQuantityConcText == "")
               NULL
             else
-              primingMethodType$new(input$sampleCsmPrimingMethodSlct)
-            },
-            testEmptyInput(input$sampleCsmDnaseTreatmentChk),
-            {
-              if (input$sampleCsmTccSlct == "")
-                NULL
-              else
-                idReferencesType$new(
-                  testEmptyInput(input$sampleCsmTccSlct))
-            })
-          }
-        },
-        error = function(e) {
-          updLog(paste("sample cdna :", e$message))
-          NULL}
-        ),
-        
-        tryCatch({
-          if (input$sampleTemplateQuantityConcText == "")
-            NULL
-          else
-            templateQuantityType$new(
-              testEmptyInput(as.numeric(input$sampleTemplateQuantityConcText)),
-              nucleotideType$new(testEmptyInput(input$sampleTemplateQuantityNucleotideSlct)))
-        },
-        error = function(e) {
-          updLog(paste("sample template quantity:\n", e$message, "\n"))
-          NULL}
-        )
+              templateQuantityType$new(
+                testEmptyInput(as.numeric(input$sampleTemplateQuantityConcText)),
+                nucleotideType$new(testEmptyInput(input$sampleTemplateQuantityNucleotideSlct)))
+          },
+          error = function(e) {
+            updLog(paste("sample template quantity:\n", e$message, "\n"))
+            NULL}
+          )
+        }
       )
       isolate({
         values$rdml$sample[[input$sampleSlct]] <- sample
@@ -756,7 +771,7 @@ shinyServer(function(input, output, session) {
         updSampleRefs()
       })
     },
-    error = function(e) updLog(paste("sample quantity:", e$message))
+    error = function(e) updLog(paste("sample:", e$message))
     )
   })
   
@@ -1042,7 +1057,7 @@ shinyServer(function(input, output, session) {
         idType$new(testEmptyInput(input$targetIdText)),
         testEmptyInput(input$targetDescriptionText),
         lapply(input$targetDocumentationSlct,
-               function(doc) idReferencesType$new(doc)),
+               function(doc) idReferencesType$new(testEmptyInput(doc))),
         xRef,
         
         targetTypeType$new(input$targetTypeSlct),
@@ -1051,7 +1066,7 @@ shinyServer(function(input, output, session) {
         testEmptyInput(as.numeric(input$targetAeSeText)),
         testEmptyInput(as.numeric(input$targetDetectionLimitText)),
         
-        dyeId= idReferencesType$new(testEmptyInput(input$targetDyeIdSlct)),
+        dyeId = idReferencesType$new(testEmptyInput(input$targetDyeIdSlct)),
         
         {
           isolate({
@@ -1903,7 +1918,7 @@ shinyServer(function(input, output, session) {
     tryCatch({
       isolate({
         data <- values$rdml$
-          experiment[[input$experimentSlct]]$
+          experiment[[input$reactSampleSlct]]$
           run[[input$runSlct]]$
           react[[input$reactSlct]]$data
       })
@@ -1941,7 +1956,6 @@ shinyServer(function(input, output, session) {
         NULL
       }
     )
-    
   })
   
   
@@ -2149,7 +2163,7 @@ shinyServer(function(input, output, session) {
   
   output$downloadRDML <- downloadHandler(
     filename = function() {
-      paste(input$rdmlFileSlct, ".RDML", sep = "")
+      input$rdmlFileSlct
     },
     content = function(file) {
       output <- values$rdml$AsXML(file)

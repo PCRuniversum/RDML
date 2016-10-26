@@ -55,10 +55,10 @@ shinyUI(
                                        "Remove ID")),
                  tabPanel("Experimenter",
                           selectizeInput("experimenterSlct",
-                                         "Select Experiment",
+                                         "Select Experimenter",
                                          choices = "",
-                                         options= list(
-                                           create =TRUE
+                                         options = list(
+                                           create = TRUE
                                          )),
                           
                           textInput("experimenterIdText", "ID",
@@ -170,8 +170,8 @@ shinyUI(
                                                             "dil", "ng",
                                                             "nMol"))
                           ),
-                          checkboxInput("sampleCalibrationSampleChk",
-                                        "Calibartion Sample",
+                          checkboxInput("sampleCalibratorSampleChk",
+                                        "Calibartor Sample",
                                         FALSE),
                           wellPanel("cDNA Synthesis Method",
                                     textInput("sampleCsmEnzymeText", 
