@@ -275,7 +275,7 @@ RDML$set("public", "initialize", function(filename,
       # multicomponent.data <- paste0(uniq.folder, "\\apldbio\\sds\\multicomponent_data.txt") %>>%
       #   read.delim(skip = 2, stringsAsFactors = FALSE) %>>%
       #   filter(!is.na(WELL))
-      data.file <- paste0(uniq.folder, "\\apldbio\\sds\\multicomponent_data.txt")
+      data.file <- paste0(uniq.folder, "/apldbio/sds/multicomponent_data.txt")
       multicomponent.data <- readChar(data.file, file.info(data.file)$size) %>>%
         str_match_all("([0-9]+)\\t([0-9]+)\\t([A-Z]+)\\t[0-9E\\-]+\\.?[0-9E\\-]*\\t([0-9E\\-]+\\.?[0-9E\\-]*)")
       multicomponent.data <- as.data.frame(multicomponent.data[[1]], stringsAsFactors = FALSE)
@@ -287,7 +287,7 @@ RDML$set("public", "initialize", function(filename,
                                                               as.numeric(fluor))]
       ncycles <- multicomponent.data$cyc %>>% max + 1
 
-      plate.setup <- paste0(uniq.folder, "\\apldbio\\sds\\plate_setup.xml") %>>%
+      plate.setup <- paste0(uniq.folder, "/apldbio/sds/plate_setup.xml") %>>%
         read_xml()
 
       rdml.env$ns <- xml_ns(plate.setup)
