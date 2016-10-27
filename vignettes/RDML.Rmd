@@ -389,7 +389,7 @@ ggplot(fdata, aes(cyc, fluor)) +
 
 
 ```{r, fig.width = 6, fig.height = 3, results = "hide", warning = FALSE}
-filename <- system.file("extdata/from_abi7500/Standard_Curve_Example.eds", package = "RDML")
+filename <- system.file("extdata/from_abi7500/sce.eds", package = "RDML")
 abi <- RDML$new(filename = filename)
 abi$AsDendrogram()
 ```
