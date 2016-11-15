@@ -80,4 +80,4 @@ All list elements (i.e. *Sample*) can be selected by corresponding selector. New
 Views raw qPCR curves. To view one (or more) curve -- click on curve at the table with curves description. To view all curves again -- deselect descriptions. *Curves arn't preprocessed and editable!*
 
 # Melting
-Views raw melting curves.. To view one (or more) curve -- click on curve at the table with curves description. To view all curves again -- deselect descriptions. *Curves arn't preprocessed and editable!*
+Views raw melting curves. To view one (or more) curve -- click on curve at the table with curves description. To view all curves again -- deselect descriptions. *Curves arn't preprocessed and editable!*
