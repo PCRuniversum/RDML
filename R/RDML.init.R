@@ -100,7 +100,7 @@ GetIds <- function(l) {
 GetDilutionsRoche <- function(uniq.folder)
 {
   # cat("\nParsing Roche standards data...")
-  if(!file.exists(paste0(uniq.folder,"/calculated_data.xml"))) {
+  if (!file.exists(paste0(uniq.folder,"/calculated_data.xml"))) {
     # cat("NO SUCH FILE")
     return(NA)
   }
@@ -572,10 +572,11 @@ RDML$set("public", "initialize", function(filename,
     pcrdata <- read.csv(filename)
     fdata.names <- colnames(pcrdata)[-1]
     data.type <- {
-      if (colnames(pcrdata)[1] == "cyc")
-        "adp"
-      else
+      if (tolower(colnames(pcrdata)[1]) == "tmp" ||
+          tolower(colnames(pcrdata)[1]) == "temperature")
         "mdp"
+      else
+        "adp"
     }
     descr <- data.frame(
       fdata.name  = fdata.names,

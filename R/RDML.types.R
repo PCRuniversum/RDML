@@ -5,6 +5,16 @@ list.names <- function(data, ...) {
   rlist::list.names(data, ...)
 }
 
+checkDateTime <- function(dateTime){
+  if (is.null(dateTime))
+    return(TRUE)
+  tryCatch({
+    as.POSIXct(str_replace(dateTime, "[T]", " "))
+    return(TRUE)},
+    error = function(e) e$message
+  )
+}
+
 # rdmlBaseType ------------------------------------------------------------
 
 #' Base R6 class for RDML package.
@@ -2473,8 +2483,7 @@ runType <-
               assert(checkNull(thermalCyclingConditions),
                      checkClass(thermalCyclingConditions, "idReferencesType"))
               assertClass(pcrFormat, "pcrFormatType")
-              assert(checkNull(runDate),
-                     checkString(runDate)) # date time
+              assert(checkDateTime(runDate)) # date time
               assert(checkNull(react),
                      checkList(react, "reactType"))
 
@@ -2612,8 +2621,7 @@ runType <-
             runDate = function(runDate) {
               if (missing(runDate))
                 return(private$.runDate)
-              assert(checkNull(runDate),
-                     checkString(runDate)) # date time
+              assert(checkDateTime(runDate)) # date time
               private$.runDate <- runDate
             },
             react = function(react) {

@@ -213,14 +213,14 @@ RDML <- R6Class("RDML",
                   dateMade = function(date.made) {
                     if (missing(date.made))
                       return(private$.dateMade)
-                    assert(checkNull(date.made), checkString(date.made))
+                    assert(checkDateTime(date.made))
                     private$.dateMade <- date.made
                   },
                   
                   dateUpdated = function(date.updated) {
                     if (missing(date.updated))
                       return(private$.dateUpdated)
-                    assert(checkNull(date.updated), checkString(date.updated))
+                    assert(checkDateTime(date.updated))
                     private$.dateUpdated <- date.updated
                   },
                   
