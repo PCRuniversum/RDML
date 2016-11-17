@@ -591,6 +591,58 @@ RDML$set("public", "initialize", function(filename,
     )
     self$SetFData(pcrdata, descr, fdata.type = data.type)
   }
+  
+  # COBAS -----------------------------------------------------------------
+  fromCobas <- function() {
+    dat <- filename %>>%
+      read_xml()
+    
+    nms <- dat %>>%
+      xml_find_all("/Experiment/Subsets/Subset[prop[@name='SubsetID']= '0']/list/item")
+    
+    samples <- trimws(xml_text(nms))
+    numsamples <- length(samples)
+    
+    for (j in 1:2)
+    {
+      trg <- switch(j,"FAM","HEX")
+      description <- data.frame(
+        fdata.name  = 1:numsamples,
+        exp.id = "exp1",
+        run.id = "run1",
+        react.id = 1:numsamples,
+        sample = samples,
+        sample.type = "unkn",
+        quantity = 0,
+        target = sprintf("unkn@unkn#%s", trg),
+        target.dyeId = trg,
+        stringsAsFactors = FALSE
+      )
+      rdml.env$ns <- xml_ns(dat)
+      
+      fdata <- NULL
+      for (i in 1:numsamples)
+      {
+        nms <- dat %>>%
+          xml_find_all(sprintf("/Experiment/run/Acquisitions/Sample[@Number='%d']/Acq/Chan[@Number='%d']/prop[@name='Fluor']",
+                               i, j - 1))
+        
+        vals <- trimws(xml_text(nms))
+        fdata <- cbind(fdata,as.numeric(c(vals)))
+      }
+      
+      colnames(fdata) <- description$react.id
+      fdata <- cbind(cyc = 1:nrow(fdata), fdata)
+      #fdata <- as.data.frame.matrix(fdata)
+      #print("fdata")
+      #print(fdata[1])
+      #print(fdata[2,])
+      #print(typeof(fdata))
+      self$SetFData(fdata, description)
+    }
+    self$id <- list(rdmlIdType$new("Roche Diagnostics" , "1"))
+    #print (self)
+  }#fromCobas
 
   # From RDML, lc96 -----------------------------------------------------------------
   fromRDML <- function() {
@@ -1307,6 +1359,10 @@ RDML$set("public", "initialize", function(filename,
     },
     r96 = {
       fromDTprime()
+      return()
+    },
+    xml = {
+      fromCobas()
       return()
     },
     {
