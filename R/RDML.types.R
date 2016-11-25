@@ -8,11 +8,11 @@ list.names <- function(data, ...) {
 checkDateTime <- function(dateTime){
   if (is.null(dateTime))
     return(TRUE)
-  tryCatch({
-    as.POSIXct(str_replace(dateTime, "[T]", " "))
-    return(TRUE)},
-    error = function(e) e$message
-  )
+  if(!is.na(ymd_hms(dateTime, quiet = TRUE)) ||
+     !is.na(ymd(dateTime, quiet = TRUE))) {
+    return(TRUE)
+  }
+  return("Must pass lubridate ymd_hms() or ymd() conversion")
 }
 
 # rdmlBaseType ------------------------------------------------------------
