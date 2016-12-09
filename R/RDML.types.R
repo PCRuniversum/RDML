@@ -39,7 +39,7 @@ rdmlBaseType <-
           public = list(
             .asXMLnodes = function(node.name) {
               subnodes <- names(private)[grepl("^\\..*$",
-                                               names(private))] %>>% rev()
+                                               names(private))] # %>>% rev()
               sprintf("<%s%s>%s</%s>",
                       node.name, #node name
                       # attribute
@@ -1773,17 +1773,17 @@ adpsType <-
               }
             },
             .asXMLnodes = function(node.name) {
-              (ifelse("tmp" %in% colnames(private$.fpoints),
-                      return(
-                        private$.fpoints[, sprintf("<adp><cyc>%s</cyc><tmp>%s</tmp><fluor>%s</fluor></adp>",
-                                                   cyc, tmp, fluor)]
-                      ),
-                      return(
-                        private$.fpoints[, sprintf("<adp><cyc>%s</cyc><fluor>%s</fluor></adp>",
-                                                   cyc, fluor)]
-                      ))
-               )() %>>%
-                paste0(collapse = "")
+              ifelse("tmp" %in% colnames(private$.fpoints),
+                     return(
+                       private$.fpoints[, sprintf("<adp><cyc>%s</cyc><tmp>%s</tmp><fluor>%s</fluor></adp>",
+                                                  cyc, tmp, fluor)]%>>%
+                         paste0(collapse = "")
+                     ),
+                     return(
+                       private$.fpoints[, sprintf("<adp><cyc>%s</cyc><fluor>%s</fluor></adp>",
+                                                  cyc, fluor)]%>>%
+                         paste0(collapse = "")
+                     ))
             }
           ),
           private = list(
