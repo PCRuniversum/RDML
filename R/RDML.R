@@ -12,7 +12,7 @@
 #' the exception for fluorescence values can be represented as \code{data.frame} by 
 #' method \code{AsTable}. Such possibility of data representation streamlines 
 #' sample filtering (by targets, types, etc.) and serves as request for \code{GetFData}
-#' method, which extracts gets fluorescence data for specified samples.
+#' method, which extracts fluorescence data for specified samples.
 #' 
 #' 
 #' @section Fields: Type, structure of data and description of fields can be 
