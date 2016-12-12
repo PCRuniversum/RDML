@@ -6,4 +6,4 @@
 #' @keywords hplot
 #' @export rdmlEdit
 rdmlEdit <- function()
-  runApp(system.file("RDMLedit", package = "RDML"))
+  shiny::runApp(system.file("RDMLedit", package = "RDML"))

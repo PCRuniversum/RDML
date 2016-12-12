@@ -49,7 +49,6 @@ Suggests:
     knitr,
     kfigr,
     MBmca,
-    rhandsontable,
     shiny,
     shinythemes
 VignetteBuilder: knitr

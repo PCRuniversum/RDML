@@ -1,5 +1,5 @@
-[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/RDML)](http://cran.r-project.org/web/packages/RDML)
-[![Downloads](http://cranlogs.r-pkg.org/badges/RDML)](http://cran.rstudio.com/package=RDML)
+[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/RDML)](https://CRAN.R-project.org/package=RDML)
+[![Downloads](https://cranlogs.r-pkg.org/badges/RDML)]( https://CRAN.R-project.org/package=RDML)
 [![Travis-CI Build Status](https://travis-ci.org/kablag/RDML.svg?branch=master)](https://travis-ci.org/kablag/RDML)
 
 ![RDML](https://github.com/kablag/RDML/blob/master/vignettes/RDML_logo.png)

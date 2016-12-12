@@ -24,7 +24,7 @@ In detail, this dataset contains three amplification curves collected by three r
 
 After completion of the experiment all *csv* raw data were transferred to the **R** environment and stored as *rda* files in the **C54** dataset as described elsewhere [@RDCT2010c]. The **R** environment provides numerous packages for the import of standard file formats, including formats from spread sheet applications (e.g., *XLS*, *XLSX*, *ODS*) [@Schutten_2014_ods, @Warnes_2015_gdata, @dragulescu_xlsx_2014], an ODBC connection [@ripley_rodbc_2015] or from the clipboard (`read.table("clipboard")`). There are several graphical user interfaces (GUIs) for **R**, which facilitate an easy import of raw data [@Valero_2012]. For example **RKWard** [@roediger_rkward_2012] has import functionality for *csv*, *txt*, *spss* and *stata* files.
 
-Therefore, we will use the **C54** dataset directly from the [chipPCR](http://cran.r-project.org/web/packages/chipPCR/index.html) package [@roediger2015chippcr]. The amplification curves have different number of cycles and one of them contains a missing value due to a sensor dropout. Thus, this data should be preprocessed before Cq calculation.
+Therefore, we will use the **C54** dataset directly from the [chipPCR](https://CRAN.R-project.org/package=chipPCR) package [@roediger2015chippcr]. The amplification curves have different number of cycles and one of them contains a missing value due to a sensor dropout. Thus, this data should be preprocessed before Cq calculation.
 
 
 ## Initialization
@@ -58,7 +58,7 @@ ggplot(dat, aes(x = Cycle, y = refMFi, colour = Experiment)) + geom_point()
 
 Preprocessing and Cq calculation steps will be held inside **RDML** object. To do this we shall add custom method to **RDML** class and use this advanced class as **RDML** object initializator (data import).
 
-As described previously [@roediger2015r], we first preprocess the raw data with the **CPP** function from the [chipPCR](http://cran.r-project.org/web/packages/chipPCR/index.html) package. After that preprocessed data will be stored in new runs inside same experiment. For Cq calculation we used the **diffQ2** function from the [MBmca](http://cran.r-project.org/web/packages/MBmca/index.html) [@roediger_RJ_2013] package. 
+As described previously [@roediger2015r], we first preprocess the raw data with the **CPP** function from the [chipPCR](https://CRAN.R-project.org/package=chipPCR) package. After that preprocessed data will be stored in new runs inside same experiment. For Cq calculation we used the **diffQ2** function from the [MBmca](https://CRAN.R-project.org/package=MBmca) [@roediger_RJ_2013] package. 
 
 Additional our method will have two arguments:
 
@@ -177,7 +177,7 @@ video.scan$documentation <- list(
           "P. Schierack, A. Boehm, J. Nitschke, I. Berger, U. Froemmel, C. Schmidt, M.",
           "Ruhland, I. Schimke, D. Roggenbuck, W. Lehmann and C. Schroeder. Advances in",
           "Biochemical Bioengineering/Biotechnology. 133:33-74, 2013.",
-          "http://www.ncbi.nlm.nih.gov/pubmed/22437246")
+          "https://www.ncbi.nlm.nih.gov/pubmed/22437246")
   )
 )
 

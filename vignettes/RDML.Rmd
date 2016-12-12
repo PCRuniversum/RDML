@@ -19,7 +19,7 @@ library(RDML)
 
 # Introduction to the RDML package
 
-The [RDML](http://cran.r-project.org/web/packages/RDML/index.html) package was created to work with the Real-time PCR Data Markup Language (RDML) -- a structured and universal data standard for exchanging quantitative PCR (qPCR) data [@lefever_rdml_2009; @rdml-ninja_2015]. RDML belongs to the family of eXtensible Markup Languages (XML). It contains fluorescence data and information about the qPCR experiment. A description and the RDML schema and the RDML format are available at http://rdml.org.
+The [RDML](https://CRAN.R-project.org/package=RDML) package was created to work with the Real-time PCR Data Markup Language (RDML) -- a structured and universal data standard for exchanging quantitative PCR (qPCR) data [@lefever_rdml_2009; @rdml-ninja_2015]. RDML belongs to the family of eXtensible Markup Languages (XML). It contains fluorescence data and information about the qPCR experiment. A description and the RDML schema and the RDML format are available at http://rdml.org.
 
 The XML technology is commonly used in the **R** environment and there are several tools to manipulate XML files [@xml_book]. When working with XML data, the workhorse package is **XML** [@Lang_XML].Therefore, investments development, implementation and maintenance is moderate.
 
@@ -31,7 +31,7 @@ The RDML format is supported by Bio-Rad (CFX 96 and CFX 384), Life Technologies 
 
 # Structure of the **RDML** package
 
-The structure of the **RDML** package mimics the RDML format and provides several [R6](http://cran.r-project.org/web/packages/R6/vignettes/Introduction.html) classes, which corresponds to [RDML v1.2](http://rdml.org/files.php?v=1.2) format types. All major manipulations with RDML data can be done by a class called **RDML** through its public methods:
+The structure of the **RDML** package mimics the RDML format and provides several [R6](https://cran.r-project.org/web/packages/R6/vignettes/Introduction.html) classes, which corresponds to [RDML v1.2](http://rdml.org/files.php?v=1.2) format types. All major manipulations with RDML data can be done by a class called **RDML** through its public methods:
 
 - `$new()` -- creates new **RDML** object (empty or from specified RDML file) 
 - `$AsTable()` -- represents data contained in **RDML** object (except fluorescent data) as data.frame.
@@ -224,7 +224,7 @@ ggplot(fdata, aes(cyc, fluor)) +
                   color = target))
 ```
 
-Our curves are not background subtrackted ass visible in the plot. To do this we use the `CPP()` function from the [chipPCR](http://cran.r-project.org/web/packages/chipPCR/index.html) package [@roediger2015chippcr] as described in @roediger2015r.
+Our curves are not background subtrackted ass visible in the plot. To do this we use the `CPP()` function from the [chipPCR](https://CRAN.R-project.org/package=chipPCR) package [@roediger2015chippcr] as described in @roediger2015r.
 
 ```{r}
 library(chipPCR)
@@ -295,7 +295,7 @@ To save **RDML** object as RDML file v1.2 we can use `$AsXML()` method where `fi
 
 `lc96$AsXML("lc96.rdml")`
 
-You can use [RDML-ninja](http://sourceforge.net/projects/qpcr-ninja/) or the [RDML validator](http://rdml.org/tools.php?validator) from the RMDL consortiun to validate a RDML file created by the **RDML** package file.
+You can use [RDML-ninja](https://sourceforge.net/projects/qpcr-ninja/) or the [RDML validator](http://rdml.org/tools.php?validator) from the RMDL consortiun to validate a RDML file created by the **RDML** package file.
 
 ## Creating custom functions
 
