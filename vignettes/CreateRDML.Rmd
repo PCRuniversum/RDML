@@ -16,13 +16,13 @@ knitr::opts_chunk$set(collapse = T, comment = "#>")
 
 # Creating RDML file from raw data
 
-This vignette describes how to create **RDML** object from user provided data and calculate Cq values with custom **RDML** class method. Our aim is to a real-world example for the use of the **RDML** package.
+This vignette describes important step how to create **RDML** object from user provided data and calculate Cq values with custom **RDML** class method. We use a real-world example to demonstrate the use of the **RDML** package.
 
 For this purpose we used data from the _VideoScan_ platform. The _VideoScan_ platform is a highly versatile fluorescence microscope based imaging platform for the real-time analysis of biomolecular interactions. _VideoScan_ has been extended by a heating/cooling-unit, which can be used for DNA melting curve analysis [@roediger_RJ_2013], real-time quantitative PCR [@roediger_highly_2013] and quantitative isothermal amplification [@spiess_impact_2014]. In this example we focus on qPCR data obtained from the amplification of the human gene *mlc-2v* [@sheikh_2015]. The experimental details (e.g., primer sequences, amplification conditions) are described in [@roediger_highly_2013; @george_development_2016].
 
-In detail, this dataset contains three amplification curves collected by three runs monitored with TaqMan qPCR chemistry. Similar to other experimental platforms has the _VideoScan_ systems an output as *csv* file (comma separated value). In general, *csv* is format that is sufficient for in house usage. However, the exchange with other scientists is demanding.
+In detail, this dataset contains three amplification curves collected by three runs monitored with TaqMan qPCR chemistry. Similar to other experimental platforms has the _VideoScan_ systems an output as *csv* file (comma separated value). In general, *csv* is a format that is sufficient for an in house usage. However, the exchange with other scientists is demanding, since further information should be part of the data. This are for example information about qPCR conditions, primers, experimentalist and so on as described in the MIQE and RDML standard documentations.	
 
-After completion of the experiment all *csv* raw data were transferred to the **R** environment and stored as *rda* files in the **C54** dataset as described elsewhere [@RDCT2010c]. The **R** environment provides numerous packages for the import of standard file formats, including formats from spread sheet applications (e.g., *XLS*, *XLSX*, *ODS*) [@Schutten_2014_ods, @Warnes_2015_gdata, @dragulescu_xlsx_2014], an ODBC connection [@ripley_rodbc_2015] or from the clipboard (`read.table("clipboard")`). There are several graphical user interfaces (GUIs) for **R**, which facilitate an easy import of raw data [@Valero_2012]. For example **RKWard** [@roediger_rkward_2012] has import functionality for *csv*, *txt*, *spss* and *stata* files.
+All *csv* raw data were transferred to the **R** environment and stored as *rda* files in the **C54** dataset after completion of the experiment as described elsewhere [@RDCT2010c]. The **R** environment provides numerous packages for the import of standard file formats, including formats from spread sheet applications (e.g., *XLS*, *XLSX*, *ODS*) [@Schutten_2014_ods, @Warnes_2015_gdata, @dragulescu_xlsx_2014], an ODBC connection [@ripley_rodbc_2015] or from the clipboard (`read.table("clipboard")`). There are several graphical user interfaces (GUIs) for **R**, which facilitate an easy import of raw data [@Valero_2012]. For example **RKWard** [@roediger_rkward_2012] has import functionality for *csv*, *txt*, *spss* and *stata* files.
 
 Therefore, we will use the **C54** dataset directly from the [chipPCR](https://CRAN.R-project.org/package=chipPCR) package [@roediger2015chippcr]. The amplification curves have different number of cycles and one of them contains a missing value due to a sensor dropout. Thus, this data should be preprocessed before Cq calculation.
 
@@ -38,7 +38,7 @@ library(ggplot2)
 data(C54)
 ```
 
-We can see that our data is data.frame with cycle numbers in the first column and fluorescence points in other columns. Such format is ready to use with **RDML** package and does not need any conversion.
+We can see that our data are arranged in data.frame with cycle numbers in the first column and fluorescence values in the other columns. Such data structure is ready to use with the **RDML** package and does not need any conversion.
 
 ```{r}
 str(C54)
@@ -56,9 +56,9 @@ ggplot(dat, aes(x = Cycle, y = refMFi, colour = Experiment)) + geom_point()
 
 ## Creating custom method for **RDML** class
 
-Preprocessing and Cq calculation steps will be held inside **RDML** object. To do this we shall add custom method to **RDML** class and use this advanced class as **RDML** object initializator (data import).
+The preprocessing and Cq calculation steps are held within a **RDML** object. To do this we shall add custom method to the **RDML** class and use this advanced class as **RDML** object initializator (data import).
 
-As described previously [@roediger2015r], we first preprocess the raw data with the **CPP** function from the [chipPCR](https://CRAN.R-project.org/package=chipPCR) package. After that preprocessed data will be stored in new runs inside same experiment. For Cq calculation we used the **diffQ2** function from the [MBmca](https://CRAN.R-project.org/package=MBmca) [@roediger_RJ_2013] package. 
+As described previously [@roediger2015r], we first preprocess the raw data with the **CPP** function from the [chipPCR](https://CRAN.R-project.org/package=chipPCR) package. Next, these preprocessed data are stored in new runs inside the same experiment. For Cq calculation we used the **diffQ2** function from the [MBmca](https://CRAN.R-project.org/package=MBmca) [@roediger_RJ_2013] package. Note, there are other functions available within **R** to determine the Cq values. The [qpcR](https://CRAN.R-project.org/package=qpcR) package is one of the most popular packages for such tasks.
 
 Additional our method will have two arguments:
 
@@ -100,7 +100,7 @@ RDML$set("public", "ProcessVideoScan",
              # R&ouml;diger et al. (2015) Bioinformatics for preprocessed data.
              # The diffQ2 function from the MBmca package 
              # (R&ouml;diger et al. (2013), The R Journal) was used to calculate the
-             # Cq values of each amplificaion curve.
+             # Cq values of each amplification curve.
              cq <- diffQ2(dat_CPP, inder = TRUE)[["xTm1.2.D2"]][1]
              self$experiment[[tab[i - 1, "exp.id"]]]$
                run[[tab[i - 1, "run.id"]]]$
@@ -113,7 +113,7 @@ RDML$set("public", "ProcessVideoScan",
 
 ## **RDML** object creation
 
-Now we can create empty **RDML** with our advanced class and set fluorescence data into it. But for setting data we have to create description (metadata) of curves which will contain:
+Now we can create an empty **RDML** object with our advanced class and set the fluorescence data into it. For setting the data we have to create a description (metadata) of the amplification curves which contain:
 
 - `fdata.name` -- curve name. Have to be as columns names in data.frame with fluorescence data.
 - `exp.id` -- experiment name.
@@ -142,17 +142,17 @@ description <- data.frame(
 # Create an empty RDML object
 video.scan <- RDML$new()
 
-# Add fluorescence data and metadata to the RDML object from a given source
-# Fare the sake of easyness we use the C54 dataset from the chipPCR package.
+# Add fluorescence data and metadata to the RDML object from a given source.
+# For the sake of simplicity we use the C54 dataset from the chipPCR package.
 video.scan$SetFData(C54, description)
 ```
 
 ## Setting additional information
 
-As optional step we can add some information about our experiment. Such as experimenter contacts, references to documentation, description of samples and targets, thermal cycling conditions, etc.
+As optional step, we can add some information about our experiment. Such as experimenter contacts, references to documentation, description of samples and targets, thermal cycling conditions, etc.
 
 ```{r}
-# Add experimentator information
+# Add experimentalist information
 video.scan$experimenter <- 
   list(
     experimenterType$new(
@@ -282,10 +282,10 @@ video.scan$ProcessVideoScan(last.cycle = c(35, 45, 55),
                                            NULL))
 ```
 
-Then visualize object with `$AsDendrogram` method (runs with IDs that include `_CPP` in names contain preprocessed curves):
+Then visualize the object with `$AsDendrogram` method (runs with IDs that include `_CPP` in names contain preprocessed curves):
 
 ```{r, results = "hide", fig.width = 6, fig.height = 4}
-# Visualise RDML object
+# Visualize RDML object
 video.scan$AsDendrogram()
 ```
 
@@ -322,12 +322,12 @@ To save our **RDML** object as file we can use `$AsXML()` method with file name 
 
 *Note that currently due to limits of `XML` package it is rather slow operation!!!*
 
-XML files can be compressed to save sapce. The **RMDL** package uses the `zip()` function from the **utils** package with default values to compress the RDML file. Therefore, the compression mode depends on the operating system. The **RDML** function `AsXML()` without an argument returns one string, which contians the XML data. This can be used to compress it with any other compression algorithm.
+A XML files can be compressed to save space. The **RMDL** package uses the `zip()` function from the **utils** package with default values to compress the RDML file. Therefore, the compression mode depends on the operating system. The **RDML** function `AsXML()` without an argument returns one string, which contains the XML data. This can be used to compress it with any other compression algorithm.
 
 ## Benchmark of the RDML generation
 
-XML becomes less efficient to work with at larger file sizes and complexer structured information (e.g., matrices). Therefore, a limitation of RMDL is the process of file generation. This characteristic is inherited by the **RDML** package. Speed is an issue in high-throughput applications. To give the user a foundation for a decision if the implementation of the RMDL format is advisable we performed a benchmark. We used the **microbenchmark** package [@Mersmann_2014_microbenchmark, @Radford_2014_microbenchmark] to assess the time required for generation of RDML files. The simulation included datasets with ranging from 1 to 1000 entries per file.
+The XML format becomes less efficient to work with at larger file sizes and complex structured information (e.g., matrices). Therefore, a limitation of RMDL is the process of the file generation. This characteristic is inherited by the **RDML** package. Speed is an issue in high-throughput applications. To give the user a foundation for a decision support if the implementation of the RMDL format is advisable, we performed a benchmark. We used the **microbenchmark** package [@Mersmann_2014_microbenchmark, @Radford_2014_microbenchmark] to assess the time required for generation of RDML files. The simulation included datasets with ranging from 1 to 1000 entries per file.
 
 ## Conclusion
 
-In this example we used raw data from the _VideoScan_ platform to demonstrate the creation of an *RDML* file via the **RDML** package. This procedure can be easily adapted to other experiments and gives the researcher a tool to create a data file for convenient data exchange. In contrast to simple *csv* files contains this file metadata in a defined structure. This in turn makes the data available to other scientists for reproducible research.
+In this example we used raw data from the _VideoScan_ platform to demonstrate the creation of an *RDML* file via the **RDML** package. This procedure can be easily adapted to other experiments and gives the researcher a tool to create a standardized data file for convenient data exchange. In contrast to simple *csv* files contains this file metadata in a defined structure. This in turn makes the data available to other scientists for reproducible research.
