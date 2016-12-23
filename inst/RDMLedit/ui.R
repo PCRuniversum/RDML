@@ -6,6 +6,8 @@ library(ggvis)
 shinyUI(
   tags$div(
     navbarPage(
+      # here add code for google analytics
+      #header = includeScript("ga.js"),
       title = "RDMLedit",
       theme = shinytheme("cerulean"),
       tabPanel("Files",
