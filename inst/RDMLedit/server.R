@@ -2113,7 +2113,19 @@ shinyServer(function(input, output, session) {
     if (is.null(fdata()) || input$mainNavbar == "mdp")
       return(NULL)
     # updLog("Plot qPCR\n")
-    ggvis(fdata(), ~cyc, ~fluor) %>>%
+    fdt <- fdata()
+    smooth <- TRUE
+    smooth.method <- input$smoothqPCRmethod
+    if (input$smoothqPCRmethod == "none") {
+      smooth <- FALSE
+      smooth.method <- "savgol"
+    }
+    if (input$preprocessqPCR) {
+      fdt[, fluor := CPP(cyc, fluor, smoother = smooth,
+                         method = smooth.method,
+                         method.norm = input$normqPCRmethod)[[1]], by = fdata.name]
+    }
+    ggvis(fdt, ~cyc, ~fluor) %>>%
       group_by(fdata.name) %>>%
       layer_paths(prop("stroke", {
         if(input$colorqPCRby == "none")
