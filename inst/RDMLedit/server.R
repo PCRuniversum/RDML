@@ -2,7 +2,7 @@ library(shiny)
 library(RDML)
 library(dplyr)
 library(tools)
-
+library(pipeR)
 
 
 testEmptyInput <- function(val) {
@@ -2113,10 +2113,32 @@ shinyServer(function(input, output, session) {
     if (is.null(fdata()) || input$mainNavbar == "mdp")
       return(NULL)
     # updLog("Plot qPCR\n")
-    fdt <- fdata()
-    ggvis(fdata(), ~cyc, ~fluor) %>%
-      group_by(fdata.name) %>%
-      layer_paths() %>% 
+    ggvis(fdata(), ~cyc, ~fluor) %>>%
+      group_by(fdata.name) %>>%
+      layer_paths(prop("stroke", {
+        if(input$colorqPCRby == "none")
+          "black"
+        else
+          as.name(input$colorqPCRby)
+      })) %>>% 
+      (vis ~ if(input$shapeqPCRby == "none") {
+        vis
+      } else {
+        layer_points(vis, prop("shape", as.name(input$shapeqPCRby)),
+                     prop("size", 20),
+                     prop("stroke", {
+                       if(input$colorqPCRby == "none")
+                         "black"
+                       else
+                         as.name(input$colorqPCRby)
+                     }),
+                     prop("fill", {
+                       if(input$colorqPCRby == "none")
+                         "black"
+                       else
+                         as.name(input$colorqPCRby)
+                     }))
+      }) %>>% 
       bind_shiny("qPCRPlot")
   })
   
@@ -2139,10 +2161,76 @@ shinyServer(function(input, output, session) {
     if (is.null(fdata()) || input$mainNavbar == "adp")
       return(NULL)
     # updLog("Plot Melting\n")
-    ggvis(fdata(), ~tmp, ~fluor) %>%
-      group_by(fdata.name) %>%
-      layer_paths() %>% 
+    ggvis(fdata(), ~tmp, ~fluor) %>>%
+      group_by(fdata.name) %>>%
+      layer_paths(prop("stroke", {
+        if(input$colorMeltingBy == "none")
+          "black"
+        else
+          as.name(input$colorMeltingBy)
+      })) %>>%
+      (vis ~ if(input$shapeMeltingBy == "none") {
+        vis
+      } else {
+        layer_points(vis, prop("shape", as.name(input$shapeMeltingBy)),
+                     prop("size", 20),
+                     prop("stroke", {
+                       if(input$colorMeltingBy == "none")
+                         "black"
+                       else
+                         as.name(input$colorMeltingBy)
+                     }),
+                     prop("fill", {
+                       if(input$colorMeltingBy == "none")
+                         "black"
+                       else
+                         as.name(input$colorMeltingBy)
+                     }))
+      }) %>>%
       bind_shiny("meltingPlot")
+  })
+  
+  observe({
+    if (is.null(fdata()) || input$mainNavbar == "adp")
+      return(NULL)
+    # updLog("Plot Melting\n")
+    fdata.deriv <- fdata()
+    # just to copy in memory to new table
+    fdata.deriv[1, 1] <- fdata.deriv[1, 1]
+    
+    fdata.deriv[
+      , fluor := {
+        diff <- diffQ(data.frame(tmp, fluor), verbose = TRUE)$xy
+        print(diff)
+        c(head(diff, 1)[1, 2], diff[, 2], tail(diff, 1)[1, 2])
+      }, by = fdata.name]
+    ggvis(fdata.deriv, ~tmp, ~fluor) %>>%
+      group_by(fdata.name) %>>%
+      layer_paths(prop("stroke", {
+        if (input$colorMeltingBy == "none")
+          "black"
+        else
+          as.name(input$colorMeltingBy)
+      })) %>>%
+      (vis ~ if(input$shapeMeltingBy == "none") {
+        vis
+      } else {
+        layer_points(vis, prop("shape", as.name(input$shapeMeltingBy)),
+                     prop("size", 20),
+                     prop("stroke", {
+                       if(input$colorMeltingBy == "none")
+                         "black"
+                       else
+                         as.name(input$colorMeltingBy)
+                     }),
+                     prop("fill", {
+                       if(input$colorMeltingBy == "none")
+                         "black"
+                       else
+                         as.name(input$colorMeltingBy)
+                     }))
+      }) %>>%
+      bind_shiny("meltingPlotDeriv")
   })
   
   output$meltingDt <- renderDataTable({
