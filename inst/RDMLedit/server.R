@@ -2089,7 +2089,7 @@ shinyServer(function(input, output, session) {
     if (nrow(tbl) == 0) {
       return(NULL)
     }
-    tbl
+    data.table(tbl)
   })
   
   fdata <- reactive({
@@ -2097,35 +2097,45 @@ shinyServer(function(input, output, session) {
       return(NULL)
     # updLog("Create fdata")
     tbl <- rdmlTable()
-    if (!is.null(input$selectedRows)) {
-      tbl <- 
-        filter(tbl,
-               fdata.name %in% input$selectedRows[
-                 seq(1, length(input$selectedRows), by = 9)])
-    }
-    values$rdml$GetFData(tbl, 
+    fdata <- values$rdml$GetFData(tbl, 
                          dp.type = input$mainNavbar,
                          long.table = TRUE)
+    if (input$mainNavbar == "adp") {
+      fdata <- fdata[cyc > input$removeFirstRows]
+      smooth <- TRUE
+      smooth.method <- input$smoothqPCRmethod
+      if (input$smoothqPCRmethod == "none") {
+        smooth <- FALSE
+        smooth.method <- "savgol"
+      }
+      if (input$preprocessqPCR) {
+        fdata[, fluor := CPP(cyc, fluor, smoother = smooth,
+                           method = smooth.method,
+                           method.norm = input$normqPCRmethod)[[1]], by = fdata.name]
+      }
+      fdata
+    } else {
+      fdata
+    }
+  })
+  
+  fdata.filtered <- reactive({
+    req(fdata)
+    if (!is.null(input$selectedRows)) {
+        fdata()[
+               fdata.name %in% input$selectedRows[
+                 seq(1, length(input$selectedRows), by = 9)]]
+    } else {
+      fdata()
+    }
   })
   
   # qPCR
   observe({
-    if (is.null(fdata()) || input$mainNavbar == "mdp")
+    if (is.null(fdata.filtered()) || input$mainNavbar == "mdp")
       return(NULL)
     # updLog("Plot qPCR\n")
-    fdt <- fdata()
-    smooth <- TRUE
-    smooth.method <- input$smoothqPCRmethod
-    if (input$smoothqPCRmethod == "none") {
-      smooth <- FALSE
-      smooth.method <- "savgol"
-    }
-    if (input$preprocessqPCR) {
-      fdt[, fluor := CPP(cyc, fluor, smoother = smooth,
-                         method = smooth.method,
-                         method.norm = input$normqPCRmethod)[[1]], by = fdata.name]
-    }
-    ggvis(fdt, ~cyc, ~fluor) %>>%
+    ggvis(fdata.filtered(), ~cyc, ~fluor) %>>%
       group_by(fdata.name) %>>%
       layer_paths(prop("stroke", {
         if(input$colorqPCRby == "none")
@@ -2157,7 +2167,16 @@ shinyServer(function(input, output, session) {
   output$qPCRDt <- renderDataTable({
     if (is.null(rdmlTable())) 
       return(NULL)
-    rdmlTable()
+    input$recalculateCq
+    # isolate({
+      tbl <- rdmlTable()#[, Cq := as.double(NA)]
+      names(tbl)[1] <- "data.name"
+      tbl[, Cq := {
+        fdt <- fdata()[fdata.name == data.name]
+        as.numeric(th.cyc(fdt$cyc, fdt$fluor, r = input$thLevel,
+                          auto = input$autoThLevel)[1, 1])
+      }, by = data.name]
+    # })
   },
   callback = "function(table) {
     table.on('click.dt', 'tr', function() {
@@ -2170,10 +2189,10 @@ shinyServer(function(input, output, session) {
   
   # melting
   observe({
-    if (is.null(fdata()) || input$mainNavbar == "adp")
+    if (is.null(fdata.filtered()) || input$mainNavbar == "adp")
       return(NULL)
     # updLog("Plot Melting\n")
-    ggvis(fdata(), ~tmp, ~fluor) %>>%
+    ggvis(fdata.filtered(), ~tmp, ~fluor) %>>%
       group_by(fdata.name) %>>%
       layer_paths(prop("stroke", {
         if(input$colorMeltingBy == "none")
@@ -2203,10 +2222,10 @@ shinyServer(function(input, output, session) {
   })
   
   observe({
-    if (is.null(fdata()) || input$mainNavbar == "adp")
+    if (is.null(fdata.filtered()) || input$mainNavbar == "adp")
       return(NULL)
     # updLog("Plot Melting\n")
-    fdata.deriv <- fdata()
+    fdata.deriv <- fdata.filtered()
     # just to copy in memory to new table
     fdata.deriv[1, 1] <- fdata.deriv[1, 1]
     
