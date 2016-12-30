@@ -538,9 +538,9 @@ shinyUI(
                                     c("None" = "none",
                                       "LOWESS" = "lowess",
                                       "Moving average" = "mova",
-                                      "Savitzky-Golay" = "savgol",
-                                      "Cubic spline smooth" = "smooth",
-                                      "Standard cubic spline smoot" = "spline",
+                                      "Savitzky-Golay (recommended)" = "savgol",
+                                      "Cubic spline smooth (recommended)" = "smooth",
+                                      "Standard cubic spline smooth" = "spline",
                                       "Friedman's SuperSmoother" = "supsmu",
                                       "Whittaker 1" = "whit1",
                                       "Whittaker 2" = "whit2"
@@ -551,8 +551,8 @@ shinyUI(
                                     "Normalization method",
                                     c("None" = "none",
                                       "Min-max" = "minm",
-                                      "MFI/max(MFI)" = "max",
-                                      "qnL parameter" = "luqn",
+                                      "Maximum normalization" = "max",
+                                      "Quantile normalization" = "luqn",
                                       "z-score" = "zscore")))),
                fluidRow(
                  column(2,
