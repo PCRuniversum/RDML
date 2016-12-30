@@ -3,7 +3,9 @@ library(RDML)
 library(dplyr)
 library(tools)
 library(pipeR)
-
+library(chipPCR)
+library(dpcR)
+library(data.table)
 
 testEmptyInput <- function(val) {
   if(is.null(val) || is.na(val) || val == "")
@@ -2167,16 +2169,21 @@ shinyServer(function(input, output, session) {
   output$qPCRDt <- renderDataTable({
     if (is.null(rdmlTable())) 
       return(NULL)
-    input$recalculateCq
+    # input$recalculateCq
     # isolate({
       tbl <- rdmlTable()#[, Cq := as.double(NA)]
       names(tbl)[1] <- "data.name"
       tbl[, Cq := {
         fdt <- fdata()[fdata.name == data.name]
-        as.numeric(th.cyc(fdt$cyc, fdt$fluor, r = input$thLevel,
-                          auto = input$autoThLevel)[1, 1])
+        switch(input$cqMethod,
+               none = as.numeric(NA),
+               th = as.numeric(th.cyc(fdt$cyc, fdt$fluor, r = input$thLevel,
+                                      auto = input$autoThLevel)[1, 1]),
+               sdm = as.numeric(limit_cq(data.frame(fdt$cyc, fdt$fluor),
+                                         cyc = 1, fluo = 2)[1, 1])
+        )
       }, by = data.name]
-    # })
+      # })
   },
   callback = "function(table) {
     table.on('click.dt', 'tr', function() {
