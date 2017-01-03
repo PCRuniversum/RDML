@@ -14,7 +14,7 @@ Publication of Quantitative Real-Time PCR Experiments (MIQE) guidelines ([Bustin
 # Installation
 ------------
 
-The stable version of [RDML](http://www.rdml.org/) is hosted on [CRAN](https://cran.r-project.org/web/packages/RDML/index.html) and can be installed as any R package.
+The stable version of the `RDML` package for R is hosted on [CRAN](https://cran.r-project.org/web/packages/RDML/index.html) and can be installed as any R package.
 
 You can install the latest development version of the code using the `devtools` R package.
 
@@ -28,7 +28,7 @@ install_github("kablag/RDML")
 
 # Examples
 
-RDML imports various data formats (CSV, XMLX) besides the RDML format. Provided that the raw data 
+`RDML` imports various data formats (CSV, XMLX) besides the RDML format. Provided that the raw data 
 have a defined structure (as described in the vignette) the import should be 
 done by a few clicks. The example below shows the import of amplification curve
 data, which were stored in a CSV file. The function `rdmlEdit()` was used in the 
