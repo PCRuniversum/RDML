@@ -12,8 +12,10 @@ Language) is the recommended file format element in the Minimum Information for
 Publication of Quantitative Real-Time PCR Experiments (MIQE) guidelines (Bustin 
 et al. 2009).
 
-Installation
+# Installation
 ------------
+
+The stable version of RDML is hosted on CRAN and can be installed as any R package.
 
 You can install the latest development version of the code using the `devtools` R package.
 
@@ -24,3 +26,19 @@ install.packages("devtools")
 library(devtools)
 install_github("kablag/RDML")
 ```
+
+# Examples
+
+RDML imports various data formats (CSV, XMLX) besides the RDML format. Provided that the raw data 
+have a defined structure (as described in the vignette) the import should be 
+done by a few clicks. The example below shows the import of amplification curve
+data, which were stored in a CSV file. The function rdmlEdit was used in the 
+[RKWard IDE/GUI](https://rkward.kde.org/) for further processing.
+
+[Data Import](https://www.b-tu.de/owncloud/index.php/s/le5Q1sBcWuynUzM#//File_import.png)
+
+Once imported enables rdmlEDIT and other functions from the RDML package complex 
+data visualization and processing in the R statistical computing environment.
+
+[Data Import](https://www.b-tu.de/owncloud/index.php/s/le5Q1sBcWuynUzM#//data_view.png)
+
