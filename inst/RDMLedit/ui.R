@@ -582,7 +582,7 @@ shinyUI(
                ggvisOutput("qPCRPlot"),
                dataTableOutput("qPCRDt"),
                value = "adp"),
-      tabPanel("Melting",
+      tabPanel("Melting Curves",
                fluidRow(
                  column(3,
                         selectInput("colorMeltingBy",
