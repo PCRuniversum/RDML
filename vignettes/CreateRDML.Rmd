@@ -20,7 +20,7 @@ This vignette describes important step how to create **RDML** object from user p
 
 For this purpose we used data from the _VideoScan_ platform. The _VideoScan_ platform is a highly versatile fluorescence microscope based imaging platform for the real-time analysis of biomolecular interactions. _VideoScan_ has been extended by a heating/cooling-unit, which can be used for DNA melting curve analysis [@roediger_RJ_2013], real-time quantitative PCR [@roediger_highly_2013] and quantitative isothermal amplification [@spiess_impact_2014]. In this example we focus on qPCR data obtained from the amplification of the human gene *mlc-2v* [@sheikh_2015]. The experimental details (e.g., primer sequences, amplification conditions) are described in [@roediger_highly_2013; @george_development_2016].
 
-In detail, this dataset contains three amplification curves collected by three runs monitored with TaqMan qPCR chemistry. Similar to other experimental platforms has the _VideoScan_ systems an output as *csv* file (comma separated value). In general, *csv* is a format that is sufficient for an in house usage. However, the exchange with other scientists is demanding, since further information should be part of the data. This are for example information about qPCR conditions, primers, experimentalist and so on as described in the MIQE and RDML standard documentations.	
+In detail, this dataset contains three amplification curves collected by three runs monitored with TaqMan qPCR chemistry. Similar to other experimental platforms has the _VideoScan_ systems an output as *csv* file (comma separated value). In general, *csv* is a format that is sufficient for an in house usage. However, the exchange with other scientists is demanding, since further information should be part of the data. These are for example information about qPCR conditions, primers, experimentalist and so on as described in the MIQE and RDML standard documentations.	
 
 All *csv* raw data were transferred to the **R** environment and stored as *rda* files in the **C54** dataset after completion of the experiment as described elsewhere [@RDCT2010c]. The **R** environment provides numerous packages for the import of standard file formats, including formats from spread sheet applications (e.g., *XLS*, *XLSX*, *ODS*) [@Schutten_2014_ods, @Warnes_2015_gdata, @dragulescu_xlsx_2014], an ODBC connection [@ripley_rodbc_2015] or from the clipboard (`read.table("clipboard")`). There are several graphical user interfaces (GUIs) for **R**, which facilitate an easy import of raw data [@Valero_2012]. For example **RKWard** [@roediger_rkward_2012] has import functionality for *csv*, *txt*, *spss* and *stata* files.
 
@@ -58,7 +58,7 @@ ggplot(dat, aes(x = Cycle, y = refMFi, colour = Experiment)) + geom_point()
 
 The preprocessing and Cq calculation steps are held within a **RDML** object. To do this we shall add custom method to the **RDML** class and use this advanced class as **RDML** object initializator (data import).
 
-As described previously [@roediger2015r], we first preprocess the raw data with the **CPP** function from the [chipPCR](https://CRAN.R-project.org/package=chipPCR) package. Next, these preprocessed data are stored in new runs inside the same experiment. For Cq calculation we used the **diffQ2** function from the [MBmca](https://CRAN.R-project.org/package=MBmca) [@roediger_RJ_2013] package. Note, there are other functions available within **R** to determine the Cq values. The [qpcR](https://CRAN.R-project.org/package=qpcR) package is one of the most popular packages for such tasks.
+As described previously [@roediger2015r], we first preprocess the raw data with the **CPP** function from the [chipPCR](https://CRAN.R-project.org/package=chipPCR) package. Next, these preprocessed data are stored in new runs within the same experiment. For Cq calculation we used the **diffQ2** function from the [MBmca](https://CRAN.R-project.org/package=MBmca) [@roediger_RJ_2013] package. Note, there are other functions available within **R** to determine the Cq values. The [qpcR](https://CRAN.R-project.org/package=qpcR) package is one of the most popular packages for such tasks.
 
 Additional our method will have two arguments:
 
@@ -113,12 +113,12 @@ RDML$set("public", "ProcessVideoScan",
 
 ## **RDML** object creation
 
-Now we can create an empty **RDML** object with our advanced class and set the fluorescence data into it. For setting the data we have to create a description (metadata) of the amplification curves which contain:
+Now we can create an empty **RDML** object with our advanced class and set the fluorescence data into it. For setting the data we have to create a description (metadata) of the amplification curves, which contain:
 
 - `fdata.name` -- curve name. Have to be as columns names in data.frame with fluorescence data.
 - `exp.id` -- experiment name.
 - `run.id` -- run name. In our case we have three runs.
-- `react.id` -- react ID. E.g., number of tube inside reaction plate.
+- `react.id` -- react ID. E.g., number of tube within a reaction plate.
 - `sample` -- sample name.
 - `type` -- sample type.
 - `target` -- target name. E.g., gene of interest name.
