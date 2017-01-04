@@ -259,7 +259,7 @@ video.scan$experiment$exp1$description <-
         "the 1 HCU (see Roediger et al. 2013 for details). A 20 micro L PCR reaction",
         "was composed of 250 nM primer (forward and reverse), 1x Maxima Probe qPCR",
         "Master Mix (Fermentas), 1 micro L template (MLC-2v amplification product in",
-        "different dilutions), 50 nM hydrolysis probe probe for MLC-2v and A.",
+        "different dilutions), 50 nM hydrolysis probe for MLC-2v and A.",
         "bidest. During the amplification, fluorescence was measured at 59.5 degree",
         "Celsius. The Cy5 channel was used to monitor the MLC-2v specific hydrolysis",
         "probe. Input stock cDNA was used undiluted (D1). D2 was 1/1000 and D3",
@@ -282,18 +282,18 @@ video.scan$ProcessVideoScan(last.cycle = c(35, 45, 55),
                                            NULL))
 ```
 
-Then visualize the object with `$AsDendrogram` method (runs with IDs that include `_CPP` in names contain preprocessed curves):
+Then visualize the object with the `$AsDendrogram` method (runs with IDs that include `_CPP` in names, contain the preprocessed curves):
 
 ```{r, results = "hide", fig.width = 6, fig.height = 4}
 # Visualize RDML object
 video.scan$AsDendrogram()
 ```
 
-And plot preprocessed curves indicating Cq values:
+And plot preprocessed curves indicating the Cq values:
 
 ```{r, results = "hide", fig.width = 6, fig.height = 4}
 ## Visualise preprocessed data with Cq values as vertical dashed lines
-# Add custom column that contains calculated Cq
+# Add custom column that contains the calculated Cq
 tab <- video.scan$AsTable(cq = {
                  cq <- data$cq
                  if (is.null(cq) || is.na(cq))
@@ -330,4 +330,4 @@ The XML format becomes less efficient to work with at larger file sizes and comp
 
 ## Conclusion
 
-In this example we used raw data from the _VideoScan_ platform to demonstrate the creation of an *RDML* file via the **RDML** package. This procedure can be easily adapted to other experiments and gives the researcher a tool to create a standardized data file for convenient data exchange. In contrast to simple *csv* files contains this file metadata in a defined structure. This in turn makes the data available to other scientists for reproducible research.
+In this example we used raw data from the _VideoScan_ platform to demonstrate the creation of an *RDML* file via the **RDML** package. This procedure can be easily adapted to other experiments and devices and gives the researcher a tool to create a file in a standardized format for convenient data exchange. In contrast to simple *csv* files contains this file additional metadata in a defined structure. This in turn makes the data available to other scientists for reproducible research.
