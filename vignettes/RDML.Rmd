@@ -5,6 +5,9 @@ date: "`r Sys.Date()`"
 output: 
   rmarkdown::html_vignette:
     toc: true
+    pandoc_args: [
+      "--number-sections"
+    ]
 bibliography: "RDML.bib"
 vignette: >
   %\VignetteIndexEntry{Using RDML package}
