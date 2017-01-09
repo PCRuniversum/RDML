@@ -574,12 +574,15 @@ shinyUI(
                    column(2,
                           numericInput("thLevel",
                                        "Threshold",
-                                       0, 0, step = 0.01)))#,
+                                       0, 0, step = 0.01))),
+                 column(2,
+                        checkboxInput("logScale",
+                                      "Log Scale"))
                  # column(2,
                  #        actionButton("recalculateCq",
                  #                     "Recalculate Cq"))
                ),
-               ggvisOutput("qPCRPlot"),
+               plotOutput("qPCRPlot"),
                dataTableOutput("qPCRDt"),
                value = "adp"),
       tabPanel("Melting",

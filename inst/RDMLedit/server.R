@@ -6,6 +6,7 @@ library(pipeR)
 library(chipPCR)
 library(dpcR)
 library(data.table)
+library(ggplot2)
 
 testEmptyInput <- function(val) {
   if(is.null(val) || is.na(val) || val == "")
@@ -2113,7 +2114,8 @@ shinyServer(function(input, output, session) {
       if (input$preprocessqPCR) {
         fdata[, fluor := CPP(cyc, fluor, smoother = smooth,
                            method = smooth.method,
-                           method.norm = input$normqPCRmethod)[[1]], by = fdata.name]
+                           method.norm = input$normqPCRmethod)[[1]],
+              by = fdata.name]
       }
       fdata
     } else {
@@ -2133,37 +2135,68 @@ shinyServer(function(input, output, session) {
   })
   
   # qPCR
-  observe({
+  output$qPCRPlot <- renderPlot({
     if (is.null(fdata.filtered()) || input$mainNavbar == "mdp")
       return(NULL)
+    fpoints <- fdata.filtered()
+    # just to copy in memory to new table
+    fpoints[1, 1] <- fpoints[1, 1]
+    # plot ticks setup
+    if (input$logScale) {
+      fpoints[, fluor := {
+        new.fluor <- log2(fluor)
+        ifelse(is.nan(new.fluor) | new.fluor == -Inf,
+               NA,
+               new.fluor)}]
+    }
+    min.fluor <- min(fpoints$fluor, na.rm = TRUE)
+    max.fluor <- max(fpoints$fluor, na.rm = TRUE)
+    ticks.step <- (max.fluor - min.fluor) /
+      25
+    
+    minor.ticks <-
+      seq(min.fluor,
+          max.fluor,
+          ticks.step) %>>% 
+      signif(3)
+    ticks <-
+      seq(min.fluor,
+          max.fluor,
+          ticks.step * 5) %>>% 
+      signif(3)
+    if (findInterval(0, c(min.fluor, max.fluor) ) == 1){
+      ticks <- c(0, ticks)
+    }
+    max.cyc <- max(fpoints$cyc)
+    
     # updLog("Plot qPCR\n")
-    ggvis(fdata.filtered(), ~cyc, ~fluor) %>>%
-      group_by(fdata.name) %>>%
-      layer_paths(prop("stroke", {
-        if(input$colorqPCRby == "none")
-          "black"
-        else
-          as.name(input$colorqPCRby)
-      })) %>>% 
-      (vis ~ if(input$shapeqPCRby == "none") {
-        vis
-      } else {
-        layer_points(vis, prop("shape", as.name(input$shapeqPCRby)),
-                     prop("size", 20),
-                     prop("stroke", {
-                       if(input$colorqPCRby == "none")
-                         "black"
-                       else
-                         as.name(input$colorqPCRby)
-                     }),
-                     prop("fill", {
-                       if(input$colorqPCRby == "none")
-                         "black"
-                       else
-                         as.name(input$colorqPCRby)
-                     }))
-      }) %>>% 
-      bind_shiny("qPCRPlot")
+    ggplot(fpoints) +
+      geom_line(aes_string(x = "cyc", y = "fluor",
+                           group = "fdata.name",
+                           color = {
+                             if (input$colorqPCRby == "none")
+                               NULL
+                             else
+                               input$colorqPCRby
+                             },
+                           linetype = {
+                             if (input$shapeqPCRby == "none")
+                               NULL
+                             else
+                               input$shapeqPCRby
+                           }),
+                size = 0.5) +
+      labs(x = "Cycles", y = "RFU",
+           color = NULL, linetype = NULL, fill = NULL) +
+      theme_bw() +
+      scale_x_continuous(minor_breaks = seq(1, max.cyc, 1),
+                         limits = c(1, max.cyc)) +
+      scale_y_continuous(breaks = ticks,
+                         minor_breaks = minor.ticks) +
+      theme(legend.position = "right",
+            legend.box = "horizontal",
+            panel.grid.minor = element_line(size = 1)
+      )
   })
   
   output$qPCRDt <- renderDataTable({
@@ -2313,10 +2346,3 @@ shinyServer(function(input, output, session) {
   })
   
 })
-
-
-
-
-
-
-
