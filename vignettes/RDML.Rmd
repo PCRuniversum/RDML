@@ -28,6 +28,20 @@ The XML technology is commonly used in the **R** environment and there are sever
 
 We use the **R6** [@Chang_R6], **assertthat** [@Wickham_assertthat], **plyr** [@Wickham_plyr], **dplyr** [@Wickham_Francois_dplyr], **tidyr** [@Wickham_tidyr] and **rlist** [@Ren_rlist] packages.
 
+## Philosphy of the RDML package
+`RDML` imports various data formats (CSV, XMLX) besides the RDML format. Provided that the raw data 
+have a defined structure (as described in the vignette) the import should be 
+done by a few clicks. The example below shows the import of amplification curve
+data, which were stored in a CSV file. The function `rdmlEdit()` was used in the 
+[RKWard IDE/GUI](https://rkward.kde.org/) for further processing.
+
+<img src="File_import.png" alt="HTML5 Icon" style="width:663px;height:332px">
+
+Once imported enables `rdmlEDIT()` and other functions from the `RDML` package complex 
+data visualization and processing in the R statistical computing environment.
+
+<img src="data_view.png" alt="HTML5 Icon" style="width:663px;height:332px">
+
 # Vendors and software packages supporting RDML
 
 The RDML format is supported by Bio-Rad (CFX 96 and CFX 384), Life Technologies (StepOne, ViiA7, QuantStudio) and Roche (LightCycler~96) thermo-cycler systems. In addition, several software packages (e.g., **Primer3Plus**, **RDML-Ninja**, **qBase+**) exist, which support RDML [@untergasser_2007; @hellemans_2007; @ruijter_amplification_2009; @pabinger_2014; @rdml-ninja_2015].
