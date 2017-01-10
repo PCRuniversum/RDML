@@ -7,6 +7,9 @@ library(chipPCR)
 library(dpcR)
 library(data.table)
 library(ggplot2)
+library(plotly)
+
+source("rdml.extensions.R")
 
 testEmptyInput <- function(val) {
   if(is.null(val) || is.na(val) || val == "")
@@ -2081,9 +2084,23 @@ shinyServer(function(input, output, session) {
   
   # Curves and table --------------------------------------------------------
   
+  # clone
+  cloneDone <- reactive({
+    req(values$rdml)
+    values$rdml$CloneRawData()
+    runif(1)
+  })
+  
+  # calculations
+  calcsDone <- reactive({
+    req(cloneDone)
+    
+    runif(1)
+  })
+  
   rdmlTable <- reactive({
-    if (is.null(values$rdml) || !(input$mainNavbar %in% c("adp",
-                                                          "mdp")))
+    if (is.null(values$rdml) || !(input$mainNavbar %in% c("adp","mdp")))
+    # if (is.null(calcsDone()) || !(input$mainNavbar %in% c("adp","mdp")))
       return(NULL)
     # updLog("Create rdmlTable")
     tbl <- values$rdml$AsTable() %>% 
@@ -2135,9 +2152,120 @@ shinyServer(function(input, output, session) {
   })
   
   # qPCR
-  output$qPCRPlot <- renderPlot({
+  # output$qPCRPlot <- renderPlot({
+  #   if (is.null(fdata.filtered()) || input$mainNavbar == "mdp")
+  #     return(NULL)
+  #   rdm <<- values$rdml
+  #   fpoints <- fdata.filtered()
+  #   # just to copy in memory to new table
+  #   fpoints[1, 1] <- fpoints[1, 1]
+  #   # plot ticks setup
+  #   if (input$logScale) {
+  #     fpoints[, fluor := {
+  #       new.fluor <- log2(fluor)
+  #       ifelse(is.nan(new.fluor) | new.fluor == -Inf,
+  #              NA,
+  #              new.fluor)}]
+  #   }
+  #   min.fluor <- min(fpoints$fluor, na.rm = TRUE)
+  #   max.fluor <- max(fpoints$fluor, na.rm = TRUE)
+  #   ticks.step <- (max.fluor - min.fluor) /
+  #     25
+  #   
+  #   minor.ticks <-
+  #     seq(min.fluor,
+  #         max.fluor,
+  #         ticks.step) %>>% 
+  #     signif(3)
+  #   ticks <-
+  #     seq(min.fluor,
+  #         max.fluor,
+  #         ticks.step * 5) %>>% 
+  #     signif(3)
+  #   if (findInterval(0, c(min.fluor, max.fluor) ) == 1){
+  #     ticks <- c(0, ticks)
+  #   }
+  #   max.cyc <- max(fpoints$cyc)
+  #   
+  #   # updLog("Plot qPCR\n")
+  #   ggplot(fpoints) +
+  #     geom_line(aes_string(x = "cyc", y = "fluor",
+  #                          group = "fdata.name",
+  #                          color = {
+  #                            if (input$colorqPCRby == "none")
+  #                              NULL
+  #                            else
+  #                              input$colorqPCRby
+  #                            },
+  #                          linetype = {
+  #                            if (input$shapeqPCRby == "none")
+  #                              NULL
+  #                            else
+  #                              input$shapeqPCRby
+  #                          }),
+  #               size = 0.75) +
+  #     # switch(input$showCqSlct,
+  #     #        cq =  {
+  #     #          if (!all(is.na(fpoints$cq)))
+  #     #            geom_vline(data = unique(fpoints, by = cq)[!is.na(cq)],
+  #     #                       aes_string(xintercept = "cq",
+  #     #                                  color = {
+  #     #                                    if (input$colorqPCRby == "none")
+  #     #                                      NULL
+  #     #                                    else
+  #     #                                      input$colorqPCRby
+  #     #                                  },
+  #     #                                  linetype = {
+  #     #                                    if (input$shapeqPCRby == "none")
+  #     #                                      NULL
+  #     #                                    else
+  #     #                                      input$shapeqPCRby
+  #     #                                  }),
+  #     #                       size = 0.25)},
+  #     #        mean.cq = {
+  #     #          if (!all(is.na(fpoints$mean.cq)))
+  #     #            geom_vline(data = fpoints %>>%
+  #     #                         distinct(mean.cq, .keep_all = TRUE) %>>%
+  #     #                         filter(!is.na(mean.cq)),
+  #     #                       aes_string(xintercept = "mean.cq",
+  #     #                                  color = input$colorPCRplotBy,
+  #     #                                  linetype = "reaction.type"),
+  #     #                       size = 0.25)
+  #     #        }) +
+  #     # switch(input$showCqSlct,
+  #     #        mean.cq = {
+  #     #          if (!all(is.na(fpoints$mean.cq)))
+  #     #            geom_rect(data = fpoints %>>%
+  #     #                        group_by(mean.cq) %>>%
+  #     #                        summarise(position = generate.legend.value(position),
+  #     #                                  var.cq.min = first(mean.cq) - 0.5 * first(var.cq),
+  #     #                                  var.cq.max = first(mean.cq) + 0.5 * first(var.cq),
+  #     #                                  sample = first(sample),
+  #     #                                  sample.type = first(sample.type),
+  #     #                                  reaction = first(reaction),
+  #     #                                  kit = first(kit)),
+  #     #                      ymin = -Inf, ymax = Inf,
+  #     #                      alpha = 0.5,
+  #     #                      aes_string(xmin = "var.cq.min", xmax = "var.cq.max",
+  #     #                                 fill = input$colorPCRplotBy))
+  #     #        }) +
+  #     labs(x = "Cycles", y = "RFU",
+  #          color = NULL, linetype = NULL, fill = NULL) +
+  #     theme_bw() +
+  #     scale_x_continuous(minor_breaks = seq(1, max.cyc, 1),
+  #                        limits = c(1, max.cyc)) +
+  #     scale_y_continuous(breaks = ticks,
+  #                        minor_breaks = minor.ticks) +
+  #     theme(legend.position = "right",
+  #           legend.box = "horizontal",
+  #           panel.grid.minor = element_line(size = 1)
+  #     )
+  # })
+  
+  output$qPCRPlot <- renderPlotly({
     if (is.null(fdata.filtered()) || input$mainNavbar == "mdp")
       return(NULL)
+    rdm <<- values$rdml
     fpoints <- fdata.filtered()
     # just to copy in memory to new table
     fpoints[1, 1] <- fpoints[1, 1]
@@ -2168,35 +2296,26 @@ shinyServer(function(input, output, session) {
       ticks <- c(0, ticks)
     }
     max.cyc <- max(fpoints$cyc)
-    
-    # updLog("Plot qPCR\n")
-    ggplot(fpoints) +
-      geom_line(aes_string(x = "cyc", y = "fluor",
-                           group = "fdata.name",
-                           color = {
-                             if (input$colorqPCRby == "none")
-                               NULL
-                             else
-                               input$colorqPCRby
-                             },
-                           linetype = {
-                             if (input$shapeqPCRby == "none")
-                               NULL
-                             else
-                               input$shapeqPCRby
-                           }),
-                size = 0.5) +
-      labs(x = "Cycles", y = "RFU",
-           color = NULL, linetype = NULL, fill = NULL) +
-      theme_bw() +
-      scale_x_continuous(minor_breaks = seq(1, max.cyc, 1),
-                         limits = c(1, max.cyc)) +
-      scale_y_continuous(breaks = ticks,
-                         minor_breaks = minor.ticks) +
-      theme(legend.position = "right",
-            legend.box = "horizontal",
-            panel.grid.minor = element_line(size = 1)
-      )
+    # fpoints <- fpoints %>>% 
+    #   group_by(fdata.name)
+    plot_ly(fpoints %>>% 
+              group_by(fdata.name),
+            x = ~cyc,
+            y = ~fluor,
+            type = "scatter",
+            mode = "lines",
+            color = {
+              if (input$colorqPCRby == "none")
+                ""
+              else
+                fpoints[, get(input$colorqPCRby)]
+            },
+            linetype = {
+              if (input$shapeqPCRby == "none")
+                NULL
+              else
+                fpoints[, get(input$shapeqPCRby)]
+            })
   })
   
   output$qPCRDt <- renderDataTable({
