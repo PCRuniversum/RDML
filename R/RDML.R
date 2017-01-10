@@ -190,8 +190,17 @@ RDML <- R6Class("RDML",
                          sub('>', ' xmlns="http://www.rdml.org" version="1.2">', text))
                     if (missing(file.name))
                       return(tree)
-                    cat(tree,
-                        file = "rdml_data.xml")
+                    
+                    con <- file("rdml_data.xml", "w")
+                    tryCatch({
+                      cat(iconv(tree,
+                                to = "UTF-8"),
+                          file = con, sep = "\n")
+                    },
+                    finally = {
+                      close(con)
+                    })
+                    
                     zip(file.name,
                         "rdml_data.xml")
                     unlink("rdml_data.xml")

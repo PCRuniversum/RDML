@@ -2082,25 +2082,49 @@ shinyServer(function(input, output, session) {
     })
   })
   
-  # Curves and table --------------------------------------------------------
-  
-  # clone
-  cloneDone <- reactive({
-    req(values$rdml)
-    values$rdml$CloneRawData()
-    runif(1)
-  })
-  
-  # calculations
+  # Calculations ------------------------------------------------------------
   calcsDone <- reactive({
-    req(cloneDone)
+    if (is.null(values$rdml))
+      return(NULL)
+    cat("Calculations\n")
+    tbl <- values$rdml$AsTable()
+    
+    smooth <- TRUE
+    smooth.method <- input$smoothqPCRmethod
+    if (input$smoothqPCRmethod == "none") {
+      smooth <- FALSE
+      smooth.method <- "savgol"
+    }
+    if (input$preprocessqPCR) {
+      tbl[adp == TRUE,
+          {
+            values$rdml$experiment[[exp.id]]$
+              run[[run.id]]$
+              react[[as.character(react.id)]]$
+              data[[target]]$PreprocessAdp(smooth,
+                                           smooth.method,
+                                           input$normqPCRmethod)
+          }, by = fdata.name]
+    } else {
+      tbl[adp == TRUE,
+          {
+            values$rdml$experiment[[exp.id]]$
+              run[[run.id]]$
+              react[[as.character(react.id)]]$
+              data[[target]]$UndoPreprocessAdp()
+          }, by = fdata.name]
+    }
+    
+    
     
     runif(1)
   })
   
+  # Curves and table --------------------------------------------------------
+  
   rdmlTable <- reactive({
-    if (is.null(values$rdml) || !(input$mainNavbar %in% c("adp","mdp")))
-    # if (is.null(calcsDone()) || !(input$mainNavbar %in% c("adp","mdp")))
+    # if (is.null(values$rdml) || !(input$mainNavbar %in% c("adp","mdp")))
+    if (is.null(calcsDone()) || !(input$mainNavbar %in% c("adp","mdp")))
       return(NULL)
     # updLog("Create rdmlTable")
     tbl <- values$rdml$AsTable() %>% 
@@ -2117,31 +2141,32 @@ shinyServer(function(input, output, session) {
       return(NULL)
     # updLog("Create fdata")
     tbl <- rdmlTable()
-    fdata <- values$rdml$GetFData(tbl, 
+    # fdata <- 
+      values$rdml$GetFData(tbl, 
                          dp.type = input$mainNavbar,
                          long.table = TRUE)
-    if (input$mainNavbar == "adp") {
-      fdata <- fdata[cyc > input$removeFirstRows]
-      smooth <- TRUE
-      smooth.method <- input$smoothqPCRmethod
-      if (input$smoothqPCRmethod == "none") {
-        smooth <- FALSE
-        smooth.method <- "savgol"
-      }
-      if (input$preprocessqPCR) {
-        fdata[, fluor := CPP(cyc, fluor, smoother = smooth,
-                           method = smooth.method,
-                           method.norm = input$normqPCRmethod)[[1]],
-              by = fdata.name]
-      }
-      fdata
-    } else {
-      fdata
-    }
+    # if (input$mainNavbar == "adp") {
+    #   fdata <- fdata[cyc > input$removeFirstRows]
+    #   smooth <- TRUE
+    #   smooth.method <- input$smoothqPCRmethod
+    #   if (input$smoothqPCRmethod == "none") {
+    #     smooth <- FALSE
+    #     smooth.method <- "savgol"
+    #   }
+    #   if (input$preprocessqPCR) {
+    #     fdata[, fluor := CPP(cyc, fluor, smoother = smooth,
+    #                        method = smooth.method,
+    #                        method.norm = input$normqPCRmethod)[[1]],
+    #           by = fdata.name]
+    #   }
+    #   fdata
+    # } else {
+    #   fdata
+    # }
   })
   
   fdata.filtered <- reactive({
-    req(fdata)
+    req(fdata())
     if (!is.null(input$selectedRows)) {
         fdata()[
                fdata.name %in% input$selectedRows[
@@ -2265,7 +2290,6 @@ shinyServer(function(input, output, session) {
   output$qPCRPlot <- renderPlotly({
     if (is.null(fdata.filtered()) || input$mainNavbar == "mdp")
       return(NULL)
-    rdm <<- values$rdml
     fpoints <- fdata.filtered()
     # just to copy in memory to new table
     fpoints[1, 1] <- fpoints[1, 1]
@@ -2465,3 +2489,4 @@ shinyServer(function(input, output, session) {
   })
   
 })
+
