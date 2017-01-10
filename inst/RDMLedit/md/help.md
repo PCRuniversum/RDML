@@ -1,4 +1,4 @@
-RDMLedit allows viewing, editing, merging and creating files in RDML format. 
+rdmlEdit allows viewing, editing, merging and creating files in RDML format. 
 
 GUI consists of five tabs:
 
@@ -7,7 +7,7 @@ GUI consists of five tabs:
     * merge several files into one,
     * review structure of files,
     * save RDML file.
-* Metadata: modifications of RDML metadata (e.g., informations about experimenter, samples, targets).
+* Metadata: modifications of RDML metadata (e.g., information about experimenter, samples, targets).
 * qPCR: raw qPCR curve data.
 * Melting: raw melting curve data.
 * Help: this very page.
@@ -85,3 +85,6 @@ Access raw qPCR curves. To view one (or more) curve, click on curve at the table
 
 # Melting
 Access raw melting curves. To view one (or more) curve, click on curve at the table with curves description. To view all curves again -- deselect descriptions. *Curves are not preprocessed or editable!*
+
+# Further information and R packages
+The rdmlEdit function can be used to manage qPCR data. However, there are further R packages which can be used to [preprocess raw data](http://bioinformatics.oxfordjournals.org/content/31/17/2900.abstract?sid=4ffb7460-48ba-4d30-ac07-edf378d5fa2a), [analyze qPCR and melting curve data](http://bioinformatics.oxfordjournals.org/content/24/13/1549.abstract?sid=8fd4cf5d-1eea-4139-8ee7-038684a4f561), [impute missing values](http://bioinformatics.oxfordjournals.org/content/30/16/2310.full) or perform [gene expression analysis](http://bioinformatics.oxfordjournals.org/content/30/17/2494.abstract?sid=1515517d-e09e-4631-8816-f74afb6f0cdd). More information can be found in [dedicated studies](https://journal.r-project.org/archive/2015-1/rodiger-burdukiewicz-blagodatskikh-etal.pdf). Quality management of qPCR data is an important aspect of the whole analysis pipeline. For example the preprocessing by [smoothing](http://clinchem.aaccjnls.org/content/61/2/379) can alter the Cq value and estimates of the amplification efficiency. Moreover, selected qPCR devices introduce a systematic [periodicity](http://www.nature.com/articles/srep38951) into the Cq data which can be tested by an indepentent [Periodicity shiny GUI](http://www.smorfland.uni.wroc.pl/shiny/period_app/). 
