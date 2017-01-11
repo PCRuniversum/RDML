@@ -8,43 +8,51 @@ shinyUI(
     navbarPage(
       # here add code for google analytics
       #header = includeScript("ga.js"),
-      title = "RDMLedit",
+      title = "rdmlEdit",
       theme = shinytheme("cerulean"),
       tabPanel("Files",
-               fileInput("rdmlFiles",
-                         h4(HTML("Upload <b>.RDML</b>, <b>.csv</b>, <b>.lc96p</b>, <b>.xls</b> or <b>.xlsx</b> file(s):")),
-                         multiple = TRUE),
-               selectizeInput("rdmlFileSlct",
-                              "View File",
-                              choices = "",
-                              options= list(
-                                create =TRUE
-                              )),
-               selectInput("mergeRdmlsSlct",
-                           "Merge RDMLs",
-                           multiple = TRUE,
-                           choices = ""),
-               actionButton("mergeBtn",
-                            "Merge"),
-               textInput("dateMadeText", "Date Made",
-                         ""),
-               textInput("dateUpdatedText", "Date Updated",
-                         ""),
-               actionButton("removeRDMLBtn",
-                            "Remove RDML"),
-               actionButton("updateRDMLBtn",
-                            "Update"),
-               downloadLink("downloadRDML", "Download RDML"),
-               # actionButton("updateDendroPlot",
-               #              "Update Dendrogram"),
-               plotOutput("dendroRDMLplot")),
+               fluidRow(
+                 column(3,
+                        wellPanel(
+                          fileInput("rdmlFiles",
+                                    HTML("Upload <b>.RDML</b>, <b>.csv</b>, <b>.lc96p</b>, <b>.xls</b> or <b>.xlsx</b> file(s):"),
+                                    multiple = TRUE),
+                          selectizeInput("rdmlFileSlct",
+                                         "View File",
+                                         choices = "",
+                                         options= list(
+                                           create =TRUE
+                                         )),
+                          actionButton("makeSubversionRDMLBtn",
+                                       "Make Subversion"),
+                          actionButton("removeRDMLBtn",
+                                       "Remove RDML")),
+                        wellPanel(
+                          selectInput("mergeRdmlsSlct",
+                                      "Merge RDMLs",
+                                      multiple = TRUE,
+                                      choices = ""),
+                          actionButton("mergeBtn",
+                                       "Merge")
+                        ),
+                        wellPanel(downloadButton("downloadRDML",
+                                                 "Download RDML"))),
+                 column(9,
+                        fluidRow(
+                          column(3,
+                                 textInput("dateMadeText", "Date Made",
+                                           ""),
+                                 textInput("dateUpdatedText", "Date Updated",
+                                           ""))),
+                        plotOutput("dendroRDMLplot"))
+               )),
       navbarMenu("Metadata",
                  tabPanel("ID",
                           selectizeInput("idSlct",
                                          "Select ID",
                                          choices = "",
-                                         options= list(
-                                           create =TRUE
+                                         options = list(
+                                           create = TRUE
                                          )),
                           textInput("idPublisherText", "Publisher",
                                     ""),

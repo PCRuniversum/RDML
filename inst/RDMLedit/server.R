@@ -55,7 +55,8 @@ shinyServer(function(input, output, session) {
                            sep = ".")
           file.rename(input$rdmlFiles$datapath[i],
                       newpath)
-          values$RDMLs[[input$rdmlFiles$name[i]]] <-
+          values$RDMLs[[paste0(file_path_sans_ext(input$rdmlFiles$name[i]),
+                               format(Sys.time(), "@%H%M%S"))]] <-
             RDML$new(newpath)
           incProgress(1,
                       message = {
@@ -78,7 +79,7 @@ shinyServer(function(input, output, session) {
       updateSelectizeInput(session,
                            "rdmlFileSlct",
                            choices = names(values$RDMLs),
-                           selected = input$rdmlFileSlct)
+                           selected = tail(names(values$RDMLs), 1))
     })
   })
   
@@ -115,47 +116,6 @@ shinyServer(function(input, output, session) {
     })
   })
   
-  # create from tables
-  observe({
-    if (is.null(input$fromTables) || length(input$fromTables$name) != 2)
-      return(NULL)
-    isolate({
-      withProgress({
-        tables <- lapply(input$fromTables$datapath,
-                         function(x) read.csv(x,
-                                              stringsAsFactors = FALSE))
-        description.index <- 
-          sapply(tables,
-                 function(t) {
-                   if (length(intersect(
-                     c("fdata.name",
-                       "exp.id",
-                       "run.id",
-                       "react.id",
-                       "sample",
-                       "target",
-                       "target.dyeId"), colnames(t))) == 7)
-                     TRUE
-                   else
-                     FALSE })
-        description <- tables[[which(description.index == TRUE)]]
-        fdata <- tables[[which(description.index == FALSE)]]
-        newRDML <- RDML$new()
-        newRDML$SetFData(fdata,
-                         description)
-        values$RDMLs <- c(newRDML,
-                          values$RDMLs)
-        name <- input$fromTables$name[which(description.index == TRUE)]
-        names(values$RDMLs)[1] <- name
-        #         updateSelectInput("rdmlFileSlc",
-        #                           selected = name)
-      },
-      min = 0,
-      max = 1,
-      message = "Processing Tables..."
-      )
-    })
-  })
   
   # merge RDMLs
   observe({
@@ -202,14 +162,17 @@ shinyServer(function(input, output, session) {
     })
   })
   
-  # update RDML
+  # make subversion RDML
   observe({
-    input$updateRDMLBtn
+    input$makeSubversionRDMLBtn
     isolate({
       if (is.null(values$rdml))
         return(NULL)
-      values$RDMLs[[input$rdmlFileSlct]] <- values$rdml$clone(deep = TRUE)
-      rdmml <<- values$RDMLs[[input$rdmlFileSlct]]
+      values$rdml$dateUpdated <- format(Sys.time(), "%Y-%m-%d %H:%M:%S")
+      new.name <- str_replace(input$rdmlFileSlct,
+                              "@.*$",
+                              format(Sys.time(), "@%H%M%S"))
+      values$RDMLs[[new.name]] <- values$rdml$clone(deep = TRUE)
     })
   })
   
@@ -2465,7 +2428,7 @@ shinyServer(function(input, output, session) {
   
   output$downloadRDML <- downloadHandler(
     filename = function() {
-      input$rdmlFileSlct
+      paste0(input$rdmlFileSlct, ".rdml")
     },
     content = function(file) {
       output <- values$rdml$AsXML(file)
