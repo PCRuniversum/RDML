@@ -4,6 +4,7 @@ library(dplyr)
 library(tools)
 library(pipeR)
 library(chipPCR)
+library(MBmca)
 library(dpcR)
 library(data.table)
 library(ggplot2)
@@ -2131,7 +2132,6 @@ shinyServer(function(input, output, session) {
     if (nrow(tbl) == 0) {
       return(NULL)
     }
-    tblf <<- tbl
     tbl
   })
   
@@ -2140,10 +2140,17 @@ shinyServer(function(input, output, session) {
       return(NULL)
     # updLog("Create fdata")
     tbl <- rdmlTable()
-    values$rdml$GetFData(tbl, 
+    fdata <- values$rdml$GetFData(tbl, 
                          dp.type = input$mainNavbar,
                          long.table = TRUE)
-    
+    if (input$mainNavbar == "mdp"){
+      fdata[
+        , fluor.deriv := {
+          diff <- diffQ(data.frame(tmp, fluor), verbose = TRUE)$xy
+          c(head(diff, 1)[1, 2], diff[, 2], tail(diff, 1)[1, 2])
+        }, by = fdata.name]
+    }
+    fdata
   })
   
   fdata.filtered <- reactive({
@@ -2186,25 +2193,25 @@ shinyServer(function(input, output, session) {
                            new.fluor)}
                 )]
     }
-    min.fluor <- min(fpoints$fluor, na.rm = TRUE)
-    max.fluor <- max(fpoints$fluor, na.rm = TRUE)
-    ticks.step <- (max.fluor - min.fluor) /
-      25
-    
-    minor.ticks <-
-      seq(min.fluor,
-          max.fluor,
-          ticks.step) %>>% 
-      signif(3)
-    ticks <-
-      seq(min.fluor,
-          max.fluor,
-          ticks.step * 5) %>>% 
-      signif(3)
-    if (findInterval(0, c(min.fluor, max.fluor) ) == 1){
-      ticks <- c(0, ticks)
-    }
-    max.cyc <- max(fpoints$cyc)
+    # min.fluor <- min(fpoints$fluor, na.rm = TRUE)
+    # max.fluor <- max(fpoints$fluor, na.rm = TRUE)
+    # ticks.step <- (max.fluor - min.fluor) /
+    #   25
+    # 
+    # minor.ticks <-
+    #   seq(min.fluor,
+    #       max.fluor,
+    #       ticks.step) %>>% 
+    #   signif(3)
+    # ticks <-
+    #   seq(min.fluor,
+    #       max.fluor,
+    #       ticks.step * 5) %>>% 
+    #   signif(3)
+    # if (findInterval(0, c(min.fluor, max.fluor) ) == 1){
+    #   ticks <- c(0, ticks)
+    # }
+    # max.cyc <- max(fpoints$cyc)
     # fpoints <- fpoints %>>% 
     #   group_by(fdata.name)
     p <- plot_ly(fpoints %>>% 
@@ -2288,86 +2295,48 @@ shinyServer(function(input, output, session) {
   )
   
   # melting
-  observe({
+  output$meltingPlot <- renderPlotly({
     if (is.null(fdata.filtered()) || input$mainNavbar == "adp")
       return(NULL)
     # updLog("Plot Melting\n")
-    ggvis(fdata.filtered(), ~tmp, ~fluor) %>>%
-      group_by(fdata.name) %>>%
-      layer_paths(prop("stroke", {
-        if(input$colorMeltingBy == "none")
-          "black"
-        else
-          as.name(input$colorMeltingBy)
-      })) %>>%
-      (vis ~ if(input$shapeMeltingBy == "none") {
-        vis
-      } else {
-        layer_points(vis, prop("shape", as.name(input$shapeMeltingBy)),
-                     prop("size", 20),
-                     prop("stroke", {
-                       if(input$colorMeltingBy == "none")
-                         "black"
-                       else
-                         as.name(input$colorMeltingBy)
-                     }),
-                     prop("fill", {
-                       if(input$colorMeltingBy == "none")
-                         "black"
-                       else
-                         as.name(input$colorMeltingBy)
-                     }))
-      }) %>>%
-      bind_shiny("meltingPlot")
-  })
-  
-  observe({
-    if (is.null(fdata.filtered()) || input$mainNavbar == "adp")
-      return(NULL)
-    # updLog("Plot Melting\n")
-    fdata.deriv <- fdata.filtered()
-    # just to copy in memory to new table
-    fdata.deriv[1, 1] <- fdata.deriv[1, 1]
-    
-    fdata.deriv[
-      , fluor := {
-        diff <- diffQ(data.frame(tmp, fluor), verbose = TRUE)$xy
-        print(diff)
-        c(head(diff, 1)[1, 2], diff[, 2], tail(diff, 1)[1, 2])
-      }, by = fdata.name]
-    ggvis(fdata.deriv, ~tmp, ~fluor) %>>%
-      group_by(fdata.name) %>>%
-      layer_paths(prop("stroke", {
-        if (input$colorMeltingBy == "none")
-          "black"
-        else
-          as.name(input$colorMeltingBy)
-      })) %>>%
-      (vis ~ if(input$shapeMeltingBy == "none") {
-        vis
-      } else {
-        layer_points(vis, prop("shape", as.name(input$shapeMeltingBy)),
-                     prop("size", 20),
-                     prop("stroke", {
-                       if(input$colorMeltingBy == "none")
-                         "black"
-                       else
-                         as.name(input$colorMeltingBy)
-                     }),
-                     prop("fill", {
-                       if(input$colorMeltingBy == "none")
-                         "black"
-                       else
-                         as.name(input$colorMeltingBy)
-                     }))
-      }) %>>%
-      bind_shiny("meltingPlotDeriv")
+    # fdata.deriv <- fdata.filtered()
+    # # just to copy in memory to new table
+    # fdata.deriv[1, 1] <- fdata.deriv[1, 1]
+    # 
+    # fdata.deriv[
+    #   , fluor.deriv := {
+    #     diff <- diffQ(data.frame(tmp, fluor), verbose = TRUE)$xy
+    #     c(head(diff, 1)[1, 2], diff[, 2], tail(diff, 1)[1, 2])
+    #   }, by = fdata.name]
+    p <- plot_ly(data = fdata.filtered() %>>% group_by(fdata.name),
+                 x = ~tmp,
+                 color = {
+                   if (input$colorMeltingBy == "none")
+                     ""
+                   else
+                     fdata.filtered()[, get(input$colorMeltingBy)]
+                 },
+                 linetype = {
+                   if (input$shapeMeltingBy == "none")
+                     NULL
+                   else
+                     fdata.filtered()[, get(input$shapeMeltingBy)]
+                 })
+    subplot(
+      add_lines(p,
+                y = ~fluor),
+      add_lines(p,
+                y = ~fluor.deriv),
+      shareX = TRUE
+    )
   })
   
   output$meltingDt <- renderDataTable({
     if (is.null(rdmlTable())) 
       return(NULL)
-    rdmlTable()
+    tbl <- rdmlTable()[, !c("quantFluor", "quantFluor.mean", "cq", "cq.mean", "cq.sd")]
+    names(tbl)[1] <- "data.name"
+    tbl
   },
   callback = "function(table) {
     table.on('click.dt', 'tr', function() {
