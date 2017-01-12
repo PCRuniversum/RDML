@@ -30,39 +30,28 @@ dataType$set("public", "UndoPreprocessAdp",
 
 dataType$set("public", "CalcCq",
              #calculate Ct
-             function(ct.range, fluo.limit, th, rdml, kit) {
-               dat <- private$.adp$fpoints %>>%
-                 as.data.frame %>>%
-                 select(cyc, fluor)
-               #move tr calculation to the right of baseline
-               
-               if (ct.range[["from"]] < self$bgTo)
-               {
-                 ct.range[["from"]] <- self$bgTo + 1
-                 
-               }
-               
-               if (tail(dat[, "cyc"], 1) < ct.range[["to"]])
-                 ct.range[["to"]] <- tail(dat[, "cyc"], 1)
-               if (max(dat[, "fluor"][ct.range[["from"]]:ct.range[["to"]]]) >= (fluo.limit)) {
-                 Ct <- {
-                   my.th.cyc(th,
-                             dat %>>%
-                               filter(findInterval(cyc, unlist(ct.range)) == 1))
-                   # filtered.points <- dat %>>%
-                   #   filter(findInterval(cyc, unlist(ct.range)) == 1)
-                   # tryCatch(
-                   #   th.cyc(filtered.points$cyc, filtered.points$fluor, r = th, linear = FALSE)@
-                   #     .Data[1, 1],
-                   #   error = function(e) NA
-                   # )
-                 }
-                 print(paste0("Ct=",Ct,"bgTo= ",self$bgTo))
-               } else { # below fluo limit
-                 # warning("Maximal fluorescence below limit")
-                 Ct <- NA
-               }
-               
-               private$.cq <- Ct
+             function(cq.method, th.level, auto.th) {
+               fdt <- self$adp$fpoints
+               switch(cq.method,
+                      none = {
+                        cq <- self$cq
+                        quantFluor <- self$quantFluor
+                      },
+                      th = {
+                        th <- th.cyc(fdt$cyc, fdt$fluor, r = th.level,
+                                     auto = auto.th)
+                        cq <- th[1, 1]
+                        quantFluor <- th[1, 2]
+                        if (is.na(cq)) {
+                          cq <- NULL
+                          quantFluor <- NULL
+                        }},
+                      sdm = {
+                        sdm <- inder(x = fdt$cyc, y = fdt$fluor)
+                        cq <-  sdm[sdm[, "d2y"] == max(sdm[, "d2y"]), "x"]
+                        quantFluor <- sdm[sdm[, "x"] == cq, "y"]
+                        })
+               self$cq <- cq
+               self$quantFluor <- quantFluor
              },
              overwrite = TRUE)

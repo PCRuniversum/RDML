@@ -23,8 +23,8 @@ shinyUI(
                                          options= list(
                                            create =TRUE
                                          )),
-                          actionButton("makeSubversionRDMLBtn",
-                                       "Make Subversion"),
+                          actionButton("createSubversionRDMLBtn",
+                                       "Create Subversion"),
                           actionButton("removeRDMLBtn",
                                        "Remove RDML")),
                         wellPanel(

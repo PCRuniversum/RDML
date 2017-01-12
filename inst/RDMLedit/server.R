@@ -162,9 +162,9 @@ shinyServer(function(input, output, session) {
     })
   })
   
-  # make subversion RDML
+  # create subversion RDML
   observe({
-    input$makeSubversionRDMLBtn
+    input$createSubversionRDMLBtn
     isolate({
       if (is.null(values$rdml))
         return(NULL)
@@ -2046,7 +2046,7 @@ shinyServer(function(input, output, session) {
   })
   
   # Calculations ------------------------------------------------------------
-  calcsDone <- reactive({
+  preprocessDone <- reactive({
     if (is.null(values$rdml))
       return(NULL)
     cat("Calculations\n")
@@ -2077,26 +2077,62 @@ shinyServer(function(input, output, session) {
               data[[target]]$UndoPreprocessAdp()
           }, by = fdata.name]
     }
-    
-    
-    
     runif(1)
   })
   
+  cqCalcsDone <- reactive({
+    req(preprocessDone())
+    tbl <- values$rdml$AsTable()
+    tbl[adp == TRUE,
+        {
+          values$rdml$experiment[[exp.id]]$
+            run[[run.id]]$
+            react[[as.character(react.id)]]$
+            data[[target]]$CalcCq(input$cqMethod,
+                                  input$thLevel,
+                                  input$autoThLevel)
+        }, by = fdata.name]
+  })
   # Curves and table --------------------------------------------------------
   
   rdmlTable <- reactive({
     # if (is.null(values$rdml) || !(input$mainNavbar %in% c("adp","mdp")))
-    if (is.null(calcsDone()) || !(input$mainNavbar %in% c("adp","mdp")))
+    if (is.null(cqCalcsDone()) || !(input$mainNavbar %in% c("adp","mdp")))
       return(NULL)
     # updLog("Create rdmlTable")
-    tbl <- values$rdml$AsTable() %>% 
-      filter_(paste(input$mainNavbar, "TRUE", sep = "==")) %>% 
-      select(-c(adp, mdp))
+    tbl <- values$rdml$AsTable(
+      add.columns = list(
+        cq = {
+          cq <- data$cq
+          if (is.null(cq))
+            as.numeric(NA)
+          else
+            cq
+        },
+        quantFluor = {
+          quantFluor <- data$quantFluor
+          if (is.null(quantFluor)) {
+            if (is.null(cq)) {
+              as.numeric(NA)
+            } else {
+              0
+            }
+          } else {
+            quantFluor
+          }
+        })
+    )[get(input$mainNavbar) == TRUE, !c("adp", "mdp")][
+      , c("cq.mean", "cq.sd", "quantFluor.mean") := list(
+      mean(cq, na.rm = TRUE),
+      sd(cq, na.rm = TRUE),
+      mean(quantFluor, na.rm = TRUE)
+      ),
+      by = .(sample, target)]
     if (nrow(tbl) == 0) {
       return(NULL)
     }
-    data.table(tbl)
+    tblf <<- tbl
+    tbl
   })
   
   fdata <- reactive({
@@ -2104,151 +2140,24 @@ shinyServer(function(input, output, session) {
       return(NULL)
     # updLog("Create fdata")
     tbl <- rdmlTable()
-    # fdata <- 
-      values$rdml$GetFData(tbl, 
+    values$rdml$GetFData(tbl, 
                          dp.type = input$mainNavbar,
                          long.table = TRUE)
-    # if (input$mainNavbar == "adp") {
-    #   fdata <- fdata[cyc > input$removeFirstRows]
-    #   smooth <- TRUE
-    #   smooth.method <- input$smoothqPCRmethod
-    #   if (input$smoothqPCRmethod == "none") {
-    #     smooth <- FALSE
-    #     smooth.method <- "savgol"
-    #   }
-    #   if (input$preprocessqPCR) {
-    #     fdata[, fluor := CPP(cyc, fluor, smoother = smooth,
-    #                        method = smooth.method,
-    #                        method.norm = input$normqPCRmethod)[[1]],
-    #           by = fdata.name]
-    #   }
-    #   fdata
-    # } else {
-    #   fdata
-    # }
+    
   })
   
   fdata.filtered <- reactive({
     req(fdata())
     if (!is.null(input$selectedRows)) {
         fdata()[
-               fdata.name %in% input$selectedRows[
-                 seq(1, length(input$selectedRows), by = 9)]]
+               fdata.name %in% 
+                 input$selectedRows[grep("[A-H][0-9]+_", input$selectedRows)]
+                 # input$selectedRows[seq(1, length(input$selectedRows), by = ncol(fdata()) - 3)]
+               ]
     } else {
       fdata()
     }
   })
-  
-  # qPCR
-  # output$qPCRPlot <- renderPlot({
-  #   if (is.null(fdata.filtered()) || input$mainNavbar == "mdp")
-  #     return(NULL)
-  #   rdm <<- values$rdml
-  #   fpoints <- fdata.filtered()
-  #   # just to copy in memory to new table
-  #   fpoints[1, 1] <- fpoints[1, 1]
-  #   # plot ticks setup
-  #   if (input$logScale) {
-  #     fpoints[, fluor := {
-  #       new.fluor <- log2(fluor)
-  #       ifelse(is.nan(new.fluor) | new.fluor == -Inf,
-  #              NA,
-  #              new.fluor)}]
-  #   }
-  #   min.fluor <- min(fpoints$fluor, na.rm = TRUE)
-  #   max.fluor <- max(fpoints$fluor, na.rm = TRUE)
-  #   ticks.step <- (max.fluor - min.fluor) /
-  #     25
-  #   
-  #   minor.ticks <-
-  #     seq(min.fluor,
-  #         max.fluor,
-  #         ticks.step) %>>% 
-  #     signif(3)
-  #   ticks <-
-  #     seq(min.fluor,
-  #         max.fluor,
-  #         ticks.step * 5) %>>% 
-  #     signif(3)
-  #   if (findInterval(0, c(min.fluor, max.fluor) ) == 1){
-  #     ticks <- c(0, ticks)
-  #   }
-  #   max.cyc <- max(fpoints$cyc)
-  #   
-  #   # updLog("Plot qPCR\n")
-  #   ggplot(fpoints) +
-  #     geom_line(aes_string(x = "cyc", y = "fluor",
-  #                          group = "fdata.name",
-  #                          color = {
-  #                            if (input$colorqPCRby == "none")
-  #                              NULL
-  #                            else
-  #                              input$colorqPCRby
-  #                            },
-  #                          linetype = {
-  #                            if (input$shapeqPCRby == "none")
-  #                              NULL
-  #                            else
-  #                              input$shapeqPCRby
-  #                          }),
-  #               size = 0.75) +
-  #     # switch(input$showCqSlct,
-  #     #        cq =  {
-  #     #          if (!all(is.na(fpoints$cq)))
-  #     #            geom_vline(data = unique(fpoints, by = cq)[!is.na(cq)],
-  #     #                       aes_string(xintercept = "cq",
-  #     #                                  color = {
-  #     #                                    if (input$colorqPCRby == "none")
-  #     #                                      NULL
-  #     #                                    else
-  #     #                                      input$colorqPCRby
-  #     #                                  },
-  #     #                                  linetype = {
-  #     #                                    if (input$shapeqPCRby == "none")
-  #     #                                      NULL
-  #     #                                    else
-  #     #                                      input$shapeqPCRby
-  #     #                                  }),
-  #     #                       size = 0.25)},
-  #     #        mean.cq = {
-  #     #          if (!all(is.na(fpoints$mean.cq)))
-  #     #            geom_vline(data = fpoints %>>%
-  #     #                         distinct(mean.cq, .keep_all = TRUE) %>>%
-  #     #                         filter(!is.na(mean.cq)),
-  #     #                       aes_string(xintercept = "mean.cq",
-  #     #                                  color = input$colorPCRplotBy,
-  #     #                                  linetype = "reaction.type"),
-  #     #                       size = 0.25)
-  #     #        }) +
-  #     # switch(input$showCqSlct,
-  #     #        mean.cq = {
-  #     #          if (!all(is.na(fpoints$mean.cq)))
-  #     #            geom_rect(data = fpoints %>>%
-  #     #                        group_by(mean.cq) %>>%
-  #     #                        summarise(position = generate.legend.value(position),
-  #     #                                  var.cq.min = first(mean.cq) - 0.5 * first(var.cq),
-  #     #                                  var.cq.max = first(mean.cq) + 0.5 * first(var.cq),
-  #     #                                  sample = first(sample),
-  #     #                                  sample.type = first(sample.type),
-  #     #                                  reaction = first(reaction),
-  #     #                                  kit = first(kit)),
-  #     #                      ymin = -Inf, ymax = Inf,
-  #     #                      alpha = 0.5,
-  #     #                      aes_string(xmin = "var.cq.min", xmax = "var.cq.max",
-  #     #                                 fill = input$colorPCRplotBy))
-  #     #        }) +
-  #     labs(x = "Cycles", y = "RFU",
-  #          color = NULL, linetype = NULL, fill = NULL) +
-  #     theme_bw() +
-  #     scale_x_continuous(minor_breaks = seq(1, max.cyc, 1),
-  #                        limits = c(1, max.cyc)) +
-  #     scale_y_continuous(breaks = ticks,
-  #                        minor_breaks = minor.ticks) +
-  #     theme(legend.position = "right",
-  #           legend.box = "horizontal",
-  #           panel.grid.minor = element_line(size = 1)
-  #     )
-  # })
   
   output$qPCRPlot <- renderPlotly({
     if (is.null(fdata.filtered()) || input$mainNavbar == "mdp")
@@ -2258,11 +2167,24 @@ shinyServer(function(input, output, session) {
     fpoints[1, 1] <- fpoints[1, 1]
     # plot ticks setup
     if (input$logScale) {
-      fpoints[, fluor := {
-        new.fluor <- log2(fluor)
-        ifelse(is.nan(new.fluor) | new.fluor == -Inf,
-               NA,
-               new.fluor)}]
+      fpoints[, c("fluor", "quantFluor", "quantFluor.mean") := 
+                list(
+                  {
+                    new.fluor <- log2(fluor)
+                    ifelse(is.nan(new.fluor) | new.fluor == -Inf,
+                           NA,
+                           new.fluor)},
+                  {
+                    new.fluor <- log2(quantFluor)
+                    ifelse(is.nan(new.fluor) | new.fluor == -Inf,
+                           0,
+                           new.fluor)},
+                  {
+                    new.fluor <- log2(quantFluor.mean)
+                    ifelse(is.nan(new.fluor) | new.fluor == -Inf,
+                           0,
+                           new.fluor)}
+                )]
     }
     min.fluor <- min(fpoints$fluor, na.rm = TRUE)
     max.fluor <- max(fpoints$fluor, na.rm = TRUE)
@@ -2285,7 +2207,7 @@ shinyServer(function(input, output, session) {
     max.cyc <- max(fpoints$cyc)
     # fpoints <- fpoints %>>% 
     #   group_by(fdata.name)
-    plot_ly(fpoints %>>% 
+    p <- plot_ly(fpoints %>>% 
               group_by(fdata.name),
             x = ~cyc,
             y = ~fluor,
@@ -2303,6 +2225,48 @@ shinyServer(function(input, output, session) {
               else
                 fpoints[, get(input$shapeqPCRby)]
             })
+    p <- switch(input$showCq,
+                none = p,
+                yes = add_trace(p,
+                                x = ~cq,
+                                y = ~quantFluor,
+                                type = "scatter",
+                                mode = "markers",
+                                color = {
+                                  if (input$colorqPCRby == "none")
+                                    ""
+                                  else
+                                    fpoints[, get(input$colorqPCRby)]
+                                },
+                                symbol = {
+                                  if (input$shapeqPCRby == "none")
+                                    NULL
+                                  else
+                                    fpoints[, get(input$shapeqPCRby)]
+                                },
+                                inherit = FALSE),
+                mean = add_trace(p,
+                                 data = fpoints %>>% 
+                                   group_by(sample, target),
+                                 x = ~cq.mean,
+                                 y = ~quantFluor.mean,
+                                 type = "scatter",
+                                 mode = "markers",
+                                 color = {
+                                   if (input$colorqPCRby == "none")
+                                     ""
+                                   else
+                                     fpoints[, get(input$colorqPCRby)]
+                                 },
+                                 symbol = {
+                                   if (input$shapeqPCRby == "none")
+                                     NULL
+                                   else
+                                     fpoints[, get(input$shapeqPCRby)]
+                                 },
+                                 inherit = FALSE)
+    )
+    p
   })
   
   output$qPCRDt <- renderDataTable({
@@ -2310,19 +2274,9 @@ shinyServer(function(input, output, session) {
       return(NULL)
     # input$recalculateCq
     # isolate({
-      tbl <- rdmlTable()#[, Cq := as.double(NA)]
+      tbl <- rdmlTable()[, !"quantFluor.mean"]
       names(tbl)[1] <- "data.name"
-      tbl[, Cq := {
-        fdt <- fdata()[fdata.name == data.name]
-        switch(input$cqMethod,
-               none = as.numeric(NA),
-               th = as.numeric(th.cyc(fdt$cyc, fdt$fluor, r = input$thLevel,
-                                      auto = input$autoThLevel)[1, 1]),
-               sdm = as.numeric(limit_cq(data.frame(fdt$cyc, fdt$fluor),
-                                         cyc = 1, fluo = 2)[1, 1])
-        )
-      }, by = data.name]
-      # })
+      tbl
   },
   callback = "function(table) {
     table.on('click.dt', 'tr', function() {
