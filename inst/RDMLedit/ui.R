@@ -558,10 +558,10 @@ shinyUI(
                           checkboxInput("autoThLevel",
                                         "Auto Threshold",
                                         TRUE)),
-                   column(2,
-                          numericInput("thLevel",
-                                       "Threshold",
-                                       0, 0, step = 0.01)))
+                   conditionalPanel(
+                     condition = "input.autoThLevel == false",
+                     column(2,
+                            uiOutput("thLevelsUI"))))
                  # column(2,
                  #        actionButton("recalculateCq",
                  #                     "Recalculate Cq"))

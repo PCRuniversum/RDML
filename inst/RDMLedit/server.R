@@ -9,6 +9,7 @@ library(dpcR)
 library(data.table)
 library(ggplot2)
 library(plotly)
+library(rlist)
 
 source("rdml.extensions.R")
 
@@ -2081,6 +2082,20 @@ shinyServer(function(input, output, session) {
     runif(1)
   })
   
+  output$thLevelsUI <- renderUI({
+    if (is.null(values$rdml))
+      return(NULL)
+    tbl <- values$rdml$AsTable()
+    wellPanel(
+      list.map(unique(tbl$target),
+               target ~ {
+                 numericInput(paste0("thLevel_", target),
+                              HTML(sprintf("Threshold <b>%s</b>", target)),
+                              0, 0, step = 0.01)
+               })
+    )
+  })
+  
   cqCalcsDone <- reactive({
     req(preprocessDone())
     tbl <- values$rdml$AsTable()
@@ -2090,7 +2105,7 @@ shinyServer(function(input, output, session) {
             run[[run.id]]$
             react[[as.character(react.id)]]$
             data[[target]]$CalcCq(input$cqMethod,
-                                  input$thLevel,
+                                  input[[paste0("thLevel_", target)]],
                                   input$autoThLevel)
         }, by = fdata.name]
   })
@@ -2136,8 +2151,7 @@ shinyServer(function(input, output, session) {
   })
   
   fdata <- reactive({
-    if (is.null(rdmlTable())) 
-      return(NULL)
+    req(rdmlTable())
     # updLog("Create fdata")
     tbl <- rdmlTable()
     fdata <- values$rdml$GetFData(tbl, 
