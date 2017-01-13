@@ -47,10 +47,14 @@ dataType$set("public", "CalcCq",
                           quantFluor <- NULL
                         }},
                       sdm = {
-                        sdm <- inder(x = fdt$cyc, y = fdt$fluor)
-                        cq <-  sdm[sdm[, "d2y"] == max(sdm[, "d2y"]), "x"]
-                        quantFluor <- sdm[sdm[, "x"] == cq, "y"]
-                        })
+                        res <- diffQ2(data.frame(fdt$cyc, fdt$fluor), inder = TRUE, warn = FALSE)
+                        cq <-  res$xTm1.2.D2[1]
+                        cyc.before.i <- tail(which(fdt$cyc < res$xTm1.2.D2[1]), 1)
+                        delta <- (res$xTm1.2.D2[1] - fdt$cyc[cyc.before.i]) / 
+                          (fdt$cyc[cyc.before.i + 1] - fdt$cyc[cyc.before.i])
+                        quantFluor <- (fdt$fluor[cyc.before.i + 1] - fdt$fluor[cyc.before.i]) *
+                          delta + fdt$fluor[cyc.before.i]
+                      })
                self$cq <- cq
                self$quantFluor <- quantFluor
              },
