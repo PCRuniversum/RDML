@@ -1,3 +1,7 @@
+format.smpl.name <- function(name, break.every = 20, break.char = "<br/>") {
+  gsub(sprintf("(.{%s})", break.every), paste0("\\1", break.char), name)
+}
+
 dataType$set("public", "rawAdp",
              NA,
              overwrite = TRUE)

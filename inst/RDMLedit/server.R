@@ -10,6 +10,8 @@ library(data.table)
 library(ggplot2)
 library(plotly)
 library(rlist)
+library(whisker)
+library(stringr)
 
 source("rdml.extensions.R")
 
@@ -2053,7 +2055,6 @@ shinyServer(function(input, output, session) {
       return(NULL)
     cat("Calculations\n")
     tbl <- values$rdml$AsTable()
-    
     smooth <- TRUE
     smooth.method <- input$smoothqPCRmethod
     if (input$smoothqPCRmethod == "none") {
@@ -2116,38 +2117,200 @@ shinyServer(function(input, output, session) {
     if (is.null(cqCalcsDone()) || !(input$mainNavbar %in% c("adp","mdp")))
       return(NULL)
     # updLog("Create rdmlTable")
-    tbl <- values$rdml$AsTable(
-      add.columns = list(
-        cq = {
-          cq <- data$cq
-          if (is.null(cq))
-            as.numeric(NA)
-          else
-            cq
-        },
-        quantFluor = {
-          quantFluor <- data$quantFluor
-          if (is.null(quantFluor)) {
-            if (is.null(cq)) {
+    cat("Create rdmlTable")
+    isolate({
+      tbl <- values$rdml$AsTable(
+        add.columns = list(
+          cq = {
+            cq <- data$cq
+            if (is.null(cq))
               as.numeric(NA)
+            else
+              cq
+          },
+          quantFluor = {
+            quantFluor <- data$quantFluor
+            if (is.null(quantFluor)) {
+              if (is.null(cq)) {
+                as.numeric(NA)
+              } else {
+                0
+              }
             } else {
-              0
+              quantFluor
             }
-          } else {
-            quantFluor
-          }
-        })
-    )[get(input$mainNavbar) == TRUE, !c("adp", "mdp")][
-      , c("cq.mean", "cq.sd", "quantFluor.mean") := list(
-      mean(cq, na.rm = TRUE),
-      sd(cq, na.rm = TRUE),
-      mean(quantFluor, na.rm = TRUE)
-      ),
-      by = .(sample, target)]
-    if (nrow(tbl) == 0) {
-      return(NULL)
-    }
-    tbl
+          })
+      )[get(input$mainNavbar) == TRUE, !c("adp", "mdp")][
+        , c("cq.mean", "cq.sd", "quantFluor.mean") := list(
+          mean(cq, na.rm = TRUE),
+          sd(cq, na.rm = TRUE),
+          mean(quantFluor, na.rm = TRUE)
+        ),
+        by = .(sample, target)]
+      if (nrow(tbl) == 0) {
+        return(NULL)
+      }
+      values$lockReplot <- 0
+      values$selectedTubes <-
+        data.frame(position = tbl$position %>>% unique(),
+                   selected = FALSE,
+                   stringsAsFactors = FALSE) %>>%
+        mutate(row = str_extract(position, "[A-H]") %>>% factor(levels = rev(LETTERS[1:8])),
+               column = str_extract(position, "[0-9]+") %>>% as.numeric() %>>% as.character())
+      rownames(values$selectedTubes) <- values$selectedTubes$position
+      targets <- unique(tbl$target)
+      updateSelectInput(session,
+                        "showTargets",
+                        choices = targets,
+                        selected = targets)
+      tbl
+    })
+  })
+  
+  # plate
+  output$plateTbl <- renderUI({
+    req(rdmlTable())
+    cat("Redraw plate\n")
+    isolate({
+      tbl <- rdmlTable()
+      tbl[1, 1] <- tbl[1, 1]
+      cell.template <- paste0("<td id='tube_{{position}}'",
+                              "title='{{position}}\u000A{{sample}}' ",
+                              "class='{{class}}' ",
+                              "style='background-color:rgba({{bgcolor}}, 0.35)'>")#,
+      #"{{snamef}}</td>")
+      descr <- tbl %>>%
+        group_by(position) %>>%
+        summarise_each(funs(first)) %>>%
+        # left_join(calc.Cqs(c("tr"), values$preprocessed$tr %>>% names),
+        #           by = "position") %>>%
+        left_join(values$selectedTubes
+                  , by = "position") %>>%
+        group_by(fdata.name) %>>%
+        mutate(snamef = format.smpl.name(sample, 5),
+               class = paste(ifelse(selected,
+                                    "sel",
+                                    "")),
+               bgcolor = "red") %>>%
+        as.data.frame()
+      rownames(descr) <- descr$position
+      sprintf(paste0('<table id="plateTable" class="plateTable"><thead>',
+                     '<tr><th id="toggleall" class="br-triangle"></th>%s</tr></thead>',
+                     '<tbody>%s</tbody></table>',
+                     '<script>addCellOnClick();</script>'),
+              list.map(1:12, col ~ sprintf("<th id='col_%02i'>%s</th>", col, col)) %>>%
+                paste(collapse = ""),
+              list.map(LETTERS[1:8],
+                       row ~ sprintf("<tr><th id='row_%s' class='%s'>%s</th>%s</tr>", row,
+                                     {
+                                       if (as.integer(charToRaw(row)) %% 2 == 0) "even-row"
+                                       else "odd-row"
+                                     },
+                                     row,
+                                     list.map(1:12,
+                                              col ~ {
+                                                tube <- sprintf("%s%02i", row, col)
+                                                if (is.na(descr[tube, "fdata.name"]))
+                                                  return("<td></td>")
+                                                paste0(
+                                                  whisker.render(cell.template,
+                                                                 descr[tube, ]),
+                                                  descr[tube, "snamef"],
+                                                  "</td>"
+                                                )
+                                              }) %>>%
+                                       paste(collapse = ""))
+              ) %>>%
+                paste(collapse = "")) %>>%
+        HTML
+    })
+  })
+  
+  # plate click
+  observe({
+    req(input$cellClick)
+    isolate({
+      values$lockReplot <- values$lockReplot + 1
+      # row <- input$cellClick[2]
+      # col <- input$cellClick[3]
+      id <- str_split(input$cellClick[2], "_")[[1]]
+      dblclick <- ifelse(input$cellClick[3] == "dblclick",
+                         TRUE, FALSE)
+      ctrl <- ifelse(input$cellClick[4] == "ctrl",
+                     TRUE, FALSE)
+      toggle <- function(action, positions) {
+        for (position in positions) {
+          action(paste("tube", position, sep = "_"), "sel", NULL)
+        }
+      }
+      selectPositions <- function(positions) {
+        if (length(positions) == 0)
+          return(NULL)
+        selected <- values$selectedTubes
+        if (dblclick) {
+          selected$selected <- FALSE
+          toggle(removeClass, values$selectedTubes$position)
+        }
+        if (all(values$selectedTubes[positions, "selected"] == TRUE)) {
+          selected[positions, "selected"] <- FALSE
+          toggle(removeClass, positions)
+        } else {
+          selected[positions, "selected"] <- TRUE
+          toggle(addClass, positions)
+        }
+        values$selectedTubes <- selected
+      }
+      switch(id[1],
+             "tube" = {
+               positions <- {
+                 if (ctrl) {
+                   descr <- rdmlTable()
+                   smpl <- descr[descr$position == id[2], sample]
+                   target <- descr[descr$position == id[2], target]
+                   descr[descr$sample == smpl & descr$target == target, position]
+                 } else {
+                   id[2]
+                 }}
+               selectPositions(positions)
+             },
+             "toggleall" = {
+               if (all(values$selectedTubes$selected == TRUE) || dblclick) {
+                 values$selectedTubes$selected <- FALSE
+                 toggle(removeClass, values$selectedTubes$position)
+               } else {
+                 values$selectedTubes$selected <- TRUE
+                 toggle(addClass, values$selectedTubes$position)
+               }
+             },
+             "col" = {
+               positions <- str_extract(values$selectedTubes$position,
+                                        paste0("[A-H]",
+                                               id[2])) %>>%
+                 na.omit
+               selectPositions(positions)
+             },
+             "row" = {
+               positions <- str_extract(values$selectedTubes$position,
+                                        paste0(id[2],
+                                               "[0-9]+")) %>>%
+                 na.omit()
+               selectPositions(positions)
+             },
+             {})
+      values$lockReplot <- values$lockReplot - 1
+    })
+  })
+  
+  # filter qPCRDt
+  observe({
+    req(values$selectedTubes)
+    positions <- values$selectedTubes %>>%
+      filter(selected == TRUE) %>>%
+      (position)
+    if (length(positions) == 0)
+      positions <- values$selectedTubes$position
+    js$filterTblByPositions(
+      paste(positions, collapse = "|"))
   })
   
   fdata <- reactive({
@@ -2169,20 +2332,22 @@ shinyServer(function(input, output, session) {
   
   fdata.filtered <- reactive({
     req(fdata())
-    if (!is.null(input$selectedRows)) {
-        fdata()[
-               fdata.name %in% 
-                 input$selectedRows[grep("[A-H][0-9]+_", input$selectedRows)]
-                 # input$selectedRows[seq(1, length(input$selectedRows), by = ncol(fdata()) - 3)]
-               ]
-    } else {
-      fdata()
+    if (values$lockReplot != 0)
+      return(NULL)
+    fd <- fdata()[target %in% input$showTargets]
+    if (!all(values$selectedTubes$selected == FALSE)) {
+      fd <- fd[
+        position %in% values$selectedTubes$position[values$selectedTubes$selected == TRUE]]
     }
+    if (nrow(fd) == 0)
+      return(NULL)
+    fd
   })
   
   output$qPCRPlot <- renderPlotly({
     if (is.null(fdata.filtered()) || input$mainNavbar == "mdp")
       return(NULL)
+    
     fpoints <- fdata.filtered()
     # just to copy in memory to new table
     fpoints[1, 1] <- fpoints[1, 1]
@@ -2298,14 +2463,15 @@ shinyServer(function(input, output, session) {
       tbl <- rdmlTable()[, !"quantFluor.mean"]
       names(tbl)[1] <- "data.name"
       tbl
-  },
-  callback = "function(table) {
-    table.on('click.dt', 'tr', function() {
-    $(this).toggleClass('selected');
-    Shiny.onInputChange('selectedRows',
-    table.rows('.selected').data().toArray());
-    });
-    }"
+  }
+  # ,
+  # callback = "function(table) {
+  #   table.on('click.dt', 'tr', function() {
+  #   $(this).toggleClass('selected');
+  #   Shiny.onInputChange('selectedRows',
+  #   table.rows('.selected').data().toArray());
+  #   });
+  #   }"
   )
   
   # melting
