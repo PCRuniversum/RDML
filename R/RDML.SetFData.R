@@ -87,10 +87,18 @@ RDML$set("public", "SetFData",
                    c(private$.experiment[[descr.row[, exp.id]]]$run,
                      runType$new(
                        idType$new(descr.row[, run.id]),
-                       pcrFormat = 
-                         pcrFormatType$new(8, 12,
-                                           labelFormatType$new("ABC"),
-                                           labelFormatType$new("123"))))
+                       pcrFormat = {
+                         if (length(unique(description[run.id == descr.row[, run.id], react.id])) > 96) {
+                           pcrFormatType$new(16, 24,
+                                             labelFormatType$new("ABC"),
+                                             labelFormatType$new("123"))
+                         } else {
+                           pcrFormatType$new(8, 12,
+                                             labelFormatType$new("ABC"),
+                                             labelFormatType$new("123"))
+                         }
+                       }
+                   ))
                }
                if (private$.experiment[[descr.row[, exp.id]]]$
                    run[[descr.row[, run.id]]]$
@@ -102,7 +110,9 @@ RDML$set("public", "SetFData",
                        run[[descr.row[, run.id]]]$react,
                      reactType$new(
                        reactIdType$new(descr.row[, react.id]),
-                       sample = idReferencesType$new(descr.row[, sample])))
+                       sample = idReferencesType$new(descr.row[, sample]),
+                       pcrFormat = private$.experiment[[descr.row[, exp.id]]]$
+                         run[[descr.row[, run.id]]]$pcrFormat))
                  if (private$.sample[[descr.row[, sample]]] %>>% 
                      is.null()) {
                    self$sample <- c(
