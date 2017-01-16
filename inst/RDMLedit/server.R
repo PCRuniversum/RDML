@@ -2080,7 +2080,21 @@ shinyServer(function(input, output, session) {
               data[[target]]$UndoPreprocessAdp()
           }, by = fdata.name]
     }
+    exp.ids <- unique(tbl$exp.id)
+    updateSelectInput(session,
+                      "showqPCRExperiment",
+                      choices = exp.ids,
+                      selected = exp.ids[1])
     runif(1)
+  })
+  
+  observe({
+    req(input$showqPCRExperiment)
+    run.ids <- unique(values$rdml$AsTable()[exp.id == input$showqPCRExperiment, run.id])
+    updateSelectInput(session,
+                      "showqPCRRun",
+                      choices = run.ids,
+                      selected = run.ids[1])
   })
   
   output$thLevelsUI <- renderUI({
@@ -2117,6 +2131,8 @@ shinyServer(function(input, output, session) {
     if (is.null(cqCalcsDone()) || !(input$mainNavbar %in% c("adp","mdp")))
       return(NULL)
     # updLog("Create rdmlTable")
+    input$showqPCRExperiment
+    input$showqPCRRun
     cat("Create rdmlTable")
     isolate({
       tbl <- values$rdml$AsTable(
@@ -2140,7 +2156,9 @@ shinyServer(function(input, output, session) {
               quantFluor
             }
           })
-      )[get(input$mainNavbar) == TRUE, !c("adp", "mdp")][
+      )[get(input$mainNavbar) == TRUE &
+          exp.id == input$showqPCRExperiment &
+          run.id == input$showqPCRRun, !c("adp", "mdp")][
         , c("cq.mean", "cq.sd", "quantFluor.mean") := list(
           mean(cq, na.rm = TRUE),
           sd(cq, na.rm = TRUE),

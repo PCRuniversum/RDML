@@ -1268,7 +1268,9 @@ RDML$set("public", "initialize", function(filename,
       list.names(.$id$id)
     
     # Combine CFX96 runs to one (by default Bio-Rad use separate run for each dye!---
-    if (!is.null(private$.id[[1]]$publisher) &&
+    if (!is.null(private$.id) &&
+        length(private$.id) != 0 &&
+        !is.null(private$.id[[1]]$publisher) &&
         private$.id[[1]]$publisher == "Bio-Rad Laboratories, Inc." &&
         length(private$.experiment[[1]]$run) > 1) {
       if (show.progress)

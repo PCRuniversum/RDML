@@ -631,7 +631,12 @@ shinyUI(
                                           "Log Scale"))),
                    fluidRow(
                      column(6, plotlyOutput("qPCRPlot")),
-                     column(6, htmlOutput("plateTbl")))),
+                     column(6, wellPanel(
+                            fluidRow(column(4, selectInput("showqPCRExperiment",
+                                                        "Experiment", c())),
+                                     column(4, selectInput("showqPCRRun",
+                                                        "Run", c()))),
+                            htmlOutput("plateTbl"))))),
                  dataTableOutput("qPCRDt"),
                  value = "adp"),
         tabPanel("Melting Curves",
