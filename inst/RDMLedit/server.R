@@ -2305,7 +2305,7 @@ shinyServer(function(input, output, session) {
              },
              "col" = {
                positions <- str_extract(values$selectedTubes$position,
-                                        paste0("[A-H]",
+                                        paste0("[A-Z]",
                                                id[2])) %>>%
                  na.omit
                selectPositions(positions)
