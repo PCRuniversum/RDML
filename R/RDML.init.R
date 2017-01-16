@@ -1266,16 +1266,38 @@ RDML$set("public", "initialize", function(filename,
                experiment ~ GetExperiment(experiment)
       ) %>>%
       list.names(.$id$id)
-
-    # return()
-    # private$.recalcPositions()
+    
+    # Combine CFX96 runs to one (by default Bio-Rad use separate run for each dye!---
+    if (!is.null(private$.id[[1]]$publisher) &&
+        private$.id[[1]]$publisher == "Bio-Rad Laboratories, Inc." &&
+        length(private$.experiment[[1]]$run) > 1) {
+      if (show.progress)
+        cat("\nCombining Bio-Rad runs")
+      first.run <- private$.experiment[[1]]$run[[1]]
+      for (run.i in 2:length(private$.experiment[[1]]$run)){
+        current.run <- private$.experiment[[1]]$run[[run.i]]
+        for (react in current.run$react){
+          react.id <- as.character(react$id$id)
+          if (is.null(first.run$react[[react.id]])) {
+            first.run$react[[react.id]] <- react
+          } else {
+            first.run$react[[react.id]]$data <- c(
+              first.run$react[[react.id]]$data,
+              react$data[[1]]
+            )
+          }
+        }
+        private$.experiment[[1]]$run[[run.i]] <- NULL
+      }
+      private$.experiment[[1]]$run[[1]]$id <- idType$new("Combined Run")
+    }
 
     # Roche LC96 extra parsing -------------------------------------------------
     # parse original!!! Roche files
     if (length(unzipped.rdml) > 1 &&
         length(private$.id) != 0 &&
         private$.id[[1]]$publisher == "Roche Diagnostics") {
-      for(i in 1:length(private$.sample)) {
+      for (i in 1:length(private$.sample)) {
         private$.sample[[i]]$id <- idType$new(private$.sample[[i]]$description)
       }
       private$.sample <- list.names(private$.sample,
