@@ -2173,7 +2173,8 @@ shinyServer(function(input, output, session) {
         data.frame(position = tbl$position %>>% unique(),
                    selected = FALSE,
                    stringsAsFactors = FALSE) %>>%
-        mutate(row = str_extract(position, "[A-H]") %>>% factor(levels = rev(LETTERS[1:8])),
+        mutate(row = str_extract(position, "[A-Z]") %>>% factor(levels = rev(LETTERS[1:values$rdml$experiment[[input$showqPCRExperiment]]$
+                                                                                       run[[input$showqPCRRun]]$pcrFormat$rows])),
                column = str_extract(position, "[0-9]+") %>>% as.numeric() %>>% as.character())
       rownames(values$selectedTubes) <- values$selectedTubes$position
       targets <- unique(tbl$target)
@@ -2212,20 +2213,22 @@ shinyServer(function(input, output, session) {
                bgcolor = "red") %>>%
         as.data.frame()
       rownames(descr) <- descr$position
+      pcr.format <- values$rdml$experiment[[input$showqPCRExperiment]]$
+        run[[input$showqPCRRun]]$pcrFormat
       sprintf(paste0('<table id="plateTable" class="plateTable"><thead>',
                      '<tr><th id="toggleall" class="br-triangle"></th>%s</tr></thead>',
                      '<tbody>%s</tbody></table>',
                      '<script>addCellOnClick();</script>'),
-              list.map(1:12, col ~ sprintf("<th id='col_%02i'>%s</th>", col, col)) %>>%
+              list.map(1:pcr.format$columns, col ~ sprintf("<th id='col_%02i'>%s</th>", col, col)) %>>%
                 paste(collapse = ""),
-              list.map(LETTERS[1:8],
+              list.map(LETTERS[1:pcr.format$rows],
                        row ~ sprintf("<tr><th id='row_%s' class='%s'>%s</th>%s</tr>", row,
                                      {
                                        if (as.integer(charToRaw(row)) %% 2 == 0) "even-row"
                                        else "odd-row"
                                      },
                                      row,
-                                     list.map(1:12,
+                                     list.map(1:pcr.format$columns,
                                               col ~ {
                                                 tube <- sprintf("%s%02i", row, col)
                                                 if (is.na(descr[tube, "fdata.name"]))
