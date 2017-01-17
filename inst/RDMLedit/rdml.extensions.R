@@ -68,3 +68,34 @@ dataType$set("public", "CalcCq",
                self$quantFluor <- quantFluor
              },
              overwrite = TRUE)
+
+dataType$set("public", "rawMdp",
+             NA,
+             overwrite = TRUE)
+
+dataType$set("public", "PreprocessMdp",
+             function(bgadj, bg, minmax, df.fact) {
+               if (!is.environment(self$rawMdp)) {
+                 self$rawMdp <- private$.mdp$clone(deep = TRUE)
+               } 
+               private$.mdp$fpoints$fluor <- 
+                 mcaSmoother(self$rawMdp$fpoints$tmp,
+                             self$rawMdp$fpoints$fluor,
+                             bgadj = bgadj,
+                             bg = bg,
+                             minmax = minmax,
+                             df.fact = df.fact)[, 2]
+             },
+             overwrite = TRUE)
+
+dataType$set("public", "UndoPreprocessMdp",
+             function() {
+               if (!is.environment(self$rawMdp)) {
+                 self$rawMdp <- private$.mdp$clone(deep = TRUE)
+               } else {
+                 private$.mdp$fpoints$fluor <- 
+                   self$rawMdp$fpoints$fluor
+               }
+               NULL
+             },
+             overwrite = TRUE)

@@ -643,6 +643,32 @@ shinyUI(
                  wellPanel(
                    fluidRow(
                      column(2,
+                            checkboxInput("preprocessMelting",
+                                          "Preprocess")),
+                     conditionalPanel(
+                       condition = "input.preprocessMelting == true",
+                       column(2,
+                              checkboxInput("bgAdjMelting",
+                                            "Adjust the Background Signal",
+                                            FALSE)),
+                       conditionalPanel(
+                         condition = "input.bgAdjMelting == true",
+                         column(2,
+                                sliderInput("bgRangeMelting", 
+                                            label = "Background Range", min = 0, 
+                                            max = 100, value = c(50, 55), step = 1))),
+                       column(2,
+                              checkboxInput("minMaxMelting",
+                                            "Min-Max Normalization",
+                                            FALSE)),
+                       column(2,
+                              sliderInput("dfFactMelting", 
+                                          label = "Factor to Smooth the Curve", min = 0.5, 
+                                          max = 1.1, value = 0.95, step = 0.05))
+                     )
+                   ),
+                   fluidRow(
+                     column(2,
                             selectInput("colorMeltingBy",
                                         "Color by",
                                         c("None" = "none",

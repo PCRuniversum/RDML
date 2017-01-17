@@ -2050,7 +2050,7 @@ shinyServer(function(input, output, session) {
   })
   
   # Calculations ------------------------------------------------------------
-  preprocessDone <- reactive({
+  preprocessAdpDone <- reactive({
     if (is.null(values$rdml))
       return(NULL)
     cat("Calculations\n")
@@ -2112,7 +2112,7 @@ shinyServer(function(input, output, session) {
   })
   
   cqCalcsDone <- reactive({
-    req(preprocessDone())
+    req(preprocessAdpDone())
     tbl <- values$rdml$AsTable()
     tbl[adp == TRUE,
         {
@@ -2124,11 +2124,46 @@ shinyServer(function(input, output, session) {
                                   input$autoThLevel)
         }, by = fdata.name]
   })
+  
+  preprocessMdpDone <- reactive({
+    if (is.null(values$rdml))
+      return(NULL)
+    cat("Calculations MDP\n")
+    tbl <- values$rdml$AsTable()
+    if (input$preprocessMelting) {
+      tbl[mdp == TRUE,
+          {
+            values$rdml$experiment[[exp.id]]$
+              run[[run.id]]$
+              react[[as.character(react.id)]]$
+              data[[target]]$PreprocessMdp(input$bgAdjMelting,
+                                           input$bgRangeMelting,
+                                           input$minMaxMelting,
+                                           input$dfFactMelting)
+          }, by = fdata.name]
+    } else {
+      tbl[mdp == TRUE,
+          {
+            values$rdml$experiment[[exp.id]]$
+              run[[run.id]]$
+              react[[as.character(react.id)]]$
+              data[[target]]$UndoPreprocessMdp()
+          }, by = fdata.name]
+    }
+    # exp.ids <- unique(tbl$exp.id)
+    # updateSelectInput(session,
+    #                   "showqPCRExperiment",
+    #                   choices = exp.ids,
+    #                   selected = exp.ids[1])
+    runif(1)
+  })
   # Curves and table --------------------------------------------------------
   
   rdmlTable <- reactive({
     # if (is.null(values$rdml) || !(input$mainNavbar %in% c("adp","mdp")))
-    if (is.null(cqCalcsDone()) || !(input$mainNavbar %in% c("adp","mdp")))
+    if (is.null(cqCalcsDone()) || 
+        is.null(preprocessMdpDone()) ||
+        !(input$mainNavbar %in% c("adp","mdp")))
       return(NULL)
     # updLog("Create rdmlTable")
     input$showqPCRExperiment
@@ -2344,7 +2379,7 @@ shinyServer(function(input, output, session) {
     if (input$mainNavbar == "mdp"){
       fdata[
         , fluor.deriv := {
-          diff <- diffQ(data.frame(tmp, fluor), verbose = TRUE)$xy
+          diff <- diffQ(data.frame(tmp, fluor), verbose = TRUE, warn = FALSE)$xy
           c(head(diff, 1)[1, 2], diff[, 2], tail(diff, 1)[1, 2])
         }, by = fdata.name]
     }
@@ -2393,27 +2428,6 @@ shinyServer(function(input, output, session) {
                            new.fluor)}
                 )]
     }
-    # min.fluor <- min(fpoints$fluor, na.rm = TRUE)
-    # max.fluor <- max(fpoints$fluor, na.rm = TRUE)
-    # ticks.step <- (max.fluor - min.fluor) /
-    #   25
-    # 
-    # minor.ticks <-
-    #   seq(min.fluor,
-    #       max.fluor,
-    #       ticks.step) %>>% 
-    #   signif(3)
-    # ticks <-
-    #   seq(min.fluor,
-    #       max.fluor,
-    #       ticks.step * 5) %>>% 
-    #   signif(3)
-    # if (findInterval(0, c(min.fluor, max.fluor) ) == 1){
-    #   ticks <- c(0, ticks)
-    # }
-    # max.cyc <- max(fpoints$cyc)
-    # fpoints <- fpoints %>>% 
-    #   group_by(fdata.name)
     p <- plot_ly(fpoints %>>% 
               group_by(fdata.name),
             x = ~cyc,
@@ -2499,16 +2513,6 @@ shinyServer(function(input, output, session) {
   output$meltingPlot <- renderPlotly({
     if (is.null(fdata.filtered()) || input$mainNavbar == "adp")
       return(NULL)
-    # updLog("Plot Melting\n")
-    # fdata.deriv <- fdata.filtered()
-    # # just to copy in memory to new table
-    # fdata.deriv[1, 1] <- fdata.deriv[1, 1]
-    # 
-    # fdata.deriv[
-    #   , fluor.deriv := {
-    #     diff <- diffQ(data.frame(tmp, fluor), verbose = TRUE)$xy
-    #     c(head(diff, 1)[1, 2], diff[, 2], tail(diff, 1)[1, 2])
-    #   }, by = fdata.name]
     p <- plot_ly(data = fdata.filtered() %>>% group_by(fdata.name),
                  x = ~tmp,
                  color = {
