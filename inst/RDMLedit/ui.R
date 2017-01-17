@@ -60,9 +60,7 @@ shinyUI(
                                         choices = ""),
                             actionButton("mergeBtn",
                                          "Merge")
-                          ),
-                          wellPanel(downloadButton("downloadRDML",
-                                                   "Download RDML"))),
+                          )),
                    column(9,
                           fluidRow(
                             column(3,
@@ -708,6 +706,10 @@ shinyUI(
                    plotlyOutput("meltingPlot")),
                  dataTableOutput("meltingDt"),
                  value = "mdp"),
+        tabPanel("Download",
+                 wellPanel(downloadButton("downloadRDML",
+                                          "Download RDML"),
+                           tags$p("Note that if you made any preprocession all fluorescence points will be overwritten with the new calculated values!!!"))),
         tabPanel("Help",
                  includeMarkdown("md/help.md")),
         id = "mainNavbar"
