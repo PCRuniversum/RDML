@@ -616,7 +616,7 @@ shinyUI(
                                           "Sample Type" = "sample.type",
                                           "Position" = "position"))),
                      column(2,
-                            selectInput("showTargets",
+                            selectInput("showTargetsadp",
                                         "Show Targets",
                                         multiple = TRUE,
                                         choices = "")),
@@ -640,7 +640,7 @@ shinyUI(
                  dataTableOutput("qPCRDt"),
                  value = "adp"),
         tabPanel("Melting Curves",
-                 wellPanel(
+                 
                    fluidRow(
                      column(2,
                             checkboxInput("preprocessMelting",
@@ -663,10 +663,11 @@ shinyUI(
                                             FALSE)),
                        column(2,
                               sliderInput("dfFactMelting", 
-                                          label = "Factor to Smooth the Curve", min = 0.5, 
+                                          label = "Factor to Smooth the Curve", min = 0.6, 
                                           max = 1.1, value = 0.95, step = 0.05))
                      )
                    ),
+                 wellPanel(
                    fluidRow(
                      column(2,
                             selectInput("colorMeltingBy",
@@ -689,7 +690,21 @@ shinyUI(
                                           "Dye" = "target.dyeId",
                                           "Sample" = "sample",
                                           "Sample Type" = "sample.type",
-                                          "Position" = "position")))),
+                                          "Position" = "position"))),
+                     column(2,
+                            selectInput("showTargetsmdp",
+                                        "Show Targets",
+                                        multiple = TRUE,
+                                        choices = ""))
+                     ),
+                   fluidRow(
+                     column(6,
+                     wellPanel(
+                       fluidRow(column(4, selectInput("showMeltingExperiment",
+                                                      "Experiment", c())),
+                                column(4, selectInput("showMeltingRun",
+                                                      "Run", c()))),
+                       htmlOutput("plateTblMelting")))),
                    plotlyOutput("meltingPlot")),
                  dataTableOutput("meltingDt"),
                  value = "mdp"),

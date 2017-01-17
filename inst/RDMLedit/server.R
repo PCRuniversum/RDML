@@ -2150,12 +2150,21 @@ shinyServer(function(input, output, session) {
               data[[target]]$UndoPreprocessMdp()
           }, by = fdata.name]
     }
-    # exp.ids <- unique(tbl$exp.id)
-    # updateSelectInput(session,
-    #                   "showqPCRExperiment",
-    #                   choices = exp.ids,
-    #                   selected = exp.ids[1])
+    exp.ids <- unique(tbl$exp.id)
+    updateSelectInput(session,
+                      "showMeltingExperiment",
+                      choices = exp.ids,
+                      selected = exp.ids[1])
     runif(1)
+  })
+  
+  observe({
+    req(input$showMeltingExperiment)
+    run.ids <- unique(values$rdml$AsTable()[exp.id == input$showMeltingExperiment, run.id])
+    updateSelectInput(session,
+                      "showMeltingRun",
+                      choices = run.ids,
+                      selected = run.ids[1])
   })
   # Curves and table --------------------------------------------------------
   
@@ -2168,6 +2177,8 @@ shinyServer(function(input, output, session) {
     # updLog("Create rdmlTable")
     input$showqPCRExperiment
     input$showqPCRRun
+    input$showMeltingExperiment
+    input$showMeltingRun
     cat("Create rdmlTable")
     isolate({
       tbl <- values$rdml$AsTable(
@@ -2214,7 +2225,7 @@ shinyServer(function(input, output, session) {
       rownames(values$selectedTubes) <- values$selectedTubes$position
       targets <- unique(tbl$target)
       updateSelectInput(session,
-                        "showTargets",
+                        paste0("showTargets", input$mainNavbar),
                         choices = targets,
                         selected = targets)
       tbl
@@ -2222,7 +2233,7 @@ shinyServer(function(input, output, session) {
   })
   
   # plate
-  output$plateTbl <- renderUI({
+  plateHTML <- reactive({
     req(rdmlTable())
     cat("Redraw plate\n")
     isolate({
@@ -2280,6 +2291,16 @@ shinyServer(function(input, output, session) {
                 paste(collapse = "")) %>>%
         HTML
     })
+  })
+  
+  output$plateTbl <- renderUI({
+    req(plateHTML())
+    plateHTML()
+  })
+  
+  output$plateTblMelting <- renderUI({
+    req(plateHTML())
+    plateHTML()
   })
   
   # plate click
@@ -2390,7 +2411,7 @@ shinyServer(function(input, output, session) {
     req(fdata())
     if (values$lockReplot != 0)
       return(NULL)
-    fd <- fdata()[target %in% input$showTargets]
+    fd <- fdata()[target %in% input[[paste0("showTargets", input$mainNavbar)]]]
     if (!all(values$selectedTubes$selected == FALSE)) {
       fd <- fd[
         position %in% values$selectedTubes$position[values$selectedTubes$selected == TRUE]]
@@ -2542,14 +2563,14 @@ shinyServer(function(input, output, session) {
     tbl <- rdmlTable()[, !c("quantFluor", "quantFluor.mean", "cq", "cq.mean", "cq.sd")]
     names(tbl)[1] <- "data.name"
     tbl
-  },
-  callback = "function(table) {
-    table.on('click.dt', 'tr', function() {
-    $(this).toggleClass('selected');
-    Shiny.onInputChange('selectedRows',
-    table.rows('.selected').data().toArray());
-    });
-    }"
+  }
+  # ,callback = "function(table) {
+  #   table.on('click.dt', 'tr', function() {
+  #   $(this).toggleClass('selected');
+  #   Shiny.onInputChange('selectedRows',
+  #   table.rows('.selected').data().toArray());
+  #   });
+  #   }"
   )
   
   # Download ----------------------------------------------------------------

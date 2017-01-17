@@ -17,6 +17,13 @@ shinyjs.filterTblByPositions = function(params){
         true,
         false
     ).draw();
+  table = $('#meltingDt').find("table").DataTable();
+  table
+    .column(4).search(
+        params,
+        true,
+        false
+    ).draw();
 };
 
 shinyjs.changeConfirmedStatus = function(params){
