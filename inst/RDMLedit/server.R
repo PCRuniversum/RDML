@@ -2053,7 +2053,7 @@ shinyServer(function(input, output, session) {
   preprocessAdpDone <- reactive({
     if (is.null(values$rdml))
       return(NULL)
-    cat("Calculations\n")
+    # cat("Calculations\n")
     tbl <- values$rdml$AsTable()
     smooth <- TRUE
     smooth.method <- input$smoothqPCRmethod
@@ -2128,7 +2128,7 @@ shinyServer(function(input, output, session) {
   preprocessMdpDone <- reactive({
     if (is.null(values$rdml))
       return(NULL)
-    cat("Calculations MDP\n")
+    # cat("Calculations MDP\n")
     tbl <- values$rdml$AsTable()
     if (input$preprocessMelting) {
       tbl[mdp == TRUE,
@@ -2179,7 +2179,7 @@ shinyServer(function(input, output, session) {
     input$showqPCRRun
     input$showMeltingExperiment
     input$showMeltingRun
-    cat("Create rdmlTable")
+    # cat("Create rdmlTable")
     isolate({
       tbl <- values$rdml$AsTable(
         add.columns = list(
@@ -2235,7 +2235,7 @@ shinyServer(function(input, output, session) {
   # plate
   plateHTML <- reactive({
     req(rdmlTable())
-    cat("Redraw plate\n")
+    # cat("Redraw plate\n")
     isolate({
       tbl <- rdmlTable()
       tbl[1, 1] <- tbl[1, 1]
