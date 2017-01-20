@@ -2440,7 +2440,11 @@ shinyServer(function(input, output, session) {
     # plot ticks setup
     if (input$cqMethod == "th" && !input$autoThLevel) {
       fpoints[, th := ifelse(input$logScale,
-                             log2(input[[paste0("thLevel_", target)]]),
+                             {
+                               new.fluor <- log10(input[[paste0("thLevel_", target)]])
+                               ifelse(is.nan(new.fluor) | new.fluor == -Inf,
+                                      0,
+                                      new.fluor)},
                              input[[paste0("thLevel_", target)]])
                 , by = target]
     }
@@ -2448,17 +2452,17 @@ shinyServer(function(input, output, session) {
       fpoints[, c("fluor", "quantFluor", "quantFluor.mean") := 
                 list(
                   {
-                    new.fluor <- log2(fluor)
+                    new.fluor <- log10(fluor)
                     ifelse(is.nan(new.fluor) | new.fluor == -Inf,
                            NA,
                            new.fluor)},
                   {
-                    new.fluor <- log2(quantFluor)
+                    new.fluor <- log10(quantFluor)
                     ifelse(is.nan(new.fluor) | new.fluor == -Inf,
                            0,
                            new.fluor)},
                   {
-                    new.fluor <- log2(quantFluor.mean)
+                    new.fluor <- log10(quantFluor.mean)
                     ifelse(is.nan(new.fluor) | new.fluor == -Inf,
                            0,
                            new.fluor)}
@@ -2536,7 +2540,7 @@ shinyServer(function(input, output, session) {
                } else {
                  NULL
                }
-             }+
+             } +
       labs(x = "Cycles", y = "RFU",
            color = NULL, linetype = NULL, fill = NULL) +
       theme_bw() +
@@ -2546,8 +2550,16 @@ shinyServer(function(input, output, session) {
       #                    minor_breaks = minor.ticks) +
       theme(legend.position = "right",
             legend.box = "horizontal",
-            panel.grid.minor = element_line(size = 1)
-      )
+            panel.grid.minor = element_line(size = 1)) 
+    # Not available with plotly
+    # + 
+            # {
+            #   if (input$logScale) {
+            #     annotation_logticks()
+            #   } else {
+            #     NULL
+            #   }
+            # }
     
     p
   })
