@@ -2054,7 +2054,10 @@ shinyServer(function(input, output, session) {
     if (is.null(values$rdml))
       return(NULL)
     # cat("Calculations\n")
-    tbl <- values$rdml$AsTable()
+    tbl <- values$rdml$AsTable()[adp == TRUE]
+    if (nrow(tbl) == 0){
+      return(runif(1))
+    }
     smooth <- TRUE
     smooth.method <- input$smoothqPCRmethod
     if (input$smoothqPCRmethod == "none") {
@@ -2113,7 +2116,10 @@ shinyServer(function(input, output, session) {
   
   cqCalcsDone <- reactive({
     req(preprocessAdpDone())
-    tbl <- values$rdml$AsTable()
+    tbl <- values$rdml$AsTable()[adp == TRUE]
+    if (nrow(tbl) == 0){
+      return(runif(1))
+    }
     tbl[adp == TRUE,
         {
           values$rdml$experiment[[exp.id]]$
@@ -2129,7 +2135,10 @@ shinyServer(function(input, output, session) {
     if (is.null(values$rdml))
       return(NULL)
     # cat("Calculations MDP\n")
-    tbl <- values$rdml$AsTable()
+    tbl <- values$rdml$AsTable()[mdp == TRUE]
+    if (nrow(tbl) == 0){
+      return(runif(1))
+    }
     if (input$preprocessMelting) {
       tbl[mdp == TRUE,
           {
@@ -2429,6 +2438,12 @@ shinyServer(function(input, output, session) {
     # just to copy in memory to new table
     fpoints[1, 1] <- fpoints[1, 1]
     # plot ticks setup
+    if (input$cqMethod == "th" && !input$autoThLevel) {
+      fpoints[, th := ifelse(input$logScale,
+                             log2(input[[paste0("thLevel_", target)]]),
+                             input[[paste0("thLevel_", target)]])
+                , by = target]
+    }
     if (input$logScale) {
       fpoints[, c("fluor", "quantFluor", "quantFluor.mean") := 
                 list(
@@ -2449,65 +2464,91 @@ shinyServer(function(input, output, session) {
                            new.fluor)}
                 )]
     }
-    p <- plot_ly(fpoints %>>% 
-              group_by(fdata.name),
-            x = ~cyc,
-            y = ~fluor,
-            type = "scatter",
-            mode = "lines",
-            color = {
-              if (input$colorqPCRby == "none")
-                ""
-              else
-                fpoints[, get(input$colorqPCRby)]
-            },
-            linetype = {
-              if (input$shapeqPCRby == "none")
-                NULL
-              else
-                fpoints[, get(input$shapeqPCRby)]
-            })
-    p <- switch(input$showCq,
-                none = p,
-                yes = add_trace(p,
-                                x = ~cq,
-                                y = ~quantFluor,
-                                type = "scatter",
-                                mode = "markers",
-                                color = {
-                                  if (input$colorqPCRby == "none")
-                                    ""
-                                  else
-                                    fpoints[, get(input$colorqPCRby)]
-                                },
-                                symbol = {
-                                  if (input$shapeqPCRby == "none")
-                                    NULL
-                                  else
-                                    fpoints[, get(input$shapeqPCRby)]
-                                },
-                                inherit = FALSE),
-                mean = add_trace(p,
-                                 data = fpoints %>>% 
-                                   group_by(sample, target),
-                                 x = ~cq.mean,
-                                 y = ~quantFluor.mean,
-                                 type = "scatter",
-                                 mode = "markers",
-                                 color = {
-                                   if (input$colorqPCRby == "none")
-                                     ""
-                                   else
-                                     fpoints[, get(input$colorqPCRby)]
-                                 },
-                                 symbol = {
-                                   if (input$shapeqPCRby == "none")
-                                     NULL
-                                   else
-                                     fpoints[, get(input$shapeqPCRby)]
-                                 },
-                                 inherit = FALSE)
-    )
+    
+    
+    p <- 
+      ggplot(fpoints) +
+      geom_line(aes_string(x = "cyc", y = "fluor",
+                           group = "fdata.name",
+                           color = {
+                             if (input$colorqPCRby == "none")
+                               NULL
+                             else
+                               input$colorqPCRby
+                           },
+                           linetype = {
+                             if (input$shapeqPCRby == "none")
+                               NULL
+                             else
+                               input$shapeqPCRby
+                           }),
+                size = 0.5) +
+      switch(input$showCq,
+             none = NULL,
+             yes = geom_point(aes_string(x = "cq", y = "quantFluor",
+                                  group = "fdata.name",
+                                  color = {
+                                    if (input$colorqPCRby == "none")
+                                      NULL
+                                    else
+                                      input$colorqPCRby
+                                  },
+                                  shape = {
+                                    if (input$shapeqPCRby == "none")
+                                      NULL
+                                    else
+                                      input$shapeqPCRby
+                                  }),
+                              size = 2),
+             mean = geom_point(aes_string(x = "cq.mean", y = "quantFluor.mean",
+                                          group = "fdata.name",
+                                          color = {
+                                            if (input$colorqPCRby == "none")
+                                              NULL
+                                            else
+                                              input$colorqPCRby
+                                          },
+                                          shape = {
+                                            if (input$shapeqPCRby == "none")
+                                              NULL
+                                            else
+                                              input$shapeqPCRby
+                                          }
+             ),
+             size = 2)) +
+             {
+               if (input$cqMethod == "th" && !input$autoThLevel) {
+                 geom_hline(aes_string(
+                   yintercept = "th",
+                   group = "target",
+                   color = {
+                     if (input$colorqPCRby == "none")
+                       NULL
+                     else
+                       input$colorqPCRby
+                   },
+                   linetype = {
+                     if (input$shapeqPCRby == "none")
+                       NULL
+                     else
+                       input$shapeqPCRby
+                   }))
+               } else {
+                 NULL
+               }
+             }+
+      labs(x = "Cycles", y = "RFU",
+           color = NULL, linetype = NULL, fill = NULL) +
+      theme_bw() +
+      # scale_x_continuous(minor_breaks = seq(1, max.cyc, 1),
+      #                    limits = c(1, max.cyc)) +
+      # scale_y_continuous(breaks = ticks,
+      #                    minor_breaks = minor.ticks) +
+      theme(legend.position = "right",
+            legend.box = "horizontal",
+            panel.grid.minor = element_line(size = 1)
+      )
+    
     p
   })
   
