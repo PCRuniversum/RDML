@@ -2103,7 +2103,9 @@ shinyServer(function(input, output, session) {
   output$thLevelsUI <- renderUI({
     if (is.null(values$rdml))
       return(NULL)
-    input$logScale
+    scale.text <- ifelse(input$logScale,
+                         " (log scale)",
+                         "")
     isolate({
       tbl <- values$rdml$AsTable()
       wellPanel(
@@ -2112,12 +2114,12 @@ shinyServer(function(input, output, session) {
                    th.name <- paste0("thLevel_", target)
                    if (is.null(input[[th.name]])) {
                      numericInput(paste0("thLevel_", target),
-                                  HTML(sprintf("Threshold <b>%s</b>", target)),
+                                  HTML(sprintf("Threshold <b>%s</b>%s", target, scale.text)),
                                   value = 0,
                                   step = 0.01)
                    } else {
                      numericInput(th.name,
-                                  HTML(sprintf("Threshold <b>%s</b>", target)),
+                                  HTML(sprintf("Threshold <b>%s</b>%s", target, scale.text)),
                                   value = ifelse(input$logScale,
                                                  {
                                                    converted <- log10(input[[th.name]])
