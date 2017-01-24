@@ -627,8 +627,8 @@ shinyServer(function(input, output, session) {
                           "sampleCsmTccSlct",
                           selected = sample$cdnaSynthesisMethod$thermalCyclingConditions)
         updateTextInput(session,
-                            "sampleTemplateQuantityConcText",
-                            value = sample$templateQuantity$conc)
+                        "sampleTemplateQuantityConcText",
+                        value = sample$templateQuantity$conc)
         updateSelectInput(session,
                           "sampleTemplateQuantityNucleotideSlct",
                           selected = sample$templateQuantity$nucleotide$value)
@@ -2103,15 +2103,35 @@ shinyServer(function(input, output, session) {
   output$thLevelsUI <- renderUI({
     if (is.null(values$rdml))
       return(NULL)
-    tbl <- values$rdml$AsTable()
-    wellPanel(
-      list.map(unique(tbl$target),
-               target ~ {
-                 numericInput(paste0("thLevel_", target),
-                              HTML(sprintf("Threshold <b>%s</b>", target)),
-                              0, 0, step = 0.01)
-               })
-    )
+    scale.text <- ifelse(input$logScale,
+                         " (log scale)",
+                         "")
+    isolate({
+      tbl <- values$rdml$AsTable()
+      wellPanel(
+        list.map(unique(tbl$target),
+                 target ~ {
+                   th.name <- paste0("thLevel_", target)
+                   if (is.null(input[[th.name]])) {
+                     numericInput(paste0("thLevel_", target),
+                                  HTML(sprintf("Threshold <b>%s</b>%s", target, scale.text)),
+                                  value = 0,
+                                  step = 0.01)
+                   } else {
+                     numericInput(th.name,
+                                  HTML(sprintf("Threshold <b>%s</b>%s", target, scale.text)),
+                                  value = ifelse(input$logScale,
+                                                 {
+                                                   converted <- log10(input[[th.name]])
+                                                   ifelse(converted == -Inf,
+                                                          0, converted)
+                                                 },
+                                                 10 ^ input[[th.name]]),
+                                  step = 0.01)
+                   }
+                 })
+      )
+    })
   })
   
   cqCalcsDone <- reactive({
@@ -2126,7 +2146,9 @@ shinyServer(function(input, output, session) {
             run[[run.id]]$
             react[[as.character(react.id)]]$
             data[[target]]$CalcCq(input$cqMethod,
-                                  input[[paste0("thLevel_", target)]],
+                                  ifelse(input$logScale,
+                                         10^input[[paste0("thLevel_", target)]],
+                                         input[[paste0("thLevel_", target)]]),
                                   input$autoThLevel)
         }, by = fdata.name]
   })
@@ -2214,12 +2236,12 @@ shinyServer(function(input, output, session) {
       )[get(input$mainNavbar) == TRUE &
           exp.id == input$showqPCRExperiment &
           run.id == input$showqPCRRun, !c("adp", "mdp")][
-        , c("cq.mean", "cq.sd", "quantFluor.mean") := list(
-          mean(cq, na.rm = TRUE),
-          sd(cq, na.rm = TRUE),
-          mean(quantFluor, na.rm = TRUE)
-        ),
-        by = .(sample, target)]
+            , c("cq.mean", "cq.sd", "quantFluor.mean") := list(
+              mean(cq, na.rm = TRUE),
+              sd(cq, na.rm = TRUE),
+              mean(quantFluor, na.rm = TRUE)
+            ),
+            by = .(sample, target)]
       if (nrow(tbl) == 0) {
         return(NULL)
       }
@@ -2404,8 +2426,8 @@ shinyServer(function(input, output, session) {
     # updLog("Create fdata")
     tbl <- rdmlTable()
     fdata <- values$rdml$GetFData(tbl, 
-                         dp.type = input$mainNavbar,
-                         long.table = TRUE)
+                                  dp.type = input$mainNavbar,
+                                  long.table = TRUE)
     if (input$mainNavbar == "mdp"){
       fdata[
         , fluor.deriv := {
@@ -2439,14 +2461,16 @@ shinyServer(function(input, output, session) {
     fpoints[1, 1] <- fpoints[1, 1]
     # plot ticks setup
     if (input$cqMethod == "th" && !input$autoThLevel) {
-      fpoints[, th := ifelse(input$logScale,
-                             {
-                               new.fluor <- log10(input[[paste0("thLevel_", target)]])
-                               ifelse(is.nan(new.fluor) | new.fluor == -Inf,
-                                      0,
-                                      new.fluor)},
-                             input[[paste0("thLevel_", target)]])
-                , by = target]
+      fpoints[, th := as.numeric(input[[paste0("thLevel_", target)]])
+                # ifelse(input$logScale,
+                #              {
+                #                new.fluor <- log10(input[[paste0("thLevel_", target)]])
+                #                ifelse(is.nan(new.fluor) | new.fluor == -Inf,
+                #                       0,
+                #                       new.fluor)},
+                             # input[[paste0("thLevel_", target)]]
+                       # )
+              , by = target]
     }
     if (input$logScale) {
       fpoints[, c("fluor", "quantFluor", "quantFluor.mean") := 
@@ -2490,19 +2514,19 @@ shinyServer(function(input, output, session) {
       switch(input$showCq,
              none = NULL,
              yes = geom_point(aes_string(x = "cq", y = "quantFluor",
-                                  group = "fdata.name",
-                                  color = {
-                                    if (input$colorqPCRby == "none")
-                                      NULL
-                                    else
-                                      input$colorqPCRby
-                                  },
-                                  shape = {
-                                    if (input$shapeqPCRby == "none")
-                                      NULL
-                                    else
-                                      input$shapeqPCRby
-                                  }),
+                                         group = "fdata.name",
+                                         color = {
+                                           if (input$colorqPCRby == "none")
+                                             NULL
+                                           else
+                                             input$colorqPCRby
+                                         },
+                                         shape = {
+                                           if (input$shapeqPCRby == "none")
+                                             NULL
+                                           else
+                                             input$shapeqPCRby
+                                         }),
                               size = 2),
              mean = geom_point(aes_string(x = "cq.mean", y = "quantFluor.mean",
                                           group = "fdata.name",
@@ -2553,13 +2577,13 @@ shinyServer(function(input, output, session) {
             panel.grid.minor = element_line(size = 1)) 
     # Not available with plotly
     # + 
-            # {
-            #   if (input$logScale) {
-            #     annotation_logticks()
-            #   } else {
-            #     NULL
-            #   }
-            # }
+    # {
+    #   if (input$logScale) {
+    #     annotation_logticks()
+    #   } else {
+    #     NULL
+    #   }
+    # }
     
     p
   })
@@ -2569,9 +2593,9 @@ shinyServer(function(input, output, session) {
       return(NULL)
     # input$recalculateCq
     # isolate({
-      tbl <- rdmlTable()[, !"quantFluor.mean"]
-      names(tbl)[1] <- "data.name"
-      tbl
+    tbl <- rdmlTable()[, !"quantFluor.mean"]
+    names(tbl)[1] <- "data.name"
+    tbl
   }
   # ,
   # callback = "function(table) {
