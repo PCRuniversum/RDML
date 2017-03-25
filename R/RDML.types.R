@@ -1761,16 +1761,7 @@ adpsType <-
           inherit = rdmlBaseType,
           public = list(
             initialize = function(fpoints) {
-              assert(checkDataFrame(fpoints, types = c("numeric")))
-              assert(
-                length(setdiff(colnames(fpoints), c("cyc", "tmp", "fluor"))) == 0 ||
-                  length(setdiff(colnames(fpoints), c("cyc", "fluor"))) == 0)
-              private$.fpoints <- {
-                if (testDataTable(fpoints))
-                  fpoints
-                else
-                  data.table(fpoints)
-              }
+              self$fpoints <- fpoints
             },
             .asXMLnodes = function(node.name) {
               ifelse("tmp" %in% colnames(private$.fpoints),
@@ -1793,7 +1784,7 @@ adpsType <-
             fpoints = function(fpoints) {
               if (missing(fpoints))
                 return(private$.fpoints)
-              assert(checkDataFrame(fpoints))
+              assert(checkDataFrame(fpoints, types = c("numeric")))
               assert(
                 length(setdiff(colnames(fpoints), c("cyc", "tmp", "fluor"))) == 0 ||
                   length(setdiff(colnames(fpoints), c("cyc", "fluor"))) == 0)
@@ -1803,6 +1794,7 @@ adpsType <-
                 else
                   data.table(fpoints)
               }
+              setkey(private$.fpoints, cyc)
             }
           ))
 
@@ -1836,14 +1828,7 @@ mdpsType <-
           inherit = rdmlBaseType,
           public = list(
             initialize = function(fpoints) {
-              assert(checkDataFrame(fpoints, types = c("numeric")))
-              assert(length(setdiff(colnames(fpoints), c("tmp", "fluor"))) == 0)
-              private$.fpoints <- {
-                if (testDataTable(fpoints))
-                  fpoints
-                else
-                  data.table(fpoints)
-              }
+              self$fpoints <- fpoints
             },
             .asXMLnodes = function(node.name) {
               private$.fpoints[, sprintf("<mdp><tmp>%s</tmp><fluor>%s</fluor></mdp>",
@@ -1858,7 +1843,7 @@ mdpsType <-
             fpoints = function(fpoints) {
               if (missing(fpoints))
                 return(private$.fpoints)
-              assert(checkDataFrame(fpoints))
+              assert(checkDataFrame(fpoints, types = c("numeric")))
               assert(length(setdiff(colnames(fpoints), c("tmp", "fluor"))) == 0)
               private$.fpoints <- {
                 if (testDataTable(fpoints))
@@ -1866,6 +1851,7 @@ mdpsType <-
                 else
                   data.table(fpoints)
               }
+              setkey(private$.fpoints, tmp)
             }
           ))
 
