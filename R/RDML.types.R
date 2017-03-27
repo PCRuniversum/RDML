@@ -191,13 +191,9 @@ rdmlIdType <-
             initialize = function(publisher,
                                   serialNumber,
                                   MD5Hash = NULL) {
-              assertString(publisher)
-              assertString(serialNumber)
-              assert(checkNull(MD5Hash),
-                     checkString(MD5Hash))
-              private$.publisher <- publisher
-              private$.serialNumber <- serialNumber
-              private$.MD5Hash <- MD5Hash
+              self$publisher <- publisher
+              self$serialNumber <- serialNumber
+              self$MD5Hash <- MD5Hash
             }
           ),
           private = list(
@@ -248,8 +244,7 @@ idType <-
           inherit = rdmlBaseType,
           public = list(
             initialize = function(id) {
-              assertString(id)
-              private$.id <- id
+              self$id <- id
             },
             .asXMLnodes = function(node.name) {
               sprintf("<%s id = '%s'/>",
@@ -293,8 +288,7 @@ reactIdType <-
           inherit = idType,
           public = list(
             initialize = function(id) {
-              assertCount(id)
-              private$.id <- id
+              self$id <- id
             }#,
             #             print = function(...) {
             #               cat(private$.id)
@@ -364,21 +358,12 @@ experimenterType <-
                                   email = NULL,
                                   labName = NULL,
                                   labAddress = NULL) {
-              assertClass(id, "idType")
-              assertString(firstName)
-              assertString(lastName)
-              assert(checkNull(email),
-                     checkString(email))
-              assert(checkNull(labName),
-                     checkString(labName))
-              assert(checkNull(labAddress),
-                     checkString(labAddress))
-              private$.id <- id
-              private$.firstName <- firstName
-              private$.lastName <- lastName
-              private$.email <- email
-              private$.labName <- labName
-              private$.labAddress <- labAddress
+              self$id <- id
+              self$firstName <- firstName
+              self$lastName <- lastName
+              self$email <- email
+              self$labName <- labName
+              self$labAddress <- labAddress
             }
           ),
           private = list(
@@ -455,11 +440,8 @@ documentationType <-
           public = list(
             initialize = function(id,
                                   text = NULL) {
-              assertClass(id, "idType")
-              assert(checkNull(text),
-                     checkString(text))
-              private$.id <- id
-              private$.text <- text
+              self$id <- id
+              self$text <- text
             }
           ),
           private = list(
@@ -505,11 +487,8 @@ dyeType <-
           public = list(
             initialize = function(id,
                                   description = NULL) {
-              assertClass(id, "idType")
-              assert(checkNull(description),
-                     checkString(description))
-              private$.id <- id
-              private$.description <- description
+              self$id <- id
+              self$description <- description
             }
           ),
           private = list(
@@ -557,12 +536,8 @@ xRefType <-
           public = list(
             initialize = function(name = NULL,
                                   id = NULL) {
-              assert(checkNull(name),
-                     checkString(name))
-              assert(checkNull(id),
-                     checkString(id))
-              private$.name <- name
-              private$.id <- id
+              self$name <- name
+              self$id <- id
             }
           ),
           private = list(
@@ -610,10 +585,8 @@ annotationType <-
           public = list(
             initialize = function(property,
                                   value) {
-              assertString(property)
-              assertString(value)
-              private$.property <- property
-              private$.value <- value
+              self$property <- property
+              self$value <- value
             }
           ),
           private = list(
@@ -659,10 +632,8 @@ quantityType <-
           public = list(
             initialize = function(value,
                                   unit) {
-              assertNumber(value)
-              assertClass(unit, "quantityUnitType")
-              private$.value <- value
-              private$.unit <- unit
+              self$value <- value
+              self$unit <- unit
             }
           ),
           private = list(
@@ -716,18 +687,10 @@ cdnaSynthesisMethodType <-
                                   primingMethod = NULL,
                                   dnaseTreatment = NULL,
                                   thermalCyclingConditions = NULL) {
-              assert(checkNull(enzyme),
-                     checkString(enzyme))
-              assert(checkNull(primingMethod),
-                     checkClass(primingMethod, "primingMethodType"))
-              assert(checkNull(dnaseTreatment),
-                     checkFlag(dnaseTreatment))
-              assert(checkNull(thermalCyclingConditions),
-                     checkClass(thermalCyclingConditions, "idType"))
-              private$.enzyme <- enzyme
-              private$.primingMethod <- primingMethod
-              private$.dnaseTreatment <- dnaseTreatment
-              private$.thermalCyclingConditions <- thermalCyclingConditions
+              self$enzyme <- enzyme
+              self$primingMethod <- primingMethod
+              self$dnaseTreatment <- dnaseTreatment
+              self$thermalCyclingConditions <- thermalCyclingConditions
             }
           ),
           private = list(
@@ -791,10 +754,8 @@ templateQuantityType <-
           public = list(
             initialize = function(conc,
                                   nucleotide) {
-              assertNumber(conc)
-              assertClass(nucleotide, "nucleotideType")
-              private$.conc <- conc
-              private$.nucleotide <- nucleotide
+              self$conc <- conc
+              self$nucleotide <- nucleotide
             }
           ),
           private = list(
@@ -835,9 +796,8 @@ enumType <-
           # class = FALSE,
           inherit = rdmlBaseType,
           public = list(
-            initialize = function(value, ...) {
-              assert(checkNull(value), checkChoice(value, c(private$.levels)))
-              private$.value <- value
+            initialize = function(value) {
+              self$value <- value
             },
             print = function(...) {
               cat(private$.value)
@@ -860,7 +820,7 @@ enumType <-
             value = function(value) {
               if (missing(value))
                 return(private$.value)
-              assertChoice(value, c(private$.levels))
+              assert(checkNull(value), checkChoice(value, c(private$.levels)))
               private$.value <- value
             }
           ))
@@ -1070,39 +1030,18 @@ sampleType <-
                                   calibratorSample = FALSE,
                                   cdnaSynthesisMethod = NULL,
                                   templateQuantity = NULL) {
-              assertClass(id, "idType")
-              assert(checkNull(description),
-                     checkString(description))
-              assert(checkNull(documentation),
-                     checkList(documentation, "idReferencesType"))
-              assert(checkNull(xRef),
-                     checkList(xRef, "xRefType"))
-              assert(checkNull(annotation),
-                     checkList(annotation, "annotationType"))
-              assertClass(type, "sampleTypeType")
-              assert(checkNull(interRunCalibrator),
-                     checkFlag(interRunCalibrator))
-              assert(checkNull(quantity),
-                     checkClass(quantity, "quantityType"))
-              assert(checkNull(calibratorSample),
-                     checkFlag(calibratorSample))
-              assert(checkNull(cdnaSynthesisMethod),
-                     checkClass(cdnaSynthesisMethod, "cdnaSynthesisMethodType"))
-              assert(checkNull(templateQuantity),
-                     checkClass(templateQuantity, "templateQuantityType"))
-
-              private$.id <- id
-              private$.description <- description
-              private$.documentation <- documentation
-              private$.xRef <- xRef
-              private$.annotation <- list.names(annotation,
+              self$id <- id
+              self$description <- description
+              self$documentation <- documentation
+              self$xRef <- xRef
+              self$annotation <- list.names(annotation,
                                                 .$property)
-              private$.type <- type
-              private$.interRunCalibrator <- interRunCalibrator
-              private$.quantity <- quantity
-              private$.calibratorSample <- calibratorSample
-              private$.cdnaSynthesisMethod <- cdnaSynthesisMethod
-              private$.templateQuantity <- templateQuantity
+              self$type <- type
+              self$interRunCalibrator <- interRunCalibrator
+              self$quantity <- quantity
+              self$calibratorSample <- calibratorSample
+              self$cdnaSynthesisMethod <- cdnaSynthesisMethod
+              self$templateQuantity <- templateQuantity
             }
           ),
           private = list(
@@ -1225,14 +1164,9 @@ oligoType <-
             initialize = function(threePrimeTag = NULL,
                                   fivePrimeTag = NULL,
                                   sequence) {
-              assert(checkNull(threePrimeTag),
-                     checkString(threePrimeTag))
-              assert(checkNull(fivePrimeTag),
-                     checkString(fivePrimeTag))
-              assertString(sequence)
-              private$.threePrimeTag <- threePrimeTag
-              private$.fivePrimeTag <- fivePrimeTag
-              private$.sequence <- sequence
+              self$threePrimeTag <- threePrimeTag
+              self$fivePrimeTag <- fivePrimeTag
+              self$sequence <- sequence
             }
           ),
           private = list(
@@ -1293,21 +1227,11 @@ sequencesType <-
                                   probe1 = NULL,
                                   probe2 = NULL,
                                   amplicon = NULL) {
-              assert(checkNull(forwardPrimer),
-                     checkClass(forwardPrimer, "oligoType"))
-              assert(checkNull(reversePrimer),
-                     checkClass(reversePrimer, "oligoType"))
-              assert(checkNull(probe1),
-                     checkClass(probe1, "oligoType"))
-              assert(checkNull(probe2),
-                     checkClass(probe2, "oligoType"))
-              assert(checkNull(amplicon),
-                     checkClass(amplicon, "oligoType"))
-              private$.forwardPrimer <- forwardPrimer
-              private$.reversePrimer <- reversePrimer
-              private$.probe1 <- probe1
-              private$.probe2 <- probe2
-              private$.amplicon <- amplicon
+              self$forwardPrimer <- forwardPrimer
+              self$reversePrimer <- reversePrimer
+              self$probe1 <- probe1
+              self$probe2 <- probe2
+              self$amplicon <- amplicon
             }
           ),
           private = list(
@@ -1379,10 +1303,8 @@ commercialAssayType <-
           public = list(
             initialize = function(company,
                                   orderNumber) {
-              assertString(company)
-              assertString(orderNumber)
-              private$.company <- company
-              private$.orderNumber <- orderNumber
+              self$company <- company
+              self$orderNumber <- orderNumber
             }
           ),
           private = list(
@@ -1481,40 +1403,18 @@ targetType <-
                                   dyeId,
                                   sequences = NULL,
                                   commercialAssay = NULL) {
-              assertClass(id, "idType")
-              assert(checkNull(description),
-                     checkString(description))
-              assert(checkNull(documentation),
-                     checkList(documentation, "idReferencesType"))
-              assert(checkNull(xRef),
-                     checkList(xRef, "xRefType"))
-              assertClass(type, "targetTypeType")
-              assert(checkNull(amplificationEfficiencyMethod),
-                     checkString(amplificationEfficiencyMethod))
-              assert(checkNull(amplificationEfficiency),
-                     checkNumber(amplificationEfficiency))
-              assert(checkNull(amplificationEfficiencySE),
-                     checkNumber(amplificationEfficiencySE))
-              assert(checkNull(detectionLimit),
-                     checkNumber(detectionLimit))
-              assertClass(dyeId, "idReferencesType")
-              assert(checkNull(sequences),
-                     checkClass(sequences, "sequencesType"))
-              assert(checkNull(commercialAssay),
-                     checkClass(commercialAssay, "commercialAssayType"))
-
-              private$.id <- id
-              private$.description <- description
-              private$.documentation <- documentation
-              private$.xRef <- xRef
-              private$.type <- type
-              private$.amplificationEfficiencyMethod <- amplificationEfficiencyMethod
-              private$.amplificationEfficiency <- amplificationEfficiency
-              private$.amplificationEfficiencySE <- amplificationEfficiencySE
-              private$.detectionLimit <- detectionLimit
-              private$.dyeId <- dyeId
-              private$.sequences <- sequences
-              private$.commercialAssay <- commercialAssay
+              self$id <- id
+              self$description <- description
+              self$documentation <- documentation
+              self$xRef <- xRef
+              self$type <- type
+              self$amplificationEfficiencyMethod <- amplificationEfficiencyMethod
+              self$amplificationEfficiency <- amplificationEfficiency
+              self$amplificationEfficiencySE <- amplificationEfficiencySE
+              self$detectionLimit <- detectionLimit
+              self$dyeId <- dyeId
+              self$sequences <- sequences
+              self$commercialAssay <- commercialAssay
             }
           ),
           private = list(
@@ -1914,33 +1814,15 @@ dataType <-
                                   bgFluor = NULL,
                                   bgFluorSlp = NULL,
                                   quantFluor = NULL) {
-              assertClass(tar, "idReferencesType")
-              assert(checkNull(cq),
-                     checkNumber(cq))
-              assert(checkNull(excl),
-                     checkString(excl))
-              assert(checkNull(adp),
-                     checkClass(adp, "adpsType"))
-              assert(checkNull(mdp),
-                     checkClass(mdp, "mdpsType"))
-              assert(checkNull(endPt),
-                     checkNumber(endPt))
-              assert(checkNull(bgFluor),
-                     checkNumber(bgFluor))
-              assert(checkNull(bgFluorSlp),
-                     checkNumber(bgFluorSlp))
-              assert(checkNull(quantFluor),
-                     checkNumber(quantFluor))
-
-              private$.tar <- tar
-              private$.cq <- cq
-              private$.excl <- excl
-              private$.adp <- adp
-              private$.mdp <- mdp
-              private$.endPt <- endPt
-              private$.bgFluor <- bgFluor
-              private$.bgFluorSlp <- bgFluorSlp
-              private$.quantFluor <- quantFluor
+              self$tar <- tar
+              self$cq <- cq
+              self$excl <- excl
+              self$adp <- adp
+              self$mdp <- mdp
+              self$endPt <- endPt
+              self$bgFluor <- bgFluor
+              self$bgFluorSlp <- bgFluorSlp
+              self$quantFluor <- quantFluor
             },
             GetFData = function(dp.type = "adp") {
               assertString(dp.type)
@@ -2093,18 +1975,11 @@ reactType <-
                                     pcrFormatType$new(8, 12,
                                                       labelFormatType$new("ABC"),
                                                       labelFormatType$new("123"))) {
-              assertClass(id, "reactIdType")
-              assertClass(sample, "idReferencesType")
-              assert(checkNull(data),
-                     checkList(data, "dataType"))
-              assert(checkNull(pcrFormat),
-                     checkClass(pcrFormat, "pcrFormatType"))
-              private$.id <- id
-              private$.sample <- sample
-              private$.data <- list.names(data,
+              self$id <- id
+              self$sample <- sample
+              self$data <- list.names(data,
                                           .$tar$id)
-              if (!is.null(pcrFormat))
-                self$.recalcPosition(pcrFormat)
+              self$.recalcPosition(pcrFormat)
             },
             GetFData = function(dp.type = "adp",
                                    long.table = FALSE) {
@@ -2213,10 +2088,8 @@ dataCollectionSoftwareType <-
           public = list(
             initialize = function(name,
                                   version) {
-              assertString(name)
-              assertString(version)
-              private$.name <- name
-              private$.version <- version
+              self$name <- name
+              self$version <- version
             }
           ),
           private = list(
@@ -2351,14 +2224,10 @@ pcrFormatType <-
                                   columns,
                                   rowLabel,
                                   columnLabel) {
-              assertCount(rows)
-              assertCount(columns)
-              assertClass(rowLabel, "labelFormatType")
-              assertClass(columnLabel, "labelFormatType")
-              private$.rows <- rows
-              private$.columns <- columns
-              private$.rowLabel <- rowLabel
-              private$.columnLabel <- columnLabel
+              self$rows <- rows
+              self$columns <- columns
+              self$rowLabel <- rowLabel
+              self$columnLabel <- columnLabel
             }
           ),
           private = list(
@@ -2451,40 +2320,18 @@ runType <-
                                   pcrFormat,
                                   runDate = NULL,
                                   react = NULL) {
-              assertClass(id, "idType")
-              assert(checkNull(description),
-                     checkString(description))
-              assert(checkNull(documentation),
-                     checkList(documentation, "idReferencesType"))
-              assert(checkNull(experimenter),
-                     checkList(experimenter, "idReferencesType"))
-              assert(checkNull(instrument),
-                     checkString(instrument))
-              assert(checkNull(dataCollectionSoftware),
-                     checkClass(dataCollectionSoftware, "dataCollectionSoftwareType"))
-              assert(checkNull(backgroundDeterminationMethod),
-                     checkString(backgroundDeterminationMethod))
-              assert(checkNull(cqDetectionMethod),
-                     checkClass(cqDetectionMethod, "cqDetectionMethodType"))
-              assert(checkNull(thermalCyclingConditions),
-                     checkClass(thermalCyclingConditions, "idReferencesType"))
-              assertClass(pcrFormat, "pcrFormatType")
-              assert(checkDateTime(runDate)) # date time
-              assert(checkNull(react),
-                     checkList(react, "reactType"))
-
-              private$.id <- id
-              private$.description <- description
-              private$.documentation <- documentation
-              private$.experimenter <- experimenter
-              private$.instrument <- instrument
-              private$.dataCollectionSoftware <- dataCollectionSoftware
-              private$.backgroundDeterminationMethod <- backgroundDeterminationMethod
-              private$.cqDetectionMethod <- cqDetectionMethod
-              private$.thermalCyclingConditions <- thermalCyclingConditions
-              private$.pcrFormat <- pcrFormat
-              private$.runDate <- runDate
-              private$.react <- list.names(react,
+              self$id <- id
+              self$description <- description
+              self$documentation <- documentation
+              self$experimenter <- experimenter
+              self$instrument <- instrument
+              self$dataCollectionSoftware <- dataCollectionSoftware
+              self$backgroundDeterminationMethod <- backgroundDeterminationMethod
+              self$cqDetectionMethod <- cqDetectionMethod
+              self$thermalCyclingConditions <- thermalCyclingConditions
+              self$pcrFormat <- pcrFormat
+              self$runDate <- runDate
+              self$react <- list.names(react,
                                            .$id$id)
               self$UpdateReactsPosition()
             },
@@ -2655,18 +2502,10 @@ experimentType <-
                                   description = NULL,
                                   documentation = NULL,
                                   run = NULL) {
-              assertClass(id, "idType")
-              assert(checkNull(description),
-                     checkString(description))
-              assert(checkNull(documentation),
-                     checkList(documentation, "idReferencesType"))
-              assert(checkNull(run),
-                     checkList(run, "runType"))
-
-              private$.id <- id
-              private$.description <- description
-              private$.documentation <- documentation
-              private$.run <- list.names(run,
+              self$id <- id
+              self$description <- description
+              self$documentation <- documentation
+              self$run <- list.names(run,
                                          .$id$id)
             },
             GetFData = function(dp.type = "adp",
@@ -2780,8 +2619,7 @@ pauseType <-
           inherit = rdmlBaseType,
           public = list(
             initialize = function(temperature) {
-              assertNumber(temperature)
-              private$.temperature <- temperature
+              self$temperature <- temperature
             }
           ),
           private = list(
@@ -2824,10 +2662,8 @@ loopType <-
           public = list(
             initialize = function(goto,
                                   repeat.n) {
-              assertCount(goto)
-              assertCount(repeat.n)
-              private$.goto <- goto
-              private$.repeat <- repeat.n
+              self$goto <- goto
+              self$repeat.n <- repeat.n
             }
           ),
           private = list(
@@ -2917,21 +2753,11 @@ baseTemperatureType <-
                                   durationChange = NULL,
                                   measure = NULL,
                                   ramp = NULL) {
-              assertCount(duration)
-              assert(checkNull(temperatureChange),
-                     checkNumber(temperatureChange))
-              assert(checkNull(durationChange),
-                     checkCount(durationChange))
-              assert(checkNull(measure),
-                     checkClass(measure, "measureType"))
-              assert(checkNull(ramp),
-                     checkNumber(ramp))
-
-              private$.duration <- duration
-              private$.temperatureChange <- temperatureChange
-              private$.durationChange <- durationChange
-              private$.measure <- measure
-              private$.ramp <- ramp
+              self$duration <- duration
+              self$temperatureChange <- temperatureChange
+              self$durationChange <- durationChange
+              self$measure <- measure
+              self$ramp <- ramp
             }
           ),
           private = list(
@@ -3001,8 +2827,7 @@ temperatureType <-
           inherit = baseTemperatureType,
           public = list(
             initialize = function(temperature, ...) {
-              assertNumber(temperature)
-              private$.temperature <- temperature
+              self$temperature <- temperature
               super$initialize(...)
             }
           ),
@@ -3046,10 +2871,8 @@ gradientType <-
             initialize = function(highTemperature,
                                   lowTemperature,
                                   ...) {
-              assertNumber(highTemperature)
-              assertNumber(lowTemperature)
-              private$.highTemperature <- highTemperature
-              private$.lowTemperature <- lowTemperature
+              self$highTemperature <- highTemperature
+              self$lowTemperature <- lowTemperature
               super$initialize(...)
             }
           ),
@@ -3108,27 +2931,13 @@ stepType <-
                                   loop = NULL,
                                   pause = NULL,
                                   lidOpen = NULL) {
-              assertCount(nr)
-              assert(checkNull(description),
-                     checkString(description))
-              assert(checkNull(temperature),
-                     checkClass(temperature, "temperatureType"))
-              assert(checkNull(gradient),
-                     checkClass(gradient, "gradientType"))
-              assert(checkNull(loop),
-                     checkClass(loop, "loopType"))
-              assert(checkNull(pause),
-                     checkClass(pause, "pauseType"))
-              assert(checkNull(lidOpen),
-                     checkClass(lidOpen, "lidOpenType"))
-
-              private$.nr <- nr
-              private$.description <- description
-              private$.temperature <- temperature
-              private$.gradient <- gradient
-              private$.loop <- loop
-              private$.pause <- pause
-              private$.lidOpen <- lidOpen
+              self$nr <- nr
+              self$description <- description
+              self$temperature <- temperature
+              self$gradient <- gradient
+              self$loop <- loop
+              self$pause <- pause
+              self$lidOpen <- lidOpen
             }
           ),
           private = list(
@@ -3226,26 +3035,13 @@ thermalCyclingConditionsType <-
                                   lidTemperature = NULL,
                                   experimenter = NULL,
                                   step) {
-              assertClass(id, "idType")
-              assert(checkNull(description),
-                     checkString(description))
-              assert(checkNull(documentation),
-                     checkList(documentation, "idReferencesType"))
-              assert(checkNull(lidTemperature),
-                     checkNumber(lidTemperature))
-              assert(checkNull(experimenter),
-                     checkList(experimenter, "idReferencesType"))
-              assert(checkNull(step),
-                     checkList(step, "stepType"))
-
-              private$.id <- id
-              private$.description <- description
-              private$.documentation <- documentation
-              private$.lidTemperature <- lidTemperature
-              private$.experimenter <- experimenter
-              private$.step <- list.names(step,
+              self$id <- id
+              self$description <- description
+              self$documentation <- documentation
+              self$lidTemperature <- lidTemperature
+              self$experimenter <- experimenter
+              self$step <- list.names(step,
                                           .$nr)
-
             }
           ),
           private = list(
