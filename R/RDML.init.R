@@ -105,6 +105,9 @@ GetDilutionsRoche <- function(uniq.folder)
     return(NA)
   }
   rdml.doc <- read_xml(paste0(uniq.folder,"/calculated_data.xml"))
+  if (length(xml_ns(rdml.doc) != 3)) {
+    return(NULL)
+  }
   rdml.env$ns <- xml_ns_rename(xml_ns(rdml.doc), d1 = "calc", d2 = "analys", d3 = "quant")
   # xml_ns_strip(rdml.doc)
   concs <- getNumericVector(rdml.doc, "//quant:absQuantDataSource/quant:standard")
