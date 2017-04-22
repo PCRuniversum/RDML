@@ -15,7 +15,7 @@ Publication of Quantitative Real-Time PCR Experiments (MIQE) guidelines ([Bustin
 # Installation
 ------------
 
-The stable version of the `RDML` package for R is hosted on [CRAN](https://cran.r-project.org/web/packages/RDML/index.html) and can be installed as any R package.
+The stable version of the `RDML` package for R is hosted on [CRAN](https://CRAN.R-project.org/package=RDML) and can be installed as any R package.
 
 You can install the latest development version of the code using the `devtools` R package.
 
