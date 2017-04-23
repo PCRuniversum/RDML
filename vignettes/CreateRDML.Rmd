@@ -2,7 +2,12 @@
 title: "Creating RDML file from raw data"
 author: "Konstantin A. Blagodatskikh, Micha&#322; Burdukiewicz, Stefan R&ouml;diger"
 date: "`r Sys.Date()`"
-output: rmarkdown::html_vignette
+output: 
+  rmarkdown::html_vignette:
+    toc: true
+    pandoc_args: [
+      "--number-sections"
+    ]
 vignette: >
   %\VignetteIndexEntry{Creating RDML file from raw data}
   %\VignetteEngine{knitr::rmarkdown}

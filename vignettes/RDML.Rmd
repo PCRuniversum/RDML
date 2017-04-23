@@ -42,6 +42,18 @@ data visualization and processing in the R statistical computing environment.
 
 <img src="data_view.png" alt="HTML5 Icon" style="width:663px;height:332px">
 
+## Major functionalities of the RDML package
+
+The public methods of the main R6 “RDML” class can be used 
+to access and process the internally stored RDML data. These methods include:
+
+* **new()** -- creates a new RDML object, empty or from a specified RDML file;
+* **AsDendrogram()** -- plots the structure of an RDML object as a dendrogram;
+* **AsTable()** -- represents the data contained in an RDML object (except fluorescence data) as a *data.frame*;
+* **GetFData()** -- gets fluorescence data;
+* **SetFData()** -- sets fluorescence data to an RDML object; 
+* **AsXML()** – saves an RDML object as an RDML~v.~1.2 file.
+
 # Vendors and software packages supporting RDML
 
 The RDML format is supported by Bio-Rad (CFX 96 and CFX 384), Life Technologies (StepOne, ViiA7, QuantStudio) and Roche (LightCycler~96) thermo-cycler systems. In addition, several software packages (e.g., **Primer3Plus**, **RDML-Ninja**, **qBase+**) exist, which support RDML [@untergasser_2007; @hellemans_2007; @ruijter_amplification_2009; @pabinger_2014; @rdml-ninja_2015].
