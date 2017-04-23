@@ -50,6 +50,8 @@ Suggests:
     kfigr,
     MBmca,
     shiny,
-    shinythemes
+    shinyjs,
+    shinythemes,
+    V8
 VignetteBuilder: knitr
 RoxygenNote: 5.0.1
