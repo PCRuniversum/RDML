@@ -543,10 +543,10 @@ shinyUI(
                    #        numericInput("removeFirstRows",
                    #                     "Remove First N Rows",
                    #                     0, 0, step = 1)),
-                   column(2,
+                   column(4,
                           checkboxInput("preprocessqPCR",
                                         "Preprocess")),
-                   column(2,
+                   column(4,
                           selectInput("smoothqPCRmethod",
                                       "Smoothing method",
                                       c("None" = "none",
@@ -560,7 +560,7 @@ shinyUI(
                                         "Whittaker 2" = "whit2"
                                         # ,"All" = "all"
                                       ))),
-                   column(2,
+                   column(4,
                           selectInput("normqPCRmethod",
                                       "Normalization method",
                                       c("None" = "none",
@@ -569,7 +569,7 @@ shinyUI(
                                         "Quantile normalization" = "luqn",
                                         "z-score" = "zscore")))),
                  fluidRow(
-                   column(2,
+                   column(4,
                           selectInput("cqMethod",
                                       "Cq method",
                                       c("None" = "none",
@@ -577,13 +577,13 @@ shinyUI(
                                         "SDM" = "sdm"))),
                    conditionalPanel(
                      condition = "input.cqMethod == 'th'",
-                     column(2,
+                     column(4,
                             checkboxInput("autoThLevel",
                                           "Auto Threshold",
                                           TRUE)),
                      conditionalPanel(
                        condition = "input.autoThLevel == false",
-                       column(2,
+                       column(4,
                               uiOutput("thLevelsUI"))))
                    # column(2,
                    #        actionButton("recalculateCq",
