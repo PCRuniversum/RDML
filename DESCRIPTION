@@ -5,10 +5,9 @@ Version: 0.9-6
 LazyData: true
 Date: 2017-04-24
 Description: Imports real-time thermo cycler (qPCR) data from Real-time PCR
-    Data Markup Language (RDML) or devices native format files and transforms
-    to the appropriate formats of the 'qpcR' and 'chipPCR' packages. Contains
-    a dendrogram visualization for the structure of RDML object and GUI for 
-    RDML editing.
+    Data Markup Language (RDML) and transforms to the appropriate formats of
+    the 'qpcR' and 'chipPCR' packages. Contains a dendrogram visualization 
+    for the structure of RDML object and GUI for RDML editing.
 Authors@R: c(
     person("Konstantin A.", "Blagodatskikh",
     email = "k.blag@yandex.ru", role = c("cre", "aut")),
@@ -51,6 +50,8 @@ Suggests:
     kfigr,
     MBmca,
     shiny,
-    shinythemes
+    shinyjs,
+    shinythemes,
+    V8
 VignetteBuilder: knitr
 RoxygenNote: 5.0.1

@@ -33,7 +33,7 @@ We use the **R6** [@Chang_R6], **assertthat** [@Wickham_assertthat], **plyr** [@
 have a defined structure (as described in the vignette) the import should be 
 done by a few clicks. The example below shows the import of amplification curve
 data, which were stored in a CSV file. The function `rdmlEdit()` was used in the 
-[RKWard IDE/GUI](https://rkward.kde.org/) for further processing.
+[RKWard IDE/GUI](https://rkward.kde.org/) [@roediger_rkward_2012] (tested with version 0.6.9z+0.7.0+devel1, tested on Kubuntu 17.04; NOTE: problems were reported on systems where not the webkit component was used for the rendering of the `rdmlEdit()` GUI) for further processing.
 
 <img src="File_import.png" alt="HTML5 Icon" style="width:663px;height:332px">
 
@@ -41,6 +41,18 @@ Once imported enables `rdmlEDIT()` and other functions from the `RDML` package c
 data visualization and processing in the R statistical computing environment.
 
 <img src="data_view.png" alt="HTML5 Icon" style="width:663px;height:332px">
+
+## Major functionalities of the RDML package
+
+The public methods of the main R6 “RDML” class can be used 
+to access and process the internally stored RDML data. These methods include:
+
+* **new()** -- creates a new RDML object, empty or from a specified RDML file;
+* **AsDendrogram()** -- plots the structure of an RDML object as a dendrogram;
+* **AsTable()** -- represents the data contained in an RDML object (except fluorescence data) as a *data.frame*;
+* **GetFData()** -- gets fluorescence data;
+* **SetFData()** -- sets fluorescence data to an RDML object; 
+* **AsXML()** – saves an RDML object as an RDML~v.~1.2 file.
 
 # Vendors and software packages supporting RDML
 
@@ -479,5 +491,11 @@ knitr::kable(bench_df[, c("nr", "median", "os")], format = "pandoc",
 ```
 
 The result above indicate that, thanks to the RDML package, even average laboratory workstation is able to save large RDML files in reasonable time (around 4 minutes for 1000 experiments).
+
+# Validation of RDML files created by the RDML package
+
+The correct structure of an RDML file is an important requirement to perform reproducibel analysis. Unfortunately created files can not be properly tested now because official RDML validator [rdml.org](http://rdml.org/tools.php) does not work 
+from time to time. However, there is a solution to validate the files by the alternate
+editor - *RDML-Ninja* [@rdml-ninja_2015].
 
 # References

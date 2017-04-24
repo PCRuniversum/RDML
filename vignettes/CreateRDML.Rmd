@@ -2,7 +2,12 @@
 title: "Creating RDML file from raw data"
 author: "Konstantin A. Blagodatskikh, Micha&#322; Burdukiewicz, Stefan R&ouml;diger"
 date: "`r Sys.Date()`"
-output: rmarkdown::html_vignette
+output: 
+  rmarkdown::html_vignette:
+    toc: true
+    pandoc_args: [
+      "--number-sections"
+    ]
 vignette: >
   %\VignetteIndexEntry{Creating RDML file from raw data}
   %\VignetteEngine{knitr::rmarkdown}
@@ -26,6 +31,9 @@ All *csv* raw data were transferred to the **R** environment and stored as *rda*
 
 Therefore, we will use the **C54** dataset directly from the [chipPCR](https://CRAN.R-project.org/package=chipPCR) package [@roediger2015chippcr]. The amplification curves have different number of cycles and one of them contains a missing value due to a sensor dropout. Thus, this data should be preprocessed before Cq calculation.
 
+**R** is a language with dynamic typing. This is helpful while scripting, but can lead 
+to problematic debugging of more complicated workflows. ***R6*** classes provide type-safe interfaces to set data without access to the inner structure of objects so that all imported data can be validated. This option is highly useful when 
+creating packages at an intermediate level for other packages (e.g., such an approach does not permit set type ***character*** in place of type ***integer***). Furthermore, the inheritance of ***R6*** objects unifies the structure of the package and streamlines the extending of its capabilities (since the whole package is written around a single base class).
 
 ## Initialization
 
@@ -314,6 +322,8 @@ ggplot(dat, aes(x = cyc, y = fluor)) +
   ggtitle("Amplification of human MLC-2v\nVideoScan HCU")
 ```
 
+However, there are further **R** packages on [CRAN](https://cran.r-project.org/), [Bioconductor](http://bioconductor.org/) and [GitHub](https://github.com/), which can be used with the RDML package [@roediger2015r]. To deal with non-detects [@mccall_non-detects_2014], normalization [@perkins_readqpcr_2012], expression analysis [@dvinge_htqpcr:_2009, matz_no_2013] and periodicity in qPCR systems [@spiess_system-specific_2016].
+
 ## Export to file
 
 To save our **RDML** object as file we can use `$AsXML()` method with file name as argument:
@@ -327,6 +337,10 @@ A XML files can be compressed to save space. The **RMDL** package uses the `zip(
 ## Benchmark of the RDML generation
 
 The XML format becomes less efficient to work with at larger file sizes and complex structured information (e.g., matrices). Therefore, a limitation of RMDL is the process of the file generation. This characteristic is inherited by the **RDML** package. Speed is an issue in high-throughput applications. To give the user a foundation for a decision support if the implementation of the RMDL format is advisable, we performed a benchmark. We used the **microbenchmark** package [@Mersmann_2014_microbenchmark, @Radford_2014_microbenchmark] to assess the time required for generation of RDML files. The simulation included datasets with ranging from 1 to 1000 entries per file.
+
+## Dealing with other data formats
+
+Researchers often collect gene expression data from more than one laboratory and and are thus required to analyze and aggregate many data sets. Adaptable data management - also known as “adaptive informatics” - is relevant in cases where data from different omics approaches and assays (e.g., flow cytometry, digital PCR, NGS) need to be merged [@baker_quantitative_2012]. As RDML is based on XML, it is possible to converge the files with other formats such as HDF, [@millard_adaptive_2011] which is supported by **R** [@Fischer_HDF5]. This enables extended data storage and analysis, but also a higher level of experimental data management.
 
 ## Conclusion
 

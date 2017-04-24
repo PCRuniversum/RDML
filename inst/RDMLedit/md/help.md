@@ -12,6 +12,9 @@ GUI consists of five tabs:
 * Melting: raw melting curve data.
 * Help: this very page.
 
+The exemplary .RDML files are available in the repository of RDML package: https://github.com/kablag/RDML/tree/master/inst/extdata.
+
+
 # Files
 ## Upload file(s)
 Upload one or more files. Supported formats:
@@ -56,7 +59,6 @@ Contains melting fluorescence data. Column names link to the *fdata.name* at *de
 | 23  | 3361 | 3535 | 3592 |
 | 24  | 3348 | 3515 | 3570 |
 
-  
 ## View File
 Uploaded file(s) can be viewed by selecting its name at **View File** selector. After this dendrogram with file structure should appear at the bottom of the page.
 

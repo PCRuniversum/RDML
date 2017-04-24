@@ -653,7 +653,7 @@ shinyUI(
                          condition = "input.bgAdjMelting == true",
                          column(2,
                                 sliderInput("bgRangeMelting", 
-                                            label = "Background Range", min = 0, 
+                                            label = "Temperature Background Range (°C)", min = 0, 
                                             max = 100, value = c(50, 55), step = 1))),
                        column(2,
                               checkboxInput("minMaxMelting",
