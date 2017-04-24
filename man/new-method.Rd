@@ -2,8 +2,8 @@
 % Please edit documentation in R/RDML.init.R
 \docType{methods}
 \name{new}
-\alias{RDML.new}
 \alias{new}
+\alias{RDML.new}
 \title{Creates new instance of \code{RDML} class object}
 \arguments{
 \item{filename}{\code{string} -- path to file}
@@ -41,6 +41,7 @@ with first column 'cyc' or 'tmp' and fluorescence data in other columns}
   against RDML data from devices: \emph{Bio-Rad CFX96}, \emph{Roche
   LightCycler 96} and \emph{Applied Biosystems StepOne}.
 }
+
 \examples{
 \dontrun{
 ## Import from RDML file
@@ -58,4 +59,3 @@ Konstantin A. Blagodatskikh <k.blag@yandex.ru>, Stefan Roediger
   <stefan.roediger@b-tu.de>, Michal Burdukiewicz
   <michalburdukiewicz@gmail.com>
 }
-

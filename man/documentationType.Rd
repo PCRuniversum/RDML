@@ -20,5 +20,5 @@ samples, targets or experiments. Inherits: \link{rdmlBaseType}.
 \item{\code{text}}{\link[checkmate]{checkString}. Text.}
   }
 }
-\keyword{datasets}
 
+\keyword{datasets}

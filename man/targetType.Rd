@@ -35,5 +35,5 @@ targets. Inherits:
   \item{\code{sequences}}{\link{sequencesType}.}
   \item{\code{commercialAssay}}{\link{commercialAssayType}.} }
 }
-\keyword{datasets}
 
+\keyword{datasets}

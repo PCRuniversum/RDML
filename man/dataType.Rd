@@ -52,5 +52,5 @@ quantFluor = NULL)}
 points as \code{data.frame}}
 }
 }
-\keyword{datasets}
 
+\keyword{datasets}

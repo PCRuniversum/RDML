@@ -14,4 +14,3 @@ AsTable(obj, ...)
 \description{
 Read more at \link{RDML.AsTable}
 }
-

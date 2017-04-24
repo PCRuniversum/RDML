@@ -14,4 +14,3 @@ GetFData(obj, ...)
 \description{
 Read more at \link{RDML.GetFData}
 }
-

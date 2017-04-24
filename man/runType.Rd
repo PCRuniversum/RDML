@@ -47,5 +47,5 @@ one rotor, one array, one chip. Inherits: \link{rdmlBaseType}.
  (\code{dp.type = "adp"}) or melting (\code{dp.type = "mdp"}) data
  points as \code{data.frame}}}
 }
-\keyword{datasets}
 
+\keyword{datasets}

@@ -18,5 +18,5 @@ Inherits: \link{rdmlBaseType}.
 \item{\code{value}}{\link[checkmate]{checkString}. Value.}
   }
 }
-\keyword{datasets}
 
+\keyword{datasets}

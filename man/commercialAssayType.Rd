@@ -20,5 +20,5 @@ allows to describe commercial assays. Inherits: \link{rdmlBaseType}.
 \item{\code{orderNumber}}{\link[checkmate]{checkString}.}
   }
 }
-\keyword{datasets}
 
+\keyword{datasets}

@@ -17,5 +17,5 @@ step is maintained. Inherits: \link{rdmlBaseType}.
 \section{Initialization}{
  \preformatted{lidOpenType$new()}
 }
-\keyword{datasets}
 
+\keyword{datasets}

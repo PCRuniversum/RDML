@@ -21,5 +21,5 @@ Inherits: \link{rdmlBaseType}.
   the external database, for example "AJ832138".}
   }
 }
-\keyword{datasets}
 
+\keyword{datasets}

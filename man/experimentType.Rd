@@ -31,5 +31,5 @@ A qPCR experiment. It may contain several runs (\link{runType}). Inherits:
   \code{long.table = TRUE} means that fluorescence data for all runs and
   reacts will be at one collumn.}}
 }
-\keyword{datasets}
 
+\keyword{datasets}

@@ -18,5 +18,5 @@ Contains identificator for reactType. Inherits: \link{rdmlBaseType}.
 \item{\code{id}}{\link[checkmate]{checkCount}. Identificator.}
 }
 }
-\keyword{datasets}
 
+\keyword{datasets}

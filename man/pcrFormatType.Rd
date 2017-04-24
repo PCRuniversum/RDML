@@ -40,5 +40,5 @@ not display a column label.
 \item{\code{columnLabel}}{\link{labelFormatType}.}
   }
 }
-\keyword{datasets}
 
+\keyword{datasets}

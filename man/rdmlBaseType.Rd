@@ -24,5 +24,5 @@ usage and should not be directly accessed.
   tree.}
 \item{\code{print(...)}}{prints object}}
 }
-\keyword{datasets}
 
+\keyword{datasets}

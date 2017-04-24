@@ -21,5 +21,5 @@ step in an amplification protocol. Inherits: \link{rdmlBaseType}.
   The temperature in degrees Celsius maintained during the pause.}
   }
 }
-\keyword{datasets}
 
+\keyword{datasets}

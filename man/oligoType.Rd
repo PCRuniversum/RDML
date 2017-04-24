@@ -23,5 +23,5 @@ Inherits: \link{rdmlBaseType}.
   \item{\code{sequence}}{\link[checkmate]{checkString}.}
   }
 }
-\keyword{datasets}
 
+\keyword{datasets}

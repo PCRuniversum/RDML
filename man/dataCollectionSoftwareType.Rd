@@ -20,9 +20,9 @@ Software name and version used to collect and analyze the data. Inherits:
 \item{\code{version}}{\link[checkmate]{checkString}.}
   }
 }
+
 \examples{
 dataCollectionSoftwareType$new(name = "ExampleSoft",
                                version = "1.0")
 }
 \keyword{datasets}
-

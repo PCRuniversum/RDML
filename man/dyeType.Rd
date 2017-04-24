@@ -19,5 +19,5 @@ Detailed information about the dye. Inherits: \link{rdmlBaseType}.
 \item{\code{description}}{ \link[checkmate]{checkString}. Description.
   }}
 }
-\keyword{datasets}
 
+\keyword{datasets}

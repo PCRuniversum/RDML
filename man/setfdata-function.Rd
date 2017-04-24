@@ -14,4 +14,3 @@ SetFData(obj, ...)
 \description{
 Read more at \link{RDML.SetFData}
 }
-

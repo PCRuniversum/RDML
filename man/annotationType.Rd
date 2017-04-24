@@ -17,9 +17,9 @@ sex could be a property with the possible values M or F. Inherits:
  \describe{ \item{property}{\link[checkmate]{checkString}.
   Property name} \item{value}{\link[checkmate]{checkString}. Value} }
 }
+
 \examples{
 #set sex property
 annotationType$new(property = "sex", value = "M")
 }
 \keyword{datasets}
-

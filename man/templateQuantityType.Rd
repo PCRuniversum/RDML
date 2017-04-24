@@ -20,5 +20,5 @@ Inherits: \link{rdmlBaseType}.
 \item{\code{nucleotide}}{\link{nucleotideType}.}
   }
 }
-\keyword{datasets}
 
+\keyword{datasets}

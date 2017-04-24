@@ -29,5 +29,5 @@ A cycling program for PCR or to amplify cDNA. Inherits: \link{rdmlBaseType}.
   runs through to amplify DNA.}
   }
 }
-\keyword{datasets}
 
+\keyword{datasets}

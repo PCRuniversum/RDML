@@ -28,5 +28,5 @@ Inherits: \link{rdmlBaseType}.
   \item{\code{lidOpen}}{\link{lidOpenType}.}
   }
 }
-\keyword{datasets}
 
+\keyword{datasets}

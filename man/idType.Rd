@@ -18,5 +18,5 @@ Contains identificator for varius RDML types. Inherits: \link{rdmlBaseType}.
 \item{\code{id}}{\link[checkmate]{checkString}. Identificator.}
 }
 }
-\keyword{datasets}
 
+\keyword{datasets}

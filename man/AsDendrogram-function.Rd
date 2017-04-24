@@ -14,4 +14,3 @@ AsDendrogram(obj, ...)
 \description{
 Read more at \link{RDML.AsDendrogram}
 }
-

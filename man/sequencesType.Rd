@@ -23,5 +23,5 @@ reversePrimer = NULL, probe1 = NULL, probe2 = NULL, amplicon = NULL)}
 \item{\code{amplicon}}{\link{oligoType}.}
   }
 }
-\keyword{datasets}
 
+\keyword{datasets}

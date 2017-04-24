@@ -49,5 +49,5 @@ Inherits: \link{rdmlBaseType}.
  \item{\code{templateQuantity}}{\link{templateQuantityType}.}
  }
 }
-\keyword{datasets}
 
+\keyword{datasets}

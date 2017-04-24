@@ -31,4 +31,3 @@ Konstantin A. Blagodatskikh <k.blag@yandex.ru>, Stefan Roediger
   <michalburdukiewicz@gmail.com>
 }
 \keyword{manip}
-

@@ -34,5 +34,5 @@ Parent class for inner usage. Inherits: \link{rdmlBaseType}.
   the maximal change rate is assumed.}
   }
 }
-\keyword{datasets}
 
+\keyword{datasets}

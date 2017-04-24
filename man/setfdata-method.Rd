@@ -51,4 +51,3 @@ plot2 <- ggplot(cpp.gg, aes(x = cyc, y = fluo,
 grid.arrange(plot1, plot2, nrow=2)
 }
 }
-

@@ -27,5 +27,5 @@ Inherits: \link{enumType}.
 \item{\code{value}}{\link[checkmate]{checkString}. Value.}
   }
 }
-\keyword{datasets}
 
+\keyword{datasets}

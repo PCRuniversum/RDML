@@ -25,5 +25,5 @@ Details of the temperature gradient across the PCR block. Inherits:
   the gradient in degrees Celsius.}
 \item{\code{...}}{ Params of parent class \link{baseTemperatureType}. }}
 }
-\keyword{datasets}
 
+\keyword{datasets}

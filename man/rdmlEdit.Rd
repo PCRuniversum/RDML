@@ -11,4 +11,3 @@ Launches graphical user interface that can edit RDML metadata and show
 qPCR or melting curves.
 }
 \keyword{hplot}
-

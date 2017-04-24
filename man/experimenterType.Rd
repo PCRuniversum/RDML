@@ -24,5 +24,5 @@ Contact details of the experimenter. Inherits: \link{rdmlBaseType}.
 \item{\code{labAddress}}{\link[checkmate]{checkString}. Lab address.}
   }
 }
-\keyword{datasets}
 
+\keyword{datasets}

@@ -20,5 +20,5 @@ Contains id of another RDML object. Inherits: \link{idType}.
 \item{\code{id}}{\link[checkmate]{checkString}. Identificator.}
 }
 }
-\keyword{datasets}
 
+\keyword{datasets}

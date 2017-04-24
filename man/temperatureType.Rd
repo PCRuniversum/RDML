@@ -22,5 +22,5 @@ This step keeps a constant temperature on the heat block. Inherits:
 \item{\code{...}}{ Params of parent class \link{baseTemperatureType}.}
 }
 }
-\keyword{datasets}
 
+\keyword{datasets}

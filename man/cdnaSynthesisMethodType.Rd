@@ -25,5 +25,5 @@ Description of the cDNA synthesis method. Inherits: \link{rdmlBaseType}.
   \item{\code{thermalCyclingConditions}}{\link{idReferencesType}.}
   }
 }
-\keyword{datasets}
 
+\keyword{datasets}

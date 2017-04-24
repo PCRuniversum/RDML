@@ -40,6 +40,7 @@ method, which extracts fluorescence data for specified samples.
   \link{RDML.AsDendrogram})}
  }
 }
+
 \examples{
 ## EXAMPLE 1:
 ## internal dataset lc96_bACTXY.rdml (in 'data' directory)
@@ -145,11 +146,6 @@ invisible(meltcurve(cols, fluos = 2:ncol(cols),
           temps = rep(1, ncol(cols) - 1)))
 }
 }
-\author{
-Konstantin A. Blagodatskikh <k.blag@yandex.ru>, Stefan Roediger 
-  <stefan.roediger@b-tu.de>, Michal Burdukiewicz 
-  <michalburdukiewicz@gmail.com>
-}
 \references{
 RDML format http://www.rdml.org/ \code{R6} package 
   http://cran.r-project.org/web/packages/R6/index.html
@@ -183,6 +179,11 @@ RDML format http://www.rdml.org/ \code{R6} package
   structured language and reporting guidelines for real-time quantitative PCR
   data.  \emph{Nucleic Acids Res.} 37, 2065--2069. doi:10.1093/nar/gkp056
 }
+\author{
+Konstantin A. Blagodatskikh <k.blag@yandex.ru>, Stefan Roediger 
+  <stefan.roediger@b-tu.de>, Michal Burdukiewicz 
+  <michalburdukiewicz@gmail.com>
+}
 \keyword{Bio--Rad}
 \keyword{CFX96}
 \keyword{IO}
@@ -191,4 +192,3 @@ RDML format http://www.rdml.org/ \code{R6} package
 \keyword{StepOne}
 \keyword{file}
 \keyword{qPCR}
-

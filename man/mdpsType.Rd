@@ -28,5 +28,5 @@ Inherits: \link{rdmlBaseType}.
 \item{\code{fpoints}}{\link[checkmate]{assertMatrix}. Matrix with amplification data points.}
   }
 }
-\keyword{datasets}
 
+\keyword{datasets}

@@ -20,5 +20,5 @@ A quantity is always defined by its value and its unit. Inherits:
 \item{\code{unit}}{\link{quantityUnitType}. Unit.}
   }
 }
-\keyword{datasets}
 
+\keyword{datasets}
