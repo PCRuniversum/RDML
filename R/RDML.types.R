@@ -1694,6 +1694,11 @@ adpsType <-
                 else
                   data.table(fpoints)
               }
+              # check for duplicate cycles. Occures in StepOne RDML files.
+              if (anyDuplicated(private$.fpoints) != FALSE) {
+                private$.fpoints <- unique(private$.fpoints)
+                warning("Duplicate cycles removed")
+              }
               setkey(private$.fpoints, cyc)
             }
           ))
@@ -2464,6 +2469,11 @@ runType <-
                      checkList(react, "reactType"))
               private$.react <- list.names(react,
                                            .$id$id)
+              # check for duplicate reacts names. Occures in StepOne RDML files.
+              if (anyDuplicated(names(private$.react)) != FALSE) {
+                private$.react <- private$.react[unique(names(private$.react))]
+                warning("Duplicate reacts removed")
+              }
             }
           ))
 
