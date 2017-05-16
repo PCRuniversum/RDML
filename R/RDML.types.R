@@ -1756,6 +1756,11 @@ mdpsType <-
                 else
                   data.table(fpoints)
               }
+              # check for duplicate temperatures. Occures in StepOne RDML files.
+              if (anyDuplicated(private$.fpoints) != FALSE) {
+                private$.fpoints <- unique(private$.fpoints)
+                warning("Duplicate temperatures removed")
+              }
               setkey(private$.fpoints, tmp)
             }
           ))
