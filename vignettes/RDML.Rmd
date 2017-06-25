@@ -498,4 +498,12 @@ The correct structure of an RDML file is an important requirement to perform rep
 from time to time. However, there is a solution to validate the files by the alternate
 editor - *RDML-Ninja* [@rdml-ninja_2015].
 
+# RDMLedit web-server
+
+The [http://shtest.evrogen.net/rdmlEdit/](RDMLedit web-server) is a web tool based on the functionalities of the RDML package. Aside from basic functionalities, like data import, alteration and export, RDMLedit also produces visualisations of qPCR data. In addition to that, RDMLedit can also merge multiple RDML files.
+
+## Local deployment of RDMLedit
+
+As a [https://shiny.rstudio.com/](shiny application), RDMLedit may be also deployed locally. It requires installed R and RDML package. Next, a user has to open R and run the following command: **rdmlEdit()**.
+
 # References
