@@ -33,7 +33,7 @@ install_github("kablag/RDML")
 have a defined structure (as described in the vignette) the import should be 
 done by a few clicks. The example below shows the import of amplification curve
 data, which were stored in a CSV file. The function `rdmlEdit()` was used in the 
-[RKWard IDE/GUI](https://rkward.kde.org/) for further processing.
+[RKWard IDE/GUI](https://rkward.kde.org/) for further processing. rdmlEdit may be also accessed as a web server (http://shtest.evrogen.net/rdmlEdit/). 
 
 ![Data Import](https://github.com/kablag/RDML/blob/master/vignettes/File_import.png)
 

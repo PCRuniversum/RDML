@@ -1,4 +1,4 @@
-rdmlEdit allows viewing, editing, merging and creating files in RDML format. 
+rdmlEdit allows viewing, editing, merging and creating files in RDML format. It can be accessed as a web server (http://shtest.evrogen.net/rdmlEdit/) or deployed locally using *rdmlEdit()* function.
 
 GUI consists of five tabs:
 
