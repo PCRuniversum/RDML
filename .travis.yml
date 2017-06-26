@@ -1,32 +1,58 @@
-## Sample .travis.yml file for use with metacran/r-builder
-## See https://github.com/metacran/r-builder for details.
+# Sample .travis.yml for R projects.
+#
+# See README.md for instructions, or for more configuration options,
+# see the wiki:
+#   https://github.com/craigcitro/r-travis/wiki
 
-language: c
 sudo: required
 
-before_install:
-  - curl -OL https://raw.githubusercontent.com/metacran/r-builder/master/pkg-build.sh
-  - chmod 755 pkg-build.sh
-  - ./pkg-build.sh bootstrap
-  - sudo apt-get -qq update
-  - sudo apt-get install libv8-dev
+language: r
 
-install:
-  - ./pkg-build.sh install_deps
+matrix:
+  include:
 
-script:
-  - ./pkg-build.sh run_tests
-
-after_failure:
-  - ./pkg-build.sh dump_logs
-
+  - os: linux
+    dist: trusty
+    r: release
+    cran: https://cran.rstudio.com/
+    addons:
+      apt:
+        packages:
+          - libgdal1-dev
+    before_install:
+    - tlmgr install xcolor
+    
+  - os: linux
+    dist: trusty
+    r: devel
+    addons:
+      apt:
+        packages:
+          - libgdal1-dev
+    before_install:
+    - tlmgr install xcolor
+    
+r_binary_packages:
+  - checkmate
+  - data.table
+  - pipeR
+  - readxl
+  - rlist
+  - R6
+  - stringr
+  - tools
+  - xml2
+  - dplyr
+  - ggplot2
+  - knitr
+  - kfigr
+  - MBmca
+  - shiny
+  - shinyjs
+  - shinythemes
+  - V8
+  
 notifications:
   email:
     on_success: change
     on_failure: change
-
-env:
-  matrix:
-    - RVERSION=oldrel
-    - RVERSION=release
-    - RVERSION=devel
