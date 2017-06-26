@@ -37,7 +37,7 @@ data, which were stored in a CSV file. The function `rdmlEdit()` was used in the
 
 ![Data Import](https://github.com/kablag/RDML/blob/master/vignettes/File_import.png)
 
-Once imported enables `rdmlEDIT()` and other functions from the `RDML` package complex 
+Once imported enables `rdmlEdit()` and other functions from the `RDML` package complex 
 data visualization and processing in the R statistical computing environment.
 
 ![Data Import](https://github.com/kablag/RDML/blob/master/vignettes/data_view.png)
