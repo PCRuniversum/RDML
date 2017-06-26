@@ -91,6 +91,8 @@ The fields names for all **RDML** package classes correspond to fields names of 
 
 <img src="rdml_overview_1_2.png" alt="HTML5 Icon" style="width:663px;height:688px">
 
+Image source: http://rdml.org/.
+
 For the base class **RDML** they are:
 
 - `dateMade`
