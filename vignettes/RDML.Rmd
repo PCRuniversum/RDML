@@ -91,6 +91,8 @@ The fields names for all **RDML** package classes correspond to fields names of 
 
 <img src="rdml_overview_1_2.png" alt="HTML5 Icon" style="width:663px;height:688px">
 
+Image source: http://rdml.org/.
+
 For the base class **RDML** they are:
 
 - `dateMade`
@@ -497,5 +499,13 @@ The result above indicate that, thanks to the RDML package, even average laborat
 The correct structure of an RDML file is an important requirement to perform reproducibel analysis. Unfortunately created files can not be properly tested now because official RDML validator [rdml.org](http://rdml.org/tools.php) does not work 
 from time to time. However, there is a solution to validate the files by the alternate
 editor - *RDML-Ninja* [@rdml-ninja_2015].
+
+# RDMLedit web-server
+
+The [http://shtest.evrogen.net/rdmlEdit/](RDMLedit web-server) is a web tool based on the functionalities of the RDML package. Aside from basic functionalities, like data import, alteration and export, RDMLedit also produces visualisations of qPCR data. In addition to that, RDMLedit can also merge multiple RDML files.
+
+## Local deployment of RDMLedit
+
+As a [https://shiny.rstudio.com/](shiny application), RDMLedit may be also deployed locally. It requires installed R and RDML package. Next, a user has to open R and run the following command: **rdmlEdit()**.
 
 # References
