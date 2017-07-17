@@ -33,7 +33,7 @@ We use the **R6** [@Chang_R6], **assertthat** [@Wickham_assertthat], **plyr** [@
 have a defined structure (as described in the vignette) the import should be 
 done by a few clicks. The example below shows the import of amplification curve
 data, which were stored in a CSV file. The function `rdmlEdit()` was used in the 
-[RKWard IDE/GUI](https://rkward.kde.org/) [@roediger_rkward_2012] (tested with version 0.6.9z+0.7.0+devel1, tested on Kubuntu 17.04; NOTE: problems were reported on systems where not the webkit component was used for the rendering of the `rdmlEdit()` GUI) for further processing.
+[RKWard IDE/GUI](https://rkward.kde.org/) [@roediger_rkward_2012] (tested with version 0.6.9z+0.7.0+devel1 on Kubuntu 17.04; NOTE: problems were reported on systems where not the webkit component was used for the rendering of the `rdmlEdit()` GUI) for further processing.
 
 <img src="File_import.png" alt="HTML5 Icon" style="width:663px;height:332px">
 
