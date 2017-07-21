@@ -17,7 +17,7 @@ knitr::opts_chunk$set(collapse = T, comment = "#>")
 # Practical Example for the Usage of the **RMDL** package
 
 A key benefit of the **RMDL** package is that it enables further statistical 
-analysis of RDML data. This section provides some examples of **R** packages 
+analysis of RDML data. This section provides **R** packages 
 that link with the **RMDL** package. Moreover, it will give an example how 
 other packages allow the manipulation of RDML objects.
 
@@ -27,11 +27,16 @@ the Akaike's An Information Criterion. The Cq value will be used to calculate
 the amplification efficiency from a calibration curve. The `effcalc` function 
 from the **chipPCR** package [@roediger2015chippcr] will be used for this task.
 
+Note: The data used here sereve as an example only. Overall, the quality of the 
+measurement is not appropriate for a further usage in a study. Here, we shwo 
+that estimated amplification efficiency estimated by the StepOne system differs 
+from the estimate as analyzed with the proposed pipeline (**RDML** $\rightarrow$ 
+**qpcR** $\rightarrow$ **chipPCR**).
 
 ## Preparation of the data
 
 In section [xyz] it was shown how to read-in RDML data. In this section we will 
-continoue with the built-in RDML example file `lc96_bACTXY.rdml`. This file was 
+continoue with the built-in RDML example file `stepone_std.rdml`. This file was 
 obtained during the measurement of human DNA concentration by a *LightCycler 
 96* (Roche) and the *XY-Detect* kit (Syntol, Russia). The file is opened as 
 described before:
@@ -56,18 +61,22 @@ raw_data_tab <- raw_data$AsTable(
         data$tar$id,
         run$id$id, # run id added to names
         sep = "~"))
-# Get all fluorescence data
+# Get all fluorescence data and assign them to the object fdata
 fdata <- as.data.frame(raw_data$GetFData(raw_data_tab, long.table = FALSE))
 ```
 
 ```{r}
-# Load the ggplot2 package
+# Load the ggplot2 package for plotting
 library(ggplot2)
+# Load the reshape2 package to rearrange the data
 library(reshape2)
+# Rearrange and plot the raw data
 fdata_gg <- melt(fdata, id.vars="cyc")
 ggplot(data=fdata_gg, aes(x=cyc, y=value, color=variable)) + 
-    geom_line() + labs(x="Cycle", y="RFU") + theme_light()
-# 
+    geom_line() + labs(x="Cycle", y="RFU") + theme_light() +
+    theme(legend.position="top",
+    legend.direction="horizontal")
+
 ```
 
 During the next steps comes the **qpcR** package into use. The function 
@@ -80,6 +89,8 @@ of a tangent on the first derivative maximum with the abscissa as calculated
 according to @guescini_new_2008.
 
 ```{r, echo=FALSE, include=FALSE}
+# Write a coustom function that 
+library(qpcR)
 res_fit <- do.call(cbind, lapply(2L:ncol(fdata), function(block_column) {
     
     res_model <- try(mselect(pcrfit(data=fdata, cyc=1, fluo=block_column), do.all = TRUE), silent=TRUE)
@@ -94,17 +105,32 @@ res_fit <- do.call(cbind, lapply(2L:ncol(fdata), function(block_column) {
 )
 colnames(res_fit) <- colnames(fdata)[-1]
 
-Cq_SDM <- res_fit[rownames(res_fit) == "cpD2", ] %>% rbind %>% data.frame
-colnames(Cq_SDM) <- c("Sample", "Cq")
+Cq_SDM <- res_fit[rownames(res_fit)=="cpD2", ] %>% unlist %>% as.data.frame
+colnames(Cq_SDM) <- c("Cq")
 
 dilution <- c(as.factor("ntc"), as.factor("unk"), 10000, 5000, 2500, 1250, 625)
-matrix(unlist(Cq_SDM), nrow=length(dilution), ncol = 3)
+Cq_values <- matrix(Cq_SDM[, "Cq"], nrow=length(dilution), ncol = 3, byrow = TRUE)
 ```
 The `effcalc` function was used to determine the coefficients of the calibration curve.
 
-```{r, echo=FALSE, include=FALSE}
+```{r, echo=TRUE}
 library(chipPCR)
 
+res_efficiency <- effcalc(dilution[-c(1:3)], Cq_values[-c(1:3), ], logx=FALSE)
+
+res_efficiency %>% plot(., CI=TRUE, main="Second Derivative Maximum Method")
+```
+```{r, results="asis"}
+# Combine the sample labels and the Cq values as calculate by the Second Derivative Maximum Method (cpD2).
+sample_Cq <- data.frame(sample=c("ntc", "unk", 10000, 5000, 2500, 1250, 625), Cq_values)
+
+# Print table of all Cq values
+knitr::kable(sample_Cq, caption="Cq values as calculate by the 
+                        Second Derivative Maximum Method (cpD2).")
+```
+
+```{r, results="asis"} 
+knitr::kable(res_efficiency, caption="Analysis of the amplification efficiency.")
 ```
 
 ```{r, echo=FALSE, results='hide', message=FALSE, warning=FALSE}
@@ -113,7 +139,7 @@ calculated_Cq <- 26.7
 
 copy_number <- 1372
 ```
-The Cq values from the unkown sample `unk` had an average Cq of `r calculated_Cq` which is a copy number of `r copy_number`.
+The Cq values (`r sample_Cq[2, -1]`) from the unkown sample `unk` had an average Cq of `r paste(round(mean(as.numeric(sample_Cq[2, -1])), 2), "±", round(sd(sample_Cq[2, -1]), 2))`.
 
 (and, if not, is this ever a problem?)
 
