@@ -27,6 +27,10 @@ library(devtools)
 install_github("kablag/RDML")
 ```
 
+# Manual
+
+The package manual is available [on-line](https://github.com/kablag/RDML).
+
 # Examples
 
 `RDML` imports various data formats (CSV, XMLX) besides the RDML format. Provided that the raw data 
