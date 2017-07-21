@@ -3,7 +3,7 @@
 [![Travis-CI Build Status](https://travis-ci.org/kablag/RDML.svg?branch=master)](https://travis-ci.org/kablag/RDML)
 [![Rdoc](http://www.rdocumentation.org/badges/version/RDML)](http://www.rdocumentation.org/packages/RDML) 
 
-![RDML](https://github.com/kablag/RDML/blob/master/vignettes/RDML_logo.png)
+<img src="https://raw.githubusercontent.com/kablag/RDML/master/vignettes/RDML_logo.png" alt="RDML" width="100%">
 
 
 Imports qPCR data from RDML v1.1 format files ([Lefever et al. 2009](http://nar.oxfordjournals.org/content/32/5/1792.abstract?view=long&pmid=19223324)) and 
