@@ -35,10 +35,10 @@ done by a few clicks. The example below shows the import of amplification curve
 data, which were stored in a CSV file. The function `rdmlEdit()` was used in the 
 [RKWard IDE/GUI](https://rkward.kde.org/) for further processing. rdmlEdit may be also accessed as a web server (http://shtest.evrogen.net/rdmlEdit/). 
 
-![Data Import](https://github.com/kablag/RDML/blob/master/vignettes/File_import.png)
+<img src="https://raw.githubusercontent.com/kablag/RDML/master/vignettes/File_import.png" alt="Data Import" width="100%">
 
 Once imported enables `rdmlEdit()` and other functions from the `RDML` package complex 
 data visualization and processing in the R statistical computing environment.
 
-![Data Import](https://github.com/kablag/RDML/blob/master/vignettes/data_view.png)
+<img src="https://raw.githubusercontent.com/kablag/RDML/master/vignettes/data_view.png" alt="Data Import">
 
