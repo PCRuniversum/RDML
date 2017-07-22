@@ -22,21 +22,21 @@ that link with the **RMDL** package. Moreover, it will give an example how
 other packages allow the manipulation of RDML objects.
 
 In this example we will use the **qpcR** package [@ritz_qpcr_2008] to calculate 
-the Cq values after the selction of an optimal sigmoidal model as suggested by 
+the Cq values after the selection of an optimal sigmoidal model as suggested by 
 the Akaike's An Information Criterion. The Cq value will be used to calculate 
 the amplification efficiency from a calibration curve. The `effcalc` function 
 from the **chipPCR** package [@roediger2015chippcr] will be used for this task.
 
-Note: The data used here sereve as an example only. Overall, the quality of the 
-measurement is not appropriate for a further usage in a study. Here, we shwo 
+Note: The data used here serve as an example only. Overall, the quality of the 
+measurement is not appropriate for a further usage in a study. Here, we show 
 that estimated amplification efficiency estimated by the StepOne system differs 
 from the estimate as analyzed with the proposed pipeline (**RDML** $\rightarrow$ 
 **qpcR** $\rightarrow$ **chipPCR**).
 
 ## Preparation of the data
 
-In section [xyz] it was shown how to read-in RDML data. In this section we will 
-continoue with the built-in RDML example file `stepone_std.rdml`. This file was 
+In the **RDML** vignette it was shown how to read-in RDML data. In this section we will 
+continue with the built-in RDML example file `stepone_std.rdml`. This file was 
 obtained during the measurement of human DNA concentration by a *LightCycler 
 96* (Roche) and the *XY-Detect* kit (Syntol, Russia). The file is opened as 
 described before:
@@ -47,7 +47,7 @@ filename <- system.file("extdata/stepone_std.rdml", package = "RDML")
 raw_data <- RDML$new(filename = filename)
 ```
 
-For convenice we use the pipe function `%>%` from the **magrittr** package for 
+For convenience we use the pipe function `%>%` from the **magrittr** package for 
 further analysis. Next we fetch the amplification curve data from the RDML file.
 
 ```{r}
@@ -80,11 +80,11 @@ ggplot(data=fdata_gg, aes(x=cyc, y=value, color=variable)) +
 ```
 
 During the next steps comes the **qpcR** package into use. The function 
-`mselect` performs a sigmoidal model selection by different criteria (e.g., 
+`mselect` performs a sigmoid model selection by different criteria (e.g., 
 bias-corrected Akaike's Information Criterion). The function `efficiency` 
 calculates the qPCR Cq values, amplification efficiency and other important 
 qPCR parameters. In this example we set the parameter type of the `efficiency` 
-funtion to `Cy0`. This will calculate the Cy0 value, which is the intersection 
+function to `Cy0`. This will calculate the Cy0 value, which is the intersection 
 of a tangent on the first derivative maximum with the abscissa as calculated 
 according to @guescini_new_2008.
 
@@ -132,16 +132,6 @@ knitr::kable(sample_Cq, caption="Cq values as calculate by the
 ```{r, results="asis"} 
 knitr::kable(res_efficiency, caption="Analysis of the amplification efficiency.")
 ```
-
-```{r, echo=FALSE, results='hide', message=FALSE, warning=FALSE}
-# Calculated Cq
-calculated_Cq <- 26.7
-
-copy_number <- 1372
-```
-The Cq values (`r sample_Cq[2, -1]`) from the unkown sample `unk` had an average Cq of `r paste(round(mean(as.numeric(sample_Cq[2, -1])), 2), "±", round(sd(sample_Cq[2, -1]), 2))`.
-
-(and, if not, is this ever a problem?)
-
+The Cq values (`r sample_Cq[2, -1]`) from the unknown sample `unk` had an average Cq of `r paste(round(mean(as.numeric(sample_Cq[2, -1])), 2), "±", round(sd(sample_Cq[2, -1]), 2))`.
 
 # References
