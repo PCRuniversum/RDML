@@ -122,7 +122,7 @@ knitr::kable(res_fit[, c(1, 5, 9, 11, 15)], caption="Selected data of calculated
 ```
 
 According to the StepOne manufacturers software is the amplification efficiency 
-`r raw_data$target[["RNase P"]]$amplificationEfficiency`%. To test this, the 
+`r round(raw_data$target[["RNase P"]]$amplificationEfficiency, 2)`%. To test this, the 
 `effcalc` function was used to determine the coefficients of the calibration 
 curve.
 
@@ -133,6 +133,9 @@ res_efficiency <- effcalc(dilution[-c(1:3)], Cq_values[-c(1:3), ], logx=TRUE)
 
 res_efficiency %>% plot(., CI=TRUE, main="Second Derivative Maximum Method")
 ```
+
+The amplification efficiency estimated with the customized function was 94.7%, which is comparable to the vale reported in the `stepone_std.rdml` file. 
+
 ```{r, results="asis"}
 # Combine the sample labels and the Cq values as calculate by the Second Derivative Maximum Method (cpD2).
 sample_Cq <- data.frame(sample=c("ntc", "unk", 10000, 5000, 2500, 1250, 625), Cq_values)
