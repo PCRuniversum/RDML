@@ -15,6 +15,22 @@ checkDateTime <- function(dateTime){
   return("Must pass lubridate ymd_hms() or ymd() conversion")
 }
 
+# returns list with unique elements (names) with warning
+filterDuplicated <- function(elements) {
+  if (anyDuplicated(elements)) {
+    warning(sprintf("Duplicate %s removed", substitute(elements)))
+    elements[!duplicated(elements)]
+  } else {
+    elements
+  }
+}
+
+# possibility to work with RDML object as data.frame
+#' @export
+"[.RDML" <- function(x, i, j) {
+  as.data.frame(x$GetFData(x$AsTable()))[i, j]
+}
+
 # rdmlBaseType ------------------------------------------------------------
 
 #' Base R6 class for RDML package.
