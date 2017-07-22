@@ -129,7 +129,7 @@ curve.
 ```{r, echo=TRUE}
 library(chipPCR)
 
-res_efficiency <- effcalc(dilution[-c(1:3)], Cq_values[-c(1:3), ], logx=FALSE)
+res_efficiency <- effcalc(dilution[-c(1:3)], Cq_values[-c(1:3), ], logx=TRUE)
 
 res_efficiency %>% plot(., CI=TRUE, main="Second Derivative Maximum Method")
 ```
