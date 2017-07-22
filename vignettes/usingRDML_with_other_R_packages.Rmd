@@ -10,8 +10,8 @@ pandoc_args: [
 ]
 bibliography: "RDML.bib"
 ---
-```{r, echo = FALSE, message = FALSE}
-knitr::opts_chunk$set(collapse = T, comment = "#>")
+```{r, echo=FALSE, message=FALSE}
+knitr::opts_chunk$set(collapse=T, comment="#>")
 ```
 
 # Practical Example for the Usage of the **RMDL** package
@@ -41,10 +41,10 @@ obtained during the measurement of human DNA concentration by a *LightCycler
 96* (Roche) and the *XY-Detect* kit (Syntol, Russia). The file is opened as 
 described before:
 
-```{r, results = "hide"}
+```{r, results="hide"}
 library(RDML)
-filename <- system.file("extdata/stepone_std.rdml", package = "RDML")
-raw_data <- RDML$new(filename = filename)
+filename <- system.file("extdata/stepone_std.rdml", package="RDML")
+raw_data <- RDML$new(filename=filename)
 ```
 
 For convenience we use the pipe function `%>%` from the **magrittr** package for 
@@ -54,15 +54,15 @@ further analysis. Next we fetch the amplification curve data from the RDML file.
 library(magrittr)
 raw_data_tab <- raw_data$AsTable(
     # Custom name pattern 'position~sample~sample.type~target~run.id'
-    name.pattern = paste(
+    name.pattern=paste(
         react$position,
         react$sample$id,
         private$.sample[[react$sample$id]]$type$value,
         data$tar$id,
         run$id$id, # run id added to names
-        sep = "~"))
+        sep="~"))
 # Get all fluorescence data and assign them to the object fdata
-fdata <- as.data.frame(raw_data$GetFData(raw_data_tab, long.table = FALSE))
+fdata <- as.data.frame(raw_data$GetFData(raw_data_tab, long.table=FALSE))
 ```
 
 ```{r}
@@ -82,18 +82,19 @@ ggplot(data=fdata_gg, aes(x=cyc, y=value, color=variable)) +
 During the next steps comes the **qpcR** package into use. The function 
 `mselect` performs a sigmoid model selection by different criteria (e.g., 
 bias-corrected Akaike's Information Criterion). The function `efficiency` 
-calculates the qPCR Cq values, amplification efficiency and other important 
-qPCR parameters. In this example we set the parameter type of the `efficiency` 
-function to `Cy0`. This will calculate the Cy0 value, which is the intersection 
-of a tangent on the first derivative maximum with the abscissa as calculated 
-according to @guescini_new_2008.
+calculates the qPCR Cq values, amplification efficiency and other important qPCR 
+parameters. In this example we set the parameter type of the `efficiency` 
+function to `Cy0`. This will calculate and report the Cy0 value. According to 
+@guescini_new_2008 is the Cy0 value the intersection of a tangent on the first 
+derivative maximum with the abscissa. However, for all further analysis we will 
+use the second derivative maximum as Cq value for further calculations.
 
-```{r, echo=FALSE, include=FALSE}
-# Write a coustom function that 
+```{r, echo=TRUE, include=TRUE}
+# Write a custom function that calculates the Cq values and other curve parameters
 library(qpcR)
 res_fit <- do.call(cbind, lapply(2L:ncol(fdata), function(block_column) {
     
-    res_model <- try(mselect(pcrfit(data=fdata, cyc=1, fluo=block_column), do.all = TRUE), silent=TRUE)
+    res_model <- try(mselect(pcrfit(data=fdata, cyc=1, fluo=block_column), do.all=TRUE), silent=TRUE)
     if(res_model %>% class == "try-error") {
         res_model <- NA
     }
@@ -103,14 +104,23 @@ res_fit <- do.call(cbind, lapply(2L:ncol(fdata), function(block_column) {
         }
     )
 )
+# Assign column names
 colnames(res_fit) <- colnames(fdata)[-1]
 
 Cq_SDM <- res_fit[rownames(res_fit)=="cpD2", ] %>% unlist %>% as.data.frame
 colnames(Cq_SDM) <- c("Cq")
 
+# Prepare the dilutions and calculated Cq values for further usage in the effcalc
+# function from the chipPCR package
+
 dilution <- c(as.factor("ntc"), as.factor("unk"), 10000, 5000, 2500, 1250, 625)
-Cq_values <- matrix(Cq_SDM[, "Cq"], nrow=length(dilution), ncol = 3, byrow = TRUE)
+Cq_values <- matrix(Cq_SDM[, "Cq"], nrow=length(dilution), ncol=3, byrow=TRUE)
 ```
+
+```{r, results="asis", echo=FALSE} 
+knitr::kable(res_fit[, c(1, 5, 9, 11, 15)], caption="Selected data of calculated values from the fitted models. The samples A01~NTC_RNase P~ntc~RNase P~Run001, A05~pop1_RNase P~unkn~RNase P~Run001, B01~pop2_RNase P~unkn~RNase P~Run001,  B03~STD_RNase P_10000.0~std~RNase P~Run001 and B07~STD_RNase P_5000.0~std~RNase P~Run001 were arbitrarily selected for presentation.")
+```
+
 According to the StepOne manufacturers software is the amplification efficiency 
 `r raw_data$target[["RNase P"]]$amplificationEfficiency`%. To test this, the 
 `effcalc` function was used to determine the coefficients of the calibration 
