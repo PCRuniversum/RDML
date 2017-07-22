@@ -111,7 +111,10 @@ colnames(Cq_SDM) <- c("Cq")
 dilution <- c(as.factor("ntc"), as.factor("unk"), 10000, 5000, 2500, 1250, 625)
 Cq_values <- matrix(Cq_SDM[, "Cq"], nrow=length(dilution), ncol = 3, byrow = TRUE)
 ```
-The `effcalc` function was used to determine the coefficients of the calibration curve.
+According to the StepOne manufacturers software is the amplification efficiency 
+`r raw_data$target[["RNase P"]]$amplificationEfficiency`%. To test this, the 
+`effcalc` function was used to determine the coefficients of the calibration 
+curve.
 
 ```{r, echo=TRUE}
 library(chipPCR)
