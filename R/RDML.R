@@ -179,7 +179,7 @@ RDML <- R6Class("RDML",
                   ###               WARNING
                   ### Some RDML functions are stored as separate files!!!
                   ### Empty functions are added to let roxygen work.                  
-                  initialize = function() { },                  
+                  initialize = function() { },
                   AsTable = function() { },
                   GetFData = function() { },
                   SetFData = function() { },
