@@ -57,7 +57,7 @@
       <h1>Using the RDML package</h1>
                         <h4 class="author">Konstantin A. Blagodatskikh, Michał Burdukiewicz, Stefan Rödiger</h4>
             
-            <h4 class="date">2017-07-21</h4>
+            <h4 class="date">2017-07-23</h4>
           </div>
 
     
@@ -231,7 +231,7 @@ experiment &lt;-<span class="st"> </span>lc96$experiment$<span class="st">`</spa
 <span class="co"># Correct type 'idType' can be seen at error message.</span>
 <span class="kw">tryCatch</span>(experiment$id &lt;-<span class="st"> "exp1"</span>,
          <span class="dt">error =</span> function(e) <span class="kw">print</span>(e))
-<span class="co">#&gt; &lt;simpleError in withCallingHandlers({    saveRDS(do.call(do.call, c(readRDS("/tmp/RtmpRNGZ8Z/file1b472d0d80d3"),         list(envir = .GlobalEnv)), envir = .GlobalEnv), file = "/tmp/RtmpRNGZ8Z/file1b4740027ce5")}, error = function(e) {    saveRDS(list("error", e), file = paste0("/tmp/RtmpRNGZ8Z/file1b4740027ce5",         ".error"))    stop(e)}): Assertion on 'id' failed: Must have class 'idType', but has class 'character'.&gt;</span>
+<span class="co">#&gt; &lt;simpleError in withCallingHandlers({    saveRDS(do.call(do.call, c(readRDS("/tmp/Rtmp23mbC6/file1642ec8f367"),         list(envir = .GlobalEnv)), envir = .GlobalEnv), file = "/tmp/Rtmp23mbC6/file16423eebec")}, error = function(e) {    saveRDS(list("error", e), file = paste0("/tmp/Rtmp23mbC6/file16423eebec",         ".error"))    stop(e)}): Assertion on 'id' failed: Must have class 'idType', but has class 'character'.&gt;</span>
 
 <span class="co"># Set 'id' with correct input type - 'idType'</span>
 experiment$id &lt;-<span class="st"> </span>idType$<span class="kw"><a href="../reference/new-method.html">new</a></span>(<span class="st">"exp1"</span>)
@@ -569,6 +569,10 @@ xslx$<span class="kw"><a href="../reference/AsDendrogram-function.html">AsDendro
 <code>obj$AsDendrogram(...)</code> – <code><a href="../reference/AsDendrogram-function.html">AsDendrogram(obj, ...)</a></code>
 </li>
 </ul>
+</div>
+<div id="using" class="section level2">
+<h2 class="hasAnchor">
+<a href="#using" class="anchor"></a>Using</h2>
 </div>
 <div id="summary" class="section level2">
 <h2 class="hasAnchor">
@@ -1197,6 +1201,7 @@ https://journal.r-project.org/archive/2013-2/roediger-bohm-schimke.pdf</a>.</p>
       <li><a href="#creating-rdml-from-.csv-files">Creating <strong>RDML</strong> from <em>.csv</em> files</a></li>
       <li><a href="#creating-rdml-from-.xls-or-.xslx-files">Creating <strong>RDML</strong> from <em>.xls</em> or <em>.xslx</em> files</a></li>
       <li><a href="#functional-style">Functional style</a></li>
+      <li><a href="#using">Using</a></li>
       <li><a href="#summary">Summary</a></li>
       </ul>
 </li>

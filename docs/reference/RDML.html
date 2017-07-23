@@ -161,12 +161,8 @@ method, which extracts fluorescence data for specified samples.</p>
                                          <span class='no'>react</span>$<span class='no'>id</span>$<span class='no'>id</span>),
                     <span class='kw'>quantity</span> <span class='kw'>=</span> <span class='no'>sample</span><span class='kw'>[[</span><span class='no'>react</span>$<span class='no'>sample</span>$<span class='no'>id</span>]]$<span class='no'>quantity</span>$<span class='no'>value</span>)</div><div class='output co'>#&gt; <span class='error'>Error in eval(expr, envir, enclos): object 'lc96' not found</span></div><div class='input'><span class='co'>## Show dyes names</span>
 <span class='fu'>unique</span>(<span class='no'>tab</span>$<span class='no'>target.dyeId</span>)</div><div class='output co'>#&gt; <span class='error'>Error in unique(tab$target.dyeId): object 'tab' not found</span></div><div class='input'><span class='co'>## Show types of the samples for dye 'FAM'</span>
-<span class='fu'>library</span>(<span class='no'>dplyr</span>)</div><div class='output co'>#&gt; <span class='message'></span>
-#&gt; <span class='message'>Attaching package: ‘dplyr’</span></div><div class='output co'>#&gt; <span class='message'>The following objects are masked from ‘package:stats’:</span>
-#&gt; <span class='message'></span>
-#&gt; <span class='message'>    filter, lag</span></div><div class='output co'>#&gt; <span class='message'>The following objects are masked from ‘package:base’:</span>
-#&gt; <span class='message'></span>
-#&gt; <span class='message'>    intersect, setdiff, setequal, union</span></div><div class='input'><span class='fu'>unique</span>(<span class='fu'>filter</span>(<span class='no'>tab</span>, <span class='no'>target.dyeId</span> <span class='kw'>==</span> <span class='st'>"FAM"</span>)$<span class='no'>sample.type</span>)</div><div class='output co'>#&gt; <span class='error'>Error in filter(tab, target.dyeId == "FAM"): object 'tab' not found</span></div><div class='input'>
+<span class='fu'>library</span>(<span class='no'>dplyr</span>)
+<span class='fu'>unique</span>(<span class='fu'>filter</span>(<span class='no'>tab</span>, <span class='no'>target.dyeId</span> <span class='kw'>==</span> <span class='st'>"FAM"</span>)$<span class='no'>sample.type</span>)</div><div class='output co'>#&gt; <span class='error'>Error in filter(tab, target.dyeId == "FAM"): object 'tab' not found</span></div><div class='input'>
 <span class='co'>## Show template quantities for dye 'FAM' type 'std'#' </span>
 <span class='fu'>not_run</span>({
   <span class='no'>COPIES</span> <span class='kw'>&lt;-</span> <span class='fu'>filter</span>(<span class='no'>tab</span>, <span class='no'>target.dyeId</span> <span class='kw'>==</span> <span class='st'>"FAM"</span>, <span class='no'>sample.type</span> <span class='kw'>==</span> <span class='st'>"std"</span>)$<span class='no'>quantity</span>
