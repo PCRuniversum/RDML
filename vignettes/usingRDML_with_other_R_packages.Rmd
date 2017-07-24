@@ -42,15 +42,31 @@ obtained during the measurement of human DNA concentration by a *LightCycler
 described before:
 
 ```{r, results="hide"}
+# Load the RDML package and use its functions to `extract` the required data
 library(RDML)
 filename <- system.file("extdata/stepone_std.rdml", package="RDML")
 raw_data <- RDML$new(filename=filename)
+```
+At this stage all data from the `stepone_std.rdml` RDML file are available. For 
+example, the amplification efficiency as provided by the  StepOne™ Real-Time 
+PCR System software can be fetched from the package via `raw_data$target[["RNase 
+P"]]$amplificationEfficiency`. In another example, we extract the information 
+about the target in this experiment.
+
+```{r}
+raw_data$target
+```
+To get some information about the run we can use:
+
+```{r}
+raw_data$experiment[["Standard Curve Example"]]$run
 ```
 
 For convenience we use the pipe function `%>%` from the **magrittr** package for 
 further analysis. Next we fetch the amplification curve data from the RDML file.
 
 ```{r}
+# Use the magrittr package to create pipes
 library(magrittr)
 raw_data_tab <- raw_data$AsTable(
     # Custom name pattern 'position~sample~sample.type~target~run.id'
@@ -107,6 +123,9 @@ res_fit <- do.call(cbind, lapply(2L:ncol(fdata), function(block_column) {
 # Assign column names
 colnames(res_fit) <- colnames(fdata)[-1]
 
+# Fetch only the Cq values (second derivative maximum) and combine them in a
+# data.frame
+
 Cq_SDM <- res_fit[rownames(res_fit)=="cpD2", ] %>% unlist %>% as.data.frame
 colnames(Cq_SDM) <- c("Cq")
 
@@ -118,11 +137,20 @@ Cq_values <- matrix(Cq_SDM[, "Cq"], nrow=length(dilution), ncol=3, byrow=TRUE)
 ```
 
 ```{r, results="asis", echo=FALSE} 
-knitr::kable(res_fit[, c(1, 5, 9, 11, 15)], caption="Selected data of calculated values from the fitted models. The values reported in the table were calculated by a chain of functions from the **qpcR** package. In detail, this were the *mselect* function to calculate the optimal multiparametric sigmoid model and the *efficiency* function to calculate the Cq values and other curve parameters. More information is available from the manual of the **qpcR** package. The samples A01~NTC_RNase P~ntc~RNase P~Run001, A05~pop1_RNase P~unkn~RNase P~Run001, B01~pop2_RNase P~unkn~RNase P~Run001,  B03~STD_RNase P_10000.0~std~RNase P~Run001 and B07~STD_RNase P_5000.0~std~RNase P~Run001 were arbitrarily selected for presentation.")
+knitr::kable(res_fit[, c(1, 5, 9, 11, 15)], caption="Selected data of calculated 
+values from the fitted models. The values reported in the table were calculated 
+by a chain of functions from the **qpcR** package. In detail, this were the 
+*mselect* function to calculate the optimal multiparametric sigmoid model and 
+the *efficiency* function to calculate the Cq values and other curve parameters. 
+More information is available from the manual of the **qpcR** package. The 
+samples A01~NTC_RNase P~ntc~RNase P~Run001, A05~pop1_RNase P~unkn~RNase 
+P~Run001, B01~pop2_RNase P~unkn~RNase P~Run001,  B03~STD_RNase 
+P_10000.0~std~RNase P~Run001 and B07~STD_RNase P_5000.0~std~RNase P~Run001 were 
+arbitrarily selected for presentation.")
 ```
 
 According to the StepOne manufacturers software is the amplification efficiency 
-`r round(raw_data$target[["RNase P"]]$amplificationEfficiency, 2)`%. To test this, the 
+`r round(raw_data$target[["RNase P"]]$amplificationEfficiency, 1)`%. To test this, the 
 `effcalc` function was used to determine the coefficients of the calibration 
 curve.
 
@@ -138,24 +166,37 @@ res_efficiency <- effcalc(dilution[-c(1:3)], Cq_values[-c(1:3), ], logx=TRUE)
 # Use the %>% function from the magrittr package to plot the results (res_efficiency) 
 # from the effcalc function 
 
-res_efficiency %>% plot(., CI=TRUE, main="Second Derivative Maximum Method")
+res_efficiency %>% plot(., CI=TRUE, ylab="Cq (SDM)", main="Second Derivative Maximum Method")
 ```
 
-The amplification efficiency estimated with the customized function was 94.7%, which is comparable to the value reported in the `stepone_std.rdml` file. 
+The amplification efficiency estimated with the customized function was `r res_efficiency@amplification.efficiency`%, 
+which is comparable to the value reported in the `stepone_std.rdml` file. 
 
 ```{r, results="asis"}
-# Combine the sample labels and the Cq values as calculate by the Second Derivative Maximum Method (cpD2).
-sample_Cq <- data.frame(sample=c("ntc", "unk", 10000, 5000, 2500, 1250, 625), Cq_values)
+# Combine the sample labels and the Cq values as calculate by the Second 
+# Derivative Maximum Method (cpD2).
+
+sample_Cq <- data.frame(sample=c("ntc", "unk", 10000, 5000, 2500, 1250, 625), 
+Cq_values)
 
 # Print table of all Cq values
-knitr::kable(sample_Cq, caption="Cq values as calculate by the 
-                        Second Derivative Maximum Method (cpD2).")
+# Use the kable function from the knitr package to print a table
+
+knitr::kable(sample_Cq, caption="Cq values as calculate by the Second Derivative 
+Maximum Method (cpD2). ntc, non-template control. unk, unknown sample. X1, X2 
+and X3 are the Cq values from a triplicate measurement.")
 ```
 
 ```{r, results="asis"} 
-knitr::kable(res_efficiency, caption="Analysis of the amplification efficiency.")
+knitr::kable(res_efficiency, caption="Analysis of the amplification efficiency. 
+The table reports the concentration-depentent average Cq values from three 
+replicates per dilution step. In addition, the standard deviation (SD) and the 
+Coefficient of Variance (RSD [%]) are presented. The results indicate that the 
+data basis for the calibration curve is valid.")
 ```
 
-The Cq values (`r sample_Cq[2, -1]`) from the unknown sample `unk` had an average Cq of `r paste(round(mean(as.numeric(sample_Cq[2, -1])), 2), "±", round(sd(sample_Cq[2, -1]), 2))`.
+The Cq values (`r sample_Cq[2, -1]`) from the unknown sample `unk` had an 
+average Cq of `r paste(round(mean(as.numeric(sample_Cq[2, -1])), 2), "±", 
+round(sd(sample_Cq[2, -1]), 2))`.
 
 ## References
