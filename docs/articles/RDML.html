@@ -57,29 +57,29 @@
       <h1>Using the RDML package</h1>
                         <h4 class="author">Konstantin A. Blagodatskikh, Michał Burdukiewicz, Stefan Rödiger</h4>
             
-            <h4 class="date">2017-07-23</h4>
+            <h4 class="date">2017-07-24</h4>
           </div>
 
     
     
 <div class="contents">
-<div id="introduction-to-the-rdml-package" class="section level1">
-<h1 class="hasAnchor">
-<a href="#introduction-to-the-rdml-package" class="anchor"></a>Introduction to the RDML package</h1>
+<div id="introduction-to-the-rdml-package" class="section level2">
+<h2 class="hasAnchor">
+<a href="#introduction-to-the-rdml-package" class="anchor"></a>Introduction to the RDML package</h2>
 <p>The <a href="https://CRAN.R-project.org/package=RDML">RDML</a> package was created to work with the Real-time PCR Data Markup Language (RDML) – a structured and universal data standard for exchanging quantitative PCR (qPCR) data <span class="citation">(Lefever et al. 2009; Jan M Ruijter et al. 2015)</span>. RDML belongs to the family of eXtensible Markup Languages (XML). It contains fluorescence data and information about the qPCR experiment. A description and the RDML schema and the RDML format are available at <a href="http://rdml.org" class="uri">http://rdml.org</a>.</p>
 <p>The XML technology is commonly used in the <strong>R</strong> environment and there are several tools to manipulate XML files <span class="citation">(Nolan and Lang 2014)</span>. When working with XML data, the workhorse package is <strong>XML</strong> <span class="citation">(Lang and CRAN Team 2015)</span>.Therefore, investments development, implementation and maintenance is moderate.</p>
 <p>We use the <strong>R6</strong> <span class="citation">(Chang 2015)</span>, <strong>assertthat</strong> <span class="citation">(Wickham 2013)</span>, <strong>plyr</strong> <span class="citation">(Wickham 2011)</span>, <strong>dplyr</strong> <span class="citation">(Wickham and Francois 2015)</span>, <strong>tidyr</strong> <span class="citation">(Wickham 2014)</span> and <strong>rlist</strong> <span class="citation">(Ren 2015)</span> packages.</p>
-<div id="philosphy-of-the-rdml-package" class="section level2">
-<h2 class="hasAnchor">
-<a href="#philosphy-of-the-rdml-package" class="anchor"></a>Philosphy of the RDML package</h2>
+<div id="philosphy-of-the-rdml-package" class="section level3">
+<h3 class="hasAnchor">
+<a href="#philosphy-of-the-rdml-package" class="anchor"></a>Philosphy of the RDML package</h3>
 <p><code>RDML</code> imports various data formats (CSV, XMLX) besides the RDML format. Provided that the raw data have a defined structure (as described in the vignette) the import should be done by a few clicks. The example below shows the import of amplification curve data, which were stored in a CSV file. The function <code><a href="../reference/rdmlEdit.html">rdmlEdit()</a></code> was used in the <a href="https://rkward.kde.org/">RKWard IDE/GUI</a> <span class="citation">(Rödiger et al. 2012)</span> (tested with version 0.6.9z+0.7.0+devel1 on Kubuntu 17.04; NOTE: problems were reported on systems where not the webkit component was used for the rendering of the <code><a href="../reference/rdmlEdit.html">rdmlEdit()</a></code> GUI) for further processing.</p>
 <p><img src="File_import.png" alt="HTML5 Icon" style="width:663px;height:332px"></p>
 <p>Once imported enables <code>rdmlEDIT()</code> and other functions from the <code>RDML</code> package complex data visualization and processing in the R statistical computing environment.</p>
 <p><img src="data_view.png" alt="HTML5 Icon" style="width:663px;height:332px"></p>
 </div>
-<div id="major-functionalities-of-the-rdml-package" class="section level2">
-<h2 class="hasAnchor">
-<a href="#major-functionalities-of-the-rdml-package" class="anchor"></a>Major functionalities of the RDML package</h2>
+<div id="major-functionalities-of-the-rdml-package" class="section level3">
+<h3 class="hasAnchor">
+<a href="#major-functionalities-of-the-rdml-package" class="anchor"></a>Major functionalities of the RDML package</h3>
 <p>The public methods of the main R6 “RDML” class can be used to access and process the internally stored RDML data. These methods include:</p>
 <ul>
 <li>
@@ -97,14 +97,14 @@
 </ul>
 </div>
 </div>
-<div id="vendors-and-software-packages-supporting-rdml" class="section level1">
-<h1 class="hasAnchor">
-<a href="#vendors-and-software-packages-supporting-rdml" class="anchor"></a>Vendors and software packages supporting RDML</h1>
+<div id="vendors-and-software-packages-supporting-rdml" class="section level2">
+<h2 class="hasAnchor">
+<a href="#vendors-and-software-packages-supporting-rdml" class="anchor"></a>Vendors and software packages supporting RDML</h2>
 <p>The RDML format is supported by Bio-Rad (CFX 96 and CFX 384), Life Technologies (StepOne, ViiA7, QuantStudio) and Roche (LightCycler~96) thermo-cycler systems. In addition, several software packages (e.g., <strong>Primer3Plus</strong>, <strong>RDML-Ninja</strong>, <strong>qBase+</strong>) exist, which support RDML <span class="citation">(Untergasser et al. 2007; Hellemans et al. 2007; J M Ruijter et al. 2009; Pabinger et al. 2014; Jan M Ruijter et al. 2015)</span>.</p>
 </div>
-<div id="structure-of-the-rdml-package" class="section level1">
-<h1 class="hasAnchor">
-<a href="#structure-of-the-rdml-package" class="anchor"></a>Structure of the <strong>RDML</strong> package</h1>
+<div id="structure-of-the-rdml-package" class="section level2">
+<h2 class="hasAnchor">
+<a href="#structure-of-the-rdml-package" class="anchor"></a>Structure of the <strong>RDML</strong> package</h2>
 <p>The structure of the <strong>RDML</strong> package mimics the RDML format and provides several <a href="https://CRAN.R-project.org/package=R6/vignettes/Introduction.html">R6</a> classes, which corresponds to <a href="http://rdml.org/files.php?v=1.2">RDML v1.2</a> format types. All major manipulations with RDML data can be done by a class called <strong>RDML</strong> through its public methods:</p>
 <ul>
 <li>
@@ -118,9 +118,9 @@
 <li>
 <code>$AsDendrogram()</code> – represents structure of <strong>RDML</strong> object as dendrogram.</li>
 </ul>
-<div id="opening-and-observing-rdml-file" class="section level2">
-<h2 class="hasAnchor">
-<a href="#opening-and-observing-rdml-file" class="anchor"></a>Opening and observing RDML file</h2>
+<div id="opening-and-observing-rdml-file" class="section level3">
+<h3 class="hasAnchor">
+<a href="#opening-and-observing-rdml-file" class="anchor"></a>Opening and observing RDML file</h3>
 <p>In this section we will use the built-in RDML example file <code>lc96_bACTXY.rdml</code>. This file was obtained during the measurement of human DNA concentration by a <em>LightCycler 96</em> (Roche) and the <em>XY-Detect</em> kit (Syntol, Russia).</p>
 <p>To open the <code>lc96_bACTXY.rdml</code> file we have to create a new <strong>RDML</strong> object with its class initializer – <code>$new()</code> and the file name as parameter <code>filename</code>.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">filename &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">"extdata/lc96_bACTXY.rdml"</span>, <span class="dt">package =</span> <span class="st">"RDML"</span>)
@@ -167,9 +167,9 @@ lc96 &lt;-<span class="st"> </span>RDML$<span class="kw"><a href="../reference/n
 <li><code>experiment</code></li>
 </ul>
 <p>These fields can be divided by two parts:</p>
-<div id="experiment-field" class="section level3">
-<h3 class="hasAnchor">
-<a href="#experiment-field" class="anchor"></a>Experiment field</h3>
+<div id="experiment-field" class="section level4">
+<h4 class="hasAnchor">
+<a href="#experiment-field" class="anchor"></a>Experiment field</h4>
 <p>Contains one or more experiments with fluorescence data. Fluorescence data are stored at the <em>data</em> level of an experiment. E.g., fluorescence data for reaction tube <em>45</em> and target <em>bACT</em> can be accessed with the following code:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fdata &lt;-<span class="st"> </span>
 <span class="st">  </span>lc96$
@@ -191,9 +191,9 @@ lc96 &lt;-<span class="st"> </span>RDML$<span class="kw"><a href="../reference/n
 <p><img src="RDML_files/figure-html/dendrogram-1.png" width="576"></p>
 <p>In this dendrogram <a href="#dendrogram">1</a> we can see that our file consists of one experiment and one run. Four targets, each with two sample types (<em>std</em> – standard, <em>unkn</em> – unknown), are part of the experiment. There is only qPCR data – <em>adp</em> in this experiment. Ten reactions (tubes) for standard type (<em>std</em>) and six reaction for the unknown (<em>unkn</em>) type. The total number of reactions can be more than number of reactions on the plate because one tube can contain more than one target (e.g., multiplexing).</p>
 </div>
-<div id="additional-information-fields" class="section level3">
-<h3 class="hasAnchor">
-<a href="#additional-information-fields" class="anchor"></a>Additional information fields</h3>
+<div id="additional-information-fields" class="section level4">
+<h4 class="hasAnchor">
+<a href="#additional-information-fields" class="anchor"></a>Additional information fields</h4>
 <p>All fields other than <strong>experiment</strong>. This additional information can be referenced in other parts of the RDML file. E.g., to access sample added to react <em>39</em> and get its quantity we can use code like this:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">ref &lt;-<span class="st"> </span>lc96$
 <span class="st">          </span>experiment$<span class="st">`</span><span class="dt">ca1eb225-ecea-4793-9804-87bfbb45f81d</span><span class="st">`</span>$
@@ -205,9 +205,9 @@ sample$quantity$value
 <span class="co">#&gt; NULL</span></code></pre></div>
 </div>
 </div>
-<div id="copying-rdml-objects" class="section level2">
-<h2 class="hasAnchor">
-<a href="#copying-rdml-objects" class="anchor"></a>Copying <strong>RDML</strong> objects</h2>
+<div id="copying-rdml-objects" class="section level3">
+<h3 class="hasAnchor">
+<a href="#copying-rdml-objects" class="anchor"></a>Copying <strong>RDML</strong> objects</h3>
 <p><strong>R6</strong> objects are environments, that’s why simple copying results in creating reference to existing object. Then modifying of copy leads to modification of original object. To create <em>real</em> copy of object we have to use method <code>$clone(deep = TRUE)</code> provided by <strong>R6</strong> class.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">id1 &lt;-<span class="st"> </span>idType$<span class="kw"><a href="../reference/new-method.html">new</a></span>(<span class="st">"id_1"</span>)
 id2 &lt;-<span class="st"> </span>id1
@@ -221,26 +221,26 @@ id3$id &lt;-<span class="st"> "id_3"</span>
 <span class="co">#&gt; Clone            : id_3</span></code></pre></div>
 <p>From example above we can see that modification of <code>id2</code> led to modification of original object <code>id1</code> but modification of cloned object <code>id3</code> didn’t.</p>
 </div>
-<div id="modifying-rdml-objects" class="section level2">
-<h2 class="hasAnchor">
-<a href="#modifying-rdml-objects" class="anchor"></a>Modifying <strong>RDML</strong> objects</h2>
+<div id="modifying-rdml-objects" class="section level3">
+<h3 class="hasAnchor">
+<a href="#modifying-rdml-objects" class="anchor"></a>Modifying <strong>RDML</strong> objects</h3>
 <p>To modify content of <strong>RDML</strong> objects we can use fields as setters. These setters provide type safe modification by input validation. In addition, setting lists of objects generates names of list elements.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Create 'real' copy of object</span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Create 'real' copy of object
 experiment &lt;-<span class="st"> </span>lc96$experiment$<span class="st">`</span><span class="dt">ca1eb225-ecea-4793-9804-87bfbb45f81d</span><span class="st">`</span>$<span class="kw">clone</span>(<span class="dt">deep =</span> <span class="ot">TRUE</span>)
-<span class="co"># Try to set 'id' with wrong input type.</span>
-<span class="co"># Correct type 'idType' can be seen at error message.</span>
+## Try to set 'id' with wrong input type.
+## Correct type 'idType' can be seen at error message.
 <span class="kw">tryCatch</span>(experiment$id &lt;-<span class="st"> "exp1"</span>,
          <span class="dt">error =</span> function(e) <span class="kw">print</span>(e))
-<span class="co">#&gt; &lt;simpleError in withCallingHandlers({    saveRDS(do.call(do.call, c(readRDS("/tmp/Rtmp23mbC6/file164278d90774"),         list(envir = .GlobalEnv)), envir = .GlobalEnv), file = "/tmp/Rtmp23mbC6/file16422376ac14")}, error = function(e) {    saveRDS(list("error", e), file = paste0("/tmp/Rtmp23mbC6/file16422376ac14",         ".error"))    stop(e)}): Assertion on 'id' failed: Must have class 'idType', but has class 'character'.&gt;</span>
+<span class="co">#&gt; &lt;simpleError in withCallingHandlers({    saveRDS(do.call(do.call, c(readRDS("/tmp/RtmpSsqYIl/filee8069f6bb54"),         list(envir = .GlobalEnv)), envir = .GlobalEnv), file = "/tmp/RtmpSsqYIl/filee807cf76e38")}, error = function(e) {    saveRDS(list("error", e), file = paste0("/tmp/RtmpSsqYIl/filee807cf76e38",         ".error"))    stop(e)}): Assertion on 'id' failed: Must have class 'idType', but has class 'character'.&gt;</span>
 
-<span class="co"># Set 'id' with correct input type - 'idType'</span>
+## Set 'id' with correct input type - 'idType'
 experiment$id &lt;-<span class="st"> </span>idType$<span class="kw"><a href="../reference/new-method.html">new</a></span>(<span class="st">"exp1"</span>)
 
-<span class="co"># Similar operations for 'run'</span>
+## Similar operations for 'run'
 run &lt;-<span class="st"> </span>experiment$run$<span class="st">`</span><span class="dt">65aeb1ec-b377-4ef6-b03f-92898d47488b</span><span class="st">`</span>$<span class="kw">clone</span>(<span class="dt">deep =</span> <span class="ot">TRUE</span>)
 run$id &lt;-<span class="st"> </span>idType$<span class="kw"><a href="../reference/new-method.html">new</a></span>(<span class="st">"run1"</span>)
 
-<span class="co"># Replace original elements with modified</span>
+## Replace original elements with modified
 experiment$run &lt;-<span class="st"> </span><span class="kw">list</span>(run)
 lc96$experiment &lt;-<span class="st"> </span><span class="kw">list</span>(experiment)</code></pre></div>
 <p><a name="dendrogram_modified"></a></p>
@@ -248,9 +248,9 @@ lc96$experiment &lt;-<span class="st"> </span><span class="kw">list</span>(exper
 <p><img src="RDML_files/figure-html/dendrogram_modified-1.png" width="576"></p>
 <p>And we can see in <a href="#dendrogram_modified">2</a> our modification with <code>$AsDendrogram()</code> method.</p>
 </div>
-<div id="astable-method" class="section level2">
-<h2 class="hasAnchor">
-<a href="#astable-method" class="anchor"></a><code><a href="../reference/astable-function.html">AsTable()</a></code> method</h2>
+<div id="astable-method" class="section level3">
+<h3 class="hasAnchor">
+<a href="#astable-method" class="anchor"></a><code><a href="../reference/astable-function.html">AsTable()</a></code> method</h3>
 <p>To get information about all fluorescence data in RDML file (type of added sample, used target, starting quantity etc.) as data.frame we can use <code>$AsTable()</code> method. By default, it provides such information as:</p>
 <ul>
 <li>
@@ -293,7 +293,7 @@ lc96$experiment &lt;-<span class="st"> </span><span class="kw">list</span>(exper
     else value
   }
 )
-<span class="co"># Remove row names for compact printing</span>
+## Remove row names for compact printing
 <span class="kw">rownames</span>(tab) &lt;-<span class="st"> </span><span class="ot">NULL</span>
 <span class="kw">head</span>(tab)
 <span class="co">#&gt;                       fdata.name exp.id run.id react.id position    sample</span>
@@ -312,9 +312,9 @@ lc96$experiment &lt;-<span class="st"> </span><span class="kw">list</span>(exper
 <span class="co">#&gt; 6:      X          Hex         std TRUE FALSE</span></code></pre></div>
 <p>Also, the generated data.frame is used as a query in <code>$GetFData()</code> and <code>$SetFData()</code> methods (see further sections).</p>
 </div>
-<div id="getting-fluorescence-data" class="section level2">
-<h2 class="hasAnchor">
-<a href="#getting-fluorescence-data" class="anchor"></a>Getting fluorescence data</h2>
+<div id="getting-fluorescence-data" class="section level3">
+<h3 class="hasAnchor">
+<a href="#getting-fluorescence-data" class="anchor"></a>Getting fluorescence data</h3>
 <p>We can get the fluorescence data two ways:</p>
 <ul>
 <li>direct access to data as it was described at <em>Experiment field</em> subsection</li>
@@ -333,7 +333,7 @@ lc96$experiment &lt;-<span class="st"> </span><span class="kw">list</span>(exper
 <span class="co">#&gt;     intersect, setdiff, setequal, union</span>
 <span class="kw">library</span>(ggplot2)
 
-<span class="co"># Prepare request to get only 'std' type samples</span>
+## Prepare request to get only 'std' type samples
 filtered.tab &lt;-<span class="st"> </span><span class="kw">filter</span>(tab,
                        sample.type ==<span class="st"> "std"</span>)
 
@@ -355,7 +355,7 @@ tab &lt;-<span class="st"> </span>lc96$<span class="kw"><a href="../reference/as
              data$tar$id,
              run$id$id, <span class="co"># run id added to names</span>
              <span class="dt">sep =</span> <span class="st">"~"</span>))
-<span class="co"># Get all fluorescence data</span>
+## Get all fluorescence data
 fdata &lt;-<span class="st"> </span><span class="kw">as.data.frame</span>(lc96$<span class="kw"><a href="../reference/GetFData-function.html">GetFData</a></span>(tab,
                                      <span class="co"># We don't need long table format for CPP()</span>
                                      <span class="dt">long.table =</span> <span class="ot">FALSE</span>))
@@ -366,9 +366,9 @@ fdata.cpp &lt;-<span class="st"> </span><span class="kw">cbind</span>(<span clas
                                          x)$y))</code></pre></div>
 <p>Now we have preprocessed data, which we will add to our object and use during next section.</p>
 </div>
-<div id="setting-fluorescence-data" class="section level2">
-<h2 class="hasAnchor">
-<a href="#setting-fluorescence-data" class="anchor"></a>Setting fluorescence data</h2>
+<div id="setting-fluorescence-data" class="section level3">
+<h3 class="hasAnchor">
+<a href="#setting-fluorescence-data" class="anchor"></a>Setting fluorescence data</h3>
 <p>To set fluorescence data to <strong>RDML</strong> object we can use <code>$SetFData()</code> method. It takes three arguments:</p>
 <ul>
 <li>
@@ -383,11 +383,11 @@ fdata.cpp &lt;-<span class="st"> </span><span class="kw">cbind</span>(<span clas
 <p>Note that colnames in <code>fdata</code> and <code>fdata.name</code> in <code>request</code> have to be the same!</p>
 </blockquote>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">tab$run.id &lt;-<span class="st"> "run.cpp"</span>
-<span class="co"># Set fluorescence data from previous section</span>
+## Set fluorescence data from previous section
 lc96$<span class="kw"><a href="../reference/setfdata-function.html">SetFData</a></span>(fdata.cpp,
               tab)
 
-<span class="co"># View setted data</span>
+## View setted data
 fdata &lt;-<span class="st"> </span>lc96$<span class="kw"><a href="../reference/GetFData-function.html">GetFData</a></span>(tab,
                        <span class="dt">long.table =</span> <span class="ot">TRUE</span>)
 <span class="kw">ggplot</span>(fdata, <span class="kw">aes</span>(cyc, fluor)) +
@@ -395,31 +395,31 @@ fdata &lt;-<span class="st"> </span>lc96$<span class="kw"><a href="../reference/
                   <span class="dt">color =</span> target))</code></pre></div>
 <p><img src="RDML_files/figure-html/unnamed-chunk-11-1.png" width="576"></p>
 </div>
-<div id="merging-rdml-objects" class="section level2">
-<h2 class="hasAnchor">
-<a href="#merging-rdml-objects" class="anchor"></a>Merging <strong>RDML</strong> objects</h2>
+<div id="merging-rdml-objects" class="section level3">
+<h3 class="hasAnchor">
+<a href="#merging-rdml-objects" class="anchor"></a>Merging <strong>RDML</strong> objects</h3>
 <p>Merging <strong>RDML</strong> objects can be done by <code><a href="../reference/MergeRDMLs.html">MergeRDMLs()</a></code> function. It takes list of <strong>RDML</strong> objects and returns one <strong>RDML</strong> object.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Load another built in RDML file</span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Load another built in RDML file
 stepone &lt;-<span class="st"> </span>RDML$<span class="kw"><a href="../reference/new-method.html">new</a></span>(<span class="kw">paste0</span>(<span class="kw">path.package</span>(<span class="st">"RDML"</span>),
                            <span class="st">"/extdata/"</span>, <span class="st">"stepone_std.rdml"</span>))
-<span class="co"># Merge it with our 'lc96' object</span>
+## Merge it with our 'lc96' object
 merged &lt;-<span class="st"> </span><span class="kw"><a href="../reference/MergeRDMLs.html">MergeRDMLs</a></span>(<span class="kw">list</span>(lc96, stepone))
-<span class="co"># View structure of new object</span>
+## View structure of new object
 merged$<span class="kw"><a href="../reference/AsDendrogram-function.html">AsDendrogram</a></span>()
 <span class="co">#&gt; Warning in self$AsTable(): fdata.name column has duplicates! Try another</span>
 <span class="co">#&gt; name.pattern.</span></code></pre></div>
 <p><img src="RDML_files/figure-html/unnamed-chunk-12-1.png" width="672"></p>
 </div>
-<div id="saving-rdml-object-as-rdml-file" class="section level2">
-<h2 class="hasAnchor">
-<a href="#saving-rdml-object-as-rdml-file" class="anchor"></a>Saving <strong>RDML</strong> object as RDML file</h2>
+<div id="saving-rdml-object-as-rdml-file" class="section level3">
+<h3 class="hasAnchor">
+<a href="#saving-rdml-object-as-rdml-file" class="anchor"></a>Saving <strong>RDML</strong> object as RDML file</h3>
 <p>To save <strong>RDML</strong> object as RDML file v1.2 we can use <code>$AsXML()</code> method where <code>file.name</code> argument is name of new RDML file. Without <code>file.name</code> function returns XML tree.</p>
 <p><code>lc96$AsXML("lc96.rdml")</code></p>
 <p>You can use <a href="https://sourceforge.net/projects/qpcr-ninja/">RDML-ninja</a> or the <a href="http://rdml.org/tools.php?validator">RDML validator</a> from the RMDL consortiun to validate a RDML file created by the <strong>RDML</strong> package file.</p>
 </div>
-<div id="creating-custom-functions" class="section level2">
-<h2 class="hasAnchor">
-<a href="#creating-custom-functions" class="anchor"></a>Creating custom functions</h2>
+<div id="creating-custom-functions" class="section level3">
+<h3 class="hasAnchor">
+<a href="#creating-custom-functions" class="anchor"></a>Creating custom functions</h3>
 <p><strong>R6</strong> classes allow add methods to existing classes. This can be done using the <code>$set()</code> method. Suppose that we decided add method to preprocess all fluorescence data and calculate Cq:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">RDML$<span class="kw">set</span>(<span class="st">"public"</span>, <span class="st">"CalcCq"</span>,
          function() {
@@ -446,7 +446,7 @@ merged$<span class="kw"><a href="../reference/AsDendrogram-function.html">AsDend
          }
 )
 
-<span class="co"># Create new object with our advanced class</span>
+## Create new object with our advanced class
 stepone &lt;-<span class="st"> </span>RDML$<span class="kw"><a href="../reference/new-method.html">new</a></span>(<span class="kw">paste0</span>(<span class="kw">path.package</span>(<span class="st">"RDML"</span>),
                            <span class="st">"/extdata/"</span>, <span class="st">"stepone_std.rdml"</span>))</code></pre></div>
 <p>And then apply our new method:</p>
@@ -476,23 +476,23 @@ stepone &lt;-<span class="st"> </span>RDML$<span class="kw"><a href="../referenc
 <span class="co">#&gt;   C07_STD_RNase P_625.0_std_RNase P   C08_STD_RNase P_625.0_std_RNase P </span>
 <span class="co">#&gt;                           16.915642                           13.706484</span></code></pre></div>
 </div>
-<div id="creating-rdml-from-table" class="section level2">
-<h2 class="hasAnchor">
-<a href="#creating-rdml-from-table" class="anchor"></a>Creating <strong>RDML</strong> from table</h2>
+<div id="creating-rdml-from-table" class="section level3">
+<h3 class="hasAnchor">
+<a href="#creating-rdml-from-table" class="anchor"></a>Creating <strong>RDML</strong> from table</h3>
 <p><strong>RDML</strong> objects can be generated not only from files but from user data contained in data.frames. To do this you have to create empty <strong>RDML</strong> object, create data.frame, which describes data and set data by <code>$SetFData()</code> method. Minimal needed information (samples, targets, dyes) will be created from data description.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">### Create simulated data with AmpSim() from chipPCR package
-<span class="co"># Cq for data to be generated</span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">#### Create simulated data with AmpSim() from chipPCR package
+## Cq for data to be generated
 Cqs &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">15</span>, <span class="dv">17</span>, <span class="dv">19</span>, <span class="dv">21</span>)
-<span class="co"># PCR si,ulation will be 35 cycles</span>
+## PCR si,ulation will be 35 cycles
 fdata &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">cyc =</span> <span class="dv">1</span>:<span class="dv">35</span>)
 for(Cq in Cqs) {
   fdata &lt;-<span class="st"> </span><span class="kw">cbind</span>(fdata,
                  <span class="kw">AmpSim</span>(<span class="dt">cyc =</span> <span class="dv">1</span>:<span class="dv">35</span>, <span class="dt">Cq =</span> Cq)[, <span class="dv">2</span>])
 }
-<span class="co"># Set names for fluorescence curves</span>
+## Set names for fluorescence curves
 <span class="kw">colnames</span>(fdata)[<span class="dv">2</span>:<span class="dv">5</span>] &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">"c1"</span>, <span class="st">"c2"</span>, <span class="st">"c3"</span>, <span class="st">"c4"</span>)
 
-<span class="co"># Create minimal description</span>
+## Create minimal description
 descr &lt;-<span class="st"> </span><span class="kw">data.frame</span>(
   <span class="dt">fdata.name =</span> <span class="kw">c</span>(<span class="st">"c1"</span>, <span class="st">"c2"</span>, <span class="st">"c3"</span>, <span class="st">"c4"</span>),
   <span class="dt">exp.id =</span> <span class="kw">c</span>(<span class="st">"exp1"</span>, <span class="st">"exp1"</span>, <span class="st">"exp1"</span>, <span class="st">"exp1"</span>),
@@ -505,12 +505,12 @@ descr &lt;-<span class="st"> </span><span class="kw">data.frame</span>(
   <span class="dt">stringsAsFactors =</span> <span class="ot">FALSE</span>
 )
 
-<span class="co"># Create empty RDML object</span>
+## Create empty RDML object
 sim &lt;-<span class="st"> </span>RDML$<span class="kw"><a href="../reference/new-method.html">new</a></span>()
-<span class="co"># Add fluorescence data</span>
+## Add fluorescence data
 sim$<span class="kw"><a href="../reference/setfdata-function.html">SetFData</a></span>(fdata, descr)
 
-<span class="co"># Observe object</span>
+## Observe object
 sim$<span class="kw"><a href="../reference/AsDendrogram-function.html">AsDendrogram</a></span>()</code></pre></div>
 <p><img src="RDML_files/figure-html/unnamed-chunk-15-1.png" width="576"></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fdata &lt;-<span class="st"> </span>sim$<span class="kw"><a href="../reference/GetFData-function.html">GetFData</a></span>(sim$<span class="kw"><a href="../reference/astable-function.html">AsTable</a></span>(),
@@ -521,27 +521,27 @@ sim$<span class="kw"><a href="../reference/AsDendrogram-function.html">AsDendrog
                 <span class="dt">linetype =</span> sample))</code></pre></div>
 <p><img src="RDML_files/figure-html/unnamed-chunk-15-2.png" width="576"></p>
 </div>
-<div id="creating-rdml-from-abi-7500-v-2-software" class="section level2">
-<h2 class="hasAnchor">
-<a href="#creating-rdml-from-abi-7500-v-2-software" class="anchor"></a>Creating <strong>RDML</strong> from <em>ABI 7500 v.2</em> software</h2>
+<div id="creating-rdml-from-abi-7500-v-2-software" class="section level3">
+<h3 class="hasAnchor">
+<a href="#creating-rdml-from-abi-7500-v-2-software" class="anchor"></a>Creating <strong>RDML</strong> from <em>ABI 7500 v.2</em> software</h3>
 <p><strong>RDML</strong> objects can be created by <em>.eds</em> file generated by <em>ABI 7500 v.2</em> or <em>StepOne</em> software (any of analysis inside device software have to be done!).</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">filename &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">"extdata/from_abi7500/sce.eds"</span>, <span class="dt">package =</span> <span class="st">"RDML"</span>)
 abi &lt;-<span class="st"> </span>RDML$<span class="kw"><a href="../reference/new-method.html">new</a></span>(<span class="dt">filename =</span> filename)
 abi$<span class="kw"><a href="../reference/AsDendrogram-function.html">AsDendrogram</a></span>()</code></pre></div>
 <p><img src="RDML_files/figure-html/unnamed-chunk-16-1.png" width="576"></p>
 </div>
-<div id="creating-rdml-from--csv-files" class="section level2">
-<h2 class="hasAnchor">
-<a href="#creating-rdml-from--csv-files" class="anchor"></a>Creating <strong>RDML</strong> from <em>.csv</em> files</h2>
+<div id="creating-rdml-from--csv-files" class="section level3">
+<h3 class="hasAnchor">
+<a href="#creating-rdml-from--csv-files" class="anchor"></a>Creating <strong>RDML</strong> from <em>.csv</em> files</h3>
 <p><strong>RDML</strong> objects can be generated by <em>.csv</em> file. This file have to contain first column <strong>cyc</strong> for qPCR data or <strong>tmp</strong> for melting data. Other columns – fluorescence signal.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">filename &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">"extdata/from_tables/fdata.csv"</span>, <span class="dt">package =</span> <span class="st">"RDML"</span>)
 csv &lt;-<span class="st"> </span>RDML$<span class="kw"><a href="../reference/new-method.html">new</a></span>(<span class="dt">filename =</span> filename)
 csv$<span class="kw"><a href="../reference/AsDendrogram-function.html">AsDendrogram</a></span>()</code></pre></div>
 <p><img src="RDML_files/figure-html/unnamed-chunk-17-1.png" width="576"></p>
 </div>
-<div id="creating-rdml-from--xls-or--xslx-files" class="section level2">
-<h2 class="hasAnchor">
-<a href="#creating-rdml-from--xls-or--xslx-files" class="anchor"></a>Creating <strong>RDML</strong> from <em>.xls</em> or <em>.xslx</em> files</h2>
+<div id="creating-rdml-from--xls-or--xslx-files" class="section level3">
+<h3 class="hasAnchor">
+<a href="#creating-rdml-from--xls-or--xslx-files" class="anchor"></a>Creating <strong>RDML</strong> from <em>.xls</em> or <em>.xslx</em> files</h3>
 <p><strong>RDML</strong> objects can be generated by <em>.xls</em> or <em>.xslx</em> file. This file have to contain <em>description</em> data.frame at sheet <em>description</em> and qPCR data at sheet <em>adp</em> and/or qPCR data at sheet <em>mdp</em>.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">filename &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">"extdata/from_tables/table.xlsx"</span>, <span class="dt">package =</span> <span class="st">"RDML"</span>)
 xslx &lt;-<span class="st"> </span>RDML$<span class="kw"><a href="../reference/new-method.html">new</a></span>(<span class="dt">filename =</span> filename)
@@ -551,9 +551,9 @@ xslx &lt;-<span class="st"> </span>RDML$<span class="kw"><a href="../reference/n
 xslx$<span class="kw"><a href="../reference/AsDendrogram-function.html">AsDendrogram</a></span>()</code></pre></div>
 <p><img src="RDML_files/figure-html/unnamed-chunk-18-1.png" width="576"></p>
 </div>
-<div id="functional-style" class="section level2">
-<h2 class="hasAnchor">
-<a href="#functional-style" class="anchor"></a>Functional style</h2>
+<div id="functional-style" class="section level3">
+<h3 class="hasAnchor">
+<a href="#functional-style" class="anchor"></a>Functional style</h3>
 <p>To provide functional programming style, which is more convenient in <strong>R</strong>, the <strong>RDML</strong> class methods have function wrappers:</p>
 <ul>
 <li>
@@ -570,13 +570,13 @@ xslx$<span class="kw"><a href="../reference/AsDendrogram-function.html">AsDendro
 </li>
 </ul>
 </div>
-<div id="using" class="section level2">
-<h2 class="hasAnchor">
-<a href="#using" class="anchor"></a>Using</h2>
+<div id="using" class="section level3">
+<h3 class="hasAnchor">
+<a href="#using" class="anchor"></a>Using</h3>
 </div>
-<div id="summary" class="section level2">
-<h2 class="hasAnchor">
-<a href="#summary" class="anchor"></a>Summary</h2>
+<div id="summary" class="section level3">
+<h3 class="hasAnchor">
+<a href="#summary" class="anchor"></a>Summary</h3>
 <p><strong>RDML</strong> package provides classes and methods to work with RDML data generated by real-time quantitative PCR devices or to create RDML files from user generated data. Because classes of the <strong>RDML</strong> package are build with <strong>R6</strong> they can be modified by adding custom methods and suggest type safe usage by input validation.</p>
 </div>
 </div>
@@ -893,10 +893,9 @@ dat &lt;-<span class="st"> </span>video.scan$<span class="kw"><a href="../refere
 <a href="#conclusion" class="anchor"></a>Conclusion</h2>
 <p>In this example we used raw data from the <em>VideoScan</em> platform to demonstrate the creation of an <em>RDML</em> file via the <strong>RDML</strong> package. This procedure can be easily adapted to other experiments and devices and gives the researcher a tool to create a file in a standardized format for convenient data exchange. In contrast to simple <em>csv</em> files contains this file additional metadata in a defined structure. This in turn makes the data available to other scientists for reproducible research.</p>
 </div>
-</div>
-<div id="benchmark" class="section level1">
-<h1 class="hasAnchor">
-<a href="#benchmark" class="anchor"></a>Benchmark</h1>
+<div id="benchmark" class="section level2">
+<h2 class="hasAnchor">
+<a href="#benchmark" class="anchor"></a>Benchmark</h2>
 <p>The RDML format may also store data from the high-throughput technologies as digital PCR or 384-well qPCR. To make the RDML package the most appropriate tool for such applications, we optimize the saving functionality of the package. Thanks to this, the RDML package is able to save in a reasonable time even large number of PCR experiments.</p>
 <p>We benchmarked the time needed for saving RDML object with different numbers of experiments on two desktop machines:</p>
 <ol style="list-style-type: decimal">
@@ -1038,24 +1037,24 @@ dat &lt;-<span class="st"> </span>video.scan$<span class="kw"><a href="../refere
 </table>
 <p>The result above indicate that, thanks to the RDML package, even average laboratory workstation is able to save large RDML files in reasonable time (around 4 minutes for 1000 experiments).</p>
 </div>
-<div id="validation-of-rdml-files-created-by-the-rdml-package" class="section level1">
-<h1 class="hasAnchor">
-<a href="#validation-of-rdml-files-created-by-the-rdml-package" class="anchor"></a>Validation of RDML files created by the RDML package</h1>
+<div id="validation-of-rdml-files-created-by-the-rdml-package" class="section level2">
+<h2 class="hasAnchor">
+<a href="#validation-of-rdml-files-created-by-the-rdml-package" class="anchor"></a>Validation of RDML files created by the RDML package</h2>
 <p>The correct structure of an RDML file is an important requirement to perform reproducibel analysis. Unfortunately created files can not be properly tested now because official RDML validator <a href="http://rdml.org/tools.php">rdml.org</a> does not work from time to time. However, there is a solution to validate the files by the alternate editor - <em>RDML-Ninja</em> <span class="citation">(Jan M Ruijter et al. 2015)</span>.</p>
 </div>
-<div id="rdmledit-web-server" class="section level1">
-<h1 class="hasAnchor">
-<a href="#rdmledit-web-server" class="anchor"></a>RDMLedit web-server</h1>
-<p>The <a href="RDMLedit%20web-server">http://shtest.evrogen.net/rdmlEdit/</a> is a web tool based on the functionalities of the RDML package. Aside from basic functionalities, like data import, alteration and export, RDMLedit also produces visualisations of qPCR data. In addition to that, RDMLedit can also merge multiple RDML files.</p>
-<div id="local-deployment-of-rdmledit" class="section level2">
+<div id="rdmledit-web-server" class="section level2">
 <h2 class="hasAnchor">
-<a href="#local-deployment-of-rdmledit" class="anchor"></a>Local deployment of RDMLedit</h2>
+<a href="#rdmledit-web-server" class="anchor"></a>RDMLedit web-server</h2>
+<p>The <a href="RDMLedit%20web-server">http://shtest.evrogen.net/rdmlEdit/</a> is a web tool based on the functionalities of the RDML package. Aside from basic functionalities, like data import, alteration and export, RDMLedit also produces visualisations of qPCR data. In addition to that, RDMLedit can also merge multiple RDML files.</p>
+<div id="local-deployment-of-rdmledit" class="section level3">
+<h3 class="hasAnchor">
+<a href="#local-deployment-of-rdmledit" class="anchor"></a>Local deployment of RDMLedit</h3>
 <p>As a <a href="shiny%20application">https://shiny.rstudio.com/</a>, RDMLedit may be also deployed locally. It requires installed R and RDML package. Next, a user has to open R and run the following command: <strong>rdmlEdit()</strong>.</p>
 </div>
 </div>
-<div id="references" class="section level1 unnumbered">
-<h1 class="hasAnchor">
-<a href="#references" class="anchor"></a>References</h1>
+<div id="references" class="section level2 unnumbered">
+<h2 class="hasAnchor">
+<a href="#references" class="anchor"></a>References</h2>
 <div id="refs" class="references">
 <div id="ref-baker_quantitative_2012">
 <p>Baker, Monya. 2012. “Quantitative Data: Learning to Share.” <em>Nature Methods</em> 9 (1): 39–41. doi:<a href="https://doi.org/10.1038/nmeth.1815">10.1038/nmeth.1815</a>.</p>
@@ -1172,39 +1171,16 @@ https://journal.r-project.org/archive/2013-2/roediger-bohm-schimke.pdf</a>.</p>
 </div>
 </div>
 </div>
+</div>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
         <div id="tocnav">
       <h2>Contents</h2>
       <ul class="nav nav-pills nav-stacked">
-<li>
-<a href="#introduction-to-the-rdml-package">Introduction to the RDML package</a><ul class="nav nav-pills nav-stacked">
-<li><a href="#philosphy-of-the-rdml-package">Philosphy of the RDML package</a></li>
-      <li><a href="#major-functionalities-of-the-rdml-package">Major functionalities of the RDML package</a></li>
-      </ul>
-</li>
+<li><a href="#introduction-to-the-rdml-package">Introduction to the RDML package</a></li>
       <li><a href="#vendors-and-software-packages-supporting-rdml">Vendors and software packages supporting RDML</a></li>
-      <li>
-<a href="#structure-of-the-rdml-package">Structure of the <strong>RDML</strong> package</a><ul class="nav nav-pills nav-stacked">
-<li><a href="#opening-and-observing-rdml-file">Opening and observing RDML file</a></li>
-      <li><a href="#copying-rdml-objects">Copying <strong>RDML</strong> objects</a></li>
-      <li><a href="#modifying-rdml-objects">Modifying <strong>RDML</strong> objects</a></li>
-      <li><a href="#astable-method"><code><a href="../reference/astable-function.html">AsTable()</a></code> method</a></li>
-      <li><a href="#getting-fluorescence-data">Getting fluorescence data</a></li>
-      <li><a href="#setting-fluorescence-data">Setting fluorescence data</a></li>
-      <li><a href="#merging-rdml-objects">Merging <strong>RDML</strong> objects</a></li>
-      <li><a href="#saving-rdml-object-as-rdml-file">Saving <strong>RDML</strong> object as RDML file</a></li>
-      <li><a href="#creating-custom-functions">Creating custom functions</a></li>
-      <li><a href="#creating-rdml-from-table">Creating <strong>RDML</strong> from table</a></li>
-      <li><a href="#creating-rdml-from-abi-7500-v.2-software">Creating <strong>RDML</strong> from <em>ABI 7500 v.2</em> software</a></li>
-      <li><a href="#creating-rdml-from-.csv-files">Creating <strong>RDML</strong> from <em>.csv</em> files</a></li>
-      <li><a href="#creating-rdml-from-.xls-or-.xslx-files">Creating <strong>RDML</strong> from <em>.xls</em> or <em>.xslx</em> files</a></li>
-      <li><a href="#functional-style">Functional style</a></li>
-      <li><a href="#using">Using</a></li>
-      <li><a href="#summary">Summary</a></li>
-      </ul>
-</li>
+      <li><a href="#structure-of-the-rdml-package">Structure of the <strong>RDML</strong> package</a></li>
       <li>
 <a href="#creating-rdml-file-from-raw-data">Creating RDML file from raw data</a><ul class="nav nav-pills nav-stacked">
 <li><a href="#initialization">Initialization</a></li>
@@ -1216,16 +1192,12 @@ https://journal.r-project.org/archive/2013-2/roediger-bohm-schimke.pdf</a>.</p>
       <li><a href="#benchmark-of-the-rdml-generation">Benchmark of the RDML generation</a></li>
       <li><a href="#dealing-with-other-data-formats">Dealing with other data formats</a></li>
       <li><a href="#conclusion">Conclusion</a></li>
-      </ul>
-</li>
       <li><a href="#benchmark">Benchmark</a></li>
       <li><a href="#validation-of-rdml-files-created-by-the-rdml-package">Validation of RDML files created by the RDML package</a></li>
-      <li>
-<a href="#rdmledit-web-server">RDMLedit web-server</a><ul class="nav nav-pills nav-stacked">
-<li><a href="#local-deployment-of-rdmledit">Local deployment of RDMLedit</a></li>
+      <li><a href="#rdmledit-web-server">RDMLedit web-server</a></li>
+      <li><a href="#references">References</a></li>
       </ul>
 </li>
-      <li><a href="#references">References</a></li>
       </ul>
 </div>
       </div>

@@ -151,4 +151,4 @@ knitr::kable(res_efficiency, caption="Analysis of the amplification efficiency."
 
 The Cq values (`r sample_Cq[2, -1]`) from the unknown sample `unk` had an average Cq of `r paste(round(mean(as.numeric(sample_Cq[2, -1])), 2), "±", round(sd(sample_Cq[2, -1]), 2))`.
 
-# References
+## References
