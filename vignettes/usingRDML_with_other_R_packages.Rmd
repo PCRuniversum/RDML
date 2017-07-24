@@ -33,7 +33,10 @@ that estimated amplification efficiency estimated by the StepOne system differs
 from the estimate as analyzed with the proposed pipeline (**RDML** $\rightarrow$ 
 **qpcR** $\rightarrow$ **chipPCR**).
 
-## Preparation of the data
+In principle, the following code examples can be combined with report generation 
+toolkits for data analysis pipelines such as **Nozzle** (see @gehlenborg_nozzle:_2013).
+
+# Preparation of the data
 
 In the **RDML** vignette it was shown how to read-in RDML data. In this section we will 
 continue with the built-in RDML example file `stepone_std.rdml`. This file was 
@@ -47,6 +50,9 @@ library(RDML)
 filename <- system.file("extdata/stepone_std.rdml", package="RDML")
 raw_data <- RDML$new(filename=filename)
 ```
+
+# Working with metadata of the example file
+
 At this stage all data from the `stepone_std.rdml` RDML file are available. For 
 example, the amplification efficiency as provided by the  StepOne™ Real-Time 
 PCR System software can be fetched from the package via `raw_data$target[["RNase 
@@ -62,12 +68,12 @@ To get some information about the run we can use:
 raw_data$experiment[["Standard Curve Example"]]$run
 ```
 
+# Extraction of the amplification curve data
+
 For convenience we use the pipe function `%>%` from the **magrittr** package for 
 further analysis. Next we fetch the amplification curve data from the RDML file.
 
 ```{r}
-# Use the magrittr package to create pipes
-library(magrittr)
 raw_data_tab <- raw_data$AsTable(
     # Custom name pattern 'position~sample~sample.type~target~run.id'
     name.pattern=paste(
@@ -80,6 +86,12 @@ raw_data_tab <- raw_data$AsTable(
 # Get all fluorescence data and assign them to the object fdata
 fdata <- as.data.frame(raw_data$GetFData(raw_data_tab, long.table=FALSE))
 ```
+
+# Plotting of the raw amplification curve data
+
+The plotting of the raw data is an important step to visually inspect the data. 
+In this example, we use the **ggplot2** package [@wickham_ggplot2_2009] instead 
+of defualt **R** graphics functions. 
 
 ```{r}
 # Load the ggplot2 package for plotting
@@ -95,22 +107,35 @@ ggplot(data=fdata_gg, aes(x=cyc, y=value, color=variable)) +
 
 ```
 
+# Analysis of the qPCR amplification curve data by a custom made function
+
 During the next steps comes the **qpcR** package into use. The function 
 `mselect` performs a sigmoid model selection by different criteria (e.g., 
-bias-corrected Akaike's Information Criterion). The function `efficiency` 
+bias-corrected Akaike's Information Criterion). Note: In most cases a sigmoidal 
+model with seven parameters was selected.
+
+The function `efficiency` 
 calculates the qPCR Cq values, amplification efficiency and other important qPCR 
 parameters. In this example we set the parameter type of the `efficiency` 
 function to `Cy0`. This will calculate and report the Cy0 value. According to 
 @guescini_new_2008 is the Cy0 value the intersection of a tangent on the first 
 derivative maximum with the abscissa. However, for all further analysis we will 
-use the second derivative maximum as Cq value for further calculations.
+use the second derivative maximum as Cq value for further calculations. This 
+supplementary material will not focus on the selection of a Cq method. For an 
+objective decision we would like to guide the reader to the study by 
+@ruijter_evaluation_2013.
+
 
 ```{r, echo=TRUE, include=TRUE}
+# Use the magrittr package to create pipes
+library(magrittr)
+
 # Write a custom function that calculates the Cq values and other curve parameters
 library(qpcR)
 res_fit <- do.call(cbind, lapply(2L:ncol(fdata), function(block_column) {
     
-    res_model <- try(mselect(pcrfit(data=fdata, cyc=1, fluo=block_column), do.all=TRUE), silent=TRUE)
+    res_model <- try(mselect(pcrfit(data=fdata, cyc=1, fluo=block_column), do.all=TRUE), 
+                     silent=TRUE)
     if(res_model %>% class=="try-error") {
         res_model <- NA
     }
@@ -136,23 +161,38 @@ dilution <- c(as.factor("ntc"), as.factor("unk"), 10000, 5000, 2500, 1250, 625)
 Cq_values <- matrix(Cq_SDM[, "Cq"], nrow=length(dilution), ncol=3, byrow=TRUE)
 ```
 
-```{r, results="asis", echo=FALSE} 
-knitr::kable(res_fit[, c(1, 5, 9, 11, 15)], caption="Selected data of calculated 
-values from the fitted models. The values reported in the table were calculated 
-by a chain of functions from the **qpcR** package. In detail, this were the 
-*mselect* function to calculate the optimal multiparametric sigmoid model and 
-the *efficiency* function to calculate the Cq values and other curve parameters. 
-More information is available from the manual of the **qpcR** package. The 
-samples A01~NTC_RNase P~ntc~RNase P~Run001, A05~pop1_RNase P~unkn~RNase 
-P~Run001, B01~pop2_RNase P~unkn~RNase P~Run001,  B03~STD_RNase 
-P_10000.0~std~RNase P~Run001 and B07~STD_RNase P_5000.0~std~RNase P~Run001 were 
-arbitrarily selected for presentation.")
+# Inspection and interpretation of the analyzed data
+
+Following we selected arbitarily a non-template control (negative) and an 
+unknown sample (positive) (two out of `r ncol(fdata)-1` amplification curves) 
+for the presentation of the coefficients that were calcuaed from the amplication 
+curve data.
+
+```{r, results="asis", echo=FALSE}
+knitr::kable(res_fit[, c(1, 5)], caption="Selected data of calculated values 
+from the fitted models. The values reported in the table were calculated by a 
+chain of functions from the **qpcR** package. In detail, this were the *mselect* 
+function to calculate the optimal multiparametric sigmoid model and the 
+*efficiency* function to calculate the Cq values and other curve parameters. 
+More information about these functions is available from the manual of the 
+**qpcR** package. The samples `A01` (ntc, non-template cntrol) and 
+`A05` (unk, unknown) were arbitrarily selected for 
+presentation. The custom made function assigned a NA (not available) to sample 
+`A01` because no Cq value or other curve 
+parameters could be calculated from the non-template control.")
 ```
 
-According to the StepOne manufacturers software is the amplification efficiency 
-`r round(raw_data$target[["RNase P"]]$amplificationEfficiency, 1)`%. To test this, the 
-`effcalc` function was used to determine the coefficients of the calibration 
-curve.
+# Calculation of the amplication efficiency from the calibration data
+
+We used the our calculated Cq values of the dilutions steps (`r 625*c(1, 2, 4, 8, 
+16)`) to determine the calibration curve. According to the StepOne manufacturers 
+software is the amplification efficiency circa 
+`r round(raw_data$target[["RNase P"]]$amplificationEfficiency, 1)`%. 
+To test this, the `effcalc` function was used to determine the coefficients of the 
+calibration curve.
+
+The following few lines are needed to calculate the amplication efficiency based on 
+Cq values that were calculated before.
 
 ```{r, echo=TRUE}
 # Load the chipPCR package
@@ -166,7 +206,8 @@ res_efficiency <- effcalc(dilution[-c(1:3)], Cq_values[-c(1:3), ], logx=TRUE)
 # Use the %>% function from the magrittr package to plot the results (res_efficiency) 
 # from the effcalc function 
 
-res_efficiency %>% plot(., CI=TRUE, ylab="Cq (SDM)", main="Second Derivative Maximum Method")
+res_efficiency %>% plot(., CI=TRUE, ylab="Cq (SDM)", 
+                        main="Second Derivative Maximum Method")
 ```
 
 The amplification efficiency estimated with the customized function was `r res_efficiency@amplification.efficiency`%, 
@@ -176,8 +217,9 @@ which is comparable to the value reported in the `stepone_std.rdml` file.
 # Combine the sample labels and the Cq values as calculate by the Second 
 # Derivative Maximum Method (cpD2).
 
-sample_Cq <- data.frame(sample=c("ntc", "unk", 10000, 5000, 2500, 1250, 625), 
-Cq_values)
+sample_Cq <- data.frame(sample=c("ntc", "unk", 
+                                 10000, 5000, 2500, 1250, 625), 
+                        Cq_values)
 
 # Print table of all Cq values
 # Use the kable function from the knitr package to print a table
@@ -199,4 +241,4 @@ The Cq values (`r sample_Cq[2, -1]`) from the unknown sample `unk` had an
 average Cq of `r paste(round(mean(as.numeric(sample_Cq[2, -1])), 2), "±", 
 round(sd(sample_Cq[2, -1]), 2))`.
 
-## References
+# References
