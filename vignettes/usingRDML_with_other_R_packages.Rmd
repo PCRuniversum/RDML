@@ -18,7 +18,7 @@ knitr::opts_chunk$set(collapse=T, comment="#>")
 
 A key benefit of the **RMDL** package is that it enables further statistical 
 analysis of RDML data. This section provides **R** packages 
-that link with the **RMDL** package. Moreover, it will give an example how 
+that link with the **RMDL** package. It will give a examples how 
 other packages allow the manipulation of RDML objects.
 
 In this example we will use the **qpcR** package [@ritz_qpcr_2008] to calculate 
@@ -95,7 +95,7 @@ library(qpcR)
 res_fit <- do.call(cbind, lapply(2L:ncol(fdata), function(block_column) {
     
     res_model <- try(mselect(pcrfit(data=fdata, cyc=1, fluo=block_column), do.all=TRUE), silent=TRUE)
-    if(res_model %>% class == "try-error") {
+    if(res_model %>% class=="try-error") {
         res_model <- NA
     }
     else{
@@ -118,7 +118,7 @@ Cq_values <- matrix(Cq_SDM[, "Cq"], nrow=length(dilution), ncol=3, byrow=TRUE)
 ```
 
 ```{r, results="asis", echo=FALSE} 
-knitr::kable(res_fit[, c(1, 5, 9, 11, 15)], caption="Selected data of calculated values from the fitted models. The samples A01~NTC_RNase P~ntc~RNase P~Run001, A05~pop1_RNase P~unkn~RNase P~Run001, B01~pop2_RNase P~unkn~RNase P~Run001,  B03~STD_RNase P_10000.0~std~RNase P~Run001 and B07~STD_RNase P_5000.0~std~RNase P~Run001 were arbitrarily selected for presentation.")
+knitr::kable(res_fit[, c(1, 5, 9, 11, 15)], caption="Selected data of calculated values from the fitted models. The values reported in the table were calculated by a chain of functions from the **qpcR** package. In detail, this were the *mselect* function to calculate the optimal multiparametric sigmoid model and the *efficiency* function to calculate the Cq values and other curve parameters. More information is available from the manual of the **qpcR** package. The samples A01~NTC_RNase P~ntc~RNase P~Run001, A05~pop1_RNase P~unkn~RNase P~Run001, B01~pop2_RNase P~unkn~RNase P~Run001,  B03~STD_RNase P_10000.0~std~RNase P~Run001 and B07~STD_RNase P_5000.0~std~RNase P~Run001 were arbitrarily selected for presentation.")
 ```
 
 According to the StepOne manufacturers software is the amplification efficiency 
@@ -127,14 +127,21 @@ According to the StepOne manufacturers software is the amplification efficiency
 curve.
 
 ```{r, echo=TRUE}
+# Load the chipPCR package
 library(chipPCR)
 
+# Use the effcalc function from the chipPCR package to calculate the amplification
+# efficiency and store the results in the object res_efficiency
+
 res_efficiency <- effcalc(dilution[-c(1:3)], Cq_values[-c(1:3), ], logx=TRUE)
+
+# Use the %>% function from the magrittr package to plot the results (res_efficiency) 
+# from the effcalc function 
 
 res_efficiency %>% plot(., CI=TRUE, main="Second Derivative Maximum Method")
 ```
 
-The amplification efficiency estimated with the customized function was 94.7%, which is comparable to the vale reported in the `stepone_std.rdml` file. 
+The amplification efficiency estimated with the customized function was 94.7%, which is comparable to the value reported in the `stepone_std.rdml` file. 
 
 ```{r, results="asis"}
 # Combine the sample labels and the Cq values as calculate by the Second Derivative Maximum Method (cpD2).
