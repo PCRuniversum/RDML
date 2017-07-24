@@ -29,10 +29,31 @@
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
 <li>
-  <a href="../reference/index.html">Reference</a>
+  <a href="..//index.html">
+    <span class="fa fa-home fa-lg"></span>
+     
+  </a>
 </li>
 <li>
-  <a href="../articles/index.html">Articles</a>
+  <a href="../articles/RDML.html">Get Started</a>
+</li>
+<li>
+  <a href="../reference/index.html">Reference</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Articles
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+<li>
+      <a href="../articles/CreateRDML.html">Creating RDML file from raw data</a>
+    </li>
+    <li>
+      <a href="../articles/usingRDML_with_other_R_packages.html">Using RDML with other R packages</a>
+    </li>
+  </ul>
 </li>
       </ul>
 <ul class="nav navbar-nav navbar-right">
@@ -94,7 +115,7 @@ dat &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class
                   <span class="dt">refMFi =</span> <span class="kw">unlist</span>(C54[, -<span class="dv">1</span>]))
 <span class="kw">levels</span>(dat[[<span class="st">"Experiment"</span>]]) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">"D1 - Stock cDNA"</span>, <span class="st">"D2 - 1/10 cDNA"</span>, <span class="st">"D3 - 1/100 cDNA"</span>)
 
-<span class="kw">ggplot</span>(dat, <span class="kw">aes</span>(<span class="dt">x =</span> Cycle, <span class="dt">y =</span> refMFi, <span class="dt">colour =</span> Experiment)) +<span class="st"> </span><span class="kw">geom_point</span>()</code></pre></div>
+<span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/ggplot">ggplot</a></span>(dat, <span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/aes">aes</a></span>(<span class="dt">x =</span> Cycle, <span class="dt">y =</span> refMFi, <span class="dt">colour =</span> Experiment)) +<span class="st"> </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/geom_point">geom_point</a></span>()</code></pre></div>
 <p><img src="CreateRDML_files/figure-html/unnamed-chunk-4-1.png" width="576"></p>
 </div>
 <div id="creating-custom-method-for-rdml-class" class="section level2">
@@ -125,7 +146,7 @@ dat &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class
            <span class="co"># Curves will be used one by one</span>
            for(i in <span class="dv">2</span>:<span class="kw">length</span>(dat)) {
              <span class="co"># Preprocess data</span>
-             preprocessed &lt;-<span class="st"> </span><span class="kw">CPP</span>(dat[<span class="dv">1</span>:last.cycle[i -<span class="st"> </span><span class="dv">1</span>], <span class="dv">1</span>], 
+             preprocessed &lt;-<span class="st"> </span><span class="kw"><a href="http://www.rdocumentation.org/packages/chipPCR/topics/CPP">CPP</a></span>(dat[<span class="dv">1</span>:last.cycle[i -<span class="st"> </span><span class="dv">1</span>], <span class="dv">1</span>], 
                                  dat[<span class="dv">1</span>:last.cycle[i -<span class="st"> </span><span class="dv">1</span>], i],
                                  <span class="dt">trans =</span> <span class="ot">TRUE</span>,
                                  <span class="dt">bg.range =</span> bg.range[[i -<span class="st"> </span><span class="dv">1</span>]])[[<span class="st">"y.norm"</span>]]
@@ -142,7 +163,7 @@ dat &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class
              <span class="co"># The diffQ2 function from the MBmca package </span>
              <span class="co"># (R&amp;ouml;diger et al. (2013), The R Journal) was used to calculate the</span>
              <span class="co"># Cq values of each amplification curve.</span>
-             cq &lt;-<span class="st"> </span><span class="kw">diffQ2</span>(dat_CPP, <span class="dt">inder =</span> <span class="ot">TRUE</span>)[[<span class="st">"xTm1.2.D2"</span>]][<span class="dv">1</span>]
+             cq &lt;-<span class="st"> </span><span class="kw"><a href="http://www.rdocumentation.org/packages/MBmca/topics/diffQ2">diffQ2</a></span>(dat_CPP, <span class="dt">inder =</span> <span class="ot">TRUE</span>)[[<span class="st">"xTm1.2.D2"</span>]][<span class="dv">1</span>]
              self$experiment[[tab[i -<span class="st"> </span><span class="dv">1</span>, <span class="st">"exp.id"</span>]]]$
 <span class="st">               </span>run[[tab[i -<span class="st"> </span><span class="dv">1</span>, <span class="st">"run.id"</span>]]]$
 <span class="st">               </span>react[[tab[i -<span class="st"> </span><span class="dv">1</span>, <span class="st">"react.id"</span>]]]$
@@ -322,9 +343,7 @@ video.scan$experiment$exp1$run$run3$thermalCyclingConditions &lt;-<span class="s
 video.scan$<span class="kw">ProcessVideoScan</span>(<span class="dt">last.cycle =</span> <span class="kw">c</span>(<span class="dv">35</span>, <span class="dv">45</span>, <span class="dv">55</span>),
                             <span class="dt">bg.range =</span> <span class="kw">list</span>(<span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">8</span>),
                                            <span class="ot">NULL</span>,
-                                           <span class="ot">NULL</span>))
-<span class="co">#&gt; Warning in lm.coefs(x[BG], y[BG], method.reg): Chosen method lmrob failed to converge. </span>
-<span class="co">#&gt;                    Performed linear regression.</span></code></pre></div>
+                                           <span class="ot">NULL</span>))</code></pre></div>
 <p>Then visualize the object with the <code>$AsDendrogram</code> method (runs with IDs that include <code>_CPP</code> in names, contain the preprocessed curves):</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Visualize RDML object</span>
 video.scan$<span class="kw"><a href="../reference/AsDendrogram-function.html">AsDendrogram</a></span>()</code></pre></div>
@@ -342,14 +361,14 @@ tab &lt;-<span class="st"> </span>video.scan$<span class="kw"><a href="../refere
 <span class="co"># Get preprocessed data in 'long.table' format</span>
 dat &lt;-<span class="st"> </span>video.scan$<span class="kw"><a href="../reference/GetFData-function.html">GetFData</a></span>(tab[<span class="kw">grepl</span>(<span class="st">"_CPP"</span>, tab[[<span class="st">"run.id"</span>]]), ],
                            <span class="dt">long.table =</span> <span class="ot">TRUE</span>)
-<span class="kw">ggplot</span>(dat, <span class="kw">aes</span>(<span class="dt">x =</span> cyc, <span class="dt">y =</span> fluor)) +
-<span class="st">  </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">group =</span> fdata.name, <span class="dt">color =</span> fdata.name),
+<span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/ggplot">ggplot</a></span>(dat, <span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/aes">aes</a></span>(<span class="dt">x =</span> cyc, <span class="dt">y =</span> fluor)) +
+<span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/geom_path">geom_line</a></span>(<span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/aes">aes</a></span>(<span class="dt">group =</span> fdata.name, <span class="dt">color =</span> fdata.name),
             <span class="dt">size =</span> <span class="fl">1.2</span>) +
-<span class="st">  </span><span class="kw">geom_vline</span>(<span class="kw">aes</span>(<span class="dt">xintercept =</span> cq, <span class="dt">color =</span> fdata.name),
+<span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/geom_abline">geom_vline</a></span>(<span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/aes">aes</a></span>(<span class="dt">xintercept =</span> cq, <span class="dt">color =</span> fdata.name),
              <span class="dt">linetype =</span> <span class="st">"longdash"</span>) +
-<span class="st">  </span><span class="kw">scale_x_continuous</span>(<span class="st">"Cycle"</span>) +
-<span class="st">  </span><span class="kw">scale_y_continuous</span>(<span class="st">"Fluorescence"</span>) +
-<span class="st">  </span><span class="kw">ggtitle</span>(<span class="st">"Amplification of human MLC-2v</span><span class="ch">\n</span><span class="st">VideoScan HCU"</span>)</code></pre></div>
+<span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/scale_continuous">scale_x_continuous</a></span>(<span class="st">"Cycle"</span>) +
+<span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/scale_continuous">scale_y_continuous</a></span>(<span class="st">"Fluorescence"</span>) +
+<span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/labs">ggtitle</a></span>(<span class="st">"Amplification of human MLC-2v</span><span class="ch">\n</span><span class="st">VideoScan HCU"</span>)</code></pre></div>
 <p><img src="CreateRDML_files/figure-html/unnamed-chunk-10-1.png" width="576"></p>
 <p>However, there are further <strong>R</strong> packages on <a href="https://cran.r-project.org/">CRAN</a>, <a href="http://bioconductor.org/">Bioconductor</a> and <a href="https://github.com/">GitHub</a>, which can be used with the RDML package <span class="citation">[@roediger2015r]</span> to deal with non-detects <span class="citation">[@mccall_non-detects_2014]</span>, normalization <span class="citation">[@perkins_readqpcr_2012]</span>, expression analysis <span class="citation">[@dvinge_htqpcr:_2009, matz_no_2013]</span> and periodicity in qPCR systems <span class="citation">[@spiess_system-specific_2016]</span>.</p>
 </div>
@@ -382,7 +401,8 @@ dat &lt;-<span class="st"> </span>video.scan$<span class="kw"><a href="../refere
 
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
         <div id="tocnav">
-      <h2>Contents</h2>
+      <h2 class="hasAnchor">
+<a href="#tocnav" class="anchor"></a>Contents</h2>
       <ul class="nav nav-pills nav-stacked">
 <li>
 <a href="#creating-rdml-file-from-raw-data">Creating RDML file from raw data</a><ul class="nav nav-pills nav-stacked">

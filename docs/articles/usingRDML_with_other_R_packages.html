@@ -29,10 +29,31 @@
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
 <li>
-  <a href="../reference/index.html">Reference</a>
+  <a href="..//index.html">
+    <span class="fa fa-home fa-lg"></span>
+     
+  </a>
 </li>
 <li>
-  <a href="../articles/index.html">Articles</a>
+  <a href="../articles/RDML.html">Get Started</a>
+</li>
+<li>
+  <a href="../reference/index.html">Reference</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Articles
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+<li>
+      <a href="../articles/CreateRDML.html">Creating RDML file from raw data</a>
+    </li>
+    <li>
+      <a href="../articles/usingRDML_with_other_R_packages.html">Using RDML with other R packages</a>
+    </li>
+  </ul>
 </li>
       </ul>
 <ul class="nav navbar-nav navbar-right">
@@ -66,19 +87,59 @@
 <div id="practical-example-for-the-usage-of-the-rmdl-package" class="section level1">
 <h1 class="hasAnchor">
 <a href="#practical-example-for-the-usage-of-the-rmdl-package" class="anchor"></a>Practical Example for the Usage of the <strong>RMDL</strong> package</h1>
-<p>A key benefit of the <strong>RMDL</strong> package is that it enables further statistical analysis of RDML data. This section provides <strong>R</strong> packages that link with the <strong>RMDL</strong> package. Moreover, it will give an example how other packages allow the manipulation of RDML objects.</p>
+<p>A key benefit of the <strong>RMDL</strong> package is that it enables further statistical analysis of RDML data. This section provides <strong>R</strong> packages that link with the <strong>RMDL</strong> package. It will give a examples how other packages allow the manipulation of RDML objects.</p>
 <p>In this example we will use the <strong>qpcR</strong> package <span class="citation">(Ritz and Spiess 2008)</span> to calculate the Cq values after the selection of an optimal sigmoidal model as suggested by the Akaike’s An Information Criterion. The Cq value will be used to calculate the amplification efficiency from a calibration curve. The <code>effcalc</code> function from the <strong>chipPCR</strong> package <span class="citation">(Rödiger, Burdukiewicz, and Schierack 2015)</span> will be used for this task.</p>
 <p>Note: The data used here serve as an example only. Overall, the quality of the measurement is not appropriate for a further usage in a study. Here, we show that estimated amplification efficiency estimated by the StepOne system differs from the estimate as analyzed with the proposed pipeline (<strong>RDML</strong> <span class="math inline">\(\rightarrow\)</span> <strong>qpcR</strong> <span class="math inline">\(\rightarrow\)</span> <strong>chipPCR</strong>).</p>
-<div id="preparation-of-the-data" class="section level2">
-<h2 class="hasAnchor">
-<a href="#preparation-of-the-data" class="anchor"></a>Preparation of the data</h2>
+<p>In principle, the following code examples can be combined with report generation toolkits for data analysis pipelines such as <strong>Nozzle</strong> (see <span class="citation">Gehlenborg et al. (2013)</span>).</p>
+</div>
+<div id="preparation-of-the-data" class="section level1">
+<h1 class="hasAnchor">
+<a href="#preparation-of-the-data" class="anchor"></a>Preparation of the data</h1>
 <p>In the <strong>RDML</strong> vignette it was shown how to read-in RDML data. In this section we will continue with the built-in RDML example file <code>stepone_std.rdml</code>. This file was obtained during the measurement of human DNA concentration by a <em>LightCycler 96</em> (Roche) and the <em>XY-Detect</em> kit (Syntol, Russia). The file is opened as described before:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(RDML)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Load the RDML package and use its functions to `extract` the required data</span>
+<span class="kw">library</span>(RDML)
 filename &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">"extdata/stepone_std.rdml"</span>, <span class="dt">package=</span><span class="st">"RDML"</span>)
 raw_data &lt;-<span class="st"> </span>RDML$<span class="kw"><a href="../reference/new-method.html">new</a></span>(<span class="dt">filename=</span>filename)</code></pre></div>
+</div>
+<div id="working-with-metadata-of-the-example-file" class="section level1">
+<h1 class="hasAnchor">
+<a href="#working-with-metadata-of-the-example-file" class="anchor"></a>Working with metadata of the example file</h1>
+<p>At this stage all data from the <code>stepone_std.rdml</code> RDML file are available. For example, the amplification efficiency as provided by the StepOne™ Real-Time PCR System software can be fetched from the package via <code>raw_data$target[["RNase  P"]]$amplificationEfficiency</code>. In another example, we extract the information about the target in this experiment.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">raw_data$target
+<span class="co">#&gt; $`RNase P`</span>
+<span class="co">#&gt;  id: ~ idType</span>
+<span class="co">#&gt;  description: NFQ-MGB</span>
+<span class="co">#&gt;  documentation: []</span>
+<span class="co">#&gt;  xRef: []</span>
+<span class="co">#&gt;  type: ~ targetTypeType</span>
+<span class="co">#&gt;  amplificationEfficiencyMethod: </span>
+<span class="co">#&gt;  amplificationEfficiency: 93.91181</span>
+<span class="co">#&gt;  amplificationEfficiencySE: </span>
+<span class="co">#&gt;  detectionLimit: </span>
+<span class="co">#&gt;  dyeId: ~ idReferencesType</span>
+<span class="co">#&gt;  sequences: ~ sequencesType</span>
+<span class="co">#&gt;  commercialAssay:</span></code></pre></div>
+<p>To get some information about the run we can use:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">raw_data$experiment[[<span class="st">"Standard Curve Example"</span>]]$run
+<span class="co">#&gt; $Run001</span>
+<span class="co">#&gt;  id: ~ idType</span>
+<span class="co">#&gt;  description: </span>
+<span class="co">#&gt;  documentation: []</span>
+<span class="co">#&gt;  experimenter: []</span>
+<span class="co">#&gt;  instrument: Applied Biosystems StepOne™ Instrument</span>
+<span class="co">#&gt;  dataCollectionSoftware: ~ dataCollectionSoftwareType</span>
+<span class="co">#&gt;  backgroundDeterminationMethod: Background Subtraction</span>
+<span class="co">#&gt;  cqDetectionMethod: ~ cqDetectionMethodType</span>
+<span class="co">#&gt;  thermalCyclingConditions: ~ idReferencesType</span>
+<span class="co">#&gt;  pcrFormat: ~ pcrFormatType</span>
+<span class="co">#&gt;  runDate: 2006-11-10T09:24:39.265</span>
+<span class="co">#&gt;  react: [1, 2, 3, 4, 5, 6, 7, 8, 13, 14, 15, 16, 17, 18, 19, 20, 25, 26, 27, 28, 29, 30, 31, 32]</span></code></pre></div>
+</div>
+<div id="extraction-of-the-amplification-curve-data" class="section level1">
+<h1 class="hasAnchor">
+<a href="#extraction-of-the-amplification-curve-data" class="anchor"></a>Extraction of the amplification curve data</h1>
 <p>For convenience we use the pipe function <code>%&gt;%</code> from the <strong>magrittr</strong> package for further analysis. Next we fetch the amplification curve data from the RDML file.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(magrittr)
-raw_data_tab &lt;-<span class="st"> </span>raw_data$<span class="kw"><a href="../reference/astable-function.html">AsTable</a></span>(
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">raw_data_tab &lt;-<span class="st"> </span>raw_data$<span class="kw"><a href="../reference/astable-function.html">AsTable</a></span>(
     <span class="co"># Custom name pattern 'position~sample~sample.type~target~run.id'</span>
     <span class="dt">name.pattern=</span><span class="kw">paste</span>(
         react$position,
@@ -89,19 +150,32 @@ raw_data_tab &lt;-<span class="st"> </span>raw_data$<span class="kw"><a href="..
         <span class="dt">sep=</span><span class="st">"~"</span>))
 <span class="co"># Get all fluorescence data and assign them to the object fdata</span>
 fdata &lt;-<span class="st"> </span><span class="kw">as.data.frame</span>(raw_data$<span class="kw"><a href="../reference/GetFData-function.html">GetFData</a></span>(raw_data_tab, <span class="dt">long.table=</span><span class="ot">FALSE</span>))</code></pre></div>
+</div>
+<div id="plotting-of-the-raw-amplification-curve-data" class="section level1">
+<h1 class="hasAnchor">
+<a href="#plotting-of-the-raw-amplification-curve-data" class="anchor"></a>Plotting of the raw amplification curve data</h1>
+<p>The plotting of the raw data is an important step to visually inspect the data. In this example, we use the <strong>ggplot2</strong> package <span class="citation">(Wickham 2009)</span> instead of defualt <strong>R</strong> graphics functions.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Load the ggplot2 package for plotting</span>
 <span class="kw">library</span>(ggplot2)
 <span class="co"># Load the reshape2 package to rearrange the data</span>
 <span class="kw">library</span>(reshape2)
 <span class="co"># Rearrange and plot the raw data</span>
-fdata_gg &lt;-<span class="st"> </span><span class="kw">melt</span>(fdata, <span class="dt">id.vars=</span><span class="st">"cyc"</span>)
-<span class="kw">ggplot</span>(<span class="dt">data=</span>fdata_gg, <span class="kw">aes</span>(<span class="dt">x=</span>cyc, <span class="dt">y=</span>value, <span class="dt">color=</span>variable)) +<span class="st"> </span>
-<span class="st">    </span><span class="kw">geom_line</span>() +<span class="st"> </span><span class="kw">labs</span>(<span class="dt">x=</span><span class="st">"Cycle"</span>, <span class="dt">y=</span><span class="st">"RFU"</span>) +<span class="st"> </span><span class="kw">theme_light</span>() +
-<span class="st">    </span><span class="kw">theme</span>(<span class="dt">legend.position=</span><span class="st">"top"</span>,
+fdata_gg &lt;-<span class="st"> </span><span class="kw"><a href="http://www.rdocumentation.org/packages/reshape2/topics/melt">melt</a></span>(fdata, <span class="dt">id.vars=</span><span class="st">"cyc"</span>)
+<span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/ggplot">ggplot</a></span>(<span class="dt">data=</span>fdata_gg, <span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/aes">aes</a></span>(<span class="dt">x=</span>cyc, <span class="dt">y=</span>value, <span class="dt">color=</span>variable)) +<span class="st"> </span>
+<span class="st">    </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/geom_path">geom_line</a></span>() +<span class="st"> </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/labs">labs</a></span>(<span class="dt">x=</span><span class="st">"Cycle"</span>, <span class="dt">y=</span><span class="st">"RFU"</span>) +<span class="st"> </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/ggtheme">theme_light</a></span>() +
+<span class="st">    </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/theme">theme</a></span>(<span class="dt">legend.position=</span><span class="st">"top"</span>,
     <span class="dt">legend.direction=</span><span class="st">"horizontal"</span>)</code></pre></div>
-<p><img src="usingRDML_with_other_R_packages_files/figure-html/unnamed-chunk-4-1.png" width="672"></p>
-<p>During the next steps comes the <strong>qpcR</strong> package into use. The function <code>mselect</code> performs a sigmoid model selection by different criteria (e.g., bias-corrected Akaike’s Information Criterion). The function <code>efficiency</code> calculates the qPCR Cq values, amplification efficiency and other important qPCR parameters. In this example we set the parameter type of the <code>efficiency</code> function to <code>Cy0</code>. This will calculate and report the Cy0 value. According to <span class="citation">Guescini et al. (2008)</span> is the Cy0 value the intersection of a tangent on the first derivative maximum with the abscissa. However, for all further analysis we will use the second derivative maximum as Cq value for further calculations.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Write a custom function that calculates the Cq values and other curve parameters</span>
+<p><img src="usingRDML_with_other_R_packages_files/figure-html/unnamed-chunk-6-1.png" width="672"></p>
+</div>
+<div id="analysis-of-the-qpcr-amplification-curve-data-by-a-custom-made-function" class="section level1">
+<h1 class="hasAnchor">
+<a href="#analysis-of-the-qpcr-amplification-curve-data-by-a-custom-made-function" class="anchor"></a>Analysis of the qPCR amplification curve data by a custom made function</h1>
+<p>During the next steps comes the <strong>qpcR</strong> package into use. The function <code>mselect</code> performs a sigmoid model selection by different criteria (e.g., bias-corrected Akaike’s Information Criterion). Note: In most cases a sigmoidal model with seven parameters was selected.</p>
+<p>The function <code>efficiency</code> calculates the qPCR Cq values, amplification efficiency and other important qPCR parameters. In this example we set the parameter type of the <code>efficiency</code> function to <code>Cy0</code>. This will calculate and report the Cy0 value. According to <span class="citation">Guescini et al. (2008)</span> is the Cy0 value the intersection of a tangent on the first derivative maximum with the abscissa. However, for all further analysis we will use the second derivative maximum as Cq value for further calculations. This supplementary material will not focus on the selection of a Cq method. For an objective decision we would like to guide the reader to the study by <span class="citation">Ruijter et al. (2013)</span>.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Use the magrittr package to create pipes</span>
+<span class="kw">library</span>(magrittr)
+
+<span class="co"># Write a custom function that calculates the Cq values and other curve parameters</span>
 <span class="kw">library</span>(qpcR)
 <span class="co">#&gt; Loading required package: MASS</span>
 <span class="co">#&gt; Loading required package: minpack.lm</span>
@@ -110,12 +184,13 @@ fdata_gg &lt;-<span class="st"> </span><span class="kw">melt</span>(fdata, <span
 <span class="co">#&gt; Loading required package: Matrix</span>
 res_fit &lt;-<span class="st"> </span><span class="kw">do.call</span>(cbind, <span class="kw">lapply</span>(2L:<span class="kw">ncol</span>(fdata), function(block_column) {
     
-    res_model &lt;-<span class="st"> </span><span class="kw">try</span>(<span class="kw">mselect</span>(<span class="kw">pcrfit</span>(<span class="dt">data=</span>fdata, <span class="dt">cyc=</span><span class="dv">1</span>, <span class="dt">fluo=</span>block_column), <span class="dt">do.all=</span><span class="ot">TRUE</span>), <span class="dt">silent=</span><span class="ot">TRUE</span>)
-    if(res_model %&gt;%<span class="st"> </span>class ==<span class="st"> "try-error"</span>) {
+    res_model &lt;-<span class="st"> </span><span class="kw">try</span>(<span class="kw"><a href="http://www.rdocumentation.org/packages/qpcR/topics/mselect">mselect</a></span>(<span class="kw"><a href="http://www.rdocumentation.org/packages/qpcR/topics/pcrfit">pcrfit</a></span>(<span class="dt">data=</span>fdata, <span class="dt">cyc=</span><span class="dv">1</span>, <span class="dt">fluo=</span>block_column), <span class="dt">do.all=</span><span class="ot">TRUE</span>), 
+                     <span class="dt">silent=</span><span class="ot">TRUE</span>)
+    if(res_model %&gt;%<span class="st"> </span>class==<span class="st">"try-error"</span>) {
         res_model &lt;-<span class="st"> </span><span class="ot">NA</span>
     }
     else{
-        <span class="kw">try</span>(<span class="kw">efficiency</span>(res_model, <span class="dt">plot=</span><span class="ot">FALSE</span>, <span class="dt">type=</span><span class="st">"Cy0"</span>), <span class="dt">silent=</span><span class="ot">TRUE</span>)
+        <span class="kw">try</span>(<span class="kw"><a href="http://www.rdocumentation.org/packages/qpcR/topics/efficiency">efficiency</a></span>(res_model, <span class="dt">plot=</span><span class="ot">FALSE</span>, <span class="dt">type=</span><span class="st">"Cy0"</span>), <span class="dt">silent=</span><span class="ot">TRUE</span>)
     }
         }
     )
@@ -522,6 +597,9 @@ res_fit &lt;-<span class="st"> </span><span class="kw">do.call</span>(cbind, <sp
 <span class="co"># Assign column names</span>
 <span class="kw">colnames</span>(res_fit) &lt;-<span class="st"> </span><span class="kw">colnames</span>(fdata)[-<span class="dv">1</span>]
 
+<span class="co"># Fetch only the Cq values (second derivative maximum) and combine them in a</span>
+<span class="co"># data.frame</span>
+
 Cq_SDM &lt;-<span class="st"> </span>res_fit[<span class="kw">rownames</span>(res_fit)==<span class="st">"cpD2"</span>, ] %&gt;%<span class="st"> </span>unlist %&gt;%<span class="st"> </span>as.data.frame
 <span class="kw">colnames</span>(Cq_SDM) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">"Cq"</span>)
 
@@ -530,86 +608,61 @@ Cq_SDM &lt;-<span class="st"> </span>res_fit[<span class="kw">rownames</span>(re
 
 dilution &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="kw">as.factor</span>(<span class="st">"ntc"</span>), <span class="kw">as.factor</span>(<span class="st">"unk"</span>), <span class="dv">10000</span>, <span class="dv">5000</span>, <span class="dv">2500</span>, <span class="dv">1250</span>, <span class="dv">625</span>)
 Cq_values &lt;-<span class="st"> </span><span class="kw">matrix</span>(Cq_SDM[, <span class="st">"Cq"</span>], <span class="dt">nrow=</span><span class="kw">length</span>(dilution), <span class="dt">ncol=</span><span class="dv">3</span>, <span class="dt">byrow=</span><span class="ot">TRUE</span>)</code></pre></div>
+</div>
+<div id="inspection-and-interpretation-of-the-analyzed-data" class="section level1">
+<h1 class="hasAnchor">
+<a href="#inspection-and-interpretation-of-the-analyzed-data" class="anchor"></a>Inspection and interpretation of the analyzed data</h1>
+<p>Following we selected arbitarily a non-template control (negative) and an unknown sample (positive) (two out of 24 amplification curves) for the presentation of the coefficients that were calcuaed from the amplication curve data.</p>
 <table class="table">
-<caption>Selected data of calculated values from the fitted models. The samples A01~NTC_RNase P<sub>ntc</sub>RNase P~Run001, A05~pop1_RNase P<sub>unkn</sub>RNase P~Run001, B01~pop2_RNase P<sub>unkn</sub>RNase P~Run001, B03~STD_RNase P_10000.0<sub>std</sub>RNase P~Run001 and B07~STD_RNase P_5000.0<sub>std</sub>RNase P~Run001 were arbitrarily selected for presentation.</caption>
+<caption>Selected data of calculated values from the fitted models. The values reported in the table were calculated by a chain of functions from the <strong>qpcR</strong> package. In detail, this were the <em>mselect</em> function to calculate the optimal multiparametric sigmoid model and the <em>efficiency</em> function to calculate the Cq values and other curve parameters. More information about these functions is available from the manual of the <strong>qpcR</strong> package. The samples <code>A01</code> (ntc, non-template cntrol) and <code>A05</code> (unk, unknown) were arbitrarily selected for presentation. The custom made function assigned a NA (not available) to sample <code>A01</code> because no Cq value or other curve parameters could be calculated from the non-template control.</caption>
 <thead><tr class="header">
 <th></th>
 <th align="left">A01~NTC_RNase P<sub>ntc</sub>RNase P~Run001</th>
 <th align="left">A05~pop1_RNase P<sub>unkn</sub>RNase P~Run001</th>
-<th align="left">B01~pop2_RNase P<sub>unkn</sub>RNase P~Run001</th>
-<th align="left">B03~STD_RNase P_10000.0<sub>std</sub>RNase P~Run001</th>
-<th align="left">B07~STD_RNase P_5000.0<sub>std</sub>RNase P~Run001</th>
 </tr></thead>
 <tbody>
 <tr class="odd">
 <td>eff</td>
 <td align="left">NA</td>
 <td align="left">1.010204</td>
-<td align="left">1.006328</td>
-<td align="left">1.008771</td>
-<td align="left">1.010094</td>
 </tr>
 <tr class="even">
 <td>resVar</td>
 <td align="left">NA</td>
 <td align="left">7.27e-06</td>
-<td align="left">8.83e-06</td>
-<td align="left">7.64e-06</td>
-<td align="left">6.93e-06</td>
 </tr>
 <tr class="odd">
 <td>AICc</td>
 <td align="left">NA</td>
 <td align="left">-347.9354</td>
-<td align="left">-340.1533</td>
-<td align="left">-345.9594</td>
-<td align="left">-349.867</td>
 </tr>
 <tr class="even">
 <td>AIC</td>
 <td align="left">NA</td>
 <td align="left">-351.4354</td>
-<td align="left">-343.6533</td>
-<td align="left">-349.4594</td>
-<td align="left">-353.367</td>
 </tr>
 <tr class="odd">
 <td>Rsq</td>
 <td align="left">NA</td>
 <td align="left">0.9999861</td>
-<td align="left">0.999985</td>
-<td align="left">0.9999888</td>
-<td align="left">0.9999882</td>
 </tr>
 <tr class="even">
 <td>Rsq.ad</td>
 <td align="left">NA</td>
 <td align="left">0.9999836</td>
-<td align="left">0.9999822</td>
-<td align="left">0.9999868</td>
-<td align="left">0.9999861</td>
 </tr>
 <tr class="odd">
 <td>cpD1</td>
 <td align="left">NA</td>
 <td align="left">32.13</td>
-<td align="left">31.07</td>
-<td align="left">30.08</td>
-<td align="left">31.12</td>
 </tr>
 <tr class="even">
 <td>cpD2</td>
 <td align="left">NA</td>
 <td align="left">28.3</td>
-<td align="left">27.3</td>
-<td align="left">26.2</td>
-<td align="left">27.32</td>
 </tr>
 <tr class="odd">
 <td>cpE</td>
-<td align="left">NA</td>
-<td align="left">NA</td>
-<td align="left">NA</td>
 <td align="left">NA</td>
 <td align="left">NA</td>
 </tr>
@@ -617,15 +670,9 @@ Cq_values &lt;-<span class="st"> </span><span class="kw">matrix</span>(Cq_SDM[, 
 <td>cpR</td>
 <td align="left">NA</td>
 <td align="left">NA</td>
-<td align="left">NA</td>
-<td align="left">NA</td>
-<td align="left">NA</td>
 </tr>
 <tr class="odd">
 <td>cpT</td>
-<td align="left">NA</td>
-<td align="left">NA</td>
-<td align="left">NA</td>
 <td align="left">NA</td>
 <td align="left">NA</td>
 </tr>
@@ -633,15 +680,9 @@ Cq_values &lt;-<span class="st"> </span><span class="kw">matrix</span>(Cq_SDM[, 
 <td>Cy0</td>
 <td align="left">NA</td>
 <td align="left">24.95</td>
-<td align="left">23.69</td>
-<td align="left">22.82</td>
-<td align="left">24.03</td>
 </tr>
 <tr class="odd">
 <td>cpCQ</td>
-<td align="left">NA</td>
-<td align="left">NA</td>
-<td align="left">NA</td>
 <td align="left">NA</td>
 <td align="left">NA</td>
 </tr>
@@ -649,60 +690,65 @@ Cq_values &lt;-<span class="st"> </span><span class="kw">matrix</span>(Cq_SDM[, 
 <td>cpMR</td>
 <td align="left">NA</td>
 <td align="left">NA</td>
-<td align="left">NA</td>
-<td align="left">NA</td>
-<td align="left">NA</td>
 </tr>
 <tr class="odd">
 <td>fluo</td>
 <td align="left">NA</td>
 <td align="left">0.6691074</td>
-<td align="left">0.7224996</td>
-<td align="left">0.6748054</td>
-<td align="left">0.6520086</td>
 </tr>
 <tr class="even">
 <td>init1</td>
 <td align="left">NA</td>
 <td align="left">0.6416786</td>
-<td align="left">0.6999944</td>
-<td align="left">0.6480037</td>
-<td align="left">0.6270977</td>
 </tr>
 <tr class="odd">
 <td>init2</td>
 <td align="left">NA</td>
 <td align="left">0.519381</td>
-<td align="left">0.6222174</td>
-<td align="left">0.5528844</td>
-<td align="left">0.5122058</td>
 </tr>
 <tr class="even">
 <td>cf</td>
 <td align="left">NA</td>
 <td align="left">NA</td>
-<td align="left">NA</td>
-<td align="left">NA</td>
-<td align="left">NA</td>
 </tr>
 </tbody>
 </table>
-<p>According to the StepOne manufacturers software is the amplification efficiency 93.91%. To test this, the <code>effcalc</code> function was used to determine the coefficients of the calibration curve.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(chipPCR)
+</div>
+<div id="calculation-of-the-amplication-efficiency-from-the-calibration-data" class="section level1">
+<h1 class="hasAnchor">
+<a href="#calculation-of-the-amplication-efficiency-from-the-calibration-data" class="anchor"></a>Calculation of the amplication efficiency from the calibration data</h1>
+<p>We used the our calculated Cq values of the dilutions steps (625, 1250, 2500, 5000, 10^{4}) to determine the calibration curve. According to the StepOne manufacturers software is the amplification efficiency circa 93.9%. To test this, the <code>effcalc</code> function was used to determine the coefficients of the calibration curve.</p>
+<p>The following few lines are needed to calculate the amplication efficiency based on Cq values that were calculated before.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Load the chipPCR package</span>
+<span class="kw">library</span>(chipPCR)
 
-res_efficiency &lt;-<span class="st"> </span><span class="kw">effcalc</span>(dilution[-<span class="kw">c</span>(<span class="dv">1</span>:<span class="dv">3</span>)], Cq_values[-<span class="kw">c</span>(<span class="dv">1</span>:<span class="dv">3</span>), ], <span class="dt">logx=</span><span class="ot">TRUE</span>)
+<span class="co"># Use the effcalc function from the chipPCR package to calculate the amplification</span>
+<span class="co"># efficiency and store the results in the object res_efficiency</span>
 
-res_efficiency %&gt;%<span class="st"> </span><span class="kw">plot</span>(., <span class="dt">CI=</span><span class="ot">TRUE</span>, <span class="dt">main=</span><span class="st">"Second Derivative Maximum Method"</span>)</code></pre></div>
-<p><img src="usingRDML_with_other_R_packages_files/figure-html/unnamed-chunk-7-1.png" width="672"></p>
-<p>The amplification efficiency estimated with the customized function was 94.7%, which is comparable to the vale reported in the <code>stepone_std.rdml</code> file.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Combine the sample labels and the Cq values as calculate by the Second Derivative Maximum Method (cpD2).</span>
-sample_Cq &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">sample=</span><span class="kw">c</span>(<span class="st">"ntc"</span>, <span class="st">"unk"</span>, <span class="dv">10000</span>, <span class="dv">5000</span>, <span class="dv">2500</span>, <span class="dv">1250</span>, <span class="dv">625</span>), Cq_values)
+res_efficiency &lt;-<span class="st"> </span><span class="kw"><a href="http://www.rdocumentation.org/packages/chipPCR/topics/effcalc">effcalc</a></span>(dilution[-<span class="kw">c</span>(<span class="dv">1</span>:<span class="dv">3</span>)], Cq_values[-<span class="kw">c</span>(<span class="dv">1</span>:<span class="dv">3</span>), ], <span class="dt">logx=</span><span class="ot">TRUE</span>)
+
+<span class="co"># Use the %&gt;% function from the magrittr package to plot the results (res_efficiency) </span>
+<span class="co"># from the effcalc function </span>
+
+res_efficiency %&gt;%<span class="st"> </span><span class="kw">plot</span>(., <span class="dt">CI=</span><span class="ot">TRUE</span>, <span class="dt">ylab=</span><span class="st">"Cq (SDM)"</span>, 
+                        <span class="dt">main=</span><span class="st">"Second Derivative Maximum Method"</span>)</code></pre></div>
+<p><img src="usingRDML_with_other_R_packages_files/figure-html/unnamed-chunk-9-1.png" width="672"></p>
+<p>The amplification efficiency estimated with the customized function was 94.7%, which is comparable to the value reported in the <code>stepone_std.rdml</code> file.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Combine the sample labels and the Cq values as calculate by the Second </span>
+<span class="co"># Derivative Maximum Method (cpD2).</span>
+
+sample_Cq &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">sample=</span><span class="kw">c</span>(<span class="st">"ntc"</span>, <span class="st">"unk"</span>, 
+                                 <span class="dv">10000</span>, <span class="dv">5000</span>, <span class="dv">2500</span>, <span class="dv">1250</span>, <span class="dv">625</span>), 
+                        Cq_values)
 
 <span class="co"># Print table of all Cq values</span>
-knitr::<span class="kw">kable</span>(sample_Cq, <span class="dt">caption=</span><span class="st">"Cq values as calculate by the </span>
-<span class="st">                        Second Derivative Maximum Method (cpD2)."</span>)</code></pre></div>
+<span class="co"># Use the kable function from the knitr package to print a table</span>
+
+knitr::<span class="kw">kable</span>(sample_Cq, <span class="dt">caption=</span><span class="st">"Cq values as calculate by the Second Derivative </span>
+<span class="st">Maximum Method (cpD2). ntc, non-template control. unk, unknown sample. X1, X2 </span>
+<span class="st">and X3 are the Cq values from a triplicate measurement."</span>)</code></pre></div>
 <table class="table">
-<caption>Cq values as calculate by the Second Derivative Maximum Method (cpD2).</caption>
+<caption>Cq values as calculate by the Second Derivative Maximum Method (cpD2). ntc, non-template control. unk, unknown sample. X1, X2 and X3 are the Cq values from a triplicate measurement.</caption>
 <thead><tr class="header">
 <th align="left">sample</th>
 <th align="right">X1</th>
@@ -754,9 +800,13 @@ knitr::<span class="kw">kable</span>(sample_Cq, <span class="dt">caption=</span>
 </tr>
 </tbody>
 </table>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">knitr::<span class="kw">kable</span>(res_efficiency, <span class="dt">caption=</span><span class="st">"Analysis of the amplification efficiency."</span>)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">knitr::<span class="kw">kable</span>(res_efficiency, <span class="dt">caption=</span><span class="st">"Analysis of the amplification efficiency. </span>
+<span class="st">The table reports the concentration-depentent average Cq values from three </span>
+<span class="st">replicates per dilution step. In addition, the standard deviation (SD) and the </span>
+<span class="st">Coefficient of Variance (RSD [%]) are presented. The results indicate that the </span>
+<span class="st">data basis for the calibration curve is valid."</span>)</code></pre></div>
 <table class="table">
-<caption>Analysis of the amplification efficiency.</caption>
+<caption>Analysis of the amplification efficiency. The table reports the concentration-depentent average Cq values from three replicates per dilution step. In addition, the standard deviation (SD) and the Coefficient of Variance (RSD [%]) are presented. The results indicate that the data basis for the calibration curve is valid.</caption>
 <thead><tr class="header">
 <th align="right">Concentration</th>
 <th align="right">Location (Mean)</th>
@@ -792,10 +842,13 @@ knitr::<span class="kw">kable</span>(sample_Cq, <span class="dt">caption=</span>
 </table>
 <p>The Cq values (28.38, 28.3, 28.42) from the unknown sample <code>unk</code> had an average Cq of 28.37 ± 0.06.</p>
 </div>
-<div id="references" class="section level2 unnumbered">
-<h2 class="hasAnchor">
-<a href="#references" class="anchor"></a>References</h2>
+<div id="references" class="section level1 unnumbered">
+<h1 class="hasAnchor">
+<a href="#references" class="anchor"></a>References</h1>
 <div id="refs" class="references">
+<div id="ref-gehlenborg_nozzle:_2013">
+<p>Gehlenborg, Nils, Michael S. Noble, Gad Getz, Lynda Chin, and Peter J. Park. 2013. “Nozzle: A Report Generation Toolkit for Data Analysis Pipelines.” <em>Bioinformatics</em> 29 (8): 1089–91. doi:<a href="https://doi.org/10.1093/bioinformatics/btt085">10.1093/bioinformatics/btt085</a>.</p>
+</div>
 <div id="ref-guescini_new_2008">
 <p>Guescini, Michele, Davide Sisti, Marco BL Rocchi, Laura Stocchi, and Vilberto Stocchi. 2008. “A New Real-Time PCR Method to Overcome Significant Quantitative Inaccuracy Due to Slight Amplification Inhibition.” <em>BMC Bioinformatics</em> 9 (1): 326. doi:<a href="https://doi.org/10.1186/1471-2105-9-326">10.1186/1471-2105-9-326</a>.</p>
 </div>
@@ -805,6 +858,11 @@ knitr::<span class="kw">kable</span>(sample_Cq, <span class="dt">caption=</span>
 <div id="ref-roediger2015chippcr">
 <p>Rödiger, Stefan, Michał Burdukiewicz, and Peter Schierack. 2015. “chipPCR: an R package to pre-process raw data of amplification curves.” <em>Bioinformatics</em> 31 (17): 2900–2902. <a href="https://bioinformatics.oxfordjournals.org/content/31/17/2900.abstract" class="uri">https://bioinformatics.oxfordjournals.org/content/31/17/2900.abstract</a>.</p>
 </div>
+<div id="ref-ruijter_evaluation_2013">
+<p>Ruijter, Jan M., Michael W. Pfaffl, Sheng Zhao, Andrej N. Spiess, Gregory Boggy, Jochen Blom, Robert G. Rutledge, et al. 2013. “Evaluation of qPCR Curve Analysis Methods for Reliable Biomarker Discovery: Bias, Resolution, Precision, and Implications.” <em>Methods</em> 59 (1): 32–46. doi:<a href="https://doi.org/10.1016/j.ymeth.2012.08.011">10.1016/j.ymeth.2012.08.011</a>.</p>
+</div>
+<div id="ref-wickham_ggplot2_2009">
+<p>Wickham, Hadley. 2009. <em>Ggplot2 - Elegant Graphics for Data Analysis</em>. New York, NY: Springer New York. <a href="http://link.springer.com/10.1007/978-0-387-98141-3" class="uri">http://link.springer.com/10.1007/978-0-387-98141-3</a>.</p>
 </div>
 </div>
 </div>
@@ -813,7 +871,8 @@ knitr::<span class="kw">kable</span>(sample_Cq, <span class="dt">caption=</span>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
         <div id="tocnav">
-      <h2>Contents</h2>
+      <h2 class="hasAnchor">
+<a href="#tocnav" class="anchor"></a>Contents</h2>
       true
     </div>
       </div>

@@ -23,7 +23,8 @@
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
-
+  
+  
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -51,10 +52,31 @@
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-  <a href="../reference/index.html">Reference</a>
+  <a href="..//index.html">
+    <span class="fa fa-home fa-lg"></span>
+     
+  </a>
 </li>
 <li>
-  <a href="../articles/index.html">Articles</a>
+  <a href="../articles/RDML.html">Get Started</a>
+</li>
+<li>
+  <a href="../reference/index.html">Reference</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Articles
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/CreateRDML.html">Creating RDML file from raw data</a>
+    </li>
+    <li>
+      <a href="../articles/usingRDML_with_other_R_packages.html">Using RDML with other R packages</a>
+    </li>
+  </ul>
 </li>
       </ul>
       
@@ -98,21 +120,21 @@ in the rotor. Values for common formats are:</p><table><tr><td> Format </td>
 rows </td>
 <td> columns </td>
 <td> rowLabel </td>
-</tr><tr><td> columnLabel </td>
-<td> single-well </td>
+<td> columnLabel </td>
+</tr><tr><td> single-well </td>
 <td> 1
 </td>
 <td> 1       </td>
-</tr><tr><td> 123      </td>
+<td> 123      </td>
 <td> 123         </td>
-<td> 48-well plate </td>
+</tr><tr><td> 48-well plate </td>
 <td> 6    </td>
-</tr><tr><td>
+<td>
 8       </td>
 <td> ABC      </td>
 <td> 123         </td>
-<td> 96-well plate </td>
-</tr><tr><td> 8    </td>
+</tr><tr><td> 96-well plate </td>
+<td> 8    </td>
 <td> 12
 </td>
 <td> ABC      </td>
@@ -122,21 +144,21 @@ rows </td>
 <td> 24      </td>
 <td>
 ABC      </td>
-</tr><tr><td> 123         </td>
-<td> 1536-well plate </td>
+<td> 123         </td>
+</tr><tr><td> 1536-well plate </td>
 <td> 32   </td>
 <td> 48      </td>
-</tr><tr><td> ABC
+<td> ABC
 </td>
 <td> 123         </td>
-<td> 3072-well array </td>
+</tr><tr><td> 3072-well array </td>
 <td> 32   </td>
-</tr><tr><td> 96      </td>
+<td> 96      </td>
 <td> A1a1
 </td>
 <td> A1a1        </td>
-<td> 5184-well chip </td>
-</tr><tr><td> 72   </td>
+</tr><tr><td> 5184-well chip </td>
+<td> 72   </td>
 <td> 72      </td>
 <td> ABC      </td>
 <td>
@@ -145,20 +167,19 @@ ABC      </td>
 <td> 32   </td>
 <td> 1       </td>
 <td> 123      </td>
-</tr><tr><td> 123
+<td> 123
 </td>
-<td> 72-well rotor </td>
+</tr><tr><td> 72-well rotor </td>
 <td> 72   </td>
 <td> 1       </td>
-</tr><tr><td> 123      </td>
-<td> 123         </td>
-<td>
-100-well rotor </td>
-<td> 100  </td>
-</tr><tr><td> 1       </td>
 <td> 123      </td>
 <td> 123         </td>
-<td> Format </td>
+</tr><tr><td>
+100-well rotor </td>
+<td> 100  </td>
+<td> 1       </td>
+<td> 123      </td>
+<td> 123         </td>
 </tr></table><p>If rows field has value -1,
 the function will not try to reconstruct a plate and just display all run
 data in a single column. If the columns field has value 1 then the function will
