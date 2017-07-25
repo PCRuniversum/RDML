@@ -14,34 +14,29 @@ bibliography: "RDML.bib"
 knitr::opts_chunk$set(collapse=T, comment="#>")
 ```
 
-# Practical Example for the Usage of the **RMDL** package
+# A Practical Example for Usage of the **RMDL** package
 
 A key benefit of the **RMDL** package is that it enables further statistical 
-analysis of RDML data. This section provides **R** packages 
-that link with the **RMDL** package. It will give a examples how 
+analysis of RDML data. This section describes **R** packages 
+that link with the **RMDL** package. It will provide examples on how 
 other packages allow the manipulation of RDML objects.
 
-In this example we will use the **qpcR** package [@ritz_qpcr_2008] to calculate 
-the Cq values after the selection of an optimal sigmoidal model as suggested by 
-the Akaike's An Information Criterion. The Cq value will be used to calculate 
-the amplification efficiency from a calibration curve. The `effcalc` function 
-from the **chipPCR** package [@roediger2015chippcr] will be used for this task.
+In this example we will employ the **qpcR** package [@ritz_qpcr_2008] to calculate Cq values after the selection of an optimal sigmoidal model, as suggested by the Akaike's An Information Criterion. The Cq values will then be used to calculate the amplification efficiency from a calibration curve, based on the `effcalc` function of the **chipPCR** package [@roediger2015chippcr].
 
-Note: The data used here serve as an example only. Overall, the quality of the 
-measurement is not appropriate for a further usage in a study. Here, we show 
-that estimated amplification efficiency estimated by the StepOne system differs 
-from the estimate as analyzed with the proposed pipeline (**RDML** $\rightarrow$ 
-**qpcR** $\rightarrow$ **chipPCR**).
+Note: The data used here serve as example only. Overall, the quality of the 
+measurement is not appropriate for further application in a study. Here, we show 
+that the estimated amplification efficiency from the StepOne system differs 
+from that of the proposed pipeline (**RDML** $\rightarrow$ **qpcR** $\rightarrow$ **chipPCR**).
 
-In principle, the following code examples can be combined with report generation 
-toolkits for data analysis pipelines such as **Nozzle** (see @gehlenborg_nozzle:_2013).
+In principle, the following code examples can be combined with report generating 
+toolkits for data analysis pipelines, such as **Nozzle** (see @gehlenborg_nozzle:_2013).
 
 # Preparation of the data
 
-In the **RDML** vignette it was shown how to read-in RDML data. In this section we will 
+In the **RDML** vignette, it was demonstrated how to read-in RDML data. In this section we will 
 continue with the built-in RDML example file `stepone_std.rdml`. This file was 
 obtained during the measurement of human DNA concentration by a *LightCycler 
-96* (Roche) and the *XY-Detect* kit (Syntol, Russia). The file is opened as 
+96* instrument (Roche) and the *XY-Detect* kit (Syntol, Russia). The file is opened as 
 described before:
 
 ```{r, results="hide"}
@@ -53,8 +48,8 @@ raw_data <- RDML$new(filename=filename)
 
 # Working with metadata of the example file
 
-At this stage all data from the `stepone_std.rdml` RDML file are available. For 
-example, the amplification efficiency as provided by the  StepOne™ Real-Time 
+At this stage, all data from the `stepone_std.rdml` RDML file are available. For 
+example, the amplification efficiency as provided by the StepOne™ Real-Time 
 PCR System software can be fetched from the package via `raw_data$target[["RNase 
 P"]]$amplificationEfficiency`. In another example, we extract the information 
 about the target in this experiment.
@@ -68,10 +63,10 @@ To get some information about the run we can use:
 raw_data$experiment[["Standard Curve Example"]]$run
 ```
 
-# Extraction of the amplification curve data
+# Extraction of raw amplification curve data
 
-For convenience we use the pipe function `%>%` from the **magrittr** package for 
-further analysis. Next we fetch the amplification curve data from the RDML file.
+For convenience, we use the pipe function `%>%` from the **magrittr** package for 
+further analysis. In the following, we fetch the amplification curve data from the RDML file.
 
 ```{r}
 raw_data_tab <- raw_data$AsTable(
@@ -87,11 +82,11 @@ raw_data_tab <- raw_data$AsTable(
 fdata <- as.data.frame(raw_data$GetFData(raw_data_tab, long.table=FALSE))
 ```
 
-# Plotting of the raw amplification curve data
+# Plotting of raw amplification curve data
 
 The plotting of the raw data is an important step to visually inspect the data. 
 In this example, we use the **ggplot2** package [@wickham_ggplot2_2009] instead 
-of defualt **R** graphics functions. 
+of the default **R** graphics functions. 
 
 ```{r}
 # Load the ggplot2 package for plotting
@@ -109,20 +104,18 @@ ggplot(data=fdata_gg, aes(x=cyc, y=value, color=variable)) +
 
 # Analysis of the qPCR amplification curve data by a custom made function
 
-During the next steps comes the **qpcR** package into use. The function 
-`mselect` performs a sigmoid model selection by different criteria (e.g., 
+During the next steps we will employ the **qpcR** package. The function 
+`mselect` performs sigmoid model selection by different criteria (e.g., 
 bias-corrected Akaike's Information Criterion). Note: In most cases a sigmoidal 
 model with seven parameters was selected.
 
-The function `efficiency` 
-calculates the qPCR Cq values, amplification efficiency and other important qPCR 
-parameters. In this example we set the parameter type of the `efficiency` 
-function to `Cy0`. This will calculate and report the Cy0 value. According to 
-@guescini_new_2008 is the Cy0 value the intersection of a tangent on the first 
-derivative maximum with the abscissa. However, for all further analysis we will 
-use the second derivative maximum as Cq value for further calculations. This 
-supplementary material will not focus on the selection of a Cq method. For an 
-objective decision we would like to guide the reader to the study by 
+The function `efficiency` calculates the qPCR Cq values, amplification efficiency and other important qPCR parameters. In this example, we set the parameter type of the `efficiency` 
+function to `Cy0`,  which will calculate and report the Cy0 value. According to 
+@guescini_new_2008, the Cy0 value is the intersection of a tangent on the first 
+derivative maximum with the abscissa. However, for all further analyses we will 
+use the second derivative maximum cycle as Cq value. However, this 
+supplementary material will not focus on the selection of a certain Cq method. For an 
+objective decision, we would like to guide the reader to the study by 
 @ruijter_evaluation_2013.
 
 
@@ -163,9 +156,9 @@ Cq_values <- matrix(Cq_SDM[, "Cq"], nrow=length(dilution), ncol=3, byrow=TRUE)
 
 # Inspection and interpretation of the analyzed data
 
-Following we selected arbitarily a non-template control (negative) and an 
+Below, we arbitarily selected a non-template control (negative) and an 
 unknown sample (positive) (two out of `r ncol(fdata)-1` amplification curves) 
-for the presentation of the coefficients that were calcuaed from the amplication 
+for the presentation of the coefficients that were calculated from the raw amplication 
 curve data.
 
 ```{r, results="asis", echo=FALSE}
@@ -182,17 +175,15 @@ presentation. The custom made function assigned a NA (not available) to sample
 parameters could be calculated from the non-template control.")
 ```
 
-# Calculation of the amplication efficiency from the calibration data
+# Calculation of the amplication efficiency from calibration data
 
-We used the our calculated Cq values of the dilutions steps (`r 625*c(1, 2, 4, 8, 
-16)`) to determine the calibration curve. According to the StepOne manufacturers 
-software is the amplification efficiency circa 
+We now use our calculated Cq values from the dilutions steps (`r 625*c(1, 2, 4, 8, 
+16)`) to determine the efficiency from the calibration curve. According to the StepOne software, the amplification efficiency is approx. 
 `r round(raw_data$target[["RNase P"]]$amplificationEfficiency, 1)`%. 
-To test this, the `effcalc` function was used to determine the coefficients of the 
+To confirm these results, the `effcalc` function was employed to determine the coefficients of the 
 calibration curve.
 
-The following few lines are needed to calculate the amplication efficiency based on 
-Cq values that were calculated before.
+The following few lines are needed to calculate the amplication efficiency based on the previously calculated Cq values.
 
 ```{r, echo=TRUE}
 # Load the chipPCR package
@@ -233,7 +224,7 @@ and X3 are the Cq values from a triplicate measurement.")
 knitr::kable(res_efficiency, caption="Analysis of the amplification efficiency. 
 The table reports the concentration-depentent average Cq values from three 
 replicates per dilution step. In addition, the standard deviation (SD) and the 
-Coefficient of Variance (RSD [%]) are presented. The results indicate that the 
+Coefficient of Variation (RSD [%]) are presented. The results indicate that the 
 data basis for the calibration curve is valid.")
 ```
 
