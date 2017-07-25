@@ -22,22 +22,22 @@ library(RDML)
 
 ## Introduction to the RDML package
 
-The [RDML](https://CRAN.R-project.org/package=RDML) package was created to work with the Real-time PCR Data Markup Language (RDML) -- a structured and universal data standard for exchanging quantitative PCR (qPCR) data [@lefever_rdml_2009; @rdml-ninja_2015]. RDML belongs to the family of eXtensible Markup Languages (XML). It contains fluorescence data and information about the qPCR experiment. A description and the RDML schema and the RDML format are available at http://rdml.org.
+The [RDML](https://CRAN.R-project.org/package=RDML) package was created to work with the Real-time PCR Data Markup Language (RDML) -- a structured and universal data standard for exchanging quantitative PCR (qPCR) data [@lefever_rdml_2009; @rdml-ninja_2015]. RDML belongs to the family of eXtensible Markup Languages (XML), and contains fluorescence data as well as information about the qPCR experiment. A description and the RDML schema and the RDML format are available at http://rdml.org.
 
-The XML technology is commonly used in the **R** environment and there are several tools to manipulate XML files [@xml_book]. When working with XML data, the workhorse package is **XML** [@Lang_XML].Therefore, investments development, implementation and maintenance is moderate.
+The XML technology is commonly used in the **R** environment and there are several tools to manipulate XML files [@xml_book]. When working with XML data, the workhorse package is **XML** [@Lang_XML]. Therefore, investments in development, implementation and maintenance is moderate.
 
 We use the **R6** [@Chang_R6], **assertthat** [@Wickham_assertthat], **plyr** [@Wickham_plyr], **dplyr** [@Wickham_Francois_dplyr], **tidyr** [@Wickham_tidyr] and **rlist** [@Ren_rlist] packages.
 
 ### Philosphy of the RDML package
-`RDML` imports various data formats (CSV, XMLX) besides the RDML format. Provided that the raw data 
-have a defined structure (as described in the vignette) the import should be 
+`RDML` imports various data formats (CSV, XMLX) apart from the RDML format. Provided that the raw data 
+have a defined structure (as described in the vignette), the import should be 
 done by a few clicks. The example below shows the import of amplification curve
 data, which were stored in a CSV file. The function `rdmlEdit()` was used in the 
 [RKWard IDE/GUI](https://rkward.kde.org/) [@roediger_rkward_2012] (tested with version 0.6.9z+0.7.0+devel1 on Kubuntu 17.04; NOTE: problems were reported on systems where not the webkit component was used for the rendering of the `rdmlEdit()` GUI) for further processing.
 
 <img src="File_import.png" alt="HTML5 Icon" style="width:663px;height:332px">
 
-Once imported enables `rdmlEDIT()` and other functions from the `RDML` package complex 
+Once imported, this enables `rdmlEDIT()` and other functions from the `RDML` package to conduct complex 
 data visualization and processing in the R statistical computing environment.
 
 <img src="data_view.png" alt="HTML5 Icon" style="width:663px;height:332px">
@@ -56,11 +56,11 @@ to access and process the internally stored RDML data. These methods include:
 
 ## Vendors and software packages supporting RDML
 
-The RDML format is supported by Bio-Rad (CFX 96 and CFX 384), Life Technologies (StepOne, ViiA7, QuantStudio) and Roche (LightCycler~96) thermo-cycler systems. In addition, several software packages (e.g., **Primer3Plus**, **RDML-Ninja**, **qBase+**) exist, which support RDML [@untergasser_2007; @hellemans_2007; @ruijter_amplification_2009; @pabinger_2014; @rdml-ninja_2015].
+The RDML format is supported by Bio-Rad (CFX 96 and CFX 384), Life Technologies (StepOne, ViiA7, QuantStudio) and Roche (LightCycler~96) thermocycler systems. In addition, several software packages (e.g., **Primer3Plus**, **RDML-Ninja**, **qBase+**) exist, which support RDML [@untergasser_2007; @hellemans_2007; @ruijter_amplification_2009; @pabinger_2014; @rdml-ninja_2015].
 
 ## Structure of the **RDML** package
 
-The structure of the **RDML** package mimics the RDML format and provides several [R6](https://CRAN.R-project.org/package=R6/vignettes/Introduction.html) classes, which corresponds to [RDML v1.2](http://rdml.org/files.php?v=1.2) format types. All major manipulations with RDML data can be done by a class called **RDML** through its public methods:
+The structure of the **RDML** package mimics the RDML format and provides several [R6](https://CRAN.R-project.org/package=R6/vignettes/Introduction.html) classes that correspond to [RDML v1.2](http://rdml.org/files.php?v=1.2) format types. All major manipulations with RDML data can be done by a class called **RDML** through its public methods:
 
 - `$new()` -- creates new **RDML** object (empty or from specified RDML file) 
 - `$AsTable()` -- represents data contained in **RDML** object (except fluorescent data) as data.frame.
@@ -70,24 +70,24 @@ The structure of the **RDML** package mimics the RDML format and provides severa
 
 ### Opening and observing RDML file
 
-In this section we will use the built-in RDML example file `lc96_bACTXY.rdml`. This file was obtained during the measurement of human DNA concentration by a *LightCycler 96* (Roche) and the *XY-Detect* kit (Syntol, Russia).
+In this section, we will use the built-in RDML example file `lc96_bACTXY.rdml`. This file was obtained during the measurement of human DNA concentration by a *LightCycler 96* (Roche) and the *XY-Detect* kit (Syntol, Russia).
 
-To open the `lc96_bACTXY.rdml` file we have to create a new **RDML** object with its class initializer -- `$new()` and the file name as parameter `filename`. 
+To open the `lc96_bACTXY.rdml` file, we have to create a new **RDML** object with its class initializer -- `$new()` and the file name as parameter `filename`. 
 ```{r, results = "hide"}
 filename <- system.file("extdata/lc96_bACTXY.rdml", package = "RDML")
 lc96 <- RDML$new(filename = filename)
 ``` 
-Next we can check structure of our new object -- `lc96` by printing it.
+Next we can check the structure of our new object -- `lc96` by printing it.
 ```{r}
 lc96
 ```
-As a result we can see field names and after `:` :
+As a result we can see field names, and after `:` 
 
 - names of the `R6` objects contained at this field after `~`,
 - contained values after `:`,
 - names of list elements enclosed in `[]`.
 
-The fields names for all **RDML** package classes correspond to fields names of RDML types as described at http://rdml.org/files.php?v=1.2.
+The field names for all **RDML** package classes correspond to field names of RDML types as described at http://rdml.org/files.php?v=1.2.
 
 <img src="rdml_overview_1_2.png" alt="HTML5 Icon" style="width:663px;height:688px">
 
@@ -110,7 +110,7 @@ These fields can be divided by two parts:
 
 #### Experiment field
 
-Contains one or more experiments with fluorescence data. Fluorescence data are stored at the *data* level of an experiment. E.g., fluorescence data for reaction tube *45* and target *bACT* can be accessed with the following code:
+Contains one or more experiments with fluorescence data. Fluorescence data are stored at the *data* level of an experiment. For example, fluorescence data for reaction tube *45* and target *bACT* can be accessed with the following code:
 ```{r}
 fdata <- 
   lc96$
@@ -121,16 +121,16 @@ fdata <-
     adp$fpoints #'adp' means amplification data points (qPCR)
 head(fdata)
 ```
-Structure of experiments can be visualized by plotting dendrogram.
+The structure of experiments can be visualized by plotting dendrograms.
 ```{r dendrogram, anchor="figure", results = "hide", fig.width = 6, fig.height = 4}
 lc96$AsDendrogram()
 ```
 
-In this dendrogram `r figr("dendrogram")` we can see that our file consists of one experiment and one run. Four targets, each with two sample types (*std* -- standard, *unkn* -- unknown), are part of the experiment. There is only qPCR data -- *adp* in this experiment. Ten reactions (tubes) for standard type (*std*) and six reaction for the unknown (*unkn*) type. The total number of reactions can be more than number of reactions on the plate because one tube can contain more than one target (e.g., multiplexing).
+In this dendrogram `r figr("dendrogram")` we can see that our file consists of one experiment and one run. Four targets, each with two sample types (*std* -- standard, *unkn* -- unknown), are part of the experiment. There is only qPCR data -- *adp* in this experiment. Ten reactions (tubes) for standard type (*std*) and six reaction for the unknown (*unkn*) type. The total number of reactions can be more than the number of reactions on the plate because one tube can contain more than one target (e.g., multiplexing).
 
 #### Additional information fields
 
-All fields other than **experiment**. This additional information can be referenced in other parts of the RDML file. E.g., to access sample added to react *39* and get its quantity we can use code like this:
+All fields other than **experiment**. This additional information can be referenced in other parts of the RDML file. For example, to access sample added to react *39* and get its quantity, we can use code like this:
 ```{r}
 ref <- lc96$
           experiment$`ca1eb225-ecea-4793-9804-87bfbb45f81d`$
@@ -143,7 +143,7 @@ sample$quantity$value
 
 ### Copying **RDML** objects
 
-**R6** objects are environments, that's why simple copying results in creating reference to existing object. Then modifying of copy leads to modification of original object. To create *real* copy of object we have to use method `$clone(deep = TRUE)` provided by **R6** class.
+**R6** objects are environments, that's why simple copying results in creating references to existing objects. Then modifying the copy leads to modification of the original object. To create a *real* copy of the object we have to use method `$clone(deep = TRUE)` provided by the **R6** class.
 
 ```{r}
 id1 <- idType$new("id_1")
@@ -155,11 +155,11 @@ cat(sprintf("Original object\t: %s ('id_1' bacame 'id_2')\nSimple copy\t\t: %s\n
             id1$id, id2$id, id3$id))
 ```
 
-From example above we can see that modification of `id2` led to modification of original object `id1` but modification of cloned object `id3` didn't.
+From the example above, we can see that the modification of `id2` led to a modification of the original object `id1`, however modification of cloned object `id3` did not.
 
 ### Modifying **RDML** objects
 
-To modify content of **RDML** objects we can use fields as setters. These setters provide type safe modification by input validation. In addition, setting lists of objects generates names of list elements.
+To modify the content of **RDML** objects, we can use fields as setters. These setters provide type safe modifications by input validation. In addition, setting lists of objects generates names of list elements.
 
 ```{r}
 ## Create 'real' copy of object
@@ -186,11 +186,11 @@ lc96$experiment <- list(experiment)
 lc96$AsDendrogram()
 ```
 
-And we can see in `r figr("dendrogram_modified")` our modification with `$AsDendrogram()` method.
+Then, we can observe in `r figr("dendrogram_modified")` our modification with the `$AsDendrogram()` method.
 
 ### `AsTable()` method
 
-To get information about all fluorescence data in RDML file (type of added sample, used target, starting quantity etc.) as data.frame we can use `$AsTable()` method. By default, it provides such information as:
+To obtain information about all fluorescence data in an RDML file (type of added sample, used target, starting quantity etc.) as a data.frame, we can use the `$AsTable()` method. By default, it provides such information as:
 
 - `fdata.name` -- aggregated name for current fluorescence data. Default pattern is `position_sample_sample.type_target` (e.g., *D03\_Sample 39\_std\_bACT*). This pattern can be modified by `name.pattern` argument.
 - `exp.id` -- experiment id (e.g., *exp1*).
@@ -204,7 +204,7 @@ To get information about all fluorescence data in RDML file (type of added sampl
 - `adp` -- `TRUE` if contains qPCR data.
 - `mdp` -- `TRUE` if contains melting data.
 
-To add custom columns for output *data.frame* we should pass it as named method argument with generating expression. Values of default columns can be used at custom name pattern and new columns referring to their names. Next example shows how to use `$AsTable()` method with a custom name pattern and additional column.
+To add custom columns to the output *data.frame*, we should pass it as a named method argument by generating expressions. Values for default columns can be used by custom name patterns and new columns referring to their names. Thr next example shows how to use the `$AsTable()` method with a custom name pattern and additional columns.
 
 ```{r}
 tab <- lc96$AsTable(
@@ -228,16 +228,16 @@ rownames(tab) <- NULL
 head(tab)
 ```
 
-Also, the generated data.frame is used as a query in `$GetFData()` and `$SetFData()` methods (see further sections).
+Here, the generated data.frame is also used as a query in `$GetFData()` and `$SetFData()` methods (see further sections).
 
 ### Getting fluorescence data
 
-We can get the fluorescence data two ways:
+We can extract the fluorescence data in two ways:
 
-- direct access to data as it was described at *Experiment field* subsection
-- using special method `$GetFData()`
+- direct access to the data as described in the *Experiment field* subsection
+- using the special method `$GetFData()`
 
-Advantage of `$GetFData()` is that it can combine fluorescence data from whole plate to one data.frame. Major argument of this function is `request`, which defines fluorescence data to be got. This request is output from `$AsTable()` method and can be filtered with ease by the **dplyr** `filter()` function. Also limits of cycles, output `data.frame` format and data type (`fdata.type = 'adp'` for qPCR, `fdata.type = 'mdp'` for melting data) can by specified (see examples below).
+The advantage of `$GetFData()` is that it can combine fluorescence data from many plates into one data.frame. The major argument of this function is `request`, which defines fluorescence data to be extracted. This request is the output from the `$AsTable()` method and can be easily filtered by the **dplyr** `filter()` function. Furthermore cycle limits, the output `data.frame` format as well as data types (`fdata.type = 'adp'` for qPCR, `fdata.type = 'mdp'` for melting data) can by specified (see examples below).
 
 ```{r, results = "hide", messages = FALSE, fig.width = 6, fig.height = 4}
 library(dplyr)
@@ -255,7 +255,7 @@ ggplot(fdata, aes(cyc, fluor)) +
                   color = target))
 ```
 
-Our curves are not background subtrackted ass visible in the plot. To do this we use the `CPP()` function from the [chipPCR](https://CRAN.R-project.org/package=chipPCR) package [@roediger2015chippcr] as described in @roediger2015r.
+Our example curves are not background subtracted, as visible in the plot. To accomplish this, we use the `CPP()` function from the [chipPCR](https://CRAN.R-project.org/package=chipPCR) package [@roediger2015chippcr] as described in @roediger2015r.
 
 ```{r}
 library(chipPCR)
@@ -278,19 +278,19 @@ fdata.cpp <- cbind(cyc = fdata[, 1],
                          function(x) CPP(fdata[, 1],
                                          x)$y))
 ```
-Now we have preprocessed data, which we will add to our object and use during next section.
+Now we have properly preprocessed data, which we will add to our object and use in the next section.
 
 ### Setting fluorescence data
 
-To set fluorescence data to **RDML** object we can use `$SetFData()` method. It takes three arguments: 
+To define fluorescence data as an **RDML** object, we can use the `$SetFData()` method. It takes three arguments: 
 
 - `fdata` -- fluorescence data in `long.table = FALSE` format 
-- `request` -- output from `AsTable()` function, which is used as path to set data;
+- `request` -- output from the `AsTable()` function, which is used to set data;
 - `fdata.type` -- `fdata.type = 'adp'` for qPCR, `fdata.type = 'mdp'` for melting data.
 
-Next we will set preprocessed fluorescence data to the new run -- *run1_cpp*. Such subelements of RDML as *experiment*, *run*, *react* and *data* that do not exist at **RDML** object create by SetFData automaticaly (read more at *Creating **RDML** from table* section).
+In the following we will define preprocessed fluorescence data as the new run -- *run1_cpp*. The subelements of RDML such as *experiment*, *run*, *react* and *data* that do not initially exist in an **RDML** object are created by SetFData automaticaly (read more at *Creating **RDML** from table* section).
 
-> Note that colnames in `fdata` and `fdata.name` in `request` have to be the same!
+> Note that the colnames in `fdata` and `fdata.name` in `request` have to be the same!
 
 ```{r, fig.width = 6, fig.height = 4}
 tab$run.id <- "run.cpp"
@@ -308,7 +308,7 @@ ggplot(fdata, aes(cyc, fluor)) +
 
 ### Merging **RDML** objects
 
-Merging **RDML** objects can be done by `MergeRDMLs()` function. It takes list of **RDML** objects and returns one **RDML** object.
+Merging **RDML** objects can be conducted by the `MergeRDMLs()` function. It takes a list of **RDML** objects and returns one single **RDML** object.
 
 ```{r, results = "hide", fig.width = 7, fig.height = 6}
 ## Load another built in RDML file
@@ -322,15 +322,15 @@ merged$AsDendrogram()
 
 ### Saving **RDML** object as RDML file
 
-To save **RDML** object as RDML file v1.2 we can use `$AsXML()` method where `file.name` argument is name of new RDML file. Without `file.name` function returns XML tree.
+To save **RDML** objects in RDML file v1.2 format, we can use the `$AsXML()` method where the `file.name` argument is the name of new RDML file. Without `file.name` given, the function returns an XML tree.
 
 `lc96$AsXML("lc96.rdml")`
 
-You can use [RDML-ninja](https://sourceforge.net/projects/qpcr-ninja/) or the [RDML validator](http://rdml.org/tools.php?validator) from the RMDL consortiun to validate a RDML file created by the **RDML** package file.
+One can use [RDML-ninja](https://sourceforge.net/projects/qpcr-ninja/) or the [RDML validator](http://rdml.org/tools.php?validator) from the RMDL consortiun to validate RDML files created by the **RDML** package.
 
 ### Creating custom functions
 
-**R6** classes allow add methods to existing classes. This can be done using the `$set()` method. Suppose that we decided add method to preprocess all fluorescence data and calculate Cq:
+**R6** classes allow to add methods to existing classes by using the `$set()` method. Suppose that we want to add a method to preprocess all fluorescence data and calculate Cq values:
 
 ```{r, results = "hide"}
 RDML$set("public", "CalcCq",
@@ -363,15 +363,15 @@ stepone <- RDML$new(paste0(path.package("RDML"),
                            "/extdata/", "stepone_std.rdml"))
 ```
 
-And then apply our new method:
+We can then apply our new method:
 
 ```{r}
 stepone$CalcCq()
 ```
 
-### Creating **RDML** from table
+### Creating **RDML** from tables
 
-**RDML** objects can be generated not only from files but from user data contained in data.frames. To do this you have to create empty **RDML** object, create data.frame, which describes data and set data by `$SetFData()` method. Minimal needed information (samples, targets, dyes) will be created from data description.
+**RDML** objects can not only be generated from files but also from user data contained in data.frames. For this, we have to create an empty **RDML** object, create a data.frame containing the data and set it by the `$SetFData()` method. Minimal required information (samples, targets, dyes) will be created from the data description.
 
 ```{r, fig.width = 6, fig.height = 3, results = "hide"}
 #### Create simulated data with AmpSim() from chipPCR package
@@ -416,7 +416,7 @@ ggplot(fdata, aes(cyc, fluor)) +
 
 ### Creating **RDML** from *ABI 7500 v.2* software
 
-**RDML** objects can be created by *.eds* file generated by *ABI 7500 v.2* or *StepOne* software (any of analysis inside device software have to be done!).
+**RDML** objects can be created from *.eds* files generated by the *ABI 7500 v.2* or *StepOne* software (here, all analyses have to be conducted within the device software!).
 
 
 ```{r, fig.width = 6, fig.height = 3, results = "hide", warning = FALSE}
@@ -427,7 +427,7 @@ abi$AsDendrogram()
 
 ### Creating **RDML** from *.csv* files
 
-**RDML** objects can be generated by *.csv* file. This file have to contain first column **cyc** for qPCR data or **tmp** for melting data. Other columns -- fluorescence signal.
+**RDML** objects can be generated from *.csv* files. The files need to contain a first column named **cyc** for qPCR data or **tmp** for melting data. The remaining columns must contain the raw fluorescence signals.
 
 ```{r, fig.width = 6, fig.height = 3, results = "hide"}
 filename <- system.file("extdata/from_tables/fdata.csv", package = "RDML")
@@ -437,7 +437,7 @@ csv$AsDendrogram()
 
 ### Creating **RDML** from *.xls* or *.xslx* files
 
-**RDML** objects can be generated by *.xls* or *.xslx* file. This file have to contain *description* data.frame at sheet *description* and qPCR data at sheet *adp* and/or qPCR data at sheet *mdp*.
+**RDML** objects can also be generated from *.xls* or *.xslx* file. The files need to contain a *description* data.frame at tab sheet *description* and qPCR data at tab sheet *adp*, and/or qPCR data at tab sheet *mdp*.
 
 ```{r, fig.width = 6, fig.height = 3, results = "hide"}
 filename <- system.file("extdata/from_tables/table.xlsx", package = "RDML")
@@ -447,7 +447,7 @@ xslx$AsDendrogram()
 
 ### Functional style
 
-To provide functional programming style, which is more convenient in **R**, the **RDML** class methods have function wrappers:
+To provide a functional programming style that is more convenient in **R**, the **RDML** class methods have function wrappers:
 
 - `obj$AsTable(...)` -- `AsTable(obj, ...)`
 - `obj$SetFData(...)` -- `SetFData(obj, ...)`
@@ -459,7 +459,7 @@ To provide functional programming style, which is more convenient in **R**, the 
 
 ### Summary
 
-**RDML** package provides classes and methods to work with RDML data generated by real-time quantitative PCR devices or to create RDML files from user generated data. Because classes of the **RDML** package are build with **R6** they can be modified by adding custom methods and suggest type safe usage by input validation.
+The **RDML** package provides classes and methods to work with RDML data generated by real-time quantitative PCR devices or enables creating RDML files from user generated data. Because classes of the **RDML** package are built with **R6**, they can be modified by adding custom methods and ensure type safe usage through input validation.
 
 ```{r,child="./CreateRDML.Rmd"}
 ```
@@ -467,17 +467,17 @@ To provide functional programming style, which is more convenient in **R**, the 
 
 ## Benchmark
 
-The RDML format may also store data from the high-throughput technologies as digital PCR or 384-well qPCR. To make the RDML package the most appropriate tool for such applications, we optimize the saving functionality of the package. Thanks to this, the RDML package is able to save in a reasonable time even large number of PCR experiments.
+The RDML format may also store data from high-throughput technologies such as digital PCR or 384-well qPCR. To make the RDML package the most appropriate tool for these applications, we optimized the saving functionality of the package. Hence, the RDML package is able to save even large numbers of qPCR experiments in reasonable time.
 
 We benchmarked the time needed for saving RDML object with different numbers of experiments on two desktop machines:
 
-1. Windows 7 x64 (build 7601) Service Pack 1 on Intel Core i5 (2,40 GHz) with 4,00 GB RAM.
+1. Windows 7 x64 (build 7601) Service Pack 1 on Intel Core i5 (2,40 GHz) with 4,00 GB RAM. R version 3.2.1 (2015-06-18).
 
-2. Kubuntu 15.04 (Kernel 3.19.0-27-generic) Intel(R) Pentium(R) CPU 997 @ 1.60GHz with 4,00 GB RAM
+2. Kubuntu 15.04 (Kernel 3.19.0-27-generic) Intel(R) Pentium(R) CPU 997 @ 1.60GHz with 4,00 GB RAM. R version 3.1.2 (2014-10-31).
 
-In case "1." we used R version 3.2.1 (2015-06-18) and in case "2." we used R version 3.1.2 (2014-10-31).
+In the case "1." we used R version 3.2.1 (2015-06-18) and in the case "2." we used R version 3.1.2 (2014-10-31)
 
-To have the fairest comparison and take into account various factor like garbage collection, we repeated the procedure 100 times.
+To warrant fairest comparison and taking into account factors like garbage collection, we repeated the procedure 100 times.
 
 ```{r, fig.width = 6, fig.height = 3, echo = FALSE}
 bench_df <- read.csv("bench_df.csv")
@@ -494,20 +494,18 @@ knitr::kable(bench_df[, c("nr", "median", "os")], format = "pandoc",
              caption = "Results of benchmark.")
 ```
 
-The result above indicate that, thanks to the RDML package, even average laboratory workstation is able to save large RDML files in reasonable time (around 4 minutes for 1000 experiments).
+The results above indicate that, thanks to the RDML package, an average laboratory workstation is able to save large RDML files in reasonable time (around 4 minutes for 1000 experiments).
 
 ## Validation of RDML files created by the RDML package
 
-The correct structure of an RDML file is an important requirement to perform reproducibel analysis. Unfortunately created files can not be properly tested now because official RDML validator [rdml.org](http://rdml.org/tools.php) does not work 
-from time to time. However, there is a solution to validate the files by the alternate
-editor - *RDML-Ninja* [@rdml-ninja_2015].
+The correct structure of an RDML file is an important prerequisite to perform reproducible analysis. Unfortunately, the created files can not be properly tested to date because the official RDML validator [rdml.org](http://rdml.org/tools.php) is not online from time to time. However, there is a solution to validate the files by the alternate editor - *RDML-Ninja* [@rdml-ninja_2015].
 
 ## RDMLedit web-server
 
-The [http://shtest.evrogen.net/rdmlEdit/](RDMLedit web-server) is a web tool based on the functionalities of the RDML package. Aside from basic functionalities, like data import, alteration and export, RDMLedit also produces visualisations of qPCR data. In addition to that, RDMLedit can also merge multiple RDML files.
+The [http://shtest.evrogen.net/rdmlEdit/](RDMLedit web-server) is a web tool based on the functionalities of the RDML package. Aside from basic functionalities like data import, modification and export, RDMLedit also produces visualisations of qPCR data. In addition, RDMLedit can also merge multiple RDML files.
 
 ### Local deployment of RDMLedit
 
-As a [https://shiny.rstudio.com/](shiny application), RDMLedit may be also deployed locally. It requires installed R and RDML package. Next, a user has to open R and run the following command: **rdmlEdit()**.
+As a [https://shiny.rstudio.com/](shiny application), RDMLedit may be also deployed locally. It requires an installed R and RDML package. To initialize, the user has to open R and run the following command: **rdmlEdit()**.
 
 ## References
