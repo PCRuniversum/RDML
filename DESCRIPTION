@@ -15,8 +15,10 @@ Authors@R: c(
     email = "stefan.roediger@b-tu.de",
     role = "aut"),
     person("Michal", "Burdukiewicz",
-    email = "michalburdukiewicz@gmail.com", role = "aut"))
-License: GPL (>= 2)
+    email = "michalburdukiewicz@gmail.com", role = "aut"),
+    person("Andrej-Nikolai", "Spiess",
+    email = "a.spiess@uke.de", role = "aut"))
+License: MIT
 URL: https://github.com/kablag/RDML
 Depends:
     R (>= 3.2.0)

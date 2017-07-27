@@ -1,6 +1,6 @@
 ---
 title: "Using RDML with other R packages"
-author: "Konstantin A. Blagodatskikh, Micha&#322; Burdukiewicz, Stefan R&ouml;diger"
+author: "Konstantin A. Blagodatskikh, Micha&#322; Burdukiewicz, Stefan R&ouml;diger, Andrej-Nikolai Spiess"
 date: "`r Sys.Date()`"
 output: 
 rmarkdown::html_vignette:
@@ -113,7 +113,7 @@ The function `efficiency` calculates the qPCR Cq values, amplification efficienc
 function to `Cy0`,  which will calculate and report the Cy0 value. According to 
 @guescini_new_2008, the Cy0 value is the intersection of a tangent on the first 
 derivative maximum with the abscissa. However, for all further analyses we will 
-use the second derivative maximum cycle as Cq value. However, this 
+use the second derivative maximum cycle as Cq value. This 
 supplementary material will not focus on the selection of a certain Cq method. For an 
 objective decision, we would like to guide the reader to the study by 
 @ruijter_evaluation_2013.
