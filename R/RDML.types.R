@@ -15,17 +15,15 @@ checkDateTime <- function(dateTime){
   return("Must pass lubridate ymd_hms() or ymd() conversion")
 }
 
-# returns list with unique elements (names) with warning
-filterDuplicated <- function(elements) {
-  if (anyDuplicated(elements)) {
-    warning(sprintf("Duplicate %s removed", substitute(elements)))
-    elements[!duplicated(elements)]
-  } else {
-    elements
-  }
-}
-
-
+# # returns list with unique elements (names) with warning
+# filterDuplicated <- function(elements) {
+#   if (anyDuplicated(elements)) {
+#     warning(sprintf("Duplicate %s removed", substitute(elements)))
+#     elements[!duplicated(elements)]
+#   } else {
+#     elements
+#   }
+# }
 
 #' Extract data points from \code{RDML} object
 #' 
@@ -45,7 +43,6 @@ filterDuplicated <- function(elements) {
 "[.RDML" <- function(x, i, j, dp.type = "adp") {
   as.data.frame(x$GetFData(x$AsTable(), dp.type = dp.type))[i, j]
 }
-
 
 
 # rdmlBaseType ------------------------------------------------------------
@@ -1108,21 +1105,21 @@ sampleType <-
               if (missing(documentation))
                 return(private$.documentation)
               assert(checkNull(documentation),
-                     checkList(documentation, "idReferencesType"))
+                     checkList(documentation, "idReferencesType", unique = TRUE))
               private$.documentation <- documentation
             },
             xRef = function(xRef) {
               if (missing(xRef))
                 return(private$.xRef)
               assert(checkNull(xRef),
-                     checkList(xRef, "xRefType"))
+                     checkList(xRef, "xRefType", unique = TRUE))
               private$.xRef <- xRef
             },
             annotation = function(annotation) {
               if (missing(annotation))
                 return(private$.annotation)
               assert(checkNull(annotation),
-                     checkList(annotation, "annotationType"))
+                     checkList(annotation, "annotationType", unique = TRUE))
               private$.annotation <- list.names(annotation,
                                                 .$property)
             },
@@ -1482,14 +1479,14 @@ targetType <-
               if (missing(documentation))
                 return(private$.documentation)
               assert(checkNull(documentation),
-                     checkList(documentation, "idReferencesType"))
+                     checkList(documentation, "idReferencesType", unique = TRUE))
               private$.documentation <- documentation
             },
             xRef = function(xRef) {
               if (missing(xRef))
                 return(private$.xRef)
               assert(checkNull(xRef),
-                     checkList(xRef, "xRefType"))
+                     checkList(xRef, "xRefType", unique = TRUE))
               private$.xRef <- xRef
             },
             type = function(type) {
@@ -2095,7 +2092,7 @@ reactType <-
               if (missing(data))
                 return(private$.data)
               assert(checkNull(data),
-                     checkList(data, "dataType"))
+                     checkList(data, "dataType", unique = TRUE))
               private$.data <- list.names(data,
                                           .$tar$id)
             },
@@ -2442,14 +2439,14 @@ runType <-
               if (missing(documentation))
                 return(private$.documentation)
               assert(checkNull(documentation),
-                     checkList(documentation, "idReferencesType"))
+                     checkList(documentation, "idReferencesType", unique = TRUE))
               private$.documentation <- documentation
             },
             experimenter = function(experimenter) {
               if (missing(experimenter))
                 return(private$.experimenter)
               assert(checkNull(experimenter),
-                     checkList(experimenter, "idReferencesType"))
+                     checkList(experimenter, "idReferencesType", unique = TRUE))
               private$.experimenter <- experimenter
             },
             instrument = function(instrument) {
@@ -2504,7 +2501,7 @@ runType <-
               if (missing(react))
                 return(private$.react)
               assert(checkNull(react),
-                     checkList(react, "reactType"))
+                     checkList(react, "reactType", unique = TRUE))
               private$.react <- list.names(react,
                                            .$id$id)
               # check for duplicate reacts names. Occures in StepOne RDML files.
@@ -2606,14 +2603,14 @@ experimentType <-
               if (missing(documentation))
                 return(private$.documentation)
               assert(checkNull(documentation),
-                     checkList(documentation, "idReferencesType"))
+                     checkList(documentation, "idReferencesType", unique = TRUE))
               private$.documentation <- documentation
             },
             run = function(run) {
               if (missing(run))
                 return(private$.run)
               assert(checkNull(run),
-                     checkList(run, "runType"))
+                     checkList(run, "runType", unique = TRUE))
               private$.run <- list.names(run,
                                          .$id$id)
             }
@@ -3118,7 +3115,7 @@ thermalCyclingConditionsType <-
               if (missing(documentation))
                 return(private$.documentation)
               assert(checkNull(documentation),
-                     checkList(documentation, "idReferencesType"))
+                     checkList(documentation, "idReferencesType", unique = TRUE))
               private$.documentation <- documentation
             },
             lidTemperature = function(lidTemperature) {
@@ -3132,14 +3129,14 @@ thermalCyclingConditionsType <-
               if (missing(experimenter))
                 return(private$.experimenter)
               assert(checkNull(experimenter),
-                     checkList(experimenter, "idReferencesType"))
+                     checkList(experimenter, "idReferencesType", unique = TRUE))
               private$.experimenter <- experimenter
             },
             step = function(step) {
               if (missing(step))
                 return(private$.step)
               assert(checkNull(step),
-                     checkList(step, "stepType"))
+                     checkList(step, "stepType", unique = TRUE))
               private$.step <- list.names(step,
                                           .$nr)
             }
