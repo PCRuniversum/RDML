@@ -25,6 +25,8 @@ filterDuplicated <- function(elements) {
   }
 }
 
+
+
 #' Extract data points from \code{RDML} object
 #' 
 #' Extract data points from \code{RDML} object as.data.frame.
@@ -43,6 +45,8 @@ filterDuplicated <- function(elements) {
 "[.RDML" <- function(x, i, j, dp.type = "adp") {
   as.data.frame(x$GetFData(x$AsTable(), dp.type = dp.type))[i, j]
 }
+
+
 
 # rdmlBaseType ------------------------------------------------------------
 
