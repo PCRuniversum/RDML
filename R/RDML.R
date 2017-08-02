@@ -309,4 +309,22 @@ RDML <- R6Class("RDML",
                 )
 )
 
+#' Extract data points from \code{RDML} object
+#' 
+#' Extract data points from \code{RDML} object as.data.frame.
+#' 
+#' @param x \code{RDML} object.
+#' @param i,j indices.
+#' @param dp.type Type of fluorescence data (i.e. 'adp' for qPCR or 'mdp' for
+#'   melting).
+#' 
+#' @docType methods
+#' @keywords manip
+#' @name [.GetFData
+#' @rdname extractdatapoints-method
+#' @export
+"[.RDML" <- function(x, i, j, dp.type = "adp") {
+  as.data.frame(x$GetFData(x$AsTable(), dp.type = dp.type))[i, j]
+}
+
 utils::globalVariables(c("."))

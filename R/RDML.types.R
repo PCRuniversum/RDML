@@ -8,7 +8,7 @@ list.names <- function(data, ...) {
 checkDateTime <- function(dateTime){
   if (is.null(dateTime))
     return(TRUE)
-  if(!is.na(ymd_hms(dateTime, quiet = TRUE)) ||
+  if (!is.na(ymd_hms(dateTime, quiet = TRUE)) ||
      !is.na(ymd(dateTime, quiet = TRUE))) {
     return(TRUE)
   }
@@ -24,26 +24,6 @@ checkDateTime <- function(dateTime){
 #     elements
 #   }
 # }
-
-#' Extract data points from \code{RDML} object
-#' 
-#' Extract data points from \code{RDML} object as.data.frame.
-#' 
-#' @param x \code{RDML} object.
-#' @param i,j indices.
-#' @param dp.type Type of fluorescence data (i.e. 'adp' for qPCR or 'mdp' for
-#'   melting).
-#' 
-#' @docType methods
-#' @keywords manip
-#' @docType methods
-#' @name [.GetFData
-#' @rdname extractdatapoints-method
-#' @export
-"[.RDML" <- function(x, i, j, dp.type = "adp") {
-  as.data.frame(x$GetFData(x$AsTable(), dp.type = dp.type))[i, j]
-}
-
 
 # rdmlBaseType ------------------------------------------------------------
 
@@ -297,6 +277,19 @@ idType <-
             }
           ))
 
+#' Convert \code{idType} object to \code{character}
+#' 
+#' Function to convert \code{idType} object to \code{character}.
+#' 
+#' @param x \code{idType} object.
+#' 
+#' @docType methods
+#' @keywords manip
+#' @name as.character.idType
+#' @rdname ascharacteridType-method
+#' @export
+as.character.idType <- function(x) x$id
+
 # reactIdType ------------------------------------------------------------
 
 #' reactIdType R6 class.
@@ -335,6 +328,19 @@ reactIdType <-
               private$.id <- id
             }
           ))
+
+#' Convert \code{reactIdType} object to \code{character}
+#' 
+#' Function to convert \code{reactIdType} object to \code{character}.
+#' 
+#' @param x \code{reactIdType} object.
+#' 
+#' @docType methods
+#' @keywords manip
+#' @name as.character.reactIdType
+#' @rdname ascharacterreactIdType-method
+#' @export
+as.character.reactIdType <- function(x) as.character(x$id)
 
 # idReferencesType ------------------------------------------------------------
 
