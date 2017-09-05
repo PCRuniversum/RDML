@@ -24,6 +24,9 @@ library(RDML)
 
 The [RDML](https://CRAN.R-project.org/package=RDML) package was created to work with the Real-time PCR Data Markup Language (RDML) -- a structured and universal data standard for exchanging quantitative PCR (qPCR) data [@lefever_rdml_2009; @rdml-ninja_2015]. RDML belongs to the family of eXtensible Markup Languages (XML), and contains fluorescence data as well as information about the qPCR experiment. A description of the RDML schema and the RDML format are available at http://rdml.org.
 
+The RDML package is published in Oxford Bioinformatics: 
+Stefan Rödiger, Michał Burdukiewicz, Andrej-Nikolai Spiess, Konstantin Blagodatskikh; Enabling reproducible real-time quantitative PCR research: the RDML package, Bioinformatics, [https://doi.org/10.1093/bioinformatics/btx528](https://doi.org/10.1093/bioinformatics/btx528) (see also `citation()`).
+
 The XML technology is commonly used in the **R** environment and there are several tools to manipulate XML files [@xml_book]. When working with XML data, the workhorse package is **XML** [@Lang_XML]. Therefore, investments in development, implementation and maintenance is moderate.
 
 We use the **R6** [@Chang_R6], **assertthat** [@Wickham_assertthat], **plyr** [@Wickham_plyr], **dplyr** [@Wickham_Francois_dplyr], **tidyr** [@Wickham_tidyr] and **rlist** [@Ren_rlist] packages.

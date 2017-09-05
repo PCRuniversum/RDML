@@ -8,6 +8,7 @@
 The RDML package is published in Oxford Bioinformatics: 
 Stefan Rödiger, Michał Burdukiewicz, Andrej-Nikolai Spiess, Konstantin Blagodatskikh; Enabling reproducible real-time quantitative PCR research: the RDML package, Bioinformatics, [https://doi.org/10.1093/bioinformatics/btx528](https://doi.org/10.1093/bioinformatics/btx528).
 
+See `citation()`.
 
 Imports qPCR data from RDML v1.1 format files ([Lefever et al. 2009](http://nar.oxfordjournals.org/content/32/5/1792.abstract?view=long&pmid=19223324)) and 
 transforms it to the appropriate format of the qpcR package (Ritz et al. 2008, 
