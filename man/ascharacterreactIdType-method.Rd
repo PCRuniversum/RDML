@@ -9,6 +9,8 @@
 }
 \arguments{
 \item{x}{\code{reactIdType} object.}
+
+\item{...}{Further arguments to be passed.}
 }
 \description{
 Function to convert \code{reactIdType} object to \code{character}.

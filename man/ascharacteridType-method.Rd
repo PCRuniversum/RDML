@@ -9,6 +9,8 @@
 }
 \arguments{
 \item{x}{\code{idType} object.}
+
+\item{...}{Further arguments to be passed.}
 }
 \description{
 Function to convert \code{idType} object to \code{character}.

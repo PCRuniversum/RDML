@@ -282,6 +282,7 @@ idType <-
 #' Function to convert \code{idType} object to \code{character}.
 #' 
 #' @param x \code{idType} object.
+#' @param ... Further arguments to be passed.
 #' 
 #' @docType methods
 #' @keywords manip
@@ -334,6 +335,7 @@ reactIdType <-
 #' Function to convert \code{reactIdType} object to \code{character}.
 #' 
 #' @param x \code{reactIdType} object.
+#' @param ... Further arguments to be passed.
 #' 
 #' @docType methods
 #' @keywords manip
