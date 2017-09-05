@@ -35,21 +35,17 @@ matrix:
 r_binary_packages:
   - checkmate
   - data.table
-  - pipeR
   - readxl
   - rlist
   - R6
   - stringr
-  - tools
   - xml2
   - dplyr
   - ggplot2
   - knitr
   - kfigr
-  - MBmca
   - shiny
   - shinyjs
-  - shinythemes
   - V8
   
 notifications:
