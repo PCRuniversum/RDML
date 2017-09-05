@@ -288,7 +288,7 @@ idType <-
 #' @name as.character.idType
 #' @rdname ascharacteridType-method
 #' @export
-as.character.idType <- function(x) x$id
+as.character.idType <- function(x, ...) x$id
 
 # reactIdType ------------------------------------------------------------
 
@@ -340,7 +340,7 @@ reactIdType <-
 #' @name as.character.reactIdType
 #' @rdname ascharacterreactIdType-method
 #' @export
-as.character.reactIdType <- function(x) as.character(x$id)
+as.character.reactIdType <- function(x, ...) as.character(x$id)
 
 # idReferencesType ------------------------------------------------------------
 
