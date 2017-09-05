@@ -1,3 +1,7 @@
+Changes from Version 0.9-7 to 0.9-8 [September 05 2017]
+* CRAN and after publication version
+* as.character for ids added
+
 Changes from Version 0.9-6 to 0.9-7 [July 31 2017]
 * updated vignettes
 * CRAN version
