@@ -1,0 +1,11 @@
+citHeader("To cite RDML in publications, please use:
+Stefan Rödiger, Michał Burdukiewicz, Andrej-Nikolai Spiess, Konstantin Blagodatskikh; Enabling reproducible real-time quantitative PCR research: the RDML package, Bioinformatics, https://doi.org/10.1093/bioinformatics/btx528
+")
+
+citEntry(entry = "Article",
+  author = "Stefan Rödiger and Michał Burdukiewicz and Andrej-Nikolai Spiess and Konstantin Blagodatskikh",
+  title = Enabling reproducible real-time quantitative PCR research: the RDML package,
+  year = 2017, 
+  url = "https://doi.org/10.1093/bioinformatics/btx528"
+  journal = "Bioinformatics"
+)
