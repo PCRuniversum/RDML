@@ -89,7 +89,7 @@ RDML$set("public", "AsTable",
              data$tar$id,
              sep = "_"),
            add.columns = list(),
-           treat.null.as.na = TRUE,
+           treat.null.as.na = FALSE,
            ...) {
            # create short names
            dateMade <- private$.dateMade

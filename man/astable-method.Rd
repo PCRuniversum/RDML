@@ -11,6 +11,8 @@
 
 \item{add.columns}{\code{list} of additional columns}
 
+\item{treat.null.as.na}{if value is \code{NULL} then convert it to \code{NA}. Helps to deal with incomplete records.}
+
 \item{...}{additional columns}
 }
 \description{
