@@ -1277,7 +1277,7 @@ RDML$set("public", "initialize", function(filename,
         private$.id[[1]]$publisher == "Bio-Rad Laboratories, Inc." &&
         length(private$.experiment[[1]]$run) > 1) {
       if (show.progress)
-        cat("\nCombining Bio-Rad runs")
+        cat("\nCombining Bio-Rad runs\n")
       first.run <- private$.experiment[[1]]$run[[1]]
       for (run.i in 2:length(private$.experiment[[1]]$run)){
         current.run <- private$.experiment[[1]]$run[[run.i]]

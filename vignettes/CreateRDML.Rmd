@@ -3,19 +3,19 @@ title: "Creating RDML file from raw data"
 author: "Konstantin A. Blagodatskikh, Micha&#322; Burdukiewicz, Stefan R&ouml;diger"
 date: "`r Sys.Date()`"
 output: 
-  rmarkdown::html_vignette:
-    toc: true
-    pandoc_args: [
-      "--number-sections"
-    ]
+rmarkdown::html_vignette:
+toc: true
+pandoc_args: [
+"--number-sections"
+]
 vignette: >
   %\VignetteIndexEntry{Creating RDML file from raw data}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
-
----
-
-```{r, echo = FALSE, message = FALSE}
+  
+  ---
+  
+  ```{r, echo = FALSE, message = FALSE}
 knitr::opts_chunk$set(collapse = T, comment = "#>")
 ```
 
@@ -286,8 +286,8 @@ After creating **RDML** object and setting data we can use our method `$ProcessV
 # Process VideoScan data
 video.scan$ProcessVideoScan(last.cycle = c(35, 45, 55),
                             bg.range = list(c(1,8),
-                                           NULL,
-                                           NULL))
+                                            NULL,
+                                            NULL))
 ```
 
 Then visualize the object with the `$AsDendrogram` method (runs with IDs that include `_CPP` in names, contain the preprocessed curves):
@@ -302,13 +302,14 @@ And plot preprocessed curves indicating the Cq values:
 ```{r, results = "hide", fig.width = 6, fig.height = 4}
 ## Visualise preprocessed data with Cq values as vertical dashed lines
 # Add custom column that contains the calculated Cq
-tab <- video.scan$AsTable(cq = {
-                 cq <- data$cq
-                 if (is.null(cq) || is.na(cq))
-                   NULL
-                 else
-                   cq
-               })
+tab <- video.scan$AsTable(
+  cq = {
+    cq <- data$cq
+    if (is.null(cq) || is.na(cq))
+      NULL
+    else
+      cq
+  })
 # Get preprocessed data in 'long.table' format
 dat <- video.scan$GetFData(tab[grepl("_CPP", tab[["run.id"]]), ],
                            long.table = TRUE)

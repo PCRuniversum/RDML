@@ -236,7 +236,7 @@ RDML <- R6Class("RDML",
                   id = function(id) {
                     if (missing(id))
                       return(private$.id)                    
-                    assertList(id, "rdmlIdType")
+                    assertList(id, "rdmlIdType", unique = TRUE)
                     private$.id <- 
                       list.names(id,
                                  .$publisher)
@@ -245,7 +245,7 @@ RDML <- R6Class("RDML",
                   experimenter = function(experimenter) {
                     if (missing(experimenter))
                       return(private$.experimenter)
-                    assertList(experimenter, "experimenterType")
+                    assertList(experimenter, "experimenterType", unique = TRUE)
                     private$.experimenter <- 
                       list.names(experimenter,
                                  .$id$id)
@@ -254,7 +254,7 @@ RDML <- R6Class("RDML",
                   documentation = function(documentation) {
                     if (missing(documentation))
                       return(private$.documentation)
-                    assertList(documentation, "documentationType")                    
+                    assertList(documentation, "documentationType", unique = TRUE)                    
                     private$.documentation <- 
                       list.names(documentation,
                                  .$id$id)
@@ -263,7 +263,7 @@ RDML <- R6Class("RDML",
                   dye = function(dye) {
                     if (missing(dye))
                       return(private$.dye)
-                    assertList(dye, "dyeType")
+                    assertList(dye, "dyeType", unique = TRUE)
                     private$.dye <- 
                       list.names(dye,
                                  .$id$id)
@@ -272,7 +272,7 @@ RDML <- R6Class("RDML",
                   sample = function(sample) {
                     if (missing(sample))
                       return(private$.sample)
-                    assertList(sample, "sampleType")
+                    assertList(sample, "sampleType", unique = TRUE)
                     private$.sample <- 
                       list.names(sample,
                                  .$id$id)
@@ -281,7 +281,7 @@ RDML <- R6Class("RDML",
                   target = function(target) {
                     if (missing(target))
                       return(private$.target)
-                    assertList(target, "targetType")
+                    assertList(target, "targetType", unique = TRUE)
                     private$.target <- 
                       list.names(target,
                                  .$id$id)
@@ -290,7 +290,9 @@ RDML <- R6Class("RDML",
                   thermalCyclingConditions = function(thermalCyclingConditions) {
                     if (missing(thermalCyclingConditions))
                       return(private$.thermalCyclingConditions)
-                    assertList(thermalCyclingConditions, "thermalCyclingConditionsType")
+                    assertList(thermalCyclingConditions,
+                               "thermalCyclingConditionsType",
+                               unique = TRUE)
                     private$.thermalCyclingConditions <- 
                       list.names(thermalCyclingConditions,
                                  .$id$id)
@@ -299,12 +301,30 @@ RDML <- R6Class("RDML",
                   experiment = function(experiment) {
                     if (missing(experiment))
                       return(private$.experiment)
-                    assertList(experiment, "experimentType")
+                    assertList(experiment, "experimentType", unique = TRUE)
                     private$.experiment <- list.names(experiment,
                                                       .$id$id)
                   }
                   
                 )
 )
+
+#' Extract data points from \code{RDML} object
+#' 
+#' Extract data points from \code{RDML} object as.data.frame.
+#' 
+#' @param x \code{RDML} object.
+#' @param i,j indices.
+#' @param dp.type Type of fluorescence data (i.e. 'adp' for qPCR or 'mdp' for
+#'   melting).
+#' 
+#' @docType methods
+#' @keywords manip
+#' @name [.GetFData
+#' @rdname extractdatapoints-method
+#' @export
+"[.RDML" <- function(x, i, j, dp.type = "adp") {
+  as.data.frame(x$GetFData(x$AsTable(), dp.type = dp.type))[i, j]
+}
 
 utils::globalVariables(c("."))

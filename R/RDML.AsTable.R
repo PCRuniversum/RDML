@@ -26,6 +26,7 @@
 #' @param .default \code{list} of default columns
 #' @param name.pattern expression to form \code{fdata.name} (see Examples)
 #' @param add.columns \code{list} of additional columns
+#' @param treat.null.as.na if value is \code{NULL} then convert it to \code{NA}. Helps to deal with incomplete records.
 #' @param ... additional columns
 #' @author Konstantin A. Blagodatskikh <k.blag@@yandex.ru>, Stefan Roediger
 #'   <stefan.roediger@@b-tu.de>, Michal Burdukiewicz
@@ -88,6 +89,7 @@ RDML$set("public", "AsTable",
              data$tar$id,
              sep = "_"),
            add.columns = list(),
+           treat.null.as.na = FALSE,
            ...) {
            # create short names
            dateMade <- private$.dateMade
@@ -101,7 +103,7 @@ RDML$set("public", "AsTable",
            thermalCyclingConditions <- private$.thermalCyclingConditions
            # dilutions <- private$.dilutions
            # conditions <- private$.conditions
-
+           
            nrows <- 0
            for (experiment in private$.experiment) {
              if (!grepl("^\\.", experiment$id$id)) {
@@ -130,6 +132,9 @@ RDML$set("public", "AsTable",
                      list.iter(
                        names(result),
                        name ~ {
+                         if (is.null(result[[name]]) && treat.null.as.na) {
+                           result[[name]] <- NA
+                         }
                          if (!is.null(result[[name]])) {
                            tryCatch(
                              set(out, i, name,
