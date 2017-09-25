@@ -46,6 +46,9 @@ Collate:
     'rdmlEdit.R'
 Suggests:
     chipPCR,
+    magrittr,
+    reshape2,
+    qpcR,
     dplyr,
     ggplot2,
     knitr,

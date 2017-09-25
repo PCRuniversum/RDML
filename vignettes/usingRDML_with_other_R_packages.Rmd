@@ -131,8 +131,7 @@ library(magrittr)
 library(qpcR)
 res_fit <- do.call(cbind, lapply(2L:ncol(fdata), function(block_column) {
     
-    res_model <- try(mselect(pcrfit(data=fdata, cyc=1, fluo=block_column), do.all=TRUE), 
-                     silent=TRUE)
+    res_model <- try(mselect(pcrfit(data=fdata, cyc=1, fluo=block_column), verbose=FALSE, do.all=TRUE), silent=TRUE)
     if(res_model %>% class=="try-error") {
         res_model <- NA
     }
