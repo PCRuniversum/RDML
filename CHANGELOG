@@ -1,3 +1,7 @@
+Changes from Version 0.9-8 to 0.9-9 [September 25 2017]
+* introduced shortcut copy() for clone(deep = TRUE)
+* vignettes corrected
+
 Changes from Version 0.9-7 to 0.9-8 [September 05 2017]
 * CRAN and after publication version
 * as.character for ids added

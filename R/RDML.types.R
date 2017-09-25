@@ -116,6 +116,9 @@ rdmlBaseType <-
                       },
                       node.name)
             },
+            copy = function() {
+              self$clone(deep = TRUE)
+            },
             print = function(...) {
               elements <- names(private)[-which(names(private) ==
                                                   "deep_clone")] %>>% rev

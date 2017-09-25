@@ -146,15 +146,15 @@ sample$quantity$value
 
 ### Copying **RDML** objects
 
-**R6** objects are environments, that's why simple copying results in creating references to existing objects. Then modifying the copy leads to modification of the original object. To create a *real* copy of the object, we have to use method `$clone(deep = TRUE)` provided by the **R6** class.
+**R6** objects are environments, that's why simple copying results in creating references to existing objects. Then modifying the copy leads to modification of the original object. To create a *real* copy of the object, we have to use method `$clone(deep = TRUE)` provided by the **R6** class (or its shortcut `$copy()` inside **RDML** package).
 
 ```{r}
 id1 <- idType$new("id_1")
 id2 <- id1
-id3 <- id1$clone(deep = TRUE)
+id3 <- id1$copy()
 id2$id <- "id_2"
 id3$id <- "id_3"
-cat(sprintf("Original object\t: %s ('id_1' bacame 'id_2')\nSimple copy\t\t: %s\nClone\t\t\t: %s\n",
+cat(sprintf("Original object\t\t: %s ('id_1' became 'id_2')\nSimple copy\t\t\t: %s\n'Real' copy (clone)\t: %s\n",
             id1$id, id2$id, id3$id))
 ```
 
@@ -166,7 +166,7 @@ To modify the content of **RDML** objects, we can use fields as setters. These s
 
 ```{r}
 ## Create 'real' copy of object
-experiment <- lc96$experiment$`ca1eb225-ecea-4793-9804-87bfbb45f81d`$clone(deep = TRUE)
+experiment <- lc96$experiment$`ca1eb225-ecea-4793-9804-87bfbb45f81d`$copy()
 ## Try to set 'id' with wrong input type.
 ## Correct type 'idType' can be seen at error message.
 tryCatch(experiment$id <- "exp1",
@@ -176,7 +176,7 @@ tryCatch(experiment$id <- "exp1",
 experiment$id <- idType$new("exp1")
 
 ## Similar operations for 'run'
-run <- experiment$run$`65aeb1ec-b377-4ef6-b03f-92898d47488b`$clone(deep = TRUE)
+run <- experiment$run$`65aeb1ec-b377-4ef6-b03f-92898d47488b`$copy()
 run$id <- idType$new("run1")
 
 ## Replace original elements with modified
