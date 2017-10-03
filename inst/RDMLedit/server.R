@@ -2254,11 +2254,13 @@ shinyServer(function(input, output, session) {
           },
           hook = {
             hook <- sample[[react$sample$id]][["annotation"]][[sprintf("%s_hook", react$id$id)]]
-            if (is.null(hook)) {
-              ""
-            } else {
-              hook$value
-            }
+            as.logical(
+              if (is.null(hook)) {
+                NA
+              } else {
+                hook$value
+              }
+            )
           })
       )[get(input$mainNavbar) == TRUE &
           exp.id == input$showqPCRExperiment &

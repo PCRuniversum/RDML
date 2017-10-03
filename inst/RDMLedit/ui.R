@@ -599,7 +599,8 @@ shinyUI(
                                                  "Hook Detection Method",
                                                  c("None" = "none",
                                                    "hookreg" = "hookreg",
-                                                   "hookregNL" = "hookregNL")))
+                                                   "hookregNL" = "hookregNL",
+                                                   "both" = "Both")))
                             )
                           ))
                    # column(2,

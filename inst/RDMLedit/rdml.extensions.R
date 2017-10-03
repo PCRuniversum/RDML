@@ -72,18 +72,57 @@ dataType$set("public", "CalcCq",
 dataType$set("public",
              "DetectHook",
              function(hookDetectionMethod, sample, position) {
-               sample$annotation <- 
-                 c(sample$annotation, 
-                   annotationType$new(sprintf("%s_hookDetectionMethod",position),
-                                      hookDetectionMethod))
-               hookRes <- hookreg(x = self$adp$fpoints[["cyc"]],
-                                  y = self$adp$fpoints[["fluor"]])
-               print(hookRes)
-               print(position)
-               sample$annotation <- 
-                 c(sample$annotation, 
-                   annotationType$new(sprintf("%s_hook", position),
-                                      as.character(hookRes[["hook"]])))
+               
+               hookRes <- 
+                 if (hookDetectionMethod == "hookreg" || hookDetectionMethod == "both") {
+                   as.logical(hookreg(x = self$adp$fpoints[["cyc"]],
+                                      y = self$adp$fpoints[["fluor"]])[["hook"]])
+                 } else {
+                   FALSE
+                 }
+               hookNLRes <- 
+                 if (hookDetectionMethod == "hookregNL" || hookDetectionMethod == "both") {
+                   as.logical(hookreg(x = self$adp$fpoints[["cyc"]],
+                                      y = self$adp$fpoints[["fluor"]])[["hook"]])
+                 } else {
+                   FALSE
+                 }
+               
+               if (hookRes && hookNLRes) {
+                 sample$annotation <- 
+                   c(sample$annotation, 
+                     annotationType$new(sprintf("%s_hookDetectionMethod",position),
+                                        "both"))
+               } else {
+                 if (hookRes) {
+                   sample$annotation <- 
+                     c(sample$annotation, 
+                       annotationType$new(sprintf("%s_hookDetectionMethod",position),
+                                          "hookreg"))
+                 }
+                 if (hookNLRes) {
+                   sample$annotation <- 
+                     c(sample$annotation, 
+                       annotationType$new(sprintf("%s_hookDetectionMethod",position),
+                                          "hookregNL"))
+                 }
+               }
+               
+               if (hookRes || hookNLRes) {
+                 sample$annotation <- 
+                   c(sample$annotation, 
+                     annotationType$new(sprintf("%s_hook", position),
+                                        "TRUE"))
+               } else {
+                 sample$annotation <- 
+                   c(sample$annotation, 
+                     annotationType$new(sprintf("%s_hookDetectionMethod",position),
+                                        "hookDetectionMethod"))
+                 sample$annotation <- 
+                   c(sample$annotation, 
+                     annotationType$new(sprintf("%s_hook", position),
+                                        "FALSE"))
+               }
                ""
              },
              overwrite = TRUE)
