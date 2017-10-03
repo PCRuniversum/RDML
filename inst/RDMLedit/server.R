@@ -5,6 +5,7 @@ library(tools)
 library(pipeR)
 library(chipPCR)
 library(MBmca)
+library(PCRedux)
 library(dpcR)
 library(data.table)
 library(ggplot2)
@@ -2153,6 +2154,23 @@ shinyServer(function(input, output, session) {
         }, by = fdata.name]
   })
   
+  hookCalcsDone <- reactive({
+    req(preprocessAdpDone())
+    tbl <- values$rdml$AsTable()[adp == TRUE]
+    if (nrow(tbl) == 0 || input$hookMethod == "none"){
+      return(runif(1))
+    }
+    tbl[adp == TRUE,
+        {
+          values$rdml$experiment[[exp.id]]$
+            run[[run.id]]$
+            react[[as.character(react.id)]]$
+            data[[target]]$DetectHook(input$hookMethod,
+                                      values$rdml$sample[[sample]],
+                                      react.id)
+        }, by = fdata.name]
+  })
+  
   preprocessMdpDone <- reactive({
     if (is.null(values$rdml))
       return(NULL)
@@ -2201,7 +2219,8 @@ shinyServer(function(input, output, session) {
   
   rdmlTable <- reactive({
     # if (is.null(values$rdml) || !(input$mainNavbar %in% c("adp","mdp")))
-    if (is.null(cqCalcsDone()) || 
+    if (is.null(cqCalcsDone()) ||
+        is.null(hookCalcsDone()) || 
         is.null(preprocessMdpDone()) ||
         !(input$mainNavbar %in% c("adp","mdp")))
       return(NULL)
@@ -2231,6 +2250,14 @@ shinyServer(function(input, output, session) {
               }
             } else {
               quantFluor
+            }
+          },
+          hook = {
+            hook <- sample[[react$sample$id]][["annotation"]][[sprintf("%s_hook", react$id$id)]]
+            if (is.null(hook)) {
+              ""
+            } else {
+              hook$value
             }
           })
       )[get(input$mainNavbar) == TRUE &
@@ -2277,7 +2304,7 @@ shinyServer(function(input, output, session) {
       #"{{snamef}}</td>")
       descr <- tbl %>>%
         group_by(position) %>>%
-        summarise_each(funs(first)) %>>%
+        summarise_all(funs(first)) %>>%
         # left_join(calc.Cqs(c("tr"), values$preprocessed$tr %>>% names),
         #           by = "position") %>>%
         left_join(values$selectedTubes

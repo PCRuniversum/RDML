@@ -12,11 +12,11 @@ dataType$set("public", "PreprocessAdp",
                  self$rawAdp <- private$.adp$clone(deep = TRUE)
                }
                private$.adp$fpoints$fluor <- 
-                   CPP(self$rawAdp$fpoints$cyc,
-                       self$rawAdp$fpoints$fluor,
-                       smoother = smooth,
-                       method = smooth.method,
-                       method.norm = normqPCR.method)[[1]]
+                 CPP(self$rawAdp$fpoints$cyc,
+                     self$rawAdp$fpoints$fluor,
+                     smoother = smooth,
+                     method = smooth.method,
+                     method.norm = normqPCR.method)[[1]]
              },
              overwrite = TRUE)
 
@@ -66,6 +66,25 @@ dataType$set("public", "CalcCq",
                       })
                self$cq <- cq
                self$quantFluor <- quantFluor
+             },
+             overwrite = TRUE)
+
+dataType$set("public",
+             "DetectHook",
+             function(hookDetectionMethod, sample, position) {
+               sample$annotation <- 
+                 c(sample$annotation, 
+                   annotationType$new(sprintf("%s_hookDetectionMethod",position),
+                                      hookDetectionMethod))
+               hookRes <- hookreg(x = self$adp$fpoints[["cyc"]],
+                                  y = self$adp$fpoints[["fluor"]])
+               print(hookRes)
+               print(position)
+               sample$annotation <- 
+                 c(sample$annotation, 
+                   annotationType$new(sprintf("%s_hook", position),
+                                      as.character(hookRes[["hook"]])))
+               ""
              },
              overwrite = TRUE)
 
