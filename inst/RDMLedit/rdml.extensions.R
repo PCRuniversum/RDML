@@ -82,7 +82,7 @@ dataType$set("public",
                  }
                hookNLRes <- 
                  if (hookDetectionMethod == "hookregNL" || hookDetectionMethod == "both") {
-                   as.logical(hookreg(x = self$adp$fpoints[["cyc"]],
+                   as.logical(hookregNL(x = self$adp$fpoints[["cyc"]],
                                       y = self$adp$fpoints[["fluor"]])[["hook"]])
                  } else {
                    FALSE
