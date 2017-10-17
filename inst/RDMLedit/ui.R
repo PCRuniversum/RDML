@@ -25,10 +25,10 @@ shinyUI(
       {
         #Not WinXp
         extendShinyjs(script = "www/js/my_shinyjs_scripts.js")
-      },
-      includeScript("www/js/single_double_click.js"),
-      includeScript("www/js/scripts.js"),
-      includeCSS("www/css/styles.css")
+      }#,
+      # includeScript("www/js/single_double_click.js"),
+      # includeScript("www/js/scripts.js"),
+      # includeCSS("www/css/styles.css")
     ),
     tags$div(
       navbarPage(
