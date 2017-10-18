@@ -57,6 +57,7 @@ Suggests:
     shiny,
     shinyjs,
     shinythemes,
+    shinyMolBio,
     V8,
     testthat
 VignetteBuilder: knitr

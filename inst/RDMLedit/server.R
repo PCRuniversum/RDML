@@ -13,6 +13,7 @@ library(plotly)
 library(rlist)
 library(whisker)
 library(stringr)
+library(shinyMolBio)
 
 source("rdml.extensions.R")
 
@@ -30,9 +31,9 @@ testNull <- function(val) {
 
 
 shinyServer(function(input, output, session) {
-  session$onSessionEnded(function() {
-    stopApp()
-  })
+  # session$onSessionEnded(function() {
+  #   stopApp()
+  # })
   
   values <- reactiveValues(RDMLs = list(),
                            log = NULL)
@@ -2298,7 +2299,7 @@ shinyServer(function(input, output, session) {
     req(rdmlTable())
     # cat("Redraw plate\n")
     isolate({
-      pcrPlate::pcrPlateInput("mainPcrPlate", "",
+      pcrPlateInput("mainPcrPlate", "",
                               rdmlTable(),
                               values$rdml$experiment[[input$showqPCRExperiment]]$
                                 run[[input$showqPCRRun]]$pcrFormat)

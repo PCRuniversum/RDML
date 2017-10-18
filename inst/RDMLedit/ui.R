@@ -4,6 +4,7 @@ library(shinyjs)
 library(dplyr)
 library(ggvis)
 library(plotly)
+library(shinyMolBio)
 
 shinyUI(
   tags$html(
