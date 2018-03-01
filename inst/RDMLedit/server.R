@@ -14,6 +14,7 @@ library(rlist)
 library(whisker)
 library(stringr)
 library(shinyMolBio)
+library(tidyverse)
 
 source("rdml.extensions.R")
 

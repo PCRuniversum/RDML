@@ -1292,6 +1292,8 @@ RDML$set("public", "initialize", function(filename,
             )
           }
         }
+      }
+      for (run.i in 2:length(private$.experiment[[1]]$run)){
         private$.experiment[[1]]$run[[run.i]] <- NULL
       }
       private$.experiment[[1]]$run[[1]]$id <- idType$new("Combined Run")
