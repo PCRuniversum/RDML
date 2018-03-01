@@ -1293,7 +1293,8 @@ RDML$set("public", "initialize", function(filename,
           }
         }
       }
-      for (run.i in 2:length(private$.experiment[[1]]$run)){
+      # delete copied runs
+      for (run.i in length(private$.experiment[[1]]$run):2){
         private$.experiment[[1]]$run[[run.i]] <- NULL
       }
       private$.experiment[[1]]$run[[1]]$id <- idType$new("Combined Run")
