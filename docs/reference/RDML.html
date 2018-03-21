@@ -19,12 +19,29 @@ data from RDML v1.1 and v1.2 format files — RDML • RDML</title>
 <!-- Font Awesome icons -->
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
 
+<!-- clipboard.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
+<meta property="og:title" content="R6 class <code>RDML</code> -- contains methods to read and overview fluorescence 
+data from RDML v1.1 and v1.2 format files — RDML" />
 
+<meta property="og:description" content="This class is a container for RDML format data (Lefever et al. 
+2009). The data may be further transformed to the appropriate format of the 
+qpcR (Ritz et al. 2008, Spiess et al. 2008) and chipPCR 
+(Roediger et al. 2015) packages (see RDML.new for import details). 
+Real-time PCR Data Markup Language (RDML) is the recommended file format 
+element in the Minimum Information for Publication of Quantitative Real-Time 
+PCR Experiments (MIQE) guidelines (Bustin et al. 2009). The inner structure of 
+imported data faithfully reflects the structure of RDML file v1.2. All data with 
+the exception for fluorescence values can be represented as data.frame by 
+method AsTable. Such possibility of data representation streamlines 
+sample filtering (by targets, types, etc.) and serves as request for GetFData
+method, which extracts fluorescence data for specified samples." />
+<meta name="twitter:card" content="summary" />
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
 
@@ -52,10 +69,31 @@ data from RDML v1.1 and v1.2 format files — RDML • RDML</title>
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
-  <a href="../reference/index.html">Reference</a>
+  <a href="../index.html">
+    <span class="fa fa-home fa-lg"></span>
+     
+  </a>
 </li>
 <li>
-  <a href="../articles/index.html">Articles</a>
+  <a href="../articles/RDML.html">Get Started</a>
+</li>
+<li>
+  <a href="../reference/index.html">Reference</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Articles
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/CreateRDML.html">UNKNOWN TITLE</a>
+    </li>
+    <li>
+      <a href="../articles/usingRDML_with_other_R_packages.html">Using RDML with other R packages</a>
+    </li>
+  </ul>
 </li>
       </ul>
       
@@ -79,6 +117,7 @@ data from RDML v1.1 and v1.2 format files — RDML • RDML</title>
     <div class="page-header">
     <h1>R6 class <code>RDML</code> -- contains methods to read and overview fluorescence 
 data from RDML v1.1 and v1.2 format files</h1>
+    <small>Source: <a href='https://github.com/kablag/RDML/blob/master/R/RDML.R'><code>R/RDML.R</code></a></small>
     </div>
 
     
@@ -123,26 +162,26 @@ method, which extracts fluorescence data for specified samples.</p>
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
     <p>RDML format http://www.rdml.org/ <code>R6</code> package 
-  http://cran.r-project.org/web/packages/R6/index.html
-    <code>qpcR</code> package http://cran.r-project.org/web/packages/qpcR/index.html
-    <code>chipPCR</code> package: 
-  http://cran.r-project.org/web/packages/chipPCR/index.html
-    Roediger S, Burdukiewicz M and Schierack P (2015). chipPCR: an R Package 
+  http://cran.r-project.org/web/packages/R6/index.html</p>  
+<p><code>qpcR</code> package http://cran.r-project.org/web/packages/qpcR/index.html</p>  
+<p><code>chipPCR</code> package: 
+  http://cran.r-project.org/web/packages/chipPCR/index.html</p>  
+<p>Roediger S, Burdukiewicz M and Schierack P (2015). chipPCR: an R Package 
   to Pre-Process Raw Data of Amplification Curves. <em>Bioinformatics</em> first 
-  published online April 24, 2015 doi:10.1093/bioinformatics/btv205
-    Ritz, C., Spiess, A.-N., 2008. qpcR: an R package for sigmoidal model 
+  published online April 24, 2015 doi:10.1093/bioinformatics/btv205</p>  
+<p>Ritz, C., Spiess, A.-N., 2008. qpcR: an R package for sigmoidal model 
   selection in quantitative real-time polymerase chain reaction analysis. 
   <em>Bioinformatics</em> 24, 1549--1551. 
-  doi:10.1093/bioinformatics/btn227
-    Spiess, A.-N., Feig, C., Ritz, C., 2008. Highly accurate sigmoidal fitting 
+  doi:10.1093/bioinformatics/btn227</p>  
+<p>Spiess, A.-N., Feig, C., Ritz, C., 2008. Highly accurate sigmoidal fitting 
   of real-time PCR data by introducing a parameter for asymmetry. <em>BMC 
-  Bioinformatics</em> 9, 221. doi:10.1186/1471-2105-9-221
-    Bustin, S.A., Benes, V., Garson, J.A., Hellemans, J., Huggett, J., Kubista,
+  Bioinformatics</em> 9, 221. doi:10.1186/1471-2105-9-221</p>  
+<p>Bustin, S.A., Benes, V., Garson, J.A., Hellemans, J., Huggett, J., Kubista,
   M., Mueller, R., Nolan, T., Pfaffl, M.W., Shipley, G.L., Vandesompele, J., 
   Wittwer, C.T., 2009. The MIQE guidelines: minimum information for 
   publication of quantitative real-time PCR experiments. <em>Clin. Chem.</em> 
-  55, 611--622.  doi:10.1373/clinchem.2008.112797
-    Lefever, S., Hellemans, J., Pattyn, F., Przybylski, D.R., Taylor, C., 
+  55, 611--622.  doi:10.1373/clinchem.2008.112797</p>  
+<p>Lefever, S., Hellemans, J., Pattyn, F., Przybylski, D.R., Taylor, C., 
   Geurts, R., Untergasser, A., Vandesompele, J., RDML consortium, 2009. RDML:
   structured language and reporting guidelines for real-time quantitative PCR
   data.  <em>Nucleic Acids Res.</em> 37, 2065--2069. doi:10.1093/nar/gkp056</p>
@@ -162,92 +201,90 @@ method, which extracts fluorescence data for specified samples.</p>
                     <span class='kw'>quantity</span> <span class='kw'>=</span> <span class='no'>sample</span><span class='kw'>[[</span><span class='no'>react</span>$<span class='no'>sample</span>$<span class='no'>id</span>]]$<span class='no'>quantity</span>$<span class='no'>value</span>)</div><div class='output co'>#&gt; <span class='error'>Error in eval(expr, envir, enclos): object 'lc96' not found</span></div><div class='input'><span class='co'>## Show dyes names</span>
 <span class='fu'>unique</span>(<span class='no'>tab</span>$<span class='no'>target.dyeId</span>)</div><div class='output co'>#&gt; <span class='error'>Error in unique(tab$target.dyeId): object 'tab' not found</span></div><div class='input'><span class='co'>## Show types of the samples for dye 'FAM'</span>
 <span class='fu'>library</span>(<span class='no'>dplyr</span>)
-<span class='fu'>unique</span>(<span class='fu'>filter</span>(<span class='no'>tab</span>, <span class='no'>target.dyeId</span> <span class='kw'>==</span> <span class='st'>"FAM"</span>)$<span class='no'>sample.type</span>)</div><div class='output co'>#&gt; <span class='error'>Error in filter(tab, target.dyeId == "FAM"): object 'tab' not found</span></div><div class='input'>
-<span class='co'>## Show template quantities for dye 'FAM' type 'std'#' </span>
-<span class='fu'>not_run</span>({
-  <span class='no'>COPIES</span> <span class='kw'>&lt;-</span> <span class='fu'>filter</span>(<span class='no'>tab</span>, <span class='no'>target.dyeId</span> <span class='kw'>==</span> <span class='st'>"FAM"</span>, <span class='no'>sample.type</span> <span class='kw'>==</span> <span class='st'>"std"</span>)$<span class='no'>quantity</span>
-  <span class='co'>## Define calibration curves (type of the samples - 'std').</span>
-  <span class='co'>## No replicates.</span>
-  <span class='fu'>library</span>(<span class='no'>qpcR</span>)
-  <span class='no'>CAL</span> <span class='kw'>&lt;-</span> <span class='fu'>modlist</span>(<span class='no'>lc96</span>$<span class='fu'><a href='GetFData-function.html'>GetFData</a></span>(<span class='fu'>filter</span>(<span class='no'>tab</span>,
-                                      <span class='no'>target.dyeId</span> <span class='kw'>==</span> <span class='st'>"FAM"</span>,
-                                      <span class='no'>sample.type</span> <span class='kw'>==</span> <span class='st'>"std"</span>)),
-                 <span class='kw'>baseline</span><span class='kw'>=</span><span class='st'>"lin"</span>, <span class='kw'>basecyc</span><span class='kw'>=</span><span class='fl'>8</span>:<span class='fl'>15</span>)
-  <span class='co'>## Define samples to predict (first two samples with the type - 'unkn').</span>
-  <span class='no'>PRED</span> <span class='kw'>&lt;-</span> <span class='fu'>modlist</span>(<span class='no'>lc96</span>$<span class='fu'><a href='GetFData-function.html'>GetFData</a></span>(<span class='fu'>filter</span>(<span class='no'>tab</span>,
-                                      <span class='no'>target.dyeId</span> <span class='kw'>==</span> <span class='st'>"FAM"</span>,
-                                      <span class='no'>sample.type</span> <span class='kw'>==</span> <span class='st'>"unkn"</span>)),
-                 <span class='kw'>baseline</span><span class='kw'>=</span><span class='st'>"lin"</span>, <span class='kw'>basecyc</span><span class='kw'>=</span><span class='fl'>8</span>:<span class='fl'>15</span>)
-  <span class='co'>## Conduct quantification.</span>
-  <span class='fu'>calib</span>(<span class='kw'>refcurve</span> <span class='kw'>=</span> <span class='no'>CAL</span>, <span class='kw'>predcurve</span> <span class='kw'>=</span> <span class='no'>PRED</span>, <span class='kw'>thresh</span> <span class='kw'>=</span> <span class='st'>"cpD2"</span>,
-        <span class='kw'>dil</span> <span class='kw'>=</span> <span class='no'>COPIES</span>)
+<span class='fu'>unique</span>(<span class='fu'><a href='http://dplyr.tidyverse.org/reference/filter.html'>filter</a></span>(<span class='no'>tab</span>, <span class='no'>target.dyeId</span> <span class='kw'>==</span> <span class='st'>"FAM"</span>)$<span class='no'>sample.type</span>)</div><div class='output co'>#&gt; <span class='error'>Error in filter(tab, target.dyeId == "FAM"): object 'tab' not found</span></div><div class='input'>
+## Show template quantities for dye 'FAM' type 'std'#' 
+</div><span class='co'># NOT RUN {</span>
+<span class='no'>COPIES</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='http://dplyr.tidyverse.org/reference/filter.html'>filter</a></span>(<span class='no'>tab</span>, <span class='no'>target.dyeId</span> <span class='kw'>==</span> <span class='st'>"FAM"</span>, <span class='no'>sample.type</span> <span class='kw'>==</span> <span class='st'>"std"</span>)$<span class='no'>quantity</span>
+<span class='co'>## Define calibration curves (type of the samples - 'std').</span>
+<span class='co'>## No replicates.</span>
+<span class='fu'>library</span>(<span class='no'>qpcR</span>)
+<span class='no'>CAL</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='http://www.rdocumentation.org/packages/qpcR/topics/modlist'>modlist</a></span>(<span class='no'>lc96</span>$<span class='fu'><a href='GetFData-function.html'>GetFData</a></span>(<span class='fu'><a href='http://dplyr.tidyverse.org/reference/filter.html'>filter</a></span>(<span class='no'>tab</span>,
+                                    <span class='no'>target.dyeId</span> <span class='kw'>==</span> <span class='st'>"FAM"</span>,
+                                    <span class='no'>sample.type</span> <span class='kw'>==</span> <span class='st'>"std"</span>)),
+               <span class='kw'>baseline</span><span class='kw'>=</span><span class='st'>"lin"</span>, <span class='kw'>basecyc</span><span class='kw'>=</span><span class='fl'>8</span>:<span class='fl'>15</span>)
+<span class='co'>## Define samples to predict (first two samples with the type - 'unkn').</span>
+<span class='no'>PRED</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='http://www.rdocumentation.org/packages/qpcR/topics/modlist'>modlist</a></span>(<span class='no'>lc96</span>$<span class='fu'><a href='GetFData-function.html'>GetFData</a></span>(<span class='fu'><a href='http://dplyr.tidyverse.org/reference/filter.html'>filter</a></span>(<span class='no'>tab</span>,
+                                    <span class='no'>target.dyeId</span> <span class='kw'>==</span> <span class='st'>"FAM"</span>,
+                                    <span class='no'>sample.type</span> <span class='kw'>==</span> <span class='st'>"unkn"</span>)),
+               <span class='kw'>baseline</span><span class='kw'>=</span><span class='st'>"lin"</span>, <span class='kw'>basecyc</span><span class='kw'>=</span><span class='fl'>8</span>:<span class='fl'>15</span>)
+<span class='co'>## Conduct quantification.</span>
+<span class='fu'><a href='http://www.rdocumentation.org/packages/qpcR/topics/calib'>calib</a></span>(<span class='kw'>refcurve</span> <span class='kw'>=</span> <span class='no'>CAL</span>, <span class='kw'>predcurve</span> <span class='kw'>=</span> <span class='no'>PRED</span>, <span class='kw'>thresh</span> <span class='kw'>=</span> <span class='st'>"cpD2"</span>,
+      <span class='kw'>dil</span> <span class='kw'>=</span> <span class='no'>COPIES</span>)
+<span class='co'># }</span><span class='co'># NOT RUN {</span>
+<span class='co'>## EXAMPLE 2:</span>
+<span class='co'>## internal dataset lc96_bACTXY.rdml (in 'data' directory)</span>
+<span class='co'>## generated by Roche LightCycler 96. Contains qPCR data</span>
+<span class='co'>## with four targets and two types.</span>
+<span class='co'>## Import with default settings.</span>
+<span class='fu'>library</span>(<span class='no'>chipPCR</span>)
+<span class='no'>PATH</span> <span class='kw'>&lt;-</span> <span class='fu'>path.package</span>(<span class='st'>"RDML"</span>)
+<span class='no'>filename</span> <span class='kw'>&lt;-</span> <span class='fu'>paste</span>(<span class='no'>PATH</span>, <span class='st'>"/extdata/"</span>, <span class='st'>"lc96_bACTXY.rdml"</span>, <span class='kw'>sep</span> <span class='kw'>=</span><span class='st'>""</span>)
+<span class='no'>lc96</span> <span class='kw'>&lt;-</span> <span class='no'>RDML</span>$<span class='fu'><a href='new-method.html'>new</a></span>(<span class='no'>filename</span>)
+
+<span class='no'>tab</span> <span class='kw'>&lt;-</span> <span class='no'>lc96</span>$<span class='fu'><a href='astable-function.html'>AsTable</a></span>(<span class='kw'>name.pattern</span> <span class='kw'>=</span> <span class='fu'>paste</span>(<span class='no'>sample</span><span class='kw'>[[</span><span class='no'>react</span>$<span class='no'>sample</span>$<span class='no'>id</span>]]$<span class='no'>description</span>,
+                                         <span class='no'>react</span>$<span class='no'>id</span>$<span class='no'>id</span>),
+                    <span class='kw'>quantity</span> <span class='kw'>=</span> <span class='no'>sample</span><span class='kw'>[[</span><span class='no'>react</span>$<span class='no'>sample</span>$<span class='no'>id</span>]]$<span class='no'>quantity</span>$<span class='no'>value</span>)
+<span class='co'>## Show targets names</span>
+<span class='fu'>unique</span>(<span class='no'>tab</span>$<span class='no'>target</span>)
+<span class='co'>## Fetch cycle dependent fluorescence for HEX chanel</span>
+<span class='no'>tmp</span> <span class='kw'>&lt;-</span> <span class='no'>lc96</span>$<span class='fu'><a href='GetFData-function.html'>GetFData</a></span>(<span class='fu'><a href='http://dplyr.tidyverse.org/reference/filter.html'>filter</a></span>(<span class='no'>tab</span>, <span class='no'>target</span> <span class='kw'>==</span> <span class='st'>"bACT"</span>, <span class='no'>sample.type</span> <span class='kw'>==</span> <span class='st'>"std"</span>))
+<span class='co'>## Fetch vector of dillutions </span>
+<span class='no'>dilution</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='http://dplyr.tidyverse.org/reference/filter.html'>filter</a></span>(<span class='no'>tab</span>, <span class='no'>target.dyeId</span> <span class='kw'>==</span> <span class='st'>"FAM"</span>, <span class='no'>sample.type</span> <span class='kw'>==</span> <span class='st'>"std"</span>)$<span class='no'>quantity</span>
+
+<span class='co'>## Use plotCurves function from the chipPCR package to </span>
+<span class='co'>## get an overview of the amplification curves</span>
+<span class='fu'><a href='http://www.rdocumentation.org/packages/chipPCR/topics/plotCurves'>plotCurves</a></span>(<span class='no'>tmp</span>[,<span class='fl'>1</span>], <span class='no'>tmp</span>[,-<span class='fl'>1</span>])
+<span class='fu'>par</span>(<span class='kw'>mfrow</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>1</span>,<span class='fl'>1</span>))
+<span class='co'>## Use inder function from the chipPCR package to </span>
+<span class='co'>## calculate the Cq (second derivative maximum, SDM)</span>
+<span class='no'>SDMout</span> <span class='kw'>&lt;-</span> <span class='fu'>sapply</span>(<span class='fl'>2L</span>:<span class='fu'>ncol</span>(<span class='no'>tmp</span>), <span class='kw'>function</span>(<span class='no'>i</span>) {
+  <span class='no'>SDM</span> <span class='kw'>&lt;-</span> <span class='fu'>summary</span>(<span class='fu'><a href='http://www.rdocumentation.org/packages/chipPCR/topics/inder'>inder</a></span>(<span class='no'>tmp</span>[, <span class='fl'>1</span>], <span class='no'>tmp</span>[, <span class='no'>i</span>]), <span class='kw'>print</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)[<span class='fl'>2</span>]
 })
-<span class='fu'>not_run</span>({
-  <span class='co'>## EXAMPLE 2:</span>
-  <span class='co'>## internal dataset lc96_bACTXY.rdml (in 'data' directory)</span>
-  <span class='co'>## generated by Roche LightCycler 96. Contains qPCR data</span>
-  <span class='co'>## with four targets and two types.</span>
-  <span class='co'>## Import with default settings.</span>
-  <span class='fu'>library</span>(<span class='no'>chipPCR</span>)
-  <span class='no'>PATH</span> <span class='kw'>&lt;-</span> <span class='fu'>path.package</span>(<span class='st'>"RDML"</span>)
-  <span class='no'>filename</span> <span class='kw'>&lt;-</span> <span class='fu'>paste</span>(<span class='no'>PATH</span>, <span class='st'>"/extdata/"</span>, <span class='st'>"lc96_bACTXY.rdml"</span>, <span class='kw'>sep</span> <span class='kw'>=</span><span class='st'>""</span>)
-  <span class='no'>lc96</span> <span class='kw'>&lt;-</span> <span class='no'>RDML</span>$<span class='fu'><a href='new-method.html'>new</a></span>(<span class='no'>filename</span>)
 
-  <span class='no'>tab</span> <span class='kw'>&lt;-</span> <span class='no'>lc96</span>$<span class='fu'><a href='astable-function.html'>AsTable</a></span>(<span class='kw'>name.pattern</span> <span class='kw'>=</span> <span class='fu'>paste</span>(<span class='no'>sample</span><span class='kw'>[[</span><span class='no'>react</span>$<span class='no'>sample</span>$<span class='no'>id</span>]]$<span class='no'>description</span>,
-                                           <span class='no'>react</span>$<span class='no'>id</span>$<span class='no'>id</span>),
-                      <span class='kw'>quantity</span> <span class='kw'>=</span> <span class='no'>sample</span><span class='kw'>[[</span><span class='no'>react</span>$<span class='no'>sample</span>$<span class='no'>id</span>]]$<span class='no'>quantity</span>$<span class='no'>value</span>)
-  <span class='co'>## Show targets names</span>
-  <span class='fu'>unique</span>(<span class='no'>tab</span>$<span class='no'>target</span>)
-  <span class='co'>## Fetch cycle dependent fluorescence for HEX chanel</span>
-  <span class='no'>tmp</span> <span class='kw'>&lt;-</span> <span class='no'>lc96</span>$<span class='fu'><a href='GetFData-function.html'>GetFData</a></span>(<span class='fu'>filter</span>(<span class='no'>tab</span>, <span class='no'>target</span> <span class='kw'>==</span> <span class='st'>"bACT"</span>, <span class='no'>sample.type</span> <span class='kw'>==</span> <span class='st'>"std"</span>))
-  <span class='co'>## Fetch vector of dillutions </span>
-  <span class='no'>dilution</span> <span class='kw'>&lt;-</span> <span class='fu'>filter</span>(<span class='no'>tab</span>, <span class='no'>target.dyeId</span> <span class='kw'>==</span> <span class='st'>"FAM"</span>, <span class='no'>sample.type</span> <span class='kw'>==</span> <span class='st'>"std"</span>)$<span class='no'>quantity</span>
+<span class='co'>## Use the effcalc function from the chipPCR package and </span>
+<span class='co'>## plot the results for the calculation of the amplification</span>
+<span class='co'>## efficiency analysis.</span>
+<span class='fu'>plot</span>(<span class='fu'><a href='http://www.rdocumentation.org/packages/chipPCR/topics/effcalc'>effcalc</a></span>(<span class='no'>dilution</span>, <span class='no'>SDMout</span>), <span class='kw'>CI</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+<span class='co'># }</span><span class='co'># NOT RUN {</span>
+<span class='co'>## EXAMPLE 3:</span>
+<span class='co'>## internal dataset BioRad_qPCR_melt.rdml (in 'data' directory)</span>
+<span class='co'>## generated by Bio-Rad CFX96. Contains qPCR and melting data.</span>
+<span class='co'>## Import with custom name pattern.</span>
+<span class='no'>PATH</span> <span class='kw'>&lt;-</span> <span class='fu'>path.package</span>(<span class='st'>"RDML"</span>)
+<span class='no'>filename</span> <span class='kw'>&lt;-</span> <span class='fu'>paste</span>(<span class='no'>PATH</span>, <span class='st'>"/extdata/"</span>, <span class='st'>"BioRad_qPCR_melt.rdml"</span>, <span class='kw'>sep</span> <span class='kw'>=</span><span class='st'>""</span>)
+<span class='no'>cfx96</span> <span class='kw'>&lt;-</span> <span class='no'>RDML</span>$<span class='fu'><a href='new-method.html'>new</a></span>(<span class='no'>filename</span>)
+<span class='co'>## Use plotCurves function from the chipPCR package to </span>
+<span class='co'>## get an overview of the amplification curves</span>
+<span class='fu'>library</span>(<span class='no'>chipPCR</span>)
+<span class='co'>## Extract all qPCR data </span>
+<span class='no'>tab</span> <span class='kw'>&lt;-</span> <span class='no'>cfx96</span>$<span class='fu'><a href='astable-function.html'>AsTable</a></span>()
+<span class='no'>cfx96.qPCR</span> <span class='kw'>&lt;-</span> <span class='no'>cfx96</span>$<span class='fu'><a href='GetFData-function.html'>GetFData</a></span>(<span class='no'>tab</span>)
+<span class='fu'><a href='http://www.rdocumentation.org/packages/chipPCR/topics/plotCurves'>plotCurves</a></span>(<span class='no'>cfx96.qPCR</span>[,<span class='fl'>1</span>], <span class='no'>cfx96.qPCR</span>[,-<span class='fl'>1</span>], <span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"l"</span>)
 
-  <span class='co'>## Use plotCurves function from the chipPCR package to </span>
-  <span class='co'>## get an overview of the amplification curves</span>
-  <span class='fu'>plotCurves</span>(<span class='no'>tmp</span>[,<span class='fl'>1</span>], <span class='no'>tmp</span>[,-<span class='fl'>1</span>])
-  <span class='fu'>par</span>(<span class='kw'>mfrow</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>1</span>,<span class='fl'>1</span>))
-  <span class='co'>## Use inder function from the chipPCR package to </span>
-  <span class='co'>## calculate the Cq (second derivative maximum, SDM)</span>
-  <span class='no'>SDMout</span> <span class='kw'>&lt;-</span> <span class='fu'>sapply</span>(<span class='fl'>2L</span>:<span class='fu'>ncol</span>(<span class='no'>tmp</span>), <span class='kw'>function</span>(<span class='no'>i</span>) {
-    <span class='no'>SDM</span> <span class='kw'>&lt;-</span> <span class='fu'>summary</span>(<span class='fu'>inder</span>(<span class='no'>tmp</span>[, <span class='fl'>1</span>], <span class='no'>tmp</span>[, <span class='no'>i</span>]), <span class='kw'>print</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)[<span class='fl'>2</span>]
-  })
-
-  <span class='co'>## Use the effcalc function from the chipPCR package and </span>
-  <span class='co'>## plot the results for the calculation of the amplification</span>
-  <span class='co'>## efficiency analysis.</span>
-  <span class='fu'>plot</span>(<span class='fu'>effcalc</span>(<span class='no'>dilution</span>, <span class='no'>SDMout</span>), <span class='kw'>CI</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
-})
-<span class='fu'>not_run</span>({
-  <span class='co'>## EXAMPLE 3:</span>
-  <span class='co'>## internal dataset BioRad_qPCR_melt.rdml (in 'data' directory)</span>
-  <span class='co'>## generated by Bio-Rad CFX96. Contains qPCR and melting data.</span>
-  <span class='co'>## Import with custom name pattern.</span>
-  <span class='no'>PATH</span> <span class='kw'>&lt;-</span> <span class='fu'>path.package</span>(<span class='st'>"RDML"</span>)
-  <span class='no'>filename</span> <span class='kw'>&lt;-</span> <span class='fu'>paste</span>(<span class='no'>PATH</span>, <span class='st'>"/extdata/"</span>, <span class='st'>"BioRad_qPCR_melt.rdml"</span>, <span class='kw'>sep</span> <span class='kw'>=</span><span class='st'>""</span>)
-  <span class='no'>cfx96</span> <span class='kw'>&lt;-</span> <span class='no'>RDML</span>$<span class='fu'><a href='new-method.html'>new</a></span>(<span class='no'>filename</span>)
-  <span class='co'>## Use plotCurves function from the chipPCR package to </span>
-  <span class='co'>## get an overview of the amplification curves</span>
-  <span class='fu'>library</span>(<span class='no'>chipPCR</span>)
-  <span class='co'>## Extract all qPCR data </span>
-  <span class='no'>tab</span> <span class='kw'>&lt;-</span> <span class='no'>cfx96</span>$<span class='fu'><a href='astable-function.html'>AsTable</a></span>()
-  <span class='no'>cfx96.qPCR</span> <span class='kw'>&lt;-</span> <span class='no'>cfx96</span>$<span class='fu'><a href='GetFData-function.html'>GetFData</a></span>(<span class='no'>tab</span>)
-  <span class='fu'>plotCurves</span>(<span class='no'>cfx96.qPCR</span>[,<span class='fl'>1</span>], <span class='no'>cfx96.qPCR</span>[,-<span class='fl'>1</span>], <span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"l"</span>)
-
-  <span class='co'>## Extract all melting data </span>
-  <span class='no'>cfx96.melt</span> <span class='kw'>&lt;-</span> <span class='no'>cfx96</span>$<span class='fu'><a href='GetFData-function.html'>GetFData</a></span>(<span class='no'>tab</span>, <span class='kw'>dp.type</span> <span class='kw'>=</span> <span class='st'>"mdp"</span>)
-  <span class='co'>## Show some generated names for samples.</span>
-  <span class='fu'>colnames</span>(<span class='no'>cfx96.melt</span>)[<span class='fl'>2L</span>:<span class='fl'>5</span>]
-  <span class='co'>## Select columns that contain</span>
-  <span class='co'>## samples with dye 'EvaGreen' and have type 'pos'</span>
-  <span class='co'>## using filtering by names.</span>
-  <span class='no'>cols</span> <span class='kw'>&lt;-</span> <span class='no'>cfx96</span>$<span class='fu'><a href='GetFData-function.html'>GetFData</a></span>(<span class='fu'>filter</span>(<span class='no'>tab</span>, <span class='fu'>grepl</span>(<span class='st'>"pos_EvaGreen$"</span>, <span class='no'>fdata.name</span>)),
-                         <span class='kw'>dp.type</span> <span class='kw'>=</span> <span class='st'>"mdp"</span>)
-  <span class='co'>## Conduct melting curve analysis.</span>
-  <span class='fu'>library</span>(<span class='no'>qpcR</span>)
-  <span class='fu'>invisible</span>(<span class='fu'>meltcurve</span>(<span class='no'>cols</span>, <span class='kw'>fluos</span> <span class='kw'>=</span> <span class='fl'>2</span>:<span class='fu'>ncol</span>(<span class='no'>cols</span>),
-            <span class='kw'>temps</span> <span class='kw'>=</span> <span class='fu'>rep</span>(<span class='fl'>1</span>, <span class='fu'>ncol</span>(<span class='no'>cols</span>) - <span class='fl'>1</span>)))
-})</div></pre>
+<span class='co'>## Extract all melting data </span>
+<span class='no'>cfx96.melt</span> <span class='kw'>&lt;-</span> <span class='no'>cfx96</span>$<span class='fu'><a href='GetFData-function.html'>GetFData</a></span>(<span class='no'>tab</span>, <span class='kw'>dp.type</span> <span class='kw'>=</span> <span class='st'>"mdp"</span>)
+<span class='co'>## Show some generated names for samples.</span>
+<span class='fu'>colnames</span>(<span class='no'>cfx96.melt</span>)[<span class='fl'>2L</span>:<span class='fl'>5</span>]
+<span class='co'>## Select columns that contain</span>
+<span class='co'>## samples with dye 'EvaGreen' and have type 'pos'</span>
+<span class='co'>## using filtering by names.</span>
+<span class='no'>cols</span> <span class='kw'>&lt;-</span> <span class='no'>cfx96</span>$<span class='fu'><a href='GetFData-function.html'>GetFData</a></span>(<span class='fu'><a href='http://dplyr.tidyverse.org/reference/filter.html'>filter</a></span>(<span class='no'>tab</span>, <span class='fu'>grepl</span>(<span class='st'>"pos_EvaGreen$"</span>, <span class='no'>fdata.name</span>)),
+                       <span class='kw'>dp.type</span> <span class='kw'>=</span> <span class='st'>"mdp"</span>)
+<span class='co'>## Conduct melting curve analysis.</span>
+<span class='fu'>library</span>(<span class='no'>qpcR</span>)
+<span class='fu'>invisible</span>(<span class='fu'><a href='http://www.rdocumentation.org/packages/qpcR/topics/meltcurve'>meltcurve</a></span>(<span class='no'>cols</span>, <span class='kw'>fluos</span> <span class='kw'>=</span> <span class='fl'>2</span>:<span class='fu'>ncol</span>(<span class='no'>cols</span>),
+          <span class='kw'>temps</span> <span class='kw'>=</span> <span class='fu'>rep</span>(<span class='fl'>1</span>, <span class='fu'>ncol</span>(<span class='no'>cols</span>) - <span class='fl'>1</span>)))
+<span class='co'># }</span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
@@ -275,11 +312,11 @@ Konstantin A. Blagodatskikh &lt;k.blag@yandex.ru&gt;, Stefan Roediger
 
       <footer>
       <div class="copyright">
-  <p>Developed by Konstantin A. Blagodatskikh, Stefan Roediger, Michal Burdukiewicz.</p>
+  <p>Developed by Konstantin A. Blagodatskikh, Stefan Roediger, Michal Burdukiewicz, Andrej-Nikolai Spiess.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="http://hadley.github.io/pkgdown/">pkgdown</a>.</p>
+  <p>Site built with <a href="http://pkgdown.r-lib.org/">pkgdown</a>.</p>
 </div>
 
       </footer>
@@ -287,3 +324,4 @@ Konstantin A. Blagodatskikh &lt;k.blag@yandex.ru&gt;, Stefan Roediger
 
   </body>
 </html>
+

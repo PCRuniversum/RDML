@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>baseTemperatureType R6 class. — baseTemperatureType • RDML</title>
+<title>Convert <code>idType</code> object to <code>character</code> — as.character.idType • RDML</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -25,9 +25,9 @@
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
-<meta property="og:title" content="baseTemperatureType R6 class. — baseTemperatureType" />
+<meta property="og:title" content="Convert <code>idType</code> object to <code>character</code> — as.character.idType" />
 
-<meta property="og:description" content="Parent class for inner usage. Inherits: rdmlBaseType." />
+<meta property="og:description" content="Function to convert idType object to character." />
 <meta name="twitter:card" content="summary" />
 <!-- mathjax -->
 <script src='https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'></script>
@@ -102,56 +102,37 @@
       <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>baseTemperatureType R6 class.</h1>
+    <h1>Convert <code>idType</code> object to <code>character</code></h1>
     <small>Source: <a href='https://github.com/kablag/RDML/blob/master/R/RDML.types.R'><code>R/RDML.types.R</code></a></small>
     </div>
 
     
-    <p>Parent class for inner usage. Inherits: <a href='rdmlBaseType.html'>rdmlBaseType</a>.</p>
+    <p>Function to convert <code>idType</code> object to <code>character</code>.</p>
     
 
-    <pre class="usage"><span class='no'>baseTemperatureType</span></pre>
-        
-    <h2 class="hasAnchor" id="format"><a class="anchor" href="#format"></a>Format</h2>
-
-    <p>An <code>R6Class</code> generator object.</p>
+    <pre class="usage"><span class='co'># S3 method for idType</span>
+<span class='fu'>as.character</span>(<span class='no'>x</span>, <span class='no'>...</span>)</pre>
     
-    <h2 class="hasAnchor" id="initialization"><a class="anchor" href="#initialization"></a>Initialization</h2>
-
-    <p></p><pre>baseTemperatureType$new(duration,
-  temperatureChange = NULL, durationChange = NULL, measure = NULL, ramp =
-  NULL)</pre>
-    
-    <h2 class="hasAnchor" id="fields"><a class="anchor" href="#fields"></a>Fields</h2>
-
-    <p></p><dl class='dl-horizontal'>
-  <dt><code>duration</code></dt><dd><p><a href='http://www.rdocumentation.org/packages/checkmate/topics/checkCount'>checkCount</a>. Duration of this
-  step in seconds.</p></dd>
-  <dt><code>temperatureChange</code></dt><dd><p><a href='http://www.rdocumentation.org/packages/checkmate/topics/checkNumber'>checkNumber</a>. Change
-  of the temperature between two consecutive cycles: actual temperature
-  = temperature + (temperatureChange * cycle counter)</p></dd>
-  <dt><code>durationChange</code></dt><dd><p><a href='http://www.rdocumentation.org/packages/checkmate/topics/checkCount'>checkCount</a>. Change of the
-  duration between two consecutive cycles: actual duration = duration +
-  (durationChange * cycle counter)</p></dd>
-  <dt><code>measure</code></dt><dd><p><a href='measureType.html'>measureType</a>. Indicates to make a measurement
-  and store it as meltcurve or real-time data.</p></dd>
-  <dt><code>ramp</code></dt><dd><p><a href='http://www.rdocumentation.org/packages/checkmate/topics/checkNumber'>checkNumber</a>. Allowed temperature
-  change between two consecutive cycles in degrees Celsius per second. If unstated,
-  the maximal change rate is assumed.</p></dd>
-  </dl>
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>x</th>
+      <td><p><code>idType</code> object.</p></td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td><p>Further arguments to be passed.</p></td>
+    </tr>
+    </table>
     
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
-      
-      <li><a href="#format">Format</a></li>
-
-      <li><a href="#initialization">Initialization</a></li>
-
-      <li><a href="#fields">Fields</a></li>
-          </ul>
+      <li><a href="#arguments">Arguments</a></li>
+                </ul>
 
   </div>
 </div>
