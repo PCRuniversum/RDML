@@ -173,9 +173,6 @@ RDML$set("public", "SetFData",
                  }
                }
            }
-           
-           
-           
            # add concentrations 
            if (!is.null(description$quantity)) {
              for (sample.name in description$sample %>>% unique()) {

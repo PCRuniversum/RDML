@@ -254,18 +254,7 @@ GetRefGenesRoche <- function(uniq.folder)
 RDML$set("public", "initialize", function(filename,
                                           show.progress = TRUE,
                                           conditions.sep = NULL,
-                                          format = "auto" #,
-                                          # dateMade = NULL,
-                                          # dateUpdated = NULL,
-                                          # id = NULL,
-                                          # experimenter = NULL,
-                                          # documentation = NULL,
-                                          # dye = NULL,
-                                          # sample = NULL,
-                                          # target = NULL,
-                                          # thermalCyclingConditions = NULL,
-                                          # experiment = NULL
-) {
+                                          format = "auto") {
   if(missing(filename)) {
     return()
   }
@@ -1085,20 +1074,11 @@ RDML$set("public", "initialize", function(filename,
               # tryCatch(
               adpsType$new(
                 data.table(cyc = cyc, tmp = tmp, fluor = fluor))
-              # ,
-              #   warning = function(w) {
-              #     dat <<- list(cyc, tmp, fluor)
-              #     stop("warn")
-              #   }
-              # )
             } else {
               adpsType$new(
                 data.table(cyc = cyc, fluor = fluor))
             }
           } else {
-            #           matrix(ncol = 2,
-            #                  dimnames = list(NULL,
-            #                                  c("cyc", "tmp", "fluor")))
             NULL
           }
         },
@@ -1106,18 +1086,8 @@ RDML$set("public", "initialize", function(filename,
           tmp <- getNumericVector(rdml.doc,paste0(data.req, "/rdml:mdp/rdml:tmp"))
           fluor <- getNumericVector(rdml.doc,paste0(data.req, "/rdml:mdp/rdml:fluor"))
           if (length(fluor) != 0 && !is.null(fluor)) {
-            #           matrix(c(tmp, fluor),
-            #                                                byrow = FALSE,
-            #                                                ncol = 2,
-            #                                                dimnames = list(NULL,
-            #                                                                c("tmp", "fluor"))) %>>%
-            #             typeof %>>% print
-            #           NULL
             mdpsType$new(data.table(tmp = tmp, fluor = fluor))
           } else {
-            #           matrix(ncol = 2,
-            #                  dimnames = list(NULL,
-            #                                  c("tmp", "fluor")))
             NULL
           }
         },
@@ -1177,8 +1147,7 @@ RDML$set("public", "initialize", function(filename,
       run.id <- xml_attr(run, "id")
       pcrFormat <- {
         rows <- getIntegerValue(run, "./rdml:pcrFormat/rdml:rows")
-        # check for absent of pcrFormat
-        # like in StepOne
+        # check for absent of 'pcrFormat' like in StepOne
         if (!is.null(rows) && !is.na(rows)) {
           pcrFormatType$new(
             rows = rows,
@@ -1239,7 +1208,6 @@ RDML$set("public", "initialize", function(filename,
                                     run.id)) %>>%
           list.filter(!is.null(.))
       )
-
     }
 
     # experiment -------------------------------------------------
