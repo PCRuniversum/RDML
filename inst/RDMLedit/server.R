@@ -6,7 +6,7 @@ library(pipeR)
 library(chipPCR)
 library(MBmca)
 library(PCRedux)
-library(dpcR)
+#library(dpcR)
 library(data.table)
 library(ggplot2)
 library(plotly)
@@ -2567,12 +2567,19 @@ shinyServer(function(input, output, session) {
   
   # Download ----------------------------------------------------------------
   
+  renderFile <- function(file) {
+    values$rdml$AsXML(file)
+  }
+  
   output$downloadRDML <- downloadHandler(
     filename = function() {
+      # updLog(input$rdmlFileSlct)
       paste0(input$rdmlFileSlct, ".rdml")
     },
     content = function(file) {
-      output <- values$rdml$AsXML(file)
+      #write.csv(data.frame(1:3), file)
+      #values$rdml$AsXML(file)
+      renderFile(file)
     }
   )
   
