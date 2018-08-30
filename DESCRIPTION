@@ -15,7 +15,9 @@ Authors@R: c(
     email = "stefan.roediger@b-tu.de",
     role = "aut"),
     person("Michal", "Burdukiewicz",
-    email = "michalburdukiewicz@gmail.com", role = "aut"),
+    email = "michalburdukiewicz@gmail.com", 
+    comment = c(ORCID = "0000-0001-8926-582X"),
+    role = "aut"),
     person("Andrej-Nikolai", "Spiess",
     email = "a.spiess@uke.de", role = "aut"))
 License: MIT + file LICENSE
