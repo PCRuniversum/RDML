@@ -191,7 +191,8 @@ RDML <- R6Class("RDML",
                     if (missing(file.name))
                       return(tree)
                     
-                    con <- file("rdml_data.xml", "w")
+                    xmlFile <- paste0(tempdir(), "/rdml_data.xml")
+                    con <- file(xmlFile, "w")
                     tryCatch({
                       cat(iconv(tree,
                                 to = "UTF-8"),
@@ -201,9 +202,8 @@ RDML <- R6Class("RDML",
                       close(con)
                     })
                     
-                    zip(file.name,
-                        "rdml_data.xml")
-                    unlink("rdml_data.xml")
+                    zip(file.name, xmlFile)
+                    unlink(xmlFile)
                   }
                 ),
                 private = list(

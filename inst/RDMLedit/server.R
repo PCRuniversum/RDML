@@ -2567,12 +2567,6 @@ shinyServer(function(input, output, session) {
   
   # Download ----------------------------------------------------------------
   
-  observeEvent(input$generateRDMLFile,
-               {
-                 updLog("Generating RDML File")
-                 values$rdmlFileTxt <- values$rdml$AsXML()
-                 updLog("RDML File generated. Press Store RDML now.")
-               })
   
   output$downloadRDML <- downloadHandler(
     filename = function() {
@@ -2580,22 +2574,7 @@ shinyServer(function(input, output, session) {
       paste0(input$rdmlFileSlct, ".rdml")
     },
     content = function(file) {
-      #write.csv(data.frame(1:3), file)
-      #values$rdml$AsXML(file)
-      # renderFile(file)
-      con <- file("rdml_data.xml", "w")
-      tryCatch({
-        cat(iconv(values$rdmlFileTxt,
-                  to = "UTF-8"),
-            file = con, sep = "\n")
-      },
-      finally = {
-        close(con)
-      })
-      
-      zip(file,
-          "rdml_data.xml")
-      unlink("rdml_data.xml")
+      values$rdml$AsXML(file)
     }
   )
   
