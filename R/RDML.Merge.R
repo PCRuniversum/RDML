@@ -1,6 +1,8 @@
 #' Merges \code{RDML} objects
 #' 
 #' Merges list of \code{RDML} objects. The first object in the list becomes base object.
+#' If \code{experiments} or \code{runs} have same name thay will be combined. 
+#' Reacts with same \code{id}, \code{experiment} and \code{run} overwrite each other! 
 #' 
 #' @param to.merge \code{RDML} objects that should be merged.
 #' 
@@ -27,27 +29,45 @@ MergeRDMLs <- function(to.merge) {
                       "dye",
                       "sample",
                       "target",
-                      "thermalCyclingConditions",
-                      "experiment"
+                      "thermalCyclingConditions"
+                      # ,"experiment"
     )) {
       if (length(rdml[[element]]) != 0) {
         baseRDML[[element]] <- c(baseRDML[[element]],
                                  list.map(rdml[[element]],
                                           subelement ~
-                                            subelement$clone(deep = TRUE)
+                                            subelement$copy()
                                  ))
+        # leave only unique subelements
+        baseRDML[[element]] <- baseRDML[[element]][unique(names(baseRDML[[element]]))]
       }
     }
-  }
-  # generate unique experiments names
-  i <- 1
-  for (exp in baseRDML$experiment) {
-    id <- exp$id$id
-    while (paste(id, i, sep = "_") %in% unique(names(baseRDML$experiment))) {
-      i = i + 1
+    # merge experiments
+    for (exp.name in names(rdml[["experiment"]])) {
+      # if experiment have unique name just add. Else test run names.
+      if (exp.name %in% names(baseRDML[["experiment"]])) {
+        for (run.name in names(rdml[["experiment"]][[exp.name]][["run"]])) {
+          # if experiment have unique name just add. Else combine reacts to one run.
+          if (run.name %in% names(baseRDML[["experiment"]][[exp.name]][["run"]])) {
+            baseRDML[["experiment"]][[exp.name]][["run"]][[run.name]][["react"]] <- 
+              c(baseRDML[["experiment"]][[exp.name]][["run"]][[run.name]][["react"]],
+                list.map(rdml[["experiment"]][[exp.name]][["run"]][[run.name]][["react"]],
+                         subelement ~
+                           subelement$copy()
+                ))
+          } else {
+            baseRDML[["experiment"]][[exp.name]][["run"]] <-
+              c(baseRDML[["experiment"]][[exp.name]][["run"]],
+                rdml[["experiment"]][[exp.name]][["run"]][[run.name]]$copy()
+              )
+          }
+        }  
+      } else {
+        baseRDML[["experiment"]] <- c(baseRDML[["experiment"]],
+                                      rdml[["experiment"]][[exp.name]]$copy()
+        )
+      }
     }
-    exp$id <- idType$new(paste(id, i, sep = "_"))
-    baseRDML$experiment <- baseRDML$experiment
   }
   baseRDML
 }
