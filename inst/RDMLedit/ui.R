@@ -727,8 +727,16 @@ shinyUI(
                  dataTableOutput("meltingDt"),
                  value = "mdp"),
         tabPanel("Store",
-                 wellPanel(downloadButton("downloadRDML",
-                                          "Store RDML"),
+                 wellPanel(
+                   tags$p("Separate Generate and Download buttons needed for technical restrictions of Shine. So you need first generate then download file!"),
+                   actionButton("generateRDMLFile", "Generate RDML File", icon = icon("file")),
+                   br(),
+                   br(),
+                   # conditionalPanel(condition = "output.RDMLFileGenerated", # This button appears after the report has been generated and is ready for download.
+                   #                  downloadButton("downloadRDML",
+                   #                                 "Store RDML")),
+                   downloadButton("downloadRDML",
+                   "Store RDML"),
                            tags$p("Note that if you made any preprocession all fluorescence points will be overwritten with the new calculated values!!!"))),
         tabPanel("Help",
                  includeMarkdown("md/help.md")),
