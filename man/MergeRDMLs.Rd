@@ -12,7 +12,7 @@ MergeRDMLs(to.merge)
 }
 \description{
 Merges list of \code{RDML} objects. The first object in the list becomes base object.
-If \code{experiments} or \code{runs} have same name thay will be combined. 
+If \code{experiments} or \code{runs} have same name they will be combined. 
 Reacts with same \code{id}, \code{experiment} and \code{run} overwrite each other!
 }
 \examples{
