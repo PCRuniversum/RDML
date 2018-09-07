@@ -9,7 +9,7 @@ dataType$set("public", "rawAdp",
 dataType$set("public", "PreprocessAdp",
              function(smooth, smooth.method, normqPCR.method) {
                if (!is.environment(self$rawAdp)) {
-                 self$rawAdp <- private$.adp$clone(deep = TRUE)
+                 self$rawAdp <- private$.adp$copy()
                }
                private$.adp$fpoints$fluor <- 
                  CPP(self$rawAdp$fpoints$cyc,
@@ -23,7 +23,7 @@ dataType$set("public", "PreprocessAdp",
 dataType$set("public", "UndoPreprocessAdp",
              function() {
                if (!is.environment(self$rawAdp)) {
-                 self$rawAdp <- private$.adp$clone(deep = TRUE)
+                 self$rawAdp <- private$.adp$copy()
                } else {
                  private$.adp$fpoints$fluor <- 
                    self$rawAdp$fpoints$fluor
@@ -134,7 +134,7 @@ dataType$set("public", "rawMdp",
 dataType$set("public", "PreprocessMdp",
              function(bgadj, bg, minmax, df.fact) {
                if (!is.environment(self$rawMdp)) {
-                 self$rawMdp <- private$.mdp$clone(deep = TRUE)
+                 self$rawMdp <- private$.mdp$copy()
                } 
                private$.mdp$fpoints$fluor <- 
                  mcaSmoother(self$rawMdp$fpoints$tmp,
@@ -149,7 +149,7 @@ dataType$set("public", "PreprocessMdp",
 dataType$set("public", "UndoPreprocessMdp",
              function() {
                if (!is.environment(self$rawMdp)) {
-                 self$rawMdp <- private$.mdp$clone(deep = TRUE)
+                 self$rawMdp <- private$.mdp$copy()
                } else {
                  private$.mdp$fpoints$fluor <- 
                    self$rawMdp$fpoints$fluor

@@ -106,7 +106,7 @@ shinyServer(function(input, output, session) {
                         choices = names(values$RDMLs)[names(values$RDMLs) != input$rdmlFileSlct],
                         selected = NULL)
       # clone selected to temp RDML 
-      values$rdml <- values$RDMLs[[input$rdmlFileSlct]]$clone(deep = TRUE)
+      values$rdml <- values$RDMLs[[input$rdmlFileSlct]]$copy()
       # update fields
       updateTextInput(session,
                       "dateMadeText",
@@ -179,7 +179,7 @@ shinyServer(function(input, output, session) {
       new.name <- str_replace(input$rdmlFileSlct,
                               "@.*$",
                               format(Sys.time(), "@%H%M%S"))
-      values$RDMLs[[new.name]] <- values$rdml$clone(deep = TRUE)
+      values$RDMLs[[new.name]] <- values$rdml$copy()
     })
   })
   

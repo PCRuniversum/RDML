@@ -151,7 +151,7 @@ rdmlBaseType <-
                   list.map(value,
                         el ~ {
                           if (tail(class(el), 1) == "R6")
-                            el$clone(deep = TRUE)
+                            el$copy()
                           else
                             el
                         })
@@ -159,7 +159,7 @@ rdmlBaseType <-
                   value
                 }
               } else {
-                value$clone(deep = TRUE)
+                value$copy()
               }
             }
           )

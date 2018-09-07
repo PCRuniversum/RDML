@@ -21,7 +21,7 @@
 #' merged$AsDendrogram()
 #' }
 MergeRDMLs <- function(to.merge) {
-  baseRDML <- to.merge[[1]]$clone(deep = TRUE)
+  baseRDML <- to.merge[[1]]$copy()
   for (rdml in to.merge[-1]) {
     for (element in c("id",
                       "experimenter",
