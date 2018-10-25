@@ -1,3 +1,4 @@
+[![published in: Bioinformatics](https://img.shields.io/badge/published%20in-Bioinformatics-ff69b4.svg?style=flat)](https://doi.org/10.1093/bioinformatics/btx528)
 [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/RDML)](https://CRAN.R-project.org/package=RDML)
 [![Downloads](https://cranlogs.r-pkg.org/badges/RDML)]( https://CRAN.R-project.org/package=RDML)
 [![Travis-CI Build Status](https://travis-ci.org/kablag/RDML.svg?branch=master)](https://travis-ci.org/kablag/RDML)
