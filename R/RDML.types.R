@@ -1866,7 +1866,7 @@ dataType <-
               self$quantFluor <- quantFluor
             },
             GetFData = function(dp.type = "adp") {
-              assertString(dp.type)
+              checkChoice(dp.type, c("adp", "mdp"))
               out <- self[[dp.type]]
               assert(checkClass(out, "adpsType"),
                      checkClass(out, "mdpsType"))

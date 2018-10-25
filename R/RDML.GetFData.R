@@ -40,6 +40,7 @@ RDML$set("public", "GetFData",
                   limits = NULL,
                   dp.type = "adp",
                   long.table = FALSE) {
+           checkChoice(dp.type, c("adp", "mdp"))
            if (missing(request))
              request <- self$AsTable()
            else
