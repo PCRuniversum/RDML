@@ -262,7 +262,7 @@ RDML$set("public", "initialize", function(filename,
 
   # ABI7500 -----------------------------------------------------------------
   fromABI <- function() {
-    tryCatch({
+    # tryCatch({
       uniq.folder <- tempfile()
       unzipped <- unzip(filename, exdir = uniq.folder)
       # multicomponent.data <- paste0(uniq.folder, "\\apldbio\\sds\\multicomponent_data.txt") %>>%
@@ -341,9 +341,10 @@ RDML$set("public", "initialize", function(filename,
       names(fdata) <- c("cyc", description$fdata.name)
       self$SetFData(fdata, description)
       self$id <- list(rdmlIdType$new("ABI" , "1"))
-    },
-    error = function(e) { stop(e) },
-    finally = unlink(uniq.folder, recursive = TRUE))
+    # },
+    # error = function(e) { stop(e) },
+    # finally = 
+      unlink(uniq.folder, recursive = TRUE)
   }
 
   # RotorGene -----------------------------------------------------------------
