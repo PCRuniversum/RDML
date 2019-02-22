@@ -1154,9 +1154,9 @@ RDML$set("public", "initialize", function(filename,
     GetRun <- function(run, experiment.id) {
       run.id <- xml_attr(run, "id")
       pcrFormat <- {
-        # Quantstudio pcrFormat
         pcrFormatStr <- getTextValue(run, "./rdml:pcrFormat")
-        if (!is.null(pcrFormatStr)) {
+        # Quantstudio pcrFormat
+        if (!is.null(pcrFormatStr) && grepl("well", pcrFormatStr)) {
           if (grepl("96-well", pcrFormatStr)) {
             pcrFormatType$new(
               rows = 8,
@@ -1172,7 +1172,7 @@ RDML$set("public", "initialize", function(filename,
               columnLabel = labelFormatType$new("123")
             )
           }
-        } else {
+        } else { # correct RDML pcrFormat
           rows <- getIntegerValue(run, "./rdml:pcrFormat/rdml:rows")
           # check for absent of 'pcrFormat' like in StepOne
           if (!is.null(rows) && !is.na(rows)) {
