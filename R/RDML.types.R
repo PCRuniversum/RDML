@@ -197,6 +197,7 @@ rdmlIdType <-
               self$publisher <- publisher
               self$serialNumber <- serialNumber
               self$MD5Hash <- MD5Hash
+              
             }
           ),
           private = list(
@@ -220,8 +221,7 @@ rdmlIdType <-
             MD5Hash = function(MD5Hash) {
               if (missing(MD5Hash))
                 return(private$.MD5Hash)
-              assert(checkNull(MD5Hash),
-                     checkString(MD5Hash))
+              assertString(MD5Hash, null.ok = TRUE)
               private$.MD5Hash <- MD5Hash
             }
           ))
@@ -409,7 +409,7 @@ experimenterType <-
             id = function(id) {
               if (missing(id))
                 return(private$.id)
-              assertClass(id, "idType")
+              assertR6(id, "idType")
               private$.id <- id
             },
             firstName = function(firstName) {
@@ -427,22 +427,19 @@ experimenterType <-
             email = function(email) {
               if (missing(email))
                 return(private$.email)
-              assert(checkNull(email),
-                     checkString(email))
+              assertString(email, null.ok = TRUE)
               private$.email <- email
             },
             labName = function(labName) {
               if (missing(labName))
                 return(private$.labName)
-              assert(checkNull(labName),
-                     checkString(labName))
+              assertString(labName, null.ok = TRUE)
               private$.labName <- labName
             },
             labAddress = function(labAddress) {
               if (missing(labAddress))
                 return(private$.labAddress)
-              assert(checkNull(labAddress),
-                     checkString(labAddress))
+              assertString(labAddress, null.ok = TRUE)
               private$.labAddress <- labAddress
             }
           ))
@@ -483,14 +480,13 @@ documentationType <-
             id = function(id) {
               if (missing(id))
                 return(private$.id)
-              assertClass(id, "idType")
+              assertR6(id, "idType")
               private$.id <- id
             },
             text = function(text) {
               if (missing(text))
                 return(private$.text)
-              assert(checkNull(text),
-                     checkString(text))
+              assertString(text, null.ok = TRUE)
               private$.text <- text
             }
           ))
@@ -530,14 +526,13 @@ dyeType <-
             id = function(id) {
               if (missing(id))
                 return(private$.id)
-              assertClass(id, "idType")
+              assertR6(id, "idType")
               private$.id <- id
             },
             description = function(description) {
               if (missing(description))
                 return(private$.description)
-              assert(checkNull(description),
-                     checkString(description))
+              assertString(description, null.ok = TRUE)
               private$.description <- description
             }
           ))
@@ -579,15 +574,13 @@ xRefType <-
             name = function(name) {
               if (missing(name))
                 return(private$.name)
-              assert(checkNull(name),
-                     checkString(name))
+              assertString(name, null.ok = TRUE)
               private$.name <- name
             },
             id = function(id) {
               if (missing(id))
                 return(private$.id)
-              assert(checkNull(id),
-                     checkString(id))
+              assertString(id, null.ok = TRUE)
               private$.id <- id
             }
           ))
@@ -681,7 +674,7 @@ quantityType <-
             unit = function(unit) {
               if (missing(unit))
                 return(private$.unit)
-              assertClass(unit, "quantityUnitType")
+              assertR6(unit, "quantityUnitType")
               private$.unit <- unit
             }
           ))
@@ -734,29 +727,25 @@ cdnaSynthesisMethodType <-
             enzyme = function(enzyme) {
               if (missing(enzyme))
                 return(private$.enzyme)
-              assert(checkNull(enzyme),
-                     checkString(enzyme))
+              assertString(enzyme, null.ok = TRUE)
               private$.enzyme <- enzyme
             },
             primingMethod = function(primingMethod) {
               if (missing(primingMethod))
                 return(private$.primingMethod)
-              assert(checkNull(primingMethod),
-                     checkClass(primingMethod, "primingMethodType"))
+              assertR6(primingMethod, "primingMethodType", null.ok = TRUE)
               private$.primingMethod <- primingMethod
             },
             dnaseTreatment = function(dnaseTreatment) {
               if (missing(dnaseTreatment))
                 return(private$.dnaseTreatment)
-              assert(checkNull(dnaseTreatment),
-                     checkFlag(dnaseTreatment))
+              assertFlag(dnaseTreatment, null.ok = TRUE)
               private$.dnaseTreatment <- dnaseTreatment
             },
             thermalCyclingConditions = function(thermalCyclingConditions) {
               if (missing(thermalCyclingConditions))
                 return(private$.thermalCyclingConditions)
-              assert(checkNull(thermalCyclingConditions),
-                     checkClass(thermalCyclingConditions, "idType"))
+              assertR6(thermalCyclingConditions, "idType", null.ok = TRUE)
               private$.thermalCyclingConditions <- thermalCyclingConditions
             }
           ))
@@ -803,7 +792,7 @@ templateQuantityType <-
             nucleotide = function(nucleotide) {
               if (missing(nucleotide))
                 return(private$.nucleotide)
-              assertClass(nucleotide, "nucleotideType")
+              assertR6(nucleotide, "nucleotideType")
               private$.nucleotide <- nucleotide
             }
           ))
@@ -851,7 +840,7 @@ enumType <-
             value = function(value) {
               if (missing(value))
                 return(private$.value)
-              assert(checkNull(value), checkChoice(value, c(private$.levels)))
+              assertChoice(value, c(private$.levels), null.ok = TRUE)
               private$.value <- value
             }
           ))
@@ -1092,77 +1081,69 @@ sampleType <-
             id = function(id) {
               if (missing(id))
                 return(private$.id)
-              assertClass(id, "idType")
+              assertR6(id, "idType")
               private$.id <- id
             },
             description = function(description) {
               if (missing(description))
                 return(private$.description)
-              assert(checkNull(description),
-                     checkString(description))
+              assertString(description, null.ok = TRUE)
               private$.description <- description
             },
             documentation = function(documentation) {
               if (missing(documentation))
                 return(private$.documentation)
-              assert(checkNull(documentation),
-                     checkList(documentation, "idReferencesType", unique = TRUE))
+              assertList(documentation, "idReferencesType", unique = TRUE,
+                         null.ok = TRUE)
               private$.documentation <- documentation
             },
             xRef = function(xRef) {
               if (missing(xRef))
                 return(private$.xRef)
-              assert(checkNull(xRef),
-                     checkList(xRef, "xRefType", unique = TRUE))
+              assertList(xRef, "xRefType", unique = TRUE, null.ok = TRUE)
               private$.xRef <- xRef
             },
             annotation = function(annotation) {
               if (missing(annotation))
                 return(private$.annotation)
-              assert(checkNull(annotation),
-                     checkList(annotation, "annotationType", unique = TRUE))
+              assertList(annotation, "annotationType", unique = TRUE, null.ok = TRUE)
               private$.annotation <- list.names(annotation,
                                                 .$property)
             },
             type = function(type) {
               if (missing(type))
                 return(private$.type)
-              assertClass(type, "sampleTypeType")
+              assertR6(type, "sampleTypeType")
               private$.type <- type
             },
             interRunCalibrator = function(interRunCalibrator) {
               if (missing(interRunCalibrator))
                 return(private$.interRunCalibrator)
-              assert(checkNull(interRunCalibrator),
-                     checkFlag(interRunCalibrator))
+              assertFlag(interRunCalibrator, null.ok = TRUE)
               private$.interRunCalibrator <- interRunCalibrator
             },
             quantity = function(quantity) {
               if (missing(quantity))
                 return(private$.quantity)
-              assert(checkNull(quantity),
-                     checkClass(quantity, "quantityType"))
+              assertR6(quantity, "quantityType", null.ok = TRUE)
               private$.quantity <- quantity
             },
             calibratorSample = function(calibratorSample) {
               if (missing(calibratorSample))
                 return(private$.calibratorSample)
-              assert(checkNull(calibratorSample),
-                     checkFlag(calibratorSample))
+              assertFlag(calibratorSample, null.ok = TRUE)
               private$.calibratorSample <- calibratorSample
             },
             cdnaSynthesisMethod = function(cdnaSynthesisMethod) {
               if (missing(cdnaSynthesisMethod))
                 return(private$.cdnaSynthesisMethod)
-              assert(checkNull(cdnaSynthesisMethod),
-                     checkClass(cdnaSynthesisMethod, "cdnaSynthesisMethodType"))
+              assertR6(cdnaSynthesisMethod, "cdnaSynthesisMethodType", null.ok = TRUE)
               private$.cdnaSynthesisMethod <- cdnaSynthesisMethod
             },
             templateQuantity = function(templateQuantity) {
               if (missing(templateQuantity))
                 return(private$.templateQuantity)
-              assert(checkNull(templateQuantity),
-                     checkClass(templateQuantity, "templateQuantityType"))
+              assertR6(templateQuantity, "templateQuantityType", null.ok = TRUE)
               private$.templateQuantity <- templateQuantity
             }
           ))
@@ -1209,15 +1190,13 @@ oligoType <-
             threePrimeTag = function(threePrimeTag) {
               if (missing(threePrimeTag))
                 return(private$.threePrimeTag)
-              assert(checkNull(threePrimeTag),
-                     checkString(threePrimeTag))
+              assertString(threePrimeTag, null.ok = TRUE)
               private$.threePrimeTag <- threePrimeTag
             },
             fivePrimeTag = function(fivePrimeTag) {
               if (missing(fivePrimeTag))
                 return(private$.fivePrimeTag)
-              assert(checkNull(fivePrimeTag),
-                     checkString(fivePrimeTag))
+              assertString(fivePrimeTag, null.ok = TRUE)
               private$.fivePrimeTag <- fivePrimeTag
             },
             sequence = function(sequence) {
@@ -1276,36 +1255,31 @@ sequencesType <-
             forwardPrimer = function(forwardPrimer) {
               if (missing(forwardPrimer))
                 return(private$.forwardPrimer)
-              assert(checkNull(forwardPrimer),
-                     checkClass(forwardPrimer, "oligoType"))
+              assertR6(forwardPrimer, "oligoType", null.ok = TRUE)
               private$.forwardPrimer <- forwardPrimer
             },
             reversePrimer = function(reversePrimer) {
               if (missing(reversePrimer))
                 return(private$.reversePrimer)
-              assert(checkNull(reversePrimer),
-                     checkClass(reversePrimer, "oligoType"))
+              assertR6(reversePrimer, "oligoType", null.ok = TRUE)
               private$.reversePrimer <- reversePrimer
             },
             probe1 = function(probe1) {
               if (missing(probe1))
                 return(private$.probe1)
-              assert(checkNull(probe1),
-                     checkClass(probe1, "oligoType"))
+              assertR6(probe1, "oligoType", null.ok = TRUE)
               private$.probe1 <- probe1
             },
             probe2 = function(probe2) {
               if (missing(probe2))
                 return(private$.probe2)
-              assert(checkNull(probe2),
-                     checkClass(probe2, "oligoType"))
+              assertR6(probe2, "oligoType", null.ok = TRUE)
               private$.probe2 <- probe2
             },
             amplicon = function(amplicon) {
               if (missing(amplicon))
                 return(private$.amplicon)
-              assert(checkNull(amplicon),
-                     checkClass(amplicon, "oligoType"))
+              assertR6(amplicon, "oligoType", null.ok = TRUE)
               private$.amplicon <- amplicon
             }
           ))
@@ -1466,83 +1440,74 @@ targetType <-
             id = function(id) {
               if (missing(id))
                 return(private$.id)
-              assertClass(id, "idType")
+              assertR6(id, "idType")
               private$.id <- id
             },
             description = function(description) {
               if (missing(description))
                 return(private$.description)
-              assert(checkNull(description),
-                     checkString(description))
+              assertString(description, null.ok = TRUE)
               private$.description <- description
             },
             documentation = function(documentation) {
               if (missing(documentation))
                 return(private$.documentation)
-              assert(checkNull(documentation),
-                     checkList(documentation, "idReferencesType", unique = TRUE))
+              assertList(documentation, "idReferencesType", unique = TRUE, null.ok = TRUE)
               private$.documentation <- documentation
             },
             xRef = function(xRef) {
               if (missing(xRef))
                 return(private$.xRef)
-              assert(checkNull(xRef),
-                     checkList(xRef, "xRefType", unique = TRUE))
+              assertList(xRef, "xRefType", unique = TRUE, null.ok = TRUE)
               private$.xRef <- xRef
             },
             type = function(type) {
               if (missing(type))
                 return(private$.type)
-              assertClass(type, "targetTypeType")
+              assertR6(type, "targetTypeType")
               private$.type <- type
             },
             amplificationEfficiencyMethod =
               function(amplificationEfficiencyMethod) {
                 if (missing(amplificationEfficiencyMethod))
                   return(private$.amplificationEfficiencyMethod)
-                assert(checkNull(amplificationEfficiencyMethod),
-                       checkString(amplificationEfficiencyMethod))
+                assertString(amplificationEfficiencyMethod, null.ok = TRUE)
                 private$.amplificationEfficiencyMethod <- amplificationEfficiencyMethod
               },
             amplificationEfficiency = function(amplificationEfficiency) {
               if (missing(amplificationEfficiency))
                 return(private$.amplificationEfficiency)
-              assert(checkNull(amplificationEfficiency),
-                     checkNumber(amplificationEfficiency))
+              assertNumber(amplificationEfficiency, null.ok = TRUE)
               private$.amplificationEfficiency <- amplificationEfficiency
             },
             amplificationEfficiencySE = function(amplificationEfficiencySE) {
               if (missing(amplificationEfficiencySE))
                 return(private$.amplificationEfficiencySE)
-              assert(checkNull(amplificationEfficiencySE),
-                     checkNumber(amplificationEfficiencySE))
+              assertNumber(amplificationEfficiencySE, null.ok = TRUE)
               private$.amplificationEfficiencySE <- amplificationEfficiencySE
             },
             detectionLimit = function(detectionLimit) {
               if (missing(detectionLimit))
                 return(private$.detectionLimit)
-              assert(checkNull(detectionLimit),
-                     checkNumber(detectionLimit))
+              assertNumber(detectionLimit, null.ok = TRUE)
               private$.detectionLimit <- detectionLimit
             },
             dyeId = function(dyeId) {
               if (missing(dyeId))
                 return(private$.dyeId)
-              assertClass(dyeId, "idReferencesType")
+              assertR6(dyeId, "idReferencesType")
               private$.dyeId <- dyeId
             },
             sequences = function(sequences) {
               if (missing(sequences))
                 return(private$.sequences)
-              assert(checkNull(sequences),
-                     checkClass(sequences, "sequencesType"))
+              assertR6(sequences, "sequencesType", null.ok = TRUE)
               private$.sequences <- sequences
             },
             commercialAssay = function(commercialAssay) {
               if (missing(commercialAssay))
                 return(private$.commercialAssay)
-              assert(checkNull(commercialAssay),
-                     checkClass(commercialAssay, "commercialAssayType"))
+              assertR6(commercialAssay, "commercialAssayType", null.ok = TRUE)
               private$.commercialAssay <- commercialAssay
             }
           ))
@@ -1890,63 +1855,55 @@ dataType <-
             tar = function(tar) {
               if (missing(tar))
                 return(private$.tar)
-              assertClass(tar, "idReferencesType")
+              assertR6(tar, "idReferencesType")
               private$.tar <- tar
             },
             cq = function(cq) {
               if (missing(cq))
                 return(private$.cq)
-              assert(checkNull(cq),
-                     checkNumber(cq))
+              assertNumber(cq, null.ok = TRUE)
               private$.cq <- cq
             },
             excl = function(excl) {
               if (missing(excl))
                 return(private$.excl)
-              assert(checkNull(excl),
-                     checkString(excl))
+              assertString(excl, null.ok = TRUE)
               private$.excl <- excl
             },
             adp = function(adp) {
               if (missing(adp))
                 return(private$.adp)
-              assert(checkNull(adp),
-                     checkClass(adp, "adpsType"))
+              assertR6(adp, "adpsType", null.ok = TRUE)
               private$.adp <- adp
             },
             mdp = function(mdp) {
               if (missing(mdp))
                 return(private$.mdp)
-              assert(checkNull(mdp),
-                     checkClass(mdp, "mdpsType"))
+              assertR6(mdp, "mdpsType", null.ok = TRUE)
               private$.mdp <- mdp
             },
             endPt = function(endPt) {
               if (missing(endPt))
                 return(private$.endPt)
-              assert(checkNull(endPt),
-                     checkNumber(endPt))
+              assertNumber(endPt, null.ok = TRUE)
               private$.endPt <- endPt
             },
             bgFluor = function(bgFluor) {
               if (missing(bgFluor))
                 return(private$.bgFluor)
-              assert(checkNull(bgFluor),
-                     checkNumber(bgFluor))
+              assertNumber(bgFluor, null.ok = TRUE)
               private$.bgFluor <- bgFluor
             },
             bgFluorSlp = function(bgFluorSlp) {
               if (missing(bgFluorSlp))
                 return(private$.bgFluorSlp)
-              assert(checkNull(bgFluorSlp),
-                     checkNumber(bgFluorSlp))
+              assertNumber(bgFluorSlp, null.ok = TRUE)
               private$.bgFluorSlp <- bgFluorSlp
             },
             quantFluor = function(quantFluor) {
               if (missing(quantFluor))
                 return(private$.quantFluor)
-              assert(checkNull(quantFluor),
-                     checkNumber(quantFluor))
+              assertNumber(quantFluor, null.ok = TRUE)
               private$.quantFluor <- quantFluor
             }
           ))
@@ -2043,7 +2000,7 @@ reactType <-
                                   value.var = "fluor")))
             },
             .recalcPosition = function(pcrFormat) {
-              assertClass(pcrFormat, "pcrFormatType")
+              assertR6(pcrFormat, "pcrFormatType")
               private$calced.position <-
                 if (pcrFormat$rowLabel$value == "ABC" && pcrFormat$columnLabel$value == "123") {
                   if (pcrFormat$rows > length(LETTERS)) {
@@ -2080,20 +2037,19 @@ reactType <-
             id = function(id) {
               if (missing(id))
                 return(private$.id)
-              assertClass(id, "reactIdType")
+              assertR6(id, "reactIdType")
               private$.id <- id
             },
             sample = function(sample) {
               if (missing(sample))
                 return(private$.sample)
-              assertClass(sample, "idReferencesType")
+              assertR6(sample, "idReferencesType")
               private$.sample <- sample
             },
             data = function(data) {
               if (missing(data))
                 return(private$.data)
-              assert(checkNull(data),
-                     checkList(data, "dataType", unique = TRUE))
+              assertList(data, "dataType", unique = TRUE, null.ok = TRUE)
               private$.data <- list.names(data,
                                           .$tar$id)
             },
@@ -2293,13 +2249,13 @@ pcrFormatType <-
             rowLabel = function(rowLabel) {
               if (missing(rowLabel))
                 return(private$.rowLabel)
-              assertClass(rowLabel, "labelFormatType")
+              assertR6(rowLabel, "labelFormatType")
               private$.rowLabel <- rowLabel
             },
             columnLabel = function(columnLabel) {
               if (missing(columnLabel))
                 return(private$.columnLabel)
-              assertClass(columnLabel, "labelFormatType")
+              assertR6(columnLabel, "labelFormatType")
               private$.columnLabel <- columnLabel
             }
           ))
@@ -2426,69 +2382,61 @@ runType <-
             id = function(id) {
               if (missing(id))
                 return(private$.id)
-              assertClass(id, "idType")
+              assertR6(id, "idType")
               private$.id <- id
             },
             description = function(description) {
               if (missing(description))
                 return(private$.description)
-              assert(checkNull(description),
-                     checkString(description))
+              assertString(description, null.ok = TRUE)
               private$.description <- description
             },
             documentation = function(documentation) {
               if (missing(documentation))
                 return(private$.documentation)
-              assert(checkNull(documentation),
-                     checkList(documentation, "idReferencesType", unique = TRUE))
+              assertList(documentation, "idReferencesType", unique = TRUE, null.ok = TRUE)
               private$.documentation <- documentation
             },
             experimenter = function(experimenter) {
               if (missing(experimenter))
                 return(private$.experimenter)
-              assert(checkNull(experimenter),
-                     checkList(experimenter, "idReferencesType", unique = TRUE))
+              assertList(experimenter, "idReferencesType", unique = TRUE, null.ok = TRUE)
               private$.experimenter <- experimenter
             },
             instrument = function(instrument) {
               if (missing(instrument))
                 return(private$.instrument)
-              assert(checkNull(instrument),
-                     checkString(instrument))
+              assertString(instrument, null.ok = TRUE)
               private$.instrument <- instrument
             },
             dataCollectionSoftware = function(dataCollectionSoftware) {
               if (missing(dataCollectionSoftware))
                 return(private$.dataCollectionSoftware)
-              assert(checkNull(dataCollectionSoftware),
-                     checkClass(dataCollectionSoftware, "dataCollectionSoftwareType"))
+              assertR6(dataCollectionSoftware, "dataCollectionSoftwareType", null.ok = TRUE)
               private$.dataCollectionSoftware <- dataCollectionSoftware
             },
             backgroundDeterminationMethod = function(backgroundDeterminationMethod) {
               if (missing(backgroundDeterminationMethod))
                 return(private$.backgroundDeterminationMethod)
-              assert(checkNull(backgroundDeterminationMethod),
-                     checkString(backgroundDeterminationMethod))
+              assertString(backgroundDeterminationMethod, null.ok = TRUE)
               private$.backgroundDeterminationMethod <- backgroundDeterminationMethod
             },
             cqDetectionMethod = function(cqDetectionMethod) {
               if (missing(cqDetectionMethod))
                 return(private$.cqDetectionMethod)
-              assert(checkNull(cqDetectionMethod),
-                     checkClass(cqDetectionMethod, "cqDetectionMethodType"))
+              assertR6(cqDetectionMethod, "cqDetectionMethodType", null.ok = TRUE)
               private$.cqDetectionMethod <- cqDetectionMethod
             },
             thermalCyclingConditions = function(thermalCyclingConditions) {
               if (missing(thermalCyclingConditions))
                 return(private$.thermalCyclingConditions)
-              assert(checkNull(thermalCyclingConditions),
-                     checkClass(thermalCyclingConditions, "idReferencesType"))
+              assertR6(thermalCyclingConditions, "idReferencesType", null.ok = TRUE)
               private$.thermalCyclingConditions <- thermalCyclingConditions
             },
             pcrFormat = function(pcrFormat) {
               if (missing(pcrFormat))
                 return(private$.pcrFormat)
-              assertClass(pcrFormat, "pcrFormatType")
+              assertR6(pcrFormat, "pcrFormatType")
               private$.pcrFormat <- pcrFormat
               self$UpdateReactsPosition()
             },
@@ -2590,28 +2538,25 @@ experimentType <-
             id = function(id) {
               if (missing(id))
                 return(private$.id)
-              assertClass(id, "idType")
+              assertR6(id, "idType")
               private$.id <- id
             },
             description = function(description) {
               if (missing(description))
                 return(private$.description)
-              assert(checkNull(description),
-                     checkString(description))
+              assertString(description, null.ok = TRUE)
               private$.description <- description
             },
             documentation = function(documentation) {
               if (missing(documentation))
                 return(private$.documentation)
-              assert(checkNull(documentation),
-                     checkList(documentation, "idReferencesType", unique = TRUE))
+              assertList(documentation, "idReferencesType", unique = TRUE, null.ok = TRUE)
               private$.documentation <- documentation
             },
             run = function(run) {
               if (missing(run))
                 return(private$.run)
-              assert(checkNull(run),
-                     checkList(run, "runType", unique = TRUE))
+              assertList(run, "runType", unique = TRUE, null.ok = TRUE)
               private$.run <- list.names(run,
                                          .$id$id)
             }
@@ -2823,29 +2768,25 @@ baseTemperatureType <-
             temperatureChange = function(temperatureChange) {
               if (missing(temperatureChange))
                 return(private$.temperatureChange)
-              assert(checkNull(temperatureChange),
-                     checkNumber(temperatureChange))
+              assertNumber(temperatureChange, null.ok = TRUE)
               private$.temperatureChange <- temperatureChange
             },
             durationChange = function(durationChange) {
               if (missing(durationChange))
                 return(private$.durationChange)
-              assert(checkNull(durationChange),
-                     checkCount(durationChange))
+              assertCount(durationChange, null.ok = TRUE)
               private$.durationChange <- durationChange
             },
             measure = function(measure) {
               if (missing(measure))
                 return(private$.measure)
-              assert(checkNull(measure),
-                     checkClass(measure, "measureType"))
+              assertR6(measure, "measureType", null.ok = TRUE)
               private$.measure <- measure
             },
             ramp = function(ramp) {
               if (missing(ramp))
                 return(private$.ramp)
-              assert(checkNull(ramp),
-                     checkNumber(ramp))
+              assertNumber(ramp, null.ok = TRUE)
               private$.ramp <- ramp
             }
           ))
@@ -3005,43 +2946,37 @@ stepType <-
             description = function(description) {
               if (missing(description))
                 return(private$.description)
-              assert(checkNull(description),
-                     checkString(description))
+              assertString(description, null.ok = TRUE)
               private$.description <- description
             },
             temperature = function(temperature) {
               if (missing(temperature))
                 return(private$.temperature)
-              assert(checkNull(temperature),
-                     checkClass(temperature, "temperatureType"))
+              assertR6(temperature, "temperatureType", null.ok = TRUE)
               private$.temperature <- temperature
             },
             gradient = function(gradient) {
               if (missing(gradient))
                 return(private$.gradient)
-              assert(checkNull(gradient),
-                     checkClass(gradient, "gradientType"))
+              assertR6(gradient, "gradientType", null.ok = TRUE)
               private$.gradient <- gradient
             },
             loop = function(loop) {
               if (missing(loop))
                 return(private$.loop)
-              assert(checkNull(loop),
-                     checkClass(loop, "loopType"))
+              assertR6(loop, "loopType", null.ok = TRUE)
               private$.loop <- loop
             },
             pause = function(pause) {
               if (missing(pause))
                 return(private$.pause)
-              assert(checkNull(pause),
-                     checkClass(pause, "pauseType"))
+              assertR6(pause, "pauseType", null.ok = TRUE)
               private$.pause <- pause
             },
             lidOpen = function(lidOpen) {
               if (missing(lidOpen))
                 return(private$.lidOpen)
-              assert(checkNull(lidOpen),
-                     checkClass(lidOpen, "lidOpenType"))
+              assertR6(lidOpen, "lidOpenType", null.ok = TRUE)
               private$.lidOpen <- lidOpen
             }
           ))
@@ -3102,42 +3037,37 @@ thermalCyclingConditionsType <-
             id = function(id) {
               if (missing(id))
                 return(private$.id)
-              assertClass(id, "idType")
+              assertR6(id, "idType")
               private$.id <- id
             },
             description = function(description) {
               if (missing(description))
                 return(private$.description)
-              assert(checkNull(description),
-                     checkString(description))
+              assertString(description, null.ok = TRUE)
               private$.description <- description
             },
             documentation = function(documentation) {
               if (missing(documentation))
                 return(private$.documentation)
-              assert(checkNull(documentation),
-                     checkList(documentation, "idReferencesType", unique = TRUE))
+              assertList(documentation, "idReferencesType", unique = TRUE, null.ok = TRUE)
               private$.documentation <- documentation
             },
             lidTemperature = function(lidTemperature) {
               if (missing(lidTemperature))
                 return(private$.lidTemperature)
-              assert(checkNull(lidTemperature),
-                     checkNumber(lidTemperature))
+              assertNumber(lidTemperature, null.ok = TRUE)
               private$.lidTemperature <- lidTemperature
             },
             experimenter = function(experimenter) {
               if (missing(experimenter))
                 return(private$.experimenter)
-              assert(checkNull(experimenter),
-                     checkList(experimenter, "idReferencesType", unique = TRUE))
+              assertList(experimenter, "idReferencesType", unique = TRUE, null.ok = TRUE)
               private$.experimenter <- experimenter
             },
             step = function(step) {
               if (missing(step))
                 return(private$.step)
-              assert(checkNull(step),
-                     checkList(step, "stepType", unique = TRUE))
+              assertList(step, "stepType", unique = TRUE, null.ok = TRUE)
               private$.step <- list.names(step,
                                           .$nr)
             }

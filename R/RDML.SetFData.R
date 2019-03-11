@@ -53,6 +53,8 @@ RDML$set("public", "SetFData",
            #            first.col.name <- ifelse(fdata.type == "adp",
            #                                     "cyc",
            #                                     "tmp")
+           checkChoice(fdata.type, c("adp", "mdp"))
+           
            fdata <- data.table(fdata)
            names(fdata)[1] <- "cyc"
            

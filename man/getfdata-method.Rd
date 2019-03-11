@@ -7,8 +7,11 @@
 \arguments{
 \item{request}{Output from AsTable method(\link{RDML.AsTable})}
 
-\item{dp.type}{Type of fluorescence data (i.e. 'adp' for qPCR or 'mdp' for
+\item{fdata.type}{Type of fluorescence data (i.e. 'adp' for qPCR or 'mdp' for
 melting)}
+
+\item{dp.type}{Type of fluorescence data (i.e. 'adp' for qPCR or 'mdp' for
+melting) - obsolete!!! Use \code{fdata.type}}
 
 \item{long.table}{Output table is ready for ggplot (See \link{RDML.AsTable}
 for example)}
@@ -34,7 +37,7 @@ cfx96 <- RDML$new(filename)
 library(dplyr)
 tab <- cfx96$AsTable()
 fdata <- cfx96$GetFData(filter(tab, sample.type == "unkn"),
-                        dp.type = "adp")
+                        fdata.type = "adp")
 ## Show names for obtained fdata
 colnames(fdata)
 }
