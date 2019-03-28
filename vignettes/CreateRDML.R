@@ -27,6 +27,7 @@ RDML$set("public", "ProcessVideoScan",
            # Get curves description
            tab <- as.data.frame(self$AsTable())
            # Get fluorescent point
+           warning(tab)
            dat <- as.data.frame(self$GetFData(tab))
            # Give new names to runs
            # Preprocess amplification curve raw data as described in 
@@ -37,7 +38,7 @@ RDML$set("public", "ProcessVideoScan",
            tab[, "run.id"] <- paste0(tab[, "run.id"], "_CPP")
            
            # Curves will be used one by one
-           for(i in 2:length(dat)) {
+           for (i in 2:length(dat)) {
              # Preprocess data
              preprocessed <- CPP(dat[1:last.cycle[i - 1], 1], 
                                  dat[1:last.cycle[i - 1], i],

@@ -4,10 +4,8 @@
 #' of experiment.
 #' 
 #' @param request Output from AsTable method(\link{RDML.AsTable})
-#' @param fdata.type Type of fluorescence data (i.e. 'adp' for qPCR or 'mdp' for
-#'   melting)
 #' @param dp.type Type of fluorescence data (i.e. 'adp' for qPCR or 'mdp' for
-#'   melting) - obsolete!!! Use \code{fdata.type}
+#'   melting)
 #' @param long.table Output table is ready for ggplot (See \link{RDML.AsTable}
 #'   for example)
 #' @return \code{matrix} which contains selected fluorescence data and 
@@ -33,21 +31,15 @@
 #' library(dplyr)
 #' tab <- cfx96$AsTable()
 #' fdata <- cfx96$GetFData(filter(tab, sample.type == "unkn"),
-#'                         fdata.type = "adp")
+#'                         dp.type = "adp")
 #' ## Show names for obtained fdata
 #' colnames(fdata)
 #' }
 RDML$set("public", "GetFData",
          function(request,
-                  fdata.type = "adp",
-                  dp.type = NULL,
+                  dp.type = "adp",
                   long.table = FALSE) {
-           checkChoice(fdata.type, c("adp", "mdp"))
-           if (!missing(dp.type)) {
-             warning("Using 'dp.type' is obsolete! Use 'fdata.type' instead.")
-             checkChoice(dp.type, c("adp", "mdp"))
-             fdata.type <- dp.type
-           }
+           checkChoice(dp.type, c("adp", "mdp"))
            checkFlag(long.table)
            
            if (missing(request))
@@ -61,11 +53,11 @@ RDML$set("public", "GetFData",
            }
            out <- 
              request[, self$experiment[[exp.id]]$run[[run.id]]$react[[as.character(
-               react.id)]]$data[[target]]$GetFData(fdata.type = fdata.type), by = .(fdata.name)]
+               react.id)]]$data[[target]]$GetFData(dp.type = dp.type), by = .(fdata.name)]
            ifelse(long.table == FALSE,
              return(dcast(out,
                           as.formula(sprintf("%s ~ fdata.name",
-                                             ifelse(fdata.type == "adp",
+                                             ifelse(dp.type == "adp",
                                                     "cyc", "tmp"))),
                           value.var = "fluor")),
              return(merge(request, out, by = "fdata.name"))

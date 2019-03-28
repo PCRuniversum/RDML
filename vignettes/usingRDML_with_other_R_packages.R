@@ -4,8 +4,8 @@ knitr::opts_chunk$set(collapse=T, comment="#>")
 ## ---- results="hide"-----------------------------------------------------
 # Load the RDML package and use its functions to `extract` the required data
 library(RDML)
-filename <- system.file("extdata/stepone_std.rdml", package="RDML")
-raw_data <- RDML$new(filename=filename)
+filename <- system.file("extdata/stepone_std.rdml", package = "RDML")
+raw_data <- RDML$new(filename = filename)
 
 ## ------------------------------------------------------------------------
 raw_data$target
