@@ -2276,7 +2276,7 @@ shinyServer(function(input, output, session) {
       if (nrow(tbl) == 0) {
         return(NULL)
       }
-      values$lockReplot <- 0
+      # values$lockReplot <- 0
       values$selectedTubes <-
         data.frame(position = tbl$position %>>% unique(),
                    selected = FALSE,
@@ -2303,7 +2303,8 @@ shinyServer(function(input, output, session) {
       pcrPlateInput("mainPcrPlate", "",
                               rdmlTable(),
                               values$rdml$experiment[[input$showqPCRExperiment]]$
-                                run[[input$showqPCRRun]]$pcrFormat)
+                                run[[input$showqPCRRun]]$pcrFormat,
+                    interactive = TRUE)
     })
   })
   
@@ -2322,7 +2323,7 @@ shinyServer(function(input, output, session) {
     req(input$mainPcrPlate)
     values$selectedTubes <- 
       values$selectedTubes %>% 
-      mutate(selected = if(position %in% input$mainPcrPlate) TRUE
+      mutate(selected = if (position %in% input$mainPcrPlate) TRUE
              else FALSE)
   })
   
@@ -2355,23 +2356,36 @@ shinyServer(function(input, output, session) {
     fdata
   })
   
-  fdata.filtered <- reactive({
-    req(fdata())
-    if (values$lockReplot != 0)
-      return(NULL)
+  # fdata.filtered <- reactive({
+  #   req(fdata())
+  #   # if (values$lockReplot != 0)
+  #     # return(NULL)
+  #   
+  #   fd <- fdata()[target %in% input[[paste0("showTargets", input$mainNavbar)]]]
+  #   fd <- fd[position %in% values$selectedTubes$position[values$selectedTubes$selected == TRUE]]
+  #   if (nrow(fd) == 0)
+  #     return(NULL)
+  #   fd
+  # })
+  
+  observeEvent(
+    c(input$mainPcrPlate, input[[paste0("showTargets", input$mainNavbar)]]),
+    {
     
-    fd <- fdata()[target %in% input[[paste0("showTargets", input$mainNavbar)]]]
-    fd <- fd[position %in% values$selectedTubes$position[values$selectedTubes$selected == TRUE]]
-    if (nrow(fd) == 0)
-      return(NULL)
-    fd
+    fd <- fdata() %>% 
+      filter(!(target %in% input[[paste0("showTargets", input$mainNavbar)]]) | 
+               !(position %in% input$mainPcrPlate))
+    # fdd <<- fd
+    updateCurves(session, "qPCRPlot", 
+                 hideCurves = unique(fd$fdata.name))
   })
   
-  output$qPCRPlot <- renderPlotly({
-    if (is.null(fdata.filtered()) || input$mainNavbar == "mdp")
+  # output$qPCRPlot <- renderPlotly({
+  output$qPCRPlotUI <- renderUI({
+    if (is.null(fdata()) || input$mainNavbar == "mdp")
       return(NULL)
     
-    fpoints <- fdata.filtered()
+    fpoints <- fdata()
     # just to copy in memory to new table
     fpoints[1, 1] <- fpoints[1, 1]
     # plot ticks setup
@@ -2387,120 +2401,128 @@ shinyServer(function(input, output, session) {
                        # )
               , by = target]
     }
-    if (input$logScale) {
-      fpoints[, c("fluor", "quantFluor", "quantFluor.mean") := 
-                list(
-                  {
-                    new.fluor <- log10(fluor)
-                    ifelse(is.nan(new.fluor) | new.fluor == -Inf,
-                           NA,
-                           new.fluor)},
-                  {
-                    new.fluor <- log10(quantFluor)
-                    ifelse(is.nan(new.fluor) | new.fluor == -Inf,
-                           0,
-                           new.fluor)},
-                  {
-                    new.fluor <- log10(quantFluor.mean)
-                    ifelse(is.nan(new.fluor) | new.fluor == -Inf,
-                           0,
-                           new.fluor)}
-                )]
-    }
-    
-    
-    p <- 
-      ggplot(fpoints) +
-      geom_line(aes_string(x = "cyc", y = "fluor",
-                           group = "fdata.name",
-                           color = {
-                             if (input$colorqPCRby == "none")
-                               NULL
-                             else
-                               input$colorqPCRby
-                           },
-                           linetype = {
-                             if (input$shapeqPCRby == "none")
-                               NULL
-                             else
-                               input$shapeqPCRby
-                           }),
-                size = 0.5) +
-      switch(input$showCq,
-             none = NULL,
-             yes = geom_point(aes_string(x = "cq", y = "quantFluor",
-                                         group = "fdata.name",
-                                         color = {
-                                           if (input$colorqPCRby == "none")
-                                             NULL
-                                           else
-                                             input$colorqPCRby
-                                         },
-                                         shape = {
-                                           if (input$shapeqPCRby == "none")
-                                             NULL
-                                           else
-                                             input$shapeqPCRby
-                                         }),
-                              size = 2),
-             mean = geom_point(aes_string(x = "cq.mean", y = "quantFluor.mean",
-                                          group = "fdata.name",
-                                          color = {
-                                            if (input$colorqPCRby == "none")
-                                              NULL
-                                            else
-                                              input$colorqPCRby
-                                          },
-                                          shape = {
-                                            if (input$shapeqPCRby == "none")
-                                              NULL
-                                            else
-                                              input$shapeqPCRby
-                                          }
-             ),
-             size = 2)) +
-             {
-               if (input$cqMethod == "th" && !input$autoThLevel) {
-                 geom_hline(aes_string(
-                   yintercept = "th",
-                   group = "target",
-                   color = {
-                     if (input$colorqPCRby == "none")
-                       NULL
-                     else
-                       input$colorqPCRby
-                   },
-                   linetype = {
-                     if (input$shapeqPCRby == "none")
-                       NULL
-                     else
-                       input$shapeqPCRby
-                   }))
-               } else {
-                 NULL
-               }
-             } +
-      labs(x = "Cycles", y = "RFU",
-           color = NULL, linetype = NULL, fill = NULL) +
-      theme_bw() +
-      # scale_x_continuous(minor_breaks = seq(1, max.cyc, 1),
-      #                    limits = c(1, max.cyc)) +
-      # scale_y_continuous(breaks = ticks,
-      #                    minor_breaks = minor.ticks) +
-      theme(legend.position = "right",
-            legend.box = "horizontal",
-            panel.grid.minor = element_line(size = 1)) 
-    # Not available with plotly
-    # + 
-    # {
-    #   if (input$logScale) {
-    #     annotation_logticks()
-    #   } else {
-    #     NULL
-    #   }
+    # if (input$logScale) {
+    #   fpoints[, c("fluor", "quantFluor", "quantFluor.mean") := 
+    #             list(
+    #               {
+    #                 new.fluor <- log10(fluor)
+    #                 ifelse(is.nan(new.fluor) | new.fluor == -Inf,
+    #                        NA,
+    #                        new.fluor)},
+    #               {
+    #                 new.fluor <- log10(quantFluor)
+    #                 ifelse(is.nan(new.fluor) | new.fluor == -Inf,
+    #                        0,
+    #                        new.fluor)},
+    #               {
+    #                 new.fluor <- log10(quantFluor.mean)
+    #                 ifelse(is.nan(new.fluor) | new.fluor == -Inf,
+    #                        0,
+    #                        new.fluor)}
+    #             )]
     # }
     
-    p
+    # 
+    # p <- 
+    #   ggplot(fpoints) +
+    #   geom_line(aes_string(x = "cyc", y = "fluor",
+    #                        group = "fdata.name",
+    #                        color = {
+    #                          if (input$colorqPCRby == "none")
+    #                            NULL
+    #                          else
+    #                            input$colorqPCRby
+    #                        },
+    #                        linetype = {
+    #                          if (input$shapeqPCRby == "none")
+    #                            NULL
+    #                          else
+    #                            input$shapeqPCRby
+    #                        }),
+    #             size = 0.5) +
+    #   switch(input$showCq,
+    #          none = NULL,
+    #          yes = geom_point(aes_string(x = "cq", y = "quantFluor",
+    #                                      group = "fdata.name",
+    #                                      color = {
+    #                                        if (input$colorqPCRby == "none")
+    #                                          NULL
+    #                                        else
+    #                                          input$colorqPCRby
+    #                                      },
+    #                                      shape = {
+    #                                        if (input$shapeqPCRby == "none")
+    #                                          NULL
+    #                                        else
+    #                                          input$shapeqPCRby
+    #                                      }),
+    #                           size = 2),
+    #          mean = geom_point(aes_string(x = "cq.mean", y = "quantFluor.mean",
+    #                                       group = "fdata.name",
+    #                                       color = {
+    #                                         if (input$colorqPCRby == "none")
+    #                                           NULL
+    #                                         else
+    #                                           input$colorqPCRby
+    #                                       },
+    #                                       shape = {
+    #                                         if (input$shapeqPCRby == "none")
+    #                                           NULL
+    #                                         else
+    #                                           input$shapeqPCRby
+    #                                       }
+    #          ),
+    #          size = 2)) +
+    #          {
+    #            if (input$cqMethod == "th" && !input$autoThLevel) {
+    #              geom_hline(aes_string(
+    #                yintercept = "th",
+    #                group = "target",
+    #                color = {
+    #                  if (input$colorqPCRby == "none")
+    #                    NULL
+    #                  else
+    #                    input$colorqPCRby
+    #                },
+    #                linetype = {
+    #                  if (input$shapeqPCRby == "none")
+    #                    NULL
+    #                  else
+    #                    input$shapeqPCRby
+    #                }))
+    #            } else {
+    #              NULL
+    #            }
+    #          } +
+    #   labs(x = "Cycles", y = "RFU",
+    #        color = NULL, linetype = NULL, fill = NULL) +
+    #   theme_bw() +
+    #   # scale_x_continuous(minor_breaks = seq(1, max.cyc, 1),
+    #   #                    limits = c(1, max.cyc)) +
+    #   # scale_y_continuous(breaks = ticks,
+    #   #                    minor_breaks = minor.ticks) +
+    #   theme(legend.position = "right",
+    #         legend.box = "horizontal",
+    #         panel.grid.minor = element_line(size = 1)) 
+    # # Not available with plotly
+    # # + 
+    # # {
+    # #   if (input$logScale) {
+    # #     annotation_logticks()
+    # #   } else {
+    # #     NULL
+    # #   }
+    # # }
+    # 
+    # p
+    renderAmpCurves("qPCRPlot", "AmpCurves",
+                    ampCurves = fpoints,
+                    colorBy = if (input$colorqPCRby == "none")
+                      NULL else input$colorqPCRby,
+                    linetypeBy = if (input$shapeqPCRby == "none")
+                      NULL else input$shapeqPCRby,
+                    logScale = input$logScale,
+                    showLegend = TRUE)
   })
   
   output$qPCRDt <- renderDataTable({

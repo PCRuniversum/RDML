@@ -3,11 +3,11 @@ title: "Using the RDML package"
 author: "Konstantin A. Blagodatskikh, Micha&#322; Burdukiewicz, Stefan R&ouml;diger, Andrej-Nikolai Spiess"
 date: "`r Sys.Date()`"
 output: 
-  rmarkdown::html_vignette:
-    toc: true
-    pandoc_args: [
-      "--number-sections"
-    ]
+rmarkdown::html_vignette:
+toc: true
+pandoc_args: [
+"--number-sections"
+]
 bibliography: "RDML.bib"
 vignette: >
   %\VignetteIndexEntry{Using RDML package}
@@ -63,7 +63,7 @@ The RDML format is supported by Bio-Rad (CFX 96 and CFX 384), Life Technologies 
 
 ## Structure of the **RDML** package
 
-The structure of the **RDML** package mimics the RDML format and provides several [R6](https://CRAN.R-project.org/package=R6/vignettes/Introduction.html) classes that correspond to [RDML v1.2](http://rdml.org/files.php?v=1.2) format types. All major manipulations with RDML data can be performed by a class called **RDML** through its public methods:
+The structure of the **RDML** package mimics the RDML format and provides several [R6](https://r6.r-lib.org/articles/Introduction.html) classes that correspond to [RDML v1.2](http://rdml.org/files.php?v=1.2) format types. All major manipulations with RDML data can be performed by a class called **RDML** through its public methods:
 
 - `$new()` -- creates new **RDML** object (empty or from specified RDML file) 
 - `$AsTable()` -- represents data contained in **RDML** object (except fluorescent data) as data.frame.

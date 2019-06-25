@@ -649,7 +649,8 @@ shinyUI(
                             checkboxInput("logScale",
                                           "Log Scale"))),
                    fluidRow(
-                     column(6, plotlyOutput("qPCRPlot")),
+                     # column(6, plotlyOutput("qPCRPlot")),
+                     column(6, uiOutput("qPCRPlotUI")),
                      column(6, wellPanel(
                        fluidRow(column(4, selectInput("showqPCRExperiment",
                                                       "Experiment", c())),

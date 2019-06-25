@@ -12,10 +12,8 @@ vignette: >
   %\VignetteIndexEntry{Creating RDML file from raw data}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
-  
-  ---
-  
-  ```{r, echo = FALSE, message = FALSE}
+---
+```{r, echo = FALSE, message = FALSE}
 knitr::opts_chunk$set(collapse = T, comment = "#>")
 ```
 

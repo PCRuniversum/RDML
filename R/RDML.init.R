@@ -108,7 +108,7 @@ GetDilutionsRoche <- function(uniq.folder)
     return(NA)
   }
   rdml.doc <- read_xml(paste0(uniq.folder,"/calculated_data.xml"))
-  if (length(xml_ns(rdml.doc) != 3)) {
+  if (length(xml_ns(rdml.doc)) != 9) {
     return(NULL)
   }
   rdml.env$ns <- xml_ns_rename(xml_ns(rdml.doc), d1 = "calc", d2 = "analys", d3 = "quant")
@@ -1334,7 +1334,7 @@ RDML$set("public", "initialize", function(filename,
       # cat("Adding Roche quantities\n")
       for (target in dilutions.r %>>% names()) {
         for (r.id in dilutions.r[[target]] %>>% names()) {
-          sample.name <- tbl[as.integer(r.id), sample, mult = "first"]
+          sample.name <- tbl[react.id == as.integer(r.id), sample][1]
           private$.sample[[sample.name]]$quantity <-
             quantityType$new(
               value = unname(dilutions.r[[1]][r.id]),

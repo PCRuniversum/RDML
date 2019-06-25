@@ -54,7 +54,7 @@
 #'          quantity = sample[[react$sample$id]]$quantity$value)
 #'          )
 #' ## Show cq30 and quantities
-#' tab[c("cq30", "quantity")]
+#' tab[, c("cq30", "quantity")]
 #' ## Get fluorescence values for 'std' type samples
 #' ## in format ready for ggplot function
 #' library(dplyr)
