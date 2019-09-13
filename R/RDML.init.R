@@ -3,54 +3,51 @@ rdml.env <- new.env(parent = emptyenv())
 # XML parsing helpers -------------------------------------------------
 getTextValue <- function(tree, path, ns = rdml.env$ns) {
   node <- xml_find_first(tree, path, ns)
-  ifelse(class(node) == "xml_missing",
-         return(NULL),
-         xml_text(node))
+  if (class(node) == "xml_missing")
+         return(NULL)
+  xml_text(node)
 }
 
 getTextVector <- function(tree, path, ns = rdml.env$ns) {
-  node.set <- xml_find_all(tree, path, ns)
-  if (length(node.set) == 0)
-    return(NULL)
-  list.mapv(node.set,
-            xml_text(.))
+  xml_text(xml_find_all(tree, path, ns))
 }
 
 getLogicalValue <- function(tree, path, ns = rdml.env$ns) {
   node <- xml_find_first(tree, path, ns)
-  ifelse(class(node) == "xml_missing",
-         return(NULL),
-         as.logical(xml_text(node)))
+  if (class(node) == "xml_missing")
+    return(NULL)
+  as.logical(xml_text(node))
 }
 
 getNumericValue <- function(tree, path, ns = rdml.env$ns) {
   node <- xml_find_first(tree, path, ns)
-  ifelse(class(node) == "xml_missing",
-         return(NULL),
-         as.numeric(xml_text(node)))
+  if (class(node) == "xml_missing")
+    return(NULL)
+  as.numeric(xml_text(node))
 }
 
+# getNumericVector <- function(tree, path, ns = rdml.env$ns) {
+#   node.set <- xml_find_all(tree, path, ns)
+#   if (length(node.set) == 0)
+#     return(NULL)
+#   list.mapv(node.set,
+#             as.numeric(xml_text(.)))
+# }
+
 getNumericVector <- function(tree, path, ns = rdml.env$ns) {
-  node.set <- xml_find_all(tree, path, ns)
-  if (length(node.set) == 0)
-    return(NULL)
-  list.mapv(node.set,
-            as.numeric(xml_text(.)))
+  as.numeric(
+    xml_text(xml_find_all(tree, path, ns)))
 }
 
 getIntegerValue <- function(tree, path, ns = rdml.env$ns) {
   node <- xml_find_first(tree, path, ns)
-  ifelse(class(node) == "xml_missing",
-         return(NULL),
-         as.integer(xml_text(node)))
+  if (class(node) == "xml_missing")
+    return(NULL)
+  xml_integer(node)
 }
 
 getIntegerVector <- function(tree, path, ns = rdml.env$ns) {
-  node.set <- xml_find_all(tree, path, ns)
-  if (length(node.set) == 0)
-    return(NULL)
-  list.mapv(node.set,
-            as.integer(xml_text(.)))
+  xml_integer(xml_find_all(tree, path, ns))
 }
 
 genId <- function(node) {
@@ -68,16 +65,16 @@ as.numeric <- function(val) {
       base::as.numeric(gsub(",", ".", val))
     }
   )
-  if (length(out) == 0)
-    return(NULL)
-  out
+  if (length(out))
+    return(out)
+  NULL
 }
 
 as.integer <- function(val) {
   out <- base::as.integer(val)
-  if (length(out) == 0)
-    return(NULL)
-  out
+  if (length(out))
+    return(out)
+  NULL
 }
 
 # Misc functions -------------------------------------------------
