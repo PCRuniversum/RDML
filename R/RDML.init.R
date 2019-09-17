@@ -1049,6 +1049,7 @@ RDML$set("public", "initialize", function(filename,
       #                    "']/rdml:data/rdml:tar[@id='",
       #                    tar.id,
       #                    "']/rdml:..")
+      
       dataType$new(
         tar = idReferencesType$new(
           if (length(unzipped.rdml) > 1 &&
@@ -1067,18 +1068,50 @@ RDML$set("public", "initialize", function(filename,
         excl = getTextValue(data, "rdml:excl"),
         adp = {
           
-          #str_match_all(dt2, "<adp>\\\\?n?\\s*<cyc>(.*)</cyc>\\\\?n?\\s*<tmp>(.*)</tmp>\\\\?n?\\s*<fluor>(.*)</fluor>\\\\?n?\\s*</adp>")
-          # cyc <- getNumericVector(rdml.doc, paste0(data.req, "/rdml:adp/rdml:cyc"))
-          cyc <- getNumericVector(data, "rdml:adp/rdml:cyc")
-          # tmp <- getNumericVector(rdml.doc, paste0(data.req, "/rdml:adp/rdml:tmp"))
-          tmp <- getNumericVector(data, "rdml:adp/rdml:tmp")
-          # fluor <- getNumericVector(rdml.doc, paste0(data.req, "/rdml:adp/rdml:fluor"))
-          fluor <- getNumericVector(data, "rdml:adp/rdml:fluor")
-          if (length(fluor)) {
-            adpsType$new(
-              data.table(cyc = cyc, tmp = tmp, fluor = fluor))
+          if (getM == "old") {
+            # cyc <- getNumericVector(rdml.doc, paste0(data.req, "/rdml:adp/rdml:cyc"))
+            cyc <- getNumericVector(data, "rdml:adp/rdml:cyc")
+            # tmp <- getNumericVector(rdml.doc, paste0(data.req, "/rdml:adp/rdml:tmp"))
+            tmp <- getNumericVector(data, "rdml:adp/rdml:tmp")
+            # fluor <- getNumericVector(rdml.doc, paste0(data.req, "/rdml:adp/rdml:fluor"))
+            fluor <- getNumericVector(data, "rdml:adp/rdml:fluor")
+            if (length(fluor)) {
+              adpsType$new(
+                data.table(cyc = cyc, tmp = tmp, fluor = fluor)
+              )
+            } else {
+              NULL
+            }
           } else {
-            NULL
+            
+            dataC <- as.character(data)
+            fpoints <- str_match_all(dataC,
+                                     "<adp>\\\\?n?\\s*<cyc>(.*)</cyc>\\\\?n?\\s*<tmp>(.*)</tmp>\\\\?n?\\s*<fluor>(.*)</fluor>\\\\?n?\\s*</adp>")[[1]][,-1]
+             # cyc <- getNumericVector(rdml.doc, paste0(data.req, "/rdml:adp/rdml:cyc"))
+            # cyc <- getNumericVector(data, "rdml:adp/rdml:cyc")
+            # tmp <- getNumericVector(rdml.doc, paste0(data.req, "/rdml:adp/rdml:tmp"))
+            # tmp <- getNumericVector(data, "rdml:adp/rdml:tmp")
+            # fluor <- getNumericVector(rdml.doc, paste0(data.req, "/rdml:adp/rdml:fluor"))
+            # fluor <- getNumericVector(data, "rdml:adp/rdml:fluor")
+            if (length(fpoints)) {
+              adpsType$new(
+                # data.table(cyc = cyc, tmp = tmp, fluor = fluor)
+                data.table(cyc = as.numeric(fpoints[, 1]), 
+                           tmp = as.numeric(fpoints[, 2]), 
+                           fluor = as.numeric(fpoints[, 3]))
+              )
+            } else {
+              fpoints <- str_match_all(dataC,
+                                       "<adp>\\\\?n?\\s*<cyc>(.*)</cyc>\\\\?n?\\s*<fluor>(.*)</fluor>\\\\?n?\\s*</adp>")[[1]][,-1]
+              if (length(fpoints)) {
+                adpsType$new(
+                  data.table(cyc = as.numeric(fpoints[, 1]),
+                             fluor = as.numeric(fpoints[, 2]))
+                )
+              } else {
+                NULL
+              }
+            }
           }
         },
         mdp = {
