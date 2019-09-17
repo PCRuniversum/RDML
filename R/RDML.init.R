@@ -1051,37 +1051,32 @@ RDML$set("public", "initialize", function(filename,
       #                    "']/rdml:..")
       dataType$new(
         tar = idReferencesType$new(
-          ifelse(length(unzipped.rdml) > 1 &&
-                   length(private$.id) != 0 &&
-                   private$.id[[1]]$publisher == "Roche Diagnostics",
-                 gsub("@(.+)$", "\\1",
-                      regmatches(tar.id, gregexpr("@(.+)$", tar.id))[[1]])
-                 ,
-                 {
-                   if (is.na(tar.id))
-                     "NA"
-                   else
-                     tar.id
-                 }
-          )),
+          if (length(unzipped.rdml) > 1 &&
+              length(private$.id) != 0 &&
+              private$.id[[1]]$publisher == "Roche Diagnostics")
+            gsub("@(.+)$", "\\1",
+                 regmatches(tar.id, gregexpr("@(.+)$", tar.id))[[1]])
+          else
+          {
+            if (is.na(tar.id))
+              "NA"
+            else
+              tar.id
+          }),
         cq = getNumericValue(data, "rdml:cq"),
         excl = getTextValue(data, "rdml:excl"),
         adp = {
+          
+          #str_match_all(dt2, "<adp>\\\\?n?\\s*<cyc>(.*)</cyc>\\\\?n?\\s*<tmp>(.*)</tmp>\\\\?n?\\s*<fluor>(.*)</fluor>\\\\?n?\\s*</adp>")
           # cyc <- getNumericVector(rdml.doc, paste0(data.req, "/rdml:adp/rdml:cyc"))
           cyc <- getNumericVector(data, "rdml:adp/rdml:cyc")
           # tmp <- getNumericVector(rdml.doc, paste0(data.req, "/rdml:adp/rdml:tmp"))
           tmp <- getNumericVector(data, "rdml:adp/rdml:tmp")
           # fluor <- getNumericVector(rdml.doc, paste0(data.req, "/rdml:adp/rdml:fluor"))
           fluor <- getNumericVector(data, "rdml:adp/rdml:fluor")
-          if (!is.null(fluor)) {
-            if (!is.null(tmp)) {
-              # tryCatch(
-              adpsType$new(
-                data.table(cyc = cyc, tmp = tmp, fluor = fluor))
-            } else {
-              adpsType$new(
-                data.table(cyc = cyc, fluor = fluor))
-            }
+          if (length(fluor)) {
+            adpsType$new(
+              data.table(cyc = cyc, tmp = tmp, fluor = fluor))
           } else {
             NULL
           }
@@ -1089,9 +1084,9 @@ RDML$set("public", "initialize", function(filename,
         mdp = {
           # tmp <- getNumericVector(rdml.doc,paste0(data.req, "/rdml:mdp/rdml:tmp"))
           # fluor <- getNumericVector(rdml.doc,paste0(data.req, "/rdml:mdp/rdml:fluor"))
-          tmp <- getNumericVector(data, "mdp/rdml:tmp")
-          fluor <- getNumericVector(data, "mdp/rdml:fluor")
-          if (length(fluor) != 0 && !is.null(fluor)) {
+          tmp <- getNumericVector(data, "rdml:mdp/rdml:tmp")
+          fluor <- getNumericVector(data, "rdml:mdp/rdml:fluor")
+          if (length(fluor)) {
             mdpsType$new(data.table(tmp = tmp, fluor = fluor))
           } else {
             NULL
