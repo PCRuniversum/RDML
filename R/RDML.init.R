@@ -1071,6 +1071,11 @@ RDML$set("public", "initialize", function(filename,
                                      "<adp>\\\\?n?\\s*<cyc>(.*)</cyc>\\\\?n?\\s*<tmp>(.*)</tmp>\\\\?n?\\s*<fluor>(.*)</fluor>\\\\?n?\\s*</adp>")[[1]][,-1]
             
             if (length(fpoints)) {
+              # check for duplicate cycles. Occures in StepOne RDML files.
+              # if (base::anyDuplicated(fpoints$cyc)) {
+              #   fpoints <- fpoints[-base::duplicated(fpoints$cyc)]
+              #   warning("Duplicate cycles removed")
+              # }
               adpsType$new(
                 # data.table(cyc = cyc, tmp = tmp, fluor = fluor)
                 data.table(cyc = as.numeric(fpoints[, 1]), 

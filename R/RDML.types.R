@@ -1512,98 +1512,6 @@ targetType <-
             }
           ))
 
-# # dpAmpCurveType ------------------------------------------------------------
-# dpAmpCurveType <-
-#   R6Class("dpAmpCurveType",
-#           # class = FALSE,
-#           inherit = rdmlBaseType,
-#           public = list(
-#             initialize = function(cyc,
-#                                   tmp = NULL,
-#                                   fluor) {
-#               assertNumber(cyc)
-#               assert(checkNull(tmp),
-# checkNumber(tmp))
-#               assertNumber(fluor)
-#               private$.cyc <- cyc
-#               private$.tmp <- tmp
-#               private$.fluor <- fluor
-#             },
-#             AsVector = function() {
-#               c(cyc = private$.cyc,
-#                 {
-#                   if (!is.null(private$.tmp))
-#                     c(tmp = private$.tmp)
-#                   },
-#                 fluor = private$.fluor)
-#             }
-#           ),
-#           private = list(
-#             .cyc = NULL,
-#             .tmp = NULL,
-#             .fluor = NULL
-#           ),
-#           active = list(
-#             cyc = function(cyc) {
-#               if (missing(cyc))
-#                 return(private$.cyc)
-#               assertNumber(cyc)
-#               private$.cyc <- cyc
-#             },
-#             tmp = function(tmp) {
-#               if (missing(tmp))
-#                 return(private$.tmp)
-#               assert(checkNull(tmp),
-# checkNumber(tmp))
-#               private$.tmp <- tmp
-#             },
-#             fluor = function(fluor) {
-#               if (missing(fluor))
-#                 return(private$.fluor)
-#               assertNumber(fluor)
-#               private$.fluor <- fluor
-#             }
-#           ))
-#
-
-# # dpMeltingCurveType ------------------------------------------------------------
-# dpMeltingCurveType <-
-#   R6Class("dpMeltingCurveType",
-#           # class = FALSE,
-#           inherit = rdmlBaseType,
-#           public = list(
-#             initialize = function(tmp,
-#                                   fluor) {
-#               assertNumber(tmp)
-#               assertNumber(fluor)
-#               private$.tmp <- tmp
-#               private$.fluor <- fluor
-#             },
-#             AsVector = function() {
-#               c(cyc = private$.tmp,
-#                 fluor = private$.fluor)
-#             }
-#           ),
-#           private = list(
-#             .cyc = NULL,
-#             .tmp = NULL,
-#             .fluor = NULL
-#           ),
-#           active = list(
-#             tmp = function(tmp) {
-#               if (missing(tmp))
-#                 return(private$.tmp)
-#               assertNumber(tmp)
-#               private$.tmp <- tmp
-#             },
-#             fluor = function(fluor) {
-#               if (missing(fluor))
-#                 return(private$.fluor)
-#               assertNumber(fluor)
-#               private$.fluor <- fluor
-#             }
-#           ))
-
 # adpsType ------------------------------------------------------------
 
 #' adpsType R6 class.
@@ -1684,18 +1592,19 @@ adpsType <-
               assert(
                 length(setdiff(colnames(fpoints), c("cyc", "tmp", "fluor"))) == 0 ||
                   length(setdiff(colnames(fpoints), c("cyc", "fluor"))) == 0)
-              private$.fpoints <- {
-                if (testDataTable(fpoints))
-                  fpoints
-                else
-                  data.table(fpoints)
+              if (!testDataTable(fpoints))
+                fpoints <- data.table(fpoints)
+              # # check for duplicate cycles. Occures in StepOne RDML files.
+              # if (base::anyDuplicated(fpoints$cyc)) {
+              #   fpoints <- fpoints[-base::duplicated(fpoints$cyc)]
+              #   warning("Duplicate cycles removed")
+              # }
+              # check for duplicate cycles
+              if (base::anyDuplicated(fpoints$cyc)) {
+                warning("fpoints contain duplicate cycles")
               }
-              # check for duplicate cycles. Occures in StepOne RDML files.
-              if (anyDuplicated(private$.fpoints) != FALSE) {
-                private$.fpoints <- unique(private$.fpoints)
-                warning("Duplicate cycles removed")
-              }
-              setkey(private$.fpoints, cyc)
+              setkey(fpoints, cyc)
+              private$.fpoints <- fpoints
             }
           ))
 
@@ -1746,18 +1655,19 @@ mdpsType <-
                 return(private$.fpoints)
               assert(checkDataFrame(fpoints, types = c("numeric")))
               assert(length(setdiff(colnames(fpoints), c("tmp", "fluor"))) == 0)
-              private$.fpoints <- {
-                if (testDataTable(fpoints))
-                  fpoints
-                else
-                  data.table(fpoints)
-              }
+              if (!testDataTable(fpoints))
+                fpoints <- data.table(fpoints)
               # check for duplicate temperatures. Occures in StepOne RDML files.
-              if (anyDuplicated(private$.fpoints) != FALSE) {
-                private$.fpoints <- unique(private$.fpoints)
-                warning("Duplicate temperatures removed")
+              # if (base::anyDuplicated(fpoints$tmp)) {
+              #   fpoints <- fpoints[-base::duplicated(fpoints$tmp)]
+              #   warning("Duplicate temperatures. removed")
+              # }
+              # check for duplicate temperatures.
+              if (base::anyDuplicated(fpoints$cyc)) {
+                warning("fpoints contain duplicate temperatures")
               }
-              setkey(private$.fpoints, tmp)
+              setkey(fpoints, tmp)
+              private$.fpoints <- fpoints
             }
           ))
 
