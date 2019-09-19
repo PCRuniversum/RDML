@@ -254,6 +254,7 @@ GetRefGenesRoche <- function(uniq.folder)
 RDML$set("public", "initialize", function(filename,
                                           show.progress = TRUE,
                                           conditions.sep = NULL,
+                                          cluster = NULL,
                                           format = "auto") {
   if(missing(filename)) {
     return()
@@ -1034,21 +1035,11 @@ RDML$set("public", "initialize", function(filename,
     #     names(tcc.list) <- GetIds(tcc.list)
     #     tcc.list
     # data -------------------------------------------------
-    GetData <- function(data, experiment.id, run.id, react.id) {
+    GetData <- function(data) {
       tar.id <-
         data %>>%
         xml_find_first("rdml:tar", rdml.env$ns) %>>%
         xml_attr("id")
-      # data.req <- paste0("/rdml:rdml/rdml:experiment[@id='",
-      #                    experiment.id,
-      #                    "']/rdml:run[@id='",
-      #                    run.id,
-      #                    "']/rdml:react[@id='",
-      #                    # react.id[length(react.id)],
-      #                    react.id,
-      #                    "']/rdml:data/rdml:tar[@id='",
-      #                    tar.id,
-      #                    "']/rdml:..")
       dataC <- as.character(data)
       dataType$new(
         tar = idReferencesType$new(
@@ -1113,9 +1104,9 @@ RDML$set("public", "initialize", function(filename,
         quantFluor = getNumericValue(data, "rdml:quantFluor")
       )
     }
-    
+
     # react -------------------------------------------------
-    GetReact <- function(react, experiment.id, run.id, 
+    GetReact <- function(react,
                          pcrFormat = pcrFormatType$new(
                            8, 12, 
                            labelFormatType$new("ABC"), 
@@ -1153,10 +1144,7 @@ RDML$set("public", "initialize", function(filename,
         data = {
           list.map(react %>>%
                      xml_find_all("rdml:data", rdml.env$ns),
-                   data ~ GetData(data,
-                                  experiment.id,
-                                  run.id,
-                                  react.id)
+                   data ~ GetData(data)
           )
         }
       )
@@ -1184,7 +1172,7 @@ RDML$set("public", "initialize", function(filename,
               columnLabel = labelFormatType$new("123")
             )
           }
-        } else { # correct RDML pcrFormat
+        } else {# correct RDML pcrFormat
           rows <- getIntegerValue(run, "rdml:pcrFormat/rdml:rows")
           # check for absent of 'pcrFormat' like in StepOne
           if (!is.null(rows) && !is.na(rows)) {
@@ -1243,10 +1231,8 @@ RDML$set("public", "initialize", function(filename,
         react = 
           list.map(run %>>%
                      xml_find_all("rdml:react", rdml.env$ns),
-                   react ~ 
+                   react ~
                      GetReact(react,
-                              experiment.id,
-                              run.id,
                               pcrFormat)
           ) %>>%
           list.filter(!is.null(.))
@@ -1268,7 +1254,7 @@ RDML$set("public", "initialize", function(filename,
         run =
           list.map(experiment %>>%
                      xml_find_all("rdml:run", rdml.env$ns),
-                   run ~ GetRun(run, experiment.id)
+                   run ~ GetRun(run)
           )
       )
     }

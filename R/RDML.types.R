@@ -1571,12 +1571,12 @@ adpsType <-
               ifelse("tmp" %in% colnames(private$.fpoints),
                      return(
                        private$.fpoints[, sprintf("<adp><cyc>%s</cyc><tmp>%s</tmp><fluor>%s</fluor></adp>",
-                                                  cyc, tmp, fluor)]%>>%
+                                                  cyc, tmp, fluor)] %>>%
                          paste0(collapse = "")
                      ),
                      return(
                        private$.fpoints[, sprintf("<adp><cyc>%s</cyc><fluor>%s</fluor></adp>",
-                                                  cyc, fluor)]%>>%
+                                                  cyc, fluor)] %>>%
                          paste0(collapse = "")
                      ))
             }
@@ -1601,7 +1601,7 @@ adpsType <-
               # }
               # check for duplicate cycles
               if (base::anyDuplicated(fpoints$cyc)) {
-                warning("fpoints contain duplicate cycles")
+                warning("fpoints table contains duplicate cycles!")
               }
               setkey(fpoints, cyc)
               private$.fpoints <- fpoints
@@ -1664,7 +1664,7 @@ mdpsType <-
               # }
               # check for duplicate temperatures.
               if (base::anyDuplicated(fpoints$cyc)) {
-                warning("fpoints contain duplicate temperatures")
+                warning("fpoints table contains duplicate temperatures!")
               }
               setkey(fpoints, tmp)
               private$.fpoints <- fpoints
