@@ -1,9 +1,15 @@
 # rlist::list.names with correct .data=NULL
-# list.names <- function(data, ...) {
-#  if (is.null(data))
-#    return(NULL)
-#  rlist::list.names(data, ...)
-# }
+list.names <- function(data, ...) {
+  tryCatch(
+    rlist::list.names(data, ...),
+    error = function(e) {
+      if (e$message == "attempt to set an attribute on NULL")
+        NULL
+      else
+        stop(e)
+    }
+  )
+}
 
 checkDateTime <- function(dateTime){
   if (is.null(dateTime))
