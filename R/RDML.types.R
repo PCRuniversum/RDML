@@ -3,10 +3,7 @@ list.names <- function(data, ...) {
   tryCatch(
     rlist::list.names(data, ...),
     error = function(e) {
-      if (e$message == "attempt to set an attribute on NULL")
-        NULL
-      else
-        stop(e)
+      NULL
     }
   )
 }
