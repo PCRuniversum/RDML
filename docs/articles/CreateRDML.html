@@ -7,8 +7,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Creating RDML file from raw data • RDML</title>
 <!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha256-916EbMg70RQy9LHiGkXzG8hSg9EdNy97GazNG/aiY1w=" crossorigin="anonymous">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous">
-<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script><!-- sticky kit --><script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous">
+<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
 <script src="../pkgdown.js"></script><meta property="og:title" content="Creating RDML file from raw data">
 <meta property="og:description" content="">
 <meta name="twitter:card" content="summary">
@@ -30,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">RDML</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1</span>
       </span>
     </div>
 
@@ -38,7 +39,7 @@
       <ul class="nav navbar-nav">
 <li>
   <a href="../index.html">
-    <span class="fa fa-home fa-lg"></span>
+    <span class="fas fa fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -66,8 +67,8 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/kablag/RDML">
-    <span class="fa fa-github fa-lg"></span>
+  <a href="https://github.com/PCRuniversum/RDML">
+    <span class="fab fa fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -80,15 +81,14 @@
 <!--/.navbar -->
 
       
+
       </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
-      <h1>Creating RDML file from raw data</h1>
-                        <h4 class="author">Konstantin A. Blagodatskikh, Michał Burdukiewicz, Stefan Rödiger</h4>
+      <h1></h1>
             
-            <h4 class="date">2019-06-25</h4>
       
-      <small class="dont-index">Source: <a href="https://github.com/kablag/RDML/blob/master/vignettes/CreateRDML.Rmd"><code>vignettes/CreateRDML.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/PCRuniversum/RDML/blob/master/vignettes/CreateRDML.Rmd"><code>vignettes/CreateRDML.Rmd</code></a></small>
       <div class="hidden name"><code>CreateRDML.Rmd</code></div>
 
     </div>
@@ -101,32 +101,32 @@
 <p>This vignette describes important step how to create <strong>RDML</strong> object from user provided data and calculate Cq values with custom <strong>RDML</strong> class method. We use a real-world example to demonstrate the use of the <strong>RDML</strong> package.</p>
 <p>For this purpose we used data from the <em>VideoScan</em> platform. The <em>VideoScan</em> platform is a highly versatile fluorescence microscope based imaging platform for the real-time analysis of biomolecular interactions. <em>VideoScan</em> has been extended by a heating/cooling-unit, which can be used for DNA melting curve analysis <span class="citation">[@roediger_RJ_2013]</span>, real-time quantitative PCR <span class="citation">[@roediger_highly_2013]</span> and quantitative isothermal amplification <span class="citation">[@spiess_impact_2014]</span>. In this example we focus on qPCR data obtained from the amplification of the human gene <em>mlc-2v</em> <span class="citation">[@sheikh_2015]</span>. The experimental details (e.g., primer sequences, amplification conditions) are described in <span class="citation">[@roediger_highly_2013; @george_development_2016]</span>.</p>
 <p>In detail, this dataset contains three amplification curves collected by three runs monitored with TaqMan qPCR chemistry. Similar to other experimental platforms has the <em>VideoScan</em> systems an output as <em>csv</em> file (comma separated value). In general, <em>csv</em> is a format that is sufficient for an in house usage. However, the exchange with other scientists is demanding, since experimental metadata is not consistently included in csv files. These are for example information about qPCR conditions, primers, experimentalist and so on as described in the MIQE and RDML standard documentations.</p>
-<p>All <em>csv</em> raw data were transferred to the <strong>R</strong> environment and stored as <em>rda</em> files in the <strong>C54</strong> dataset after completion of the experiment as described elsewhere <span class="citation">[@RDCT2010c]</span>. The <strong>R</strong> environment provides numerous packages for the import of standard file formats, including formats from spread sheet applications (e.g., <em>XLS</em>, <em>XLSX</em>, <em>ODS</em>) <span class="citation">[@Schutten_2014_ods, @Warnes_2015_gdata, @dragulescu_xlsx_2014]</span>, an ODBC connection <span class="citation">[@ripley_rodbc_2015]</span> or from the clipboard (<code><a href="https://www.rdocumentation.org/packages/utils/topics/read.table">read.table("clipboard")</a></code>). There are several graphical user interfaces (GUIs) for <strong>R</strong>, which facilitate an easy import of raw data <span class="citation">[@Valero_2012]</span>. For example <strong>RKWard</strong> <span class="citation">[@roediger_rkward_2012]</span> has import functionality for <em>csv</em>, <em>txt</em>, <em>spss</em> and <em>stata</em> files.</p>
+<p>All <em>csv</em> raw data were transferred to the <strong>R</strong> environment and stored as <em>rda</em> files in the <strong>C54</strong> dataset after completion of the experiment as described elsewhere <span class="citation">[@RDCT2010c]</span>. The <strong>R</strong> environment provides numerous packages for the import of standard file formats, including formats from spread sheet applications (e.g., <em>XLS</em>, <em>XLSX</em>, <em>ODS</em>) <span class="citation">[@Schutten_2014_ods, @Warnes_2015_gdata, @dragulescu_xlsx_2014]</span>, an ODBC connection <span class="citation">[@ripley_rodbc_2015]</span> or from the clipboard (<code><a href="https://rdrr.io/r/utils/read.table.html">read.table("clipboard")</a></code>). There are several graphical user interfaces (GUIs) for <strong>R</strong>, which facilitate an easy import of raw data <span class="citation">[@Valero_2012]</span>. For example <strong>RKWard</strong> <span class="citation">[@roediger_rkward_2012]</span> has import functionality for <em>csv</em>, <em>txt</em>, <em>spss</em> and <em>stata</em> files.</p>
 <p>We will use the <strong>C54</strong> dataset directly from the <a href="https://CRAN.R-project.org/package=chipPCR">chipPCR</a> package <span class="citation">[@roediger2015chippcr]</span>. The amplification curves have different number of cycles and one of them contains a missing value due to a sensor dropout. Thus, this data should be preprocessed before Cq calculation.</p>
 <p><strong>R</strong> is a language with dynamic typing. This is helpful while scripting, but can lead to problematic debugging of more complicated workflows. <strong><em>R6</em></strong> classes provide type-safe interfaces to set data without access to the inner structure of objects so that all imported data can be validated. This option is highly useful when creating packages at an intermediate level for other packages (e.g., such an approach does not permit set type <strong><em>character</em></strong> in place of type <strong><em>integer</em></strong>). Furthermore, the inheritance of <strong><em>R6</em></strong> objects unifies the structure of the package and streamlines the extending of its capabilities (since the whole package is written around a single base class).</p>
 <div id="initialization" class="section level2">
 <h2 class="hasAnchor">
 <a href="#initialization" class="anchor"></a>Initialization</h2>
 <p>First of all we have to load all necessary packages and fluorescence data into our <strong>R</strong> session.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(RDML)
-<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(chipPCR)
-<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(MBmca)
-<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(ggplot2)
-<span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/data">data</a></span>(C54)</code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(RDML)</a>
+<a class="sourceLine" id="cb1-2" data-line-number="2"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(chipPCR)</a>
+<a class="sourceLine" id="cb1-3" data-line-number="3"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(MBmca)</a>
+<a class="sourceLine" id="cb1-4" data-line-number="4"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(ggplot2)</a>
+<a class="sourceLine" id="cb1-5" data-line-number="5"><span class="kw"><a href="https://rdrr.io/r/utils/data.html">data</a></span>(C54)</a></code></pre></div>
 <p>We can see that our data are arranged in data.frame with cycle numbers in the first column and fluorescence values in the other columns. Such data structure is ready to use with the <strong>RDML</strong> package and does not need any conversion.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/str">str</a></span>(C54)
-<span class="co">#&gt; 'data.frame':    56 obs. of  4 variables:</span>
-<span class="co">#&gt;  $ Cycle: num  0 1 2 3 4 5 6 7 8 9 ...</span>
-<span class="co">#&gt;  $ D1   : num  0.141 0.146 0.152 0.151 0.153 ...</span>
-<span class="co">#&gt;  $ D2   : num  0.148 0.148 0.148 0.149 0.149 ...</span>
-<span class="co">#&gt;  $ D3   : num  0.145 0.147 0.148 0.148 0.149 ...</span></code></pre></div>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
-dat &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/data.frame">data.frame</a></span>(<span class="dt">Cycle =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/rep">rep</a></span>(C54[, <span class="dv">1</span>], <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/nrow">ncol</a></span>(C54) <span class="op">-</span><span class="st"> </span><span class="dv">1</span>),
-                  <span class="dt">Experiment =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/unlist">unlist</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/lapply">lapply</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/colnames">colnames</a></span>(C54)[<span class="op">-</span><span class="dv">1</span>], <span class="cf">function</span>(i) <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/rep">rep</a></span>(i, <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/nrow">nrow</a></span>(C54)))),
-                  <span class="dt">refMFi =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/unlist">unlist</a></span>(C54[, <span class="op">-</span><span class="dv">1</span>]))
-<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/levels">levels</a></span>(dat[[<span class="st">"Experiment"</span>]]) &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"D1 - Stock cDNA"</span>, <span class="st">"D2 - 1/10 cDNA"</span>, <span class="st">"D3 - 1/100 cDNA"</span>)
-
-<span class="kw"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(dat, <span class="kw"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="dt">x =</span> Cycle, <span class="dt">y =</span> refMFi, <span class="dt">colour =</span> Experiment)) <span class="op">+</span><span class="st"> </span><span class="kw"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span>()</code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="kw"><a href="https://rdrr.io/r/utils/str.html">str</a></span>(C54)</a>
+<a class="sourceLine" id="cb2-2" data-line-number="2"><span class="co">#&gt; 'data.frame':    56 obs. of  4 variables:</span></a>
+<a class="sourceLine" id="cb2-3" data-line-number="3"><span class="co">#&gt;  $ Cycle: num  0 1 2 3 4 5 6 7 8 9 ...</span></a>
+<a class="sourceLine" id="cb2-4" data-line-number="4"><span class="co">#&gt;  $ D1   : num  0.141 0.146 0.152 0.151 0.153 ...</span></a>
+<a class="sourceLine" id="cb2-5" data-line-number="5"><span class="co">#&gt;  $ D2   : num  0.148 0.148 0.148 0.149 0.149 ...</span></a>
+<a class="sourceLine" id="cb2-6" data-line-number="6"><span class="co">#&gt;  $ D3   : num  0.145 0.147 0.148 0.148 0.149 ...</span></a></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1"></a>
+<a class="sourceLine" id="cb3-2" data-line-number="2">dat &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span>(<span class="dt">Cycle =</span> <span class="kw"><a href="https://rdrr.io/r/base/rep.html">rep</a></span>(C54[, <span class="dv">1</span>], <span class="kw"><a href="https://rdrr.io/r/base/nrow.html">ncol</a></span>(C54) <span class="op">-</span><span class="st"> </span><span class="dv">1</span>),</a>
+<a class="sourceLine" id="cb3-3" data-line-number="3">                  <span class="dt">Experiment =</span> <span class="kw"><a href="https://rdrr.io/r/base/unlist.html">unlist</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/lapply.html">lapply</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/colnames.html">colnames</a></span>(C54)[<span class="op">-</span><span class="dv">1</span>], <span class="cf">function</span>(i) <span class="kw"><a href="https://rdrr.io/r/base/rep.html">rep</a></span>(i, <span class="kw"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span>(C54)))),</a>
+<a class="sourceLine" id="cb3-4" data-line-number="4">                  <span class="dt">refMFi =</span> <span class="kw"><a href="https://rdrr.io/r/base/unlist.html">unlist</a></span>(C54[, <span class="dv">-1</span>]))</a>
+<a class="sourceLine" id="cb3-5" data-line-number="5"><span class="kw"><a href="https://rdrr.io/r/base/levels.html">levels</a></span>(dat[[<span class="st">"Experiment"</span>]]) &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"D1 - Stock cDNA"</span>, <span class="st">"D2 - 1/10 cDNA"</span>, <span class="st">"D3 - 1/100 cDNA"</span>)</a>
+<a class="sourceLine" id="cb3-6" data-line-number="6"></a>
+<a class="sourceLine" id="cb3-7" data-line-number="7"><span class="kw"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(dat, <span class="kw"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="dt">x =</span> Cycle, <span class="dt">y =</span> refMFi, <span class="dt">colour =</span> Experiment)) <span class="op">+</span><span class="st"> </span><span class="kw"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span>()</a></code></pre></div>
 <p><img src="CreateRDML_files/figure-html/unnamed-chunk-4-1.png" width="576"></p>
 </div>
 <div id="creating-custom-method-for-rdml-class" class="section level2">
@@ -139,50 +139,50 @@ dat &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumen
 <li>vector <code>last.cycle</code> – cycle limits for every amplification curve;</li>
 <li>list <code>bg.range</code> – background range for every amplification curve.</li>
 </ul>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">RDML<span class="op">$</span><span class="kw">set</span>(<span class="st">"public"</span>, <span class="st">"ProcessVideoScan"</span>,
-         <span class="cf">function</span>(last.cycle,
-                  bg.range) {
-           <span class="co"># Get curves description</span>
-           tab &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/as.data.frame">as.data.frame</a></span>(self<span class="op">$</span><span class="kw"><a href="../reference/astable-function.html">AsTable</a></span>())
-           <span class="co"># Get fluorescent point</span>
-           <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/warning">warning</a></span>(tab)
-           dat &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/as.data.frame">as.data.frame</a></span>(self<span class="op">$</span><span class="kw"><a href="../reference/GetFData-function.html">GetFData</a></span>(tab))
-           <span class="co"># Give new names to runs</span>
-           <span class="co"># Preprocess amplification curve raw data as described in </span>
-           <span class="co"># R&amp;ouml;diger et al. (2015) Bioinformatics. Note that the dataset</span>
-           <span class="co"># has different length of cycle numbers and missing values (NAs).</span>
-           <span class="co"># The CPP function from the chipPCR package prepares the data for </span>
-           <span class="co"># further analysis.</span>
-           tab[, <span class="st">"run.id"</span>] &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/paste">paste0</a></span>(tab[, <span class="st">"run.id"</span>], <span class="st">"_CPP"</span>)
-           
-           <span class="co"># Curves will be used one by one</span>
-           <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">2</span><span class="op">:</span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/length">length</a></span>(dat)) {
-             <span class="co"># Preprocess data</span>
-             preprocessed &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/chipPCR/topics/CPP">CPP</a></span>(dat[<span class="dv">1</span><span class="op">:</span>last.cycle[i <span class="op">-</span><span class="st"> </span><span class="dv">1</span>], <span class="dv">1</span>], 
-                                 dat[<span class="dv">1</span><span class="op">:</span>last.cycle[i <span class="op">-</span><span class="st"> </span><span class="dv">1</span>], i],
-                                 <span class="dt">trans =</span> <span class="ot">TRUE</span>,
-                                 <span class="dt">bg.range =</span> bg.range[[i <span class="op">-</span><span class="st"> </span><span class="dv">1</span>]])[[<span class="st">"y.norm"</span>]]
-             <span class="co"># Create data.frame with cycle number and preprocessed curve Then</span>
-             <span class="co"># give name to fluorescence points columns as before preprocessing</span>
-             dat_CPP &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/cbind">cbind</a></span>(dat[<span class="dv">1</span><span class="op">:</span>last.cycle[i <span class="op">-</span><span class="st"> </span><span class="dv">1</span>], <span class="dv">1</span>],
-                              preprocessed)
-             <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/colnames">colnames</a></span>(dat_CPP)[<span class="dv">2</span>] &lt;-<span class="st"> </span>tab<span class="op">$</span>fdata.name[i <span class="op">-</span><span class="st"> </span><span class="dv">1</span>]
-             <span class="co"># Set preprocessed data with new description (new run names)</span>
-             self<span class="op">$</span><span class="kw"><a href="../reference/setfdata-function.html">SetFData</a></span>(dat_CPP, tab)
-             <span class="co"># Calculate and set Cq</span>
-             <span class="co"># Set Cq from second derivative maximum method as described in </span>
-             <span class="co"># R&amp;ouml;diger et al. (2015) Bioinformatics for preprocessed data.</span>
-             <span class="co"># The diffQ2 function from the MBmca package </span>
-             <span class="co"># (R&amp;ouml;diger et al. (2013), The R Journal) was used to calculate the</span>
-             <span class="co"># Cq values of each amplification curve.</span>
-             cq &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/MBmca/topics/diffQ2">diffQ2</a></span>(dat_CPP, <span class="dt">inder =</span> <span class="ot">TRUE</span>)[[<span class="st">"xTm1.2.D2"</span>]][<span class="dv">1</span>]
-             self<span class="op">$</span>experiment[[tab[i <span class="op">-</span><span class="st"> </span><span class="dv">1</span>, <span class="st">"exp.id"</span>]]]<span class="op">$</span>
-<span class="st">               </span>run[[tab[i <span class="op">-</span><span class="st"> </span><span class="dv">1</span>, <span class="st">"run.id"</span>]]]<span class="op">$</span>
-<span class="st">               </span>react[[tab[i <span class="op">-</span><span class="st"> </span><span class="dv">1</span>, <span class="st">"react.id"</span>]]]<span class="op">$</span>
-<span class="st">               </span>data[[tab[i <span class="op">-</span><span class="st"> </span><span class="dv">1</span>, <span class="st">"target"</span>]]]<span class="op">$</span>cq &lt;-<span class="st"> </span>cq
-           }
-         }, <span class="dt">overwrite =</span> <span class="ot">TRUE</span>
-)</code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1">RDML<span class="op">$</span><span class="kw">set</span>(<span class="st">"public"</span>, <span class="st">"ProcessVideoScan"</span>,</a>
+<a class="sourceLine" id="cb4-2" data-line-number="2">         <span class="cf">function</span>(last.cycle,</a>
+<a class="sourceLine" id="cb4-3" data-line-number="3">                  bg.range) {</a>
+<a class="sourceLine" id="cb4-4" data-line-number="4">           <span class="co"># Get curves description</span></a>
+<a class="sourceLine" id="cb4-5" data-line-number="5">           tab &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/as.data.frame.html">as.data.frame</a></span>(self<span class="op">$</span><span class="kw"><a href="../reference/astable-function.html">AsTable</a></span>())</a>
+<a class="sourceLine" id="cb4-6" data-line-number="6">           <span class="co"># Get fluorescent point</span></a>
+<a class="sourceLine" id="cb4-7" data-line-number="7">           <span class="kw"><a href="https://rdrr.io/r/base/warning.html">warning</a></span>(tab)</a>
+<a class="sourceLine" id="cb4-8" data-line-number="8">           dat &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/as.data.frame.html">as.data.frame</a></span>(self<span class="op">$</span><span class="kw"><a href="../reference/GetFData-function.html">GetFData</a></span>(tab))</a>
+<a class="sourceLine" id="cb4-9" data-line-number="9">           <span class="co"># Give new names to runs</span></a>
+<a class="sourceLine" id="cb4-10" data-line-number="10">           <span class="co"># Preprocess amplification curve raw data as described in </span></a>
+<a class="sourceLine" id="cb4-11" data-line-number="11">           <span class="co"># R&amp;ouml;diger et al. (2015) Bioinformatics. Note that the dataset</span></a>
+<a class="sourceLine" id="cb4-12" data-line-number="12">           <span class="co"># has different length of cycle numbers and missing values (NAs).</span></a>
+<a class="sourceLine" id="cb4-13" data-line-number="13">           <span class="co"># The CPP function from the chipPCR package prepares the data for </span></a>
+<a class="sourceLine" id="cb4-14" data-line-number="14">           <span class="co"># further analysis.</span></a>
+<a class="sourceLine" id="cb4-15" data-line-number="15">           tab[, <span class="st">"run.id"</span>] &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(tab[, <span class="st">"run.id"</span>], <span class="st">"_CPP"</span>)</a>
+<a class="sourceLine" id="cb4-16" data-line-number="16">           </a>
+<a class="sourceLine" id="cb4-17" data-line-number="17">           <span class="co"># Curves will be used one by one</span></a>
+<a class="sourceLine" id="cb4-18" data-line-number="18">           <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">2</span><span class="op">:</span><span class="kw"><a href="https://rdrr.io/r/base/length.html">length</a></span>(dat)) {</a>
+<a class="sourceLine" id="cb4-19" data-line-number="19">             <span class="co"># Preprocess data</span></a>
+<a class="sourceLine" id="cb4-20" data-line-number="20">             preprocessed &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/pkg/chipPCR/man/CPP.html">CPP</a></span>(dat[<span class="dv">1</span><span class="op">:</span>last.cycle[i <span class="op">-</span><span class="st"> </span><span class="dv">1</span>], <span class="dv">1</span>], </a>
+<a class="sourceLine" id="cb4-21" data-line-number="21">                                 dat[<span class="dv">1</span><span class="op">:</span>last.cycle[i <span class="op">-</span><span class="st"> </span><span class="dv">1</span>], i],</a>
+<a class="sourceLine" id="cb4-22" data-line-number="22">                                 <span class="dt">trans =</span> <span class="ot">TRUE</span>,</a>
+<a class="sourceLine" id="cb4-23" data-line-number="23">                                 <span class="dt">bg.range =</span> bg.range[[i <span class="op">-</span><span class="st"> </span><span class="dv">1</span>]])[[<span class="st">"y.norm"</span>]]</a>
+<a class="sourceLine" id="cb4-24" data-line-number="24">             <span class="co"># Create data.frame with cycle number and preprocessed curve Then</span></a>
+<a class="sourceLine" id="cb4-25" data-line-number="25">             <span class="co"># give name to fluorescence points columns as before preprocessing</span></a>
+<a class="sourceLine" id="cb4-26" data-line-number="26">             dat_CPP &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/cbind.html">cbind</a></span>(dat[<span class="dv">1</span><span class="op">:</span>last.cycle[i <span class="op">-</span><span class="st"> </span><span class="dv">1</span>], <span class="dv">1</span>],</a>
+<a class="sourceLine" id="cb4-27" data-line-number="27">                              preprocessed)</a>
+<a class="sourceLine" id="cb4-28" data-line-number="28">             <span class="kw"><a href="https://rdrr.io/r/base/colnames.html">colnames</a></span>(dat_CPP)[<span class="dv">2</span>] &lt;-<span class="st"> </span>tab<span class="op">$</span>fdata.name[i <span class="op">-</span><span class="st"> </span><span class="dv">1</span>]</a>
+<a class="sourceLine" id="cb4-29" data-line-number="29">             <span class="co"># Set preprocessed data with new description (new run names)</span></a>
+<a class="sourceLine" id="cb4-30" data-line-number="30">             self<span class="op">$</span><span class="kw"><a href="../reference/setfdata-function.html">SetFData</a></span>(dat_CPP, tab)</a>
+<a class="sourceLine" id="cb4-31" data-line-number="31">             <span class="co"># Calculate and set Cq</span></a>
+<a class="sourceLine" id="cb4-32" data-line-number="32">             <span class="co"># Set Cq from second derivative maximum method as described in </span></a>
+<a class="sourceLine" id="cb4-33" data-line-number="33">             <span class="co"># R&amp;ouml;diger et al. (2015) Bioinformatics for preprocessed data.</span></a>
+<a class="sourceLine" id="cb4-34" data-line-number="34">             <span class="co"># The diffQ2 function from the MBmca package </span></a>
+<a class="sourceLine" id="cb4-35" data-line-number="35">             <span class="co"># (R&amp;ouml;diger et al. (2013), The R Journal) was used to calculate the</span></a>
+<a class="sourceLine" id="cb4-36" data-line-number="36">             <span class="co"># Cq values of each amplification curve.</span></a>
+<a class="sourceLine" id="cb4-37" data-line-number="37">             cq &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/pkg/MBmca/man/diffQ2.html">diffQ2</a></span>(dat_CPP, <span class="dt">inder =</span> <span class="ot">TRUE</span>)[[<span class="st">"xTm1.2.D2"</span>]][<span class="dv">1</span>]</a>
+<a class="sourceLine" id="cb4-38" data-line-number="38">             self<span class="op">$</span>experiment[[tab[i <span class="op">-</span><span class="st"> </span><span class="dv">1</span>, <span class="st">"exp.id"</span>]]]<span class="op">$</span></a>
+<a class="sourceLine" id="cb4-39" data-line-number="39"><span class="st">               </span>run[[tab[i <span class="op">-</span><span class="st"> </span><span class="dv">1</span>, <span class="st">"run.id"</span>]]]<span class="op">$</span></a>
+<a class="sourceLine" id="cb4-40" data-line-number="40"><span class="st">               </span>react[[tab[i <span class="op">-</span><span class="st"> </span><span class="dv">1</span>, <span class="st">"react.id"</span>]]]<span class="op">$</span></a>
+<a class="sourceLine" id="cb4-41" data-line-number="41"><span class="st">               </span>data[[tab[i <span class="op">-</span><span class="st"> </span><span class="dv">1</span>, <span class="st">"target"</span>]]]<span class="op">$</span>cq &lt;-<span class="st"> </span>cq</a>
+<a class="sourceLine" id="cb4-42" data-line-number="42">           }</a>
+<a class="sourceLine" id="cb4-43" data-line-number="43">         }, <span class="dt">overwrite =</span> <span class="ot">TRUE</span></a>
+<a class="sourceLine" id="cb4-44" data-line-number="44">)</a></code></pre></div>
 </div>
 <div id="rdml-object-creation" class="section level2">
 <h2 class="hasAnchor">
@@ -206,189 +206,189 @@ dat &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumen
 <li>
 <code>target.dyeID</code> – fluorescent dye used for detection.</li>
 </ul>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Create a data frame of metadata </span>
-description &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/data.frame">data.frame</a></span>(
-  <span class="dt">fdata.name =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"D1"</span>, <span class="st">"D2"</span>, <span class="st">"D3"</span>),
-  <span class="dt">exp.id =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"exp1"</span>, <span class="st">"exp1"</span>, <span class="st">"exp1"</span>),
-  <span class="dt">run.id =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"run1"</span>, <span class="st">"run2"</span>, <span class="st">"run3"</span>),
-  <span class="dt">react.id =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>),
-  <span class="dt">sample =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"D1 - Stock cDNA"</span>, <span class="st">"D2 - 1/10 cDNA"</span>, <span class="st">"D3 - 1/100 cDNA"</span>),
-  <span class="dt">sample.type =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"unkn"</span>, <span class="st">"unkn"</span>, <span class="st">"unkn"</span>),
-  <span class="dt">target =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"MLC-2v"</span>, <span class="st">"MLC-2v"</span>, <span class="st">"MLC-2v"</span>),
-  <span class="dt">target.dyeId =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"Cy5"</span>, <span class="st">"Cy5"</span>, <span class="st">"Cy5"</span>),
-  <span class="dt">stringsAsFactors =</span> <span class="ot">FALSE</span>
-)
-
-<span class="co"># Create an empty RDML object</span>
-video.scan &lt;-<span class="st"> </span>RDML<span class="op">$</span><span class="kw"><a href="../reference/new-method.html">new</a></span>()
-
-<span class="co"># Add fluorescence data and metadata to the RDML object from a given source.</span>
-<span class="co"># For the sake of simplicity we use the C54 dataset from the chipPCR package.</span>
-video.scan<span class="op">$</span><span class="kw"><a href="../reference/setfdata-function.html">SetFData</a></span>(C54, description)</code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1"><span class="co"># Create a data frame of metadata </span></a>
+<a class="sourceLine" id="cb5-2" data-line-number="2">description &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span>(</a>
+<a class="sourceLine" id="cb5-3" data-line-number="3">  <span class="dt">fdata.name =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"D1"</span>, <span class="st">"D2"</span>, <span class="st">"D3"</span>),</a>
+<a class="sourceLine" id="cb5-4" data-line-number="4">  <span class="dt">exp.id =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"exp1"</span>, <span class="st">"exp1"</span>, <span class="st">"exp1"</span>),</a>
+<a class="sourceLine" id="cb5-5" data-line-number="5">  <span class="dt">run.id =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"run1"</span>, <span class="st">"run2"</span>, <span class="st">"run3"</span>),</a>
+<a class="sourceLine" id="cb5-6" data-line-number="6">  <span class="dt">react.id =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>),</a>
+<a class="sourceLine" id="cb5-7" data-line-number="7">  <span class="dt">sample =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"D1 - Stock cDNA"</span>, <span class="st">"D2 - 1/10 cDNA"</span>, <span class="st">"D3 - 1/100 cDNA"</span>),</a>
+<a class="sourceLine" id="cb5-8" data-line-number="8">  <span class="dt">sample.type =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"unkn"</span>, <span class="st">"unkn"</span>, <span class="st">"unkn"</span>),</a>
+<a class="sourceLine" id="cb5-9" data-line-number="9">  <span class="dt">target =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"MLC-2v"</span>, <span class="st">"MLC-2v"</span>, <span class="st">"MLC-2v"</span>),</a>
+<a class="sourceLine" id="cb5-10" data-line-number="10">  <span class="dt">target.dyeId =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"Cy5"</span>, <span class="st">"Cy5"</span>, <span class="st">"Cy5"</span>),</a>
+<a class="sourceLine" id="cb5-11" data-line-number="11">  <span class="dt">stringsAsFactors =</span> <span class="ot">FALSE</span></a>
+<a class="sourceLine" id="cb5-12" data-line-number="12">)</a>
+<a class="sourceLine" id="cb5-13" data-line-number="13"></a>
+<a class="sourceLine" id="cb5-14" data-line-number="14"><span class="co"># Create an empty RDML object</span></a>
+<a class="sourceLine" id="cb5-15" data-line-number="15">video.scan &lt;-<span class="st"> </span>RDML<span class="op">$</span><span class="kw"><a href="../reference/new-method.html">new</a></span>()</a>
+<a class="sourceLine" id="cb5-16" data-line-number="16"></a>
+<a class="sourceLine" id="cb5-17" data-line-number="17"><span class="co"># Add fluorescence data and metadata to the RDML object from a given source.</span></a>
+<a class="sourceLine" id="cb5-18" data-line-number="18"><span class="co"># For the sake of simplicity we use the C54 dataset from the chipPCR package.</span></a>
+<a class="sourceLine" id="cb5-19" data-line-number="19">video.scan<span class="op">$</span><span class="kw"><a href="../reference/setfdata-function.html">SetFData</a></span>(C54, description)</a></code></pre></div>
 </div>
 <div id="setting-additional-information" class="section level2">
 <h2 class="hasAnchor">
 <a href="#setting-additional-information" class="anchor"></a>Setting additional information</h2>
 <p>As optional step, we can add some information about our experiment. Such as experimenter contacts, references to documentation, description of samples and targets, thermal cycling conditions, etc.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Add experimentalist information</span>
-video.scan<span class="op">$</span>experimenter &lt;-<span class="st"> </span>
-<span class="st">  </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list">list</a></span>(
-    experimenterType<span class="op">$</span><span class="kw"><a href="../reference/new-method.html">new</a></span>(
-      idType<span class="op">$</span><span class="kw"><a href="../reference/new-method.html">new</a></span>(<span class="st">"SR"</span>),
-      <span class="st">"Stefan"</span>,
-      <span class="st">"Roediger"</span>,
-      <span class="st">"stefan.roediger@b-tu.de"</span>
-    ),
-    experimenterType<span class="op">$</span><span class="kw"><a href="../reference/new-method.html">new</a></span>(
-      idType<span class="op">$</span><span class="kw"><a href="../reference/new-method.html">new</a></span>(<span class="st">"CD"</span>),
-      <span class="st">"Claudia"</span>,
-      <span class="st">"Deutschmann"</span>
-    )
-  )
-
-<span class="co"># Add a reference to documentation</span>
-video.scan<span class="op">$</span>documentation &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list">list</a></span>(
-  documentationType<span class="op">$</span><span class="kw"><a href="../reference/new-method.html">new</a></span>(
-    idType<span class="op">$</span><span class="kw"><a href="../reference/new-method.html">new</a></span>(<span class="st">"Roediger et al. 2013"</span>),
-    <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/paste">paste</a></span>(<span class="st">"A Highly Versatile Microscope Imaging Technology Platform for the Multiplex"</span>,
-          <span class="st">"Real-Time Detection of Biomolecules and Autoimmune Antibodies. S. Roediger,"</span>,
-          <span class="st">"P. Schierack, A. Boehm, J. Nitschke, I. Berger, U. Froemmel, C. Schmidt, M."</span>,
-          <span class="st">"Ruhland, I. Schimke, D. Roggenbuck, W. Lehmann and C. Schroeder. Advances in"</span>,
-          <span class="st">"Biochemical Bioengineering/Biotechnology. 133:33-74, 2013."</span>,
-          <span class="st">"https://www.ncbi.nlm.nih.gov/pubmed/22437246"</span>)
-  )
-)
-
-cdna &lt;-<span class="st"> </span>
-<span class="st">  </span>cdnaSynthesisMethodType<span class="op">$</span><span class="kw"><a href="../reference/new-method.html">new</a></span>(
-    <span class="dt">enzyme =</span> <span class="st">"SuperScript II"</span>,
-    <span class="dt">primingMethod =</span>
-      primingMethodType<span class="op">$</span><span class="kw"><a href="../reference/new-method.html">new</a></span>(<span class="st">"oligo-dt"</span>),
-    <span class="dt">dnaseTreatment =</span> <span class="ot">TRUE</span>
-  )
-video.scan<span class="op">$</span>sample<span class="op">$</span><span class="st">`</span><span class="dt">D1 - Stock cDNA</span><span class="st">`</span><span class="op">$</span>description &lt;-<span class="st"> "Input stock cDNA was used undiluted (D1)"</span>
-video.scan<span class="op">$</span>sample<span class="op">$</span><span class="st">`</span><span class="dt">D1 - Stock cDNA</span><span class="st">`</span><span class="op">$</span>cdnaSynthesisMethod &lt;-<span class="st"> </span>cdna
-video.scan<span class="op">$</span>sample<span class="op">$</span><span class="st">`</span><span class="dt">D2 - 1/10 cDNA</span><span class="st">`</span><span class="op">$</span>description &lt;-<span class="st"> "1/1000 diluted in A. bidest"</span>
-video.scan<span class="op">$</span>sample<span class="op">$</span><span class="st">`</span><span class="dt">D2 - 1/10 cDNA</span><span class="st">`</span><span class="op">$</span>cdnaSynthesisMethod &lt;-<span class="st"> </span>cdna
-video.scan<span class="op">$</span>sample<span class="op">$</span><span class="st">`</span><span class="dt">D3 - 1/100 cDNA</span><span class="st">`</span><span class="op">$</span>description &lt;-<span class="st"> "1/1000000 diluted in A. bidest"</span>
-video.scan<span class="op">$</span>sample<span class="op">$</span><span class="st">`</span><span class="dt">D3 - 1/100 cDNA</span><span class="st">`</span><span class="op">$</span>cdnaSynthesisMethod &lt;-<span class="st"> </span>cdna
-
-video.scan<span class="op">$</span>target<span class="op">$</span><span class="st">`</span><span class="dt">MLC-2v</span><span class="st">`</span><span class="op">$</span>xRef &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list">list</a></span>(
-  xRefType<span class="op">$</span><span class="kw"><a href="../reference/new-method.html">new</a></span>(<span class="st">"uniprot"</span>,
-               <span class="st">"P10916"</span>)
-)
-video.scan<span class="op">$</span>target<span class="op">$</span><span class="st">`</span><span class="dt">MLC-2v</span><span class="st">`</span><span class="op">$</span>sequences &lt;-<span class="st"> </span>
-<span class="st">  </span>sequencesType<span class="op">$</span><span class="kw"><a href="../reference/new-method.html">new</a></span>(
-    forwardPrimer &lt;-<span class="st"> </span>oligoType<span class="op">$</span><span class="kw"><a href="../reference/new-method.html">new</a></span>(
-      <span class="dt">sequence =</span> <span class="st">"ACAGGGATGGCTTCATTGAC"</span>),
-    reversePrimer &lt;-<span class="st"> </span>oligoType<span class="op">$</span><span class="kw"><a href="../reference/new-method.html">new</a></span>(
-      <span class="dt">sequence =</span> <span class="st">"ATGCGTTGAGAATGGTTTCC"</span>),
-    probe1 &lt;-<span class="st"> </span>oligoType<span class="op">$</span><span class="kw"><a href="../reference/new-method.html">new</a></span>(
-      <span class="dt">threePrimeTag =</span> <span class="st">"Atto647N"</span>,
-      <span class="dt">sequence =</span> <span class="st">"CAGGGTCCGCTCCCTTAAGTTTCTCC"</span>,
-      <span class="dt">fivePrimeTag =</span> <span class="st">"BHQ2"</span>)
-  )
-
-tcc &lt;-<span class="st"> </span>
-<span class="st">  </span>thermalCyclingConditionsType<span class="op">$</span><span class="kw"><a href="../reference/new-method.html">new</a></span>(
-    idType<span class="op">$</span><span class="kw"><a href="../reference/new-method.html">new</a></span>(<span class="st">"Amplification"</span>),
-    <span class="dt">experimenter =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list">list</a></span>(
-      idReferencesType<span class="op">$</span><span class="kw"><a href="../reference/new-method.html">new</a></span>(<span class="st">"SR"</span>),
-      idReferencesType<span class="op">$</span><span class="kw"><a href="../reference/new-method.html">new</a></span>(<span class="st">"CD"</span>)
-    ),
-    <span class="dt">step =</span> 
-      <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list">list</a></span>(
-        stepType<span class="op">$</span><span class="kw"><a href="../reference/new-method.html">new</a></span>(
-          <span class="dt">nr =</span> <span class="dv">1</span>,
-          <span class="dt">temperature =</span> temperatureType<span class="op">$</span><span class="kw"><a href="../reference/new-method.html">new</a></span>(<span class="dv">95</span>,
-                                            <span class="dv">600</span>)
-        ),
-        stepType<span class="op">$</span><span class="kw"><a href="../reference/new-method.html">new</a></span>(
-          <span class="dt">nr =</span> <span class="dv">2</span>,
-          <span class="dt">temperature =</span> temperatureType<span class="op">$</span><span class="kw"><a href="../reference/new-method.html">new</a></span>(<span class="dv">95</span>,
-                                            <span class="dv">40</span>)
-        ),
-        stepType<span class="op">$</span><span class="kw"><a href="../reference/new-method.html">new</a></span>(
-          <span class="dt">nr =</span> <span class="dv">3</span>,
-          <span class="dt">temperature =</span> temperatureType<span class="op">$</span><span class="kw"><a href="../reference/new-method.html">new</a></span>(<span class="fl">58.5</span>,
-                                            <span class="dv">90</span>)
-        ),
-        stepType<span class="op">$</span><span class="kw"><a href="../reference/new-method.html">new</a></span>(
-          <span class="dt">nr =</span> <span class="dv">4</span>,
-          <span class="dt">temperature =</span> temperatureType<span class="op">$</span><span class="kw"><a href="../reference/new-method.html">new</a></span>(<span class="fl">68.5</span>,
-                                            <span class="dv">90</span>)
-        ),
-        stepType<span class="op">$</span><span class="kw"><a href="../reference/new-method.html">new</a></span>(
-          <span class="dt">nr =</span> <span class="dv">5</span>,
-          <span class="dt">loop =</span> loopType<span class="op">$</span><span class="kw"><a href="../reference/new-method.html">new</a></span>(<span class="dt">goto =</span> <span class="dv">2</span>,
-                              <span class="dt">repeat.n =</span> <span class="dv">49</span>)
-        )
-      )
-  )
-video.scan<span class="op">$</span>thermalCyclingConditions &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list">list</a></span>(
-  tcc
-)
-
-<span class="co">#add description of the experiment</span>
-video.scan<span class="op">$</span>experiment<span class="op">$</span>exp1<span class="op">$</span>description &lt;-<span class="st"> </span>
-<span class="st">  </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/paste">paste</a></span>(<span class="st">"The aim was to amplify MLC-2v in the VideoScan and to monitor with a"</span>,
-        <span class="st">"hydrolysis probe for MLC-2v. The primer sequences for MLC-2v were taken"</span>,
-        <span class="st">"from Roediger et al. (2013). The amplification was detected in solution of"</span>,
-        <span class="st">"the 1 HCU (see Roediger et al. 2013 for details). A 20 micro L PCR reaction"</span>,
-        <span class="st">"was composed of 250 nM primer (forward and reverse), 1x Maxima Probe qPCR"</span>,
-        <span class="st">"Master Mix (Fermentas), 1 micro L template (MLC-2v amplification product in"</span>,
-        <span class="st">"different dilutions), 50 nM hydrolysis probe for MLC-2v and A."</span>,
-        <span class="st">"bidest. During the amplification, fluorescence was measured at 59.5 degree"</span>,
-        <span class="st">"Celsius. The Cy5 channel was used to monitor the MLC-2v specific hydrolysis"</span>,
-        <span class="st">"probe. Input stock cDNA was used undiluted (D1). D2 was 1/1000 and D3"</span>,
-        <span class="st">"1/1000000 diluted in A. bidest. The D1, D2, and D3 have different numbers"</span>,
-        <span class="st">"measure points and D2 contains a missing value at cycle 37."</span>)
-video.scan<span class="op">$</span>experiment<span class="op">$</span>exp1<span class="op">$</span>run<span class="op">$</span>run1<span class="op">$</span>thermalCyclingConditions &lt;-<span class="st"> </span>idReferencesType<span class="op">$</span><span class="kw"><a href="../reference/new-method.html">new</a></span>(<span class="st">"Amplification"</span>)
-video.scan<span class="op">$</span>experiment<span class="op">$</span>exp1<span class="op">$</span>run<span class="op">$</span>run2<span class="op">$</span>thermalCyclingConditions &lt;-<span class="st"> </span>idReferencesType<span class="op">$</span><span class="kw"><a href="../reference/new-method.html">new</a></span>(<span class="st">"Amplification"</span>)
-video.scan<span class="op">$</span>experiment<span class="op">$</span>exp1<span class="op">$</span>run<span class="op">$</span>run3<span class="op">$</span>thermalCyclingConditions &lt;-<span class="st"> </span>idReferencesType<span class="op">$</span><span class="kw"><a href="../reference/new-method.html">new</a></span>(<span class="st">"Amplification"</span>)</code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1"><span class="co"># Add experimentalist information</span></a>
+<a class="sourceLine" id="cb6-2" data-line-number="2">video.scan<span class="op">$</span>experimenter &lt;-<span class="st"> </span></a>
+<a class="sourceLine" id="cb6-3" data-line-number="3"><span class="st">  </span><span class="kw"><a href="https://rdrr.io/r/base/list.html">list</a></span>(</a>
+<a class="sourceLine" id="cb6-4" data-line-number="4">    experimenterType<span class="op">$</span><span class="kw"><a href="../reference/new-method.html">new</a></span>(</a>
+<a class="sourceLine" id="cb6-5" data-line-number="5">      idType<span class="op">$</span><span class="kw"><a href="../reference/new-method.html">new</a></span>(<span class="st">"SR"</span>),</a>
+<a class="sourceLine" id="cb6-6" data-line-number="6">      <span class="st">"Stefan"</span>,</a>
+<a class="sourceLine" id="cb6-7" data-line-number="7">      <span class="st">"Roediger"</span>,</a>
+<a class="sourceLine" id="cb6-8" data-line-number="8">      <span class="st">"stefan.roediger@b-tu.de"</span></a>
+<a class="sourceLine" id="cb6-9" data-line-number="9">    ),</a>
+<a class="sourceLine" id="cb6-10" data-line-number="10">    experimenterType<span class="op">$</span><span class="kw"><a href="../reference/new-method.html">new</a></span>(</a>
+<a class="sourceLine" id="cb6-11" data-line-number="11">      idType<span class="op">$</span><span class="kw"><a href="../reference/new-method.html">new</a></span>(<span class="st">"CD"</span>),</a>
+<a class="sourceLine" id="cb6-12" data-line-number="12">      <span class="st">"Claudia"</span>,</a>
+<a class="sourceLine" id="cb6-13" data-line-number="13">      <span class="st">"Deutschmann"</span></a>
+<a class="sourceLine" id="cb6-14" data-line-number="14">    )</a>
+<a class="sourceLine" id="cb6-15" data-line-number="15">  )</a>
+<a class="sourceLine" id="cb6-16" data-line-number="16"></a>
+<a class="sourceLine" id="cb6-17" data-line-number="17"><span class="co"># Add a reference to documentation</span></a>
+<a class="sourceLine" id="cb6-18" data-line-number="18">video.scan<span class="op">$</span>documentation &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/list.html">list</a></span>(</a>
+<a class="sourceLine" id="cb6-19" data-line-number="19">  documentationType<span class="op">$</span><span class="kw"><a href="../reference/new-method.html">new</a></span>(</a>
+<a class="sourceLine" id="cb6-20" data-line-number="20">    idType<span class="op">$</span><span class="kw"><a href="../reference/new-method.html">new</a></span>(<span class="st">"Roediger et al. 2013"</span>),</a>
+<a class="sourceLine" id="cb6-21" data-line-number="21">    <span class="kw"><a href="https://rdrr.io/r/base/paste.html">paste</a></span>(<span class="st">"A Highly Versatile Microscope Imaging Technology Platform for the Multiplex"</span>,</a>
+<a class="sourceLine" id="cb6-22" data-line-number="22">          <span class="st">"Real-Time Detection of Biomolecules and Autoimmune Antibodies. S. Roediger,"</span>,</a>
+<a class="sourceLine" id="cb6-23" data-line-number="23">          <span class="st">"P. Schierack, A. Boehm, J. Nitschke, I. Berger, U. Froemmel, C. Schmidt, M."</span>,</a>
+<a class="sourceLine" id="cb6-24" data-line-number="24">          <span class="st">"Ruhland, I. Schimke, D. Roggenbuck, W. Lehmann and C. Schroeder. Advances in"</span>,</a>
+<a class="sourceLine" id="cb6-25" data-line-number="25">          <span class="st">"Biochemical Bioengineering/Biotechnology. 133:33-74, 2013."</span>,</a>
+<a class="sourceLine" id="cb6-26" data-line-number="26">          <span class="st">"https://www.ncbi.nlm.nih.gov/pubmed/22437246"</span>)</a>
+<a class="sourceLine" id="cb6-27" data-line-number="27">  )</a>
+<a class="sourceLine" id="cb6-28" data-line-number="28">)</a>
+<a class="sourceLine" id="cb6-29" data-line-number="29"></a>
+<a class="sourceLine" id="cb6-30" data-line-number="30">cdna &lt;-<span class="st"> </span></a>
+<a class="sourceLine" id="cb6-31" data-line-number="31"><span class="st">  </span>cdnaSynthesisMethodType<span class="op">$</span><span class="kw"><a href="../reference/new-method.html">new</a></span>(</a>
+<a class="sourceLine" id="cb6-32" data-line-number="32">    <span class="dt">enzyme =</span> <span class="st">"SuperScript II"</span>,</a>
+<a class="sourceLine" id="cb6-33" data-line-number="33">    <span class="dt">primingMethod =</span></a>
+<a class="sourceLine" id="cb6-34" data-line-number="34">      primingMethodType<span class="op">$</span><span class="kw"><a href="../reference/new-method.html">new</a></span>(<span class="st">"oligo-dt"</span>),</a>
+<a class="sourceLine" id="cb6-35" data-line-number="35">    <span class="dt">dnaseTreatment =</span> <span class="ot">TRUE</span></a>
+<a class="sourceLine" id="cb6-36" data-line-number="36">  )</a>
+<a class="sourceLine" id="cb6-37" data-line-number="37">video.scan<span class="op">$</span>sample<span class="op">$</span><span class="st">`</span><span class="dt">D1 - Stock cDNA</span><span class="st">`</span><span class="op">$</span>description &lt;-<span class="st"> "Input stock cDNA was used undiluted (D1)"</span></a>
+<a class="sourceLine" id="cb6-38" data-line-number="38">video.scan<span class="op">$</span>sample<span class="op">$</span><span class="st">`</span><span class="dt">D1 - Stock cDNA</span><span class="st">`</span><span class="op">$</span>cdnaSynthesisMethod &lt;-<span class="st"> </span>cdna</a>
+<a class="sourceLine" id="cb6-39" data-line-number="39">video.scan<span class="op">$</span>sample<span class="op">$</span><span class="st">`</span><span class="dt">D2 - 1/10 cDNA</span><span class="st">`</span><span class="op">$</span>description &lt;-<span class="st"> "1/1000 diluted in A. bidest"</span></a>
+<a class="sourceLine" id="cb6-40" data-line-number="40">video.scan<span class="op">$</span>sample<span class="op">$</span><span class="st">`</span><span class="dt">D2 - 1/10 cDNA</span><span class="st">`</span><span class="op">$</span>cdnaSynthesisMethod &lt;-<span class="st"> </span>cdna</a>
+<a class="sourceLine" id="cb6-41" data-line-number="41">video.scan<span class="op">$</span>sample<span class="op">$</span><span class="st">`</span><span class="dt">D3 - 1/100 cDNA</span><span class="st">`</span><span class="op">$</span>description &lt;-<span class="st"> "1/1000000 diluted in A. bidest"</span></a>
+<a class="sourceLine" id="cb6-42" data-line-number="42">video.scan<span class="op">$</span>sample<span class="op">$</span><span class="st">`</span><span class="dt">D3 - 1/100 cDNA</span><span class="st">`</span><span class="op">$</span>cdnaSynthesisMethod &lt;-<span class="st"> </span>cdna</a>
+<a class="sourceLine" id="cb6-43" data-line-number="43"></a>
+<a class="sourceLine" id="cb6-44" data-line-number="44">video.scan<span class="op">$</span>target<span class="op">$</span><span class="st">`</span><span class="dt">MLC-2v</span><span class="st">`</span><span class="op">$</span>xRef &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/list.html">list</a></span>(</a>
+<a class="sourceLine" id="cb6-45" data-line-number="45">  xRefType<span class="op">$</span><span class="kw"><a href="../reference/new-method.html">new</a></span>(<span class="st">"uniprot"</span>,</a>
+<a class="sourceLine" id="cb6-46" data-line-number="46">               <span class="st">"P10916"</span>)</a>
+<a class="sourceLine" id="cb6-47" data-line-number="47">)</a>
+<a class="sourceLine" id="cb6-48" data-line-number="48">video.scan<span class="op">$</span>target<span class="op">$</span><span class="st">`</span><span class="dt">MLC-2v</span><span class="st">`</span><span class="op">$</span>sequences &lt;-<span class="st"> </span></a>
+<a class="sourceLine" id="cb6-49" data-line-number="49"><span class="st">  </span>sequencesType<span class="op">$</span><span class="kw"><a href="../reference/new-method.html">new</a></span>(</a>
+<a class="sourceLine" id="cb6-50" data-line-number="50">    forwardPrimer &lt;-<span class="st"> </span>oligoType<span class="op">$</span><span class="kw"><a href="../reference/new-method.html">new</a></span>(</a>
+<a class="sourceLine" id="cb6-51" data-line-number="51">      <span class="dt">sequence =</span> <span class="st">"ACAGGGATGGCTTCATTGAC"</span>),</a>
+<a class="sourceLine" id="cb6-52" data-line-number="52">    reversePrimer &lt;-<span class="st"> </span>oligoType<span class="op">$</span><span class="kw"><a href="../reference/new-method.html">new</a></span>(</a>
+<a class="sourceLine" id="cb6-53" data-line-number="53">      <span class="dt">sequence =</span> <span class="st">"ATGCGTTGAGAATGGTTTCC"</span>),</a>
+<a class="sourceLine" id="cb6-54" data-line-number="54">    probe1 &lt;-<span class="st"> </span>oligoType<span class="op">$</span><span class="kw"><a href="../reference/new-method.html">new</a></span>(</a>
+<a class="sourceLine" id="cb6-55" data-line-number="55">      <span class="dt">threePrimeTag =</span> <span class="st">"Atto647N"</span>,</a>
+<a class="sourceLine" id="cb6-56" data-line-number="56">      <span class="dt">sequence =</span> <span class="st">"CAGGGTCCGCTCCCTTAAGTTTCTCC"</span>,</a>
+<a class="sourceLine" id="cb6-57" data-line-number="57">      <span class="dt">fivePrimeTag =</span> <span class="st">"BHQ2"</span>)</a>
+<a class="sourceLine" id="cb6-58" data-line-number="58">  )</a>
+<a class="sourceLine" id="cb6-59" data-line-number="59"></a>
+<a class="sourceLine" id="cb6-60" data-line-number="60">tcc &lt;-<span class="st"> </span></a>
+<a class="sourceLine" id="cb6-61" data-line-number="61"><span class="st">  </span>thermalCyclingConditionsType<span class="op">$</span><span class="kw"><a href="../reference/new-method.html">new</a></span>(</a>
+<a class="sourceLine" id="cb6-62" data-line-number="62">    idType<span class="op">$</span><span class="kw"><a href="../reference/new-method.html">new</a></span>(<span class="st">"Amplification"</span>),</a>
+<a class="sourceLine" id="cb6-63" data-line-number="63">    <span class="dt">experimenter =</span> <span class="kw"><a href="https://rdrr.io/r/base/list.html">list</a></span>(</a>
+<a class="sourceLine" id="cb6-64" data-line-number="64">      idReferencesType<span class="op">$</span><span class="kw"><a href="../reference/new-method.html">new</a></span>(<span class="st">"SR"</span>),</a>
+<a class="sourceLine" id="cb6-65" data-line-number="65">      idReferencesType<span class="op">$</span><span class="kw"><a href="../reference/new-method.html">new</a></span>(<span class="st">"CD"</span>)</a>
+<a class="sourceLine" id="cb6-66" data-line-number="66">    ),</a>
+<a class="sourceLine" id="cb6-67" data-line-number="67">    <span class="dt">step =</span> </a>
+<a class="sourceLine" id="cb6-68" data-line-number="68">      <span class="kw"><a href="https://rdrr.io/r/base/list.html">list</a></span>(</a>
+<a class="sourceLine" id="cb6-69" data-line-number="69">        stepType<span class="op">$</span><span class="kw"><a href="../reference/new-method.html">new</a></span>(</a>
+<a class="sourceLine" id="cb6-70" data-line-number="70">          <span class="dt">nr =</span> <span class="dv">1</span>,</a>
+<a class="sourceLine" id="cb6-71" data-line-number="71">          <span class="dt">temperature =</span> temperatureType<span class="op">$</span><span class="kw"><a href="../reference/new-method.html">new</a></span>(<span class="dv">95</span>,</a>
+<a class="sourceLine" id="cb6-72" data-line-number="72">                                            <span class="dv">600</span>)</a>
+<a class="sourceLine" id="cb6-73" data-line-number="73">        ),</a>
+<a class="sourceLine" id="cb6-74" data-line-number="74">        stepType<span class="op">$</span><span class="kw"><a href="../reference/new-method.html">new</a></span>(</a>
+<a class="sourceLine" id="cb6-75" data-line-number="75">          <span class="dt">nr =</span> <span class="dv">2</span>,</a>
+<a class="sourceLine" id="cb6-76" data-line-number="76">          <span class="dt">temperature =</span> temperatureType<span class="op">$</span><span class="kw"><a href="../reference/new-method.html">new</a></span>(<span class="dv">95</span>,</a>
+<a class="sourceLine" id="cb6-77" data-line-number="77">                                            <span class="dv">40</span>)</a>
+<a class="sourceLine" id="cb6-78" data-line-number="78">        ),</a>
+<a class="sourceLine" id="cb6-79" data-line-number="79">        stepType<span class="op">$</span><span class="kw"><a href="../reference/new-method.html">new</a></span>(</a>
+<a class="sourceLine" id="cb6-80" data-line-number="80">          <span class="dt">nr =</span> <span class="dv">3</span>,</a>
+<a class="sourceLine" id="cb6-81" data-line-number="81">          <span class="dt">temperature =</span> temperatureType<span class="op">$</span><span class="kw"><a href="../reference/new-method.html">new</a></span>(<span class="fl">58.5</span>,</a>
+<a class="sourceLine" id="cb6-82" data-line-number="82">                                            <span class="dv">90</span>)</a>
+<a class="sourceLine" id="cb6-83" data-line-number="83">        ),</a>
+<a class="sourceLine" id="cb6-84" data-line-number="84">        stepType<span class="op">$</span><span class="kw"><a href="../reference/new-method.html">new</a></span>(</a>
+<a class="sourceLine" id="cb6-85" data-line-number="85">          <span class="dt">nr =</span> <span class="dv">4</span>,</a>
+<a class="sourceLine" id="cb6-86" data-line-number="86">          <span class="dt">temperature =</span> temperatureType<span class="op">$</span><span class="kw"><a href="../reference/new-method.html">new</a></span>(<span class="fl">68.5</span>,</a>
+<a class="sourceLine" id="cb6-87" data-line-number="87">                                            <span class="dv">90</span>)</a>
+<a class="sourceLine" id="cb6-88" data-line-number="88">        ),</a>
+<a class="sourceLine" id="cb6-89" data-line-number="89">        stepType<span class="op">$</span><span class="kw"><a href="../reference/new-method.html">new</a></span>(</a>
+<a class="sourceLine" id="cb6-90" data-line-number="90">          <span class="dt">nr =</span> <span class="dv">5</span>,</a>
+<a class="sourceLine" id="cb6-91" data-line-number="91">          <span class="dt">loop =</span> loopType<span class="op">$</span><span class="kw"><a href="../reference/new-method.html">new</a></span>(<span class="dt">goto =</span> <span class="dv">2</span>,</a>
+<a class="sourceLine" id="cb6-92" data-line-number="92">                              <span class="dt">repeat.n =</span> <span class="dv">49</span>)</a>
+<a class="sourceLine" id="cb6-93" data-line-number="93">        )</a>
+<a class="sourceLine" id="cb6-94" data-line-number="94">      )</a>
+<a class="sourceLine" id="cb6-95" data-line-number="95">  )</a>
+<a class="sourceLine" id="cb6-96" data-line-number="96">video.scan<span class="op">$</span>thermalCyclingConditions &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/list.html">list</a></span>(</a>
+<a class="sourceLine" id="cb6-97" data-line-number="97">  tcc</a>
+<a class="sourceLine" id="cb6-98" data-line-number="98">)</a>
+<a class="sourceLine" id="cb6-99" data-line-number="99"></a>
+<a class="sourceLine" id="cb6-100" data-line-number="100"><span class="co">#add description of the experiment</span></a>
+<a class="sourceLine" id="cb6-101" data-line-number="101">video.scan<span class="op">$</span>experiment<span class="op">$</span>exp1<span class="op">$</span>description &lt;-<span class="st"> </span></a>
+<a class="sourceLine" id="cb6-102" data-line-number="102"><span class="st">  </span><span class="kw"><a href="https://rdrr.io/r/base/paste.html">paste</a></span>(<span class="st">"The aim was to amplify MLC-2v in the VideoScan and to monitor with a"</span>,</a>
+<a class="sourceLine" id="cb6-103" data-line-number="103">        <span class="st">"hydrolysis probe for MLC-2v. The primer sequences for MLC-2v were taken"</span>,</a>
+<a class="sourceLine" id="cb6-104" data-line-number="104">        <span class="st">"from Roediger et al. (2013). The amplification was detected in solution of"</span>,</a>
+<a class="sourceLine" id="cb6-105" data-line-number="105">        <span class="st">"the 1 HCU (see Roediger et al. 2013 for details). A 20 micro L PCR reaction"</span>,</a>
+<a class="sourceLine" id="cb6-106" data-line-number="106">        <span class="st">"was composed of 250 nM primer (forward and reverse), 1x Maxima Probe qPCR"</span>,</a>
+<a class="sourceLine" id="cb6-107" data-line-number="107">        <span class="st">"Master Mix (Fermentas), 1 micro L template (MLC-2v amplification product in"</span>,</a>
+<a class="sourceLine" id="cb6-108" data-line-number="108">        <span class="st">"different dilutions), 50 nM hydrolysis probe for MLC-2v and A."</span>,</a>
+<a class="sourceLine" id="cb6-109" data-line-number="109">        <span class="st">"bidest. During the amplification, fluorescence was measured at 59.5 degree"</span>,</a>
+<a class="sourceLine" id="cb6-110" data-line-number="110">        <span class="st">"Celsius. The Cy5 channel was used to monitor the MLC-2v specific hydrolysis"</span>,</a>
+<a class="sourceLine" id="cb6-111" data-line-number="111">        <span class="st">"probe. Input stock cDNA was used undiluted (D1). D2 was 1/1000 and D3"</span>,</a>
+<a class="sourceLine" id="cb6-112" data-line-number="112">        <span class="st">"1/1000000 diluted in A. bidest. The D1, D2, and D3 have different numbers"</span>,</a>
+<a class="sourceLine" id="cb6-113" data-line-number="113">        <span class="st">"measure points and D2 contains a missing value at cycle 37."</span>)</a>
+<a class="sourceLine" id="cb6-114" data-line-number="114">video.scan<span class="op">$</span>experiment<span class="op">$</span>exp1<span class="op">$</span>run<span class="op">$</span>run1<span class="op">$</span>thermalCyclingConditions &lt;-<span class="st"> </span>idReferencesType<span class="op">$</span><span class="kw"><a href="../reference/new-method.html">new</a></span>(<span class="st">"Amplification"</span>)</a>
+<a class="sourceLine" id="cb6-115" data-line-number="115">video.scan<span class="op">$</span>experiment<span class="op">$</span>exp1<span class="op">$</span>run<span class="op">$</span>run2<span class="op">$</span>thermalCyclingConditions &lt;-<span class="st"> </span>idReferencesType<span class="op">$</span><span class="kw"><a href="../reference/new-method.html">new</a></span>(<span class="st">"Amplification"</span>)</a>
+<a class="sourceLine" id="cb6-116" data-line-number="116">video.scan<span class="op">$</span>experiment<span class="op">$</span>exp1<span class="op">$</span>run<span class="op">$</span>run3<span class="op">$</span>thermalCyclingConditions &lt;-<span class="st"> </span>idReferencesType<span class="op">$</span><span class="kw"><a href="../reference/new-method.html">new</a></span>(<span class="st">"Amplification"</span>)</a></code></pre></div>
 </div>
 <div id="processing-data" class="section level2">
 <h2 class="hasAnchor">
 <a href="#processing-data" class="anchor"></a>Processing data</h2>
 <p>After creating <strong>RDML</strong> object and setting data we can use our method <code>$ProcessVideoScan</code>.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Process VideoScan data</span>
-video.scan<span class="op">$</span><span class="kw">ProcessVideoScan</span>(<span class="dt">last.cycle =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">35</span>, <span class="dv">45</span>, <span class="dv">55</span>),
-                            <span class="dt">bg.range =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list">list</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">1</span>,<span class="dv">8</span>),
-                                            <span class="ot">NULL</span>,
-                                            <span class="ot">NULL</span>))
-<span class="co">#&gt; Warning in video.scan$ProcessVideoScan(last.cycle = c(35, 45, 55),</span>
-<span class="co">#&gt; bg.range = list(c(1, : c("A01_D1 - Stock cDNA_unkn_MLC-2v", "A01_D2 - 1/10</span>
-<span class="co">#&gt; cDNA_unkn_MLC-2v", "A01_D3 - 1/100 cDNA_unkn_MLC-2v")c("exp1", "exp1",</span>
-<span class="co">#&gt; "exp1")c("run1", "run2", "run3")c(1, 1, 1)c("A01", "A01", "A01")c("D1 -</span>
-<span class="co">#&gt; Stock cDNA", "D2 - 1/10 cDNA", "D3 - 1/100 cDNA")c("MLC-2v", "MLC-2v",</span>
-<span class="co">#&gt; "MLC-2v")c("Cy5", "Cy5", "Cy5")c("unkn", "unkn", "unkn")c(TRUE, TRUE,</span>
-<span class="co">#&gt; TRUE)c(FALSE, FALSE, FALSE)</span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1"><span class="co"># Process VideoScan data</span></a>
+<a class="sourceLine" id="cb7-2" data-line-number="2">video.scan<span class="op">$</span><span class="kw">ProcessVideoScan</span>(<span class="dt">last.cycle =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="dv">35</span>, <span class="dv">45</span>, <span class="dv">55</span>),</a>
+<a class="sourceLine" id="cb7-3" data-line-number="3">                            <span class="dt">bg.range =</span> <span class="kw"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="dv">1</span>,<span class="dv">8</span>),</a>
+<a class="sourceLine" id="cb7-4" data-line-number="4">                                            <span class="ot">NULL</span>,</a>
+<a class="sourceLine" id="cb7-5" data-line-number="5">                                            <span class="ot">NULL</span>))</a>
+<a class="sourceLine" id="cb7-6" data-line-number="6"><span class="co">#&gt; Warning in video.scan$ProcessVideoScan(last.cycle = c(35, 45, 55),</span></a>
+<a class="sourceLine" id="cb7-7" data-line-number="7"><span class="co">#&gt; bg.range = list(c(1, : c("A01_D1 - Stock cDNA_unkn_MLC-2v", "A01_D2 - 1/10</span></a>
+<a class="sourceLine" id="cb7-8" data-line-number="8"><span class="co">#&gt; cDNA_unkn_MLC-2v", "A01_D3 - 1/100 cDNA_unkn_MLC-2v")c("exp1", "exp1",</span></a>
+<a class="sourceLine" id="cb7-9" data-line-number="9"><span class="co">#&gt; "exp1")c("run1", "run2", "run3")c(1, 1, 1)c("A01", "A01", "A01")c("D1 -</span></a>
+<a class="sourceLine" id="cb7-10" data-line-number="10"><span class="co">#&gt; Stock cDNA", "D2 - 1/10 cDNA", "D3 - 1/100 cDNA")c("MLC-2v", "MLC-2v",</span></a>
+<a class="sourceLine" id="cb7-11" data-line-number="11"><span class="co">#&gt; "MLC-2v")c("Cy5", "Cy5", "Cy5")c("unkn", "unkn", "unkn")c(TRUE, TRUE,</span></a>
+<a class="sourceLine" id="cb7-12" data-line-number="12"><span class="co">#&gt; TRUE)c(FALSE, FALSE, FALSE)</span></a></code></pre></div>
 <p>Then visualize the object with the <code>$AsDendrogram</code> method (runs with IDs that include <code>_CPP</code> in names, contain the preprocessed curves):</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Visualize RDML object</span>
-video.scan<span class="op">$</span><span class="kw"><a href="../reference/AsDendrogram-function.html">AsDendrogram</a></span>()</code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1"><span class="co"># Visualize RDML object</span></a>
+<a class="sourceLine" id="cb8-2" data-line-number="2">video.scan<span class="op">$</span><span class="kw"><a href="../reference/AsDendrogram-function.html">AsDendrogram</a></span>()</a></code></pre></div>
 <p><img src="CreateRDML_files/figure-html/unnamed-chunk-9-1.png" width="576"></p>
 <p>And plot preprocessed curves indicating the Cq values:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Visualise preprocessed data with Cq values as vertical dashed lines
-<span class="co"># Add custom column that contains the calculated Cq</span>
-tab &lt;-<span class="st"> </span>video.scan<span class="op">$</span><span class="kw"><a href="../reference/astable-function.html">AsTable</a></span>(
-  <span class="dt">cq =</span> {
-    cq &lt;-<span class="st"> </span>data<span class="op">$</span>cq
-    <span class="cf">if</span> (<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/NULL">is.null</a></span>(cq) <span class="op">||</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/NA">is.na</a></span>(cq))
-      <span class="ot">NULL</span>
-    <span class="cf">else</span>
-      cq
-  })
-<span class="co"># Get preprocessed data in 'long.table' format</span>
-dat &lt;-<span class="st"> </span>video.scan<span class="op">$</span><span class="kw"><a href="../reference/GetFData-function.html">GetFData</a></span>(tab[<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/grep">grepl</a></span>(<span class="st">"_CPP"</span>, tab[[<span class="st">"run.id"</span>]]), ],
-                           <span class="dt">long.table =</span> <span class="ot">TRUE</span>)
-<span class="kw"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(dat, <span class="kw"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="dt">x =</span> cyc, <span class="dt">y =</span> fluor)) <span class="op">+</span>
-<span class="st">  </span><span class="kw"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html">geom_line</a></span>(<span class="kw"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="dt">group =</span> fdata.name, <span class="dt">color =</span> fdata.name),
-            <span class="dt">size =</span> <span class="fl">1.2</span>) <span class="op">+</span>
-<span class="st">  </span><span class="kw"><a href="https://ggplot2.tidyverse.org/reference/geom_abline.html">geom_vline</a></span>(<span class="kw"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="dt">xintercept =</span> cq, <span class="dt">color =</span> fdata.name),
-             <span class="dt">linetype =</span> <span class="st">"longdash"</span>) <span class="op">+</span>
-<span class="st">  </span><span class="kw"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html">scale_x_continuous</a></span>(<span class="st">"Cycle"</span>) <span class="op">+</span>
-<span class="st">  </span><span class="kw"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html">scale_y_continuous</a></span>(<span class="st">"Fluorescence"</span>) <span class="op">+</span>
-<span class="st">  </span><span class="kw"><a href="https://ggplot2.tidyverse.org/reference/labs.html">ggtitle</a></span>(<span class="st">"Amplification of human MLC-2v</span><span class="ch">\n</span><span class="st">VideoScan HCU"</span>)</code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" data-line-number="1"><span class="co">## Visualise preprocessed data with Cq values as vertical dashed lines</span></a>
+<a class="sourceLine" id="cb9-2" data-line-number="2"><span class="co"># Add custom column that contains the calculated Cq</span></a>
+<a class="sourceLine" id="cb9-3" data-line-number="3">tab &lt;-<span class="st"> </span>video.scan<span class="op">$</span><span class="kw"><a href="../reference/astable-function.html">AsTable</a></span>(</a>
+<a class="sourceLine" id="cb9-4" data-line-number="4">  <span class="dt">cq =</span> {</a>
+<a class="sourceLine" id="cb9-5" data-line-number="5">    cq &lt;-<span class="st"> </span>data<span class="op">$</span>cq</a>
+<a class="sourceLine" id="cb9-6" data-line-number="6">    <span class="cf">if</span> (<span class="kw"><a href="https://rdrr.io/r/base/NULL.html">is.null</a></span>(cq) <span class="op">||</span><span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span>(cq))</a>
+<a class="sourceLine" id="cb9-7" data-line-number="7">      <span class="ot">NULL</span></a>
+<a class="sourceLine" id="cb9-8" data-line-number="8">    <span class="cf">else</span></a>
+<a class="sourceLine" id="cb9-9" data-line-number="9">      cq</a>
+<a class="sourceLine" id="cb9-10" data-line-number="10">  })</a>
+<a class="sourceLine" id="cb9-11" data-line-number="11"><span class="co"># Get preprocessed data in 'long.table' format</span></a>
+<a class="sourceLine" id="cb9-12" data-line-number="12">dat &lt;-<span class="st"> </span>video.scan<span class="op">$</span><span class="kw"><a href="../reference/GetFData-function.html">GetFData</a></span>(tab[<span class="kw"><a href="https://rdrr.io/r/base/grep.html">grepl</a></span>(<span class="st">"_CPP"</span>, tab[[<span class="st">"run.id"</span>]]), ],</a>
+<a class="sourceLine" id="cb9-13" data-line-number="13">                           <span class="dt">long.table =</span> <span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb9-14" data-line-number="14"><span class="kw"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(dat, <span class="kw"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="dt">x =</span> cyc, <span class="dt">y =</span> fluor)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb9-15" data-line-number="15"><span class="st">  </span><span class="kw"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html">geom_line</a></span>(<span class="kw"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="dt">group =</span> fdata.name, <span class="dt">color =</span> fdata.name),</a>
+<a class="sourceLine" id="cb9-16" data-line-number="16">            <span class="dt">size =</span> <span class="fl">1.2</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb9-17" data-line-number="17"><span class="st">  </span><span class="kw"><a href="https://ggplot2.tidyverse.org/reference/geom_abline.html">geom_vline</a></span>(<span class="kw"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="dt">xintercept =</span> cq, <span class="dt">color =</span> fdata.name),</a>
+<a class="sourceLine" id="cb9-18" data-line-number="18">             <span class="dt">linetype =</span> <span class="st">"longdash"</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb9-19" data-line-number="19"><span class="st">  </span><span class="kw"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html">scale_x_continuous</a></span>(<span class="st">"Cycle"</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb9-20" data-line-number="20"><span class="st">  </span><span class="kw"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html">scale_y_continuous</a></span>(<span class="st">"Fluorescence"</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb9-21" data-line-number="21"><span class="st">  </span><span class="kw"><a href="https://ggplot2.tidyverse.org/reference/labs.html">ggtitle</a></span>(<span class="st">"Amplification of human MLC-2v</span><span class="ch">\n</span><span class="st">VideoScan HCU"</span>)</a></code></pre></div>
 <p><img src="CreateRDML_files/figure-html/unnamed-chunk-10-1.png" width="576"></p>
 <p>However, there are further <strong>R</strong> packages on <a href="https://cran.r-project.org/">CRAN</a>, <a href="http://bioconductor.org/">Bioconductor</a> and <a href="https://github.com/">GitHub</a>, which can be used with the RDML package <span class="citation">[@roediger2015r]</span> to deal with non-detects <span class="citation">[@mccall_non-detects_2014]</span>, normalization <span class="citation">[@perkins_readqpcr_2012]</span>, expression analysis <span class="citation">[@dvinge_htqpcr:_2009, matz_no_2013]</span> and periodicity in qPCR systems <span class="citation">[@spiess_system-specific_2016]</span>.</p>
 </div>
@@ -398,7 +398,7 @@ dat &lt;-<span class="st"> </span>video.scan<span class="op">$</span><span class
 <p>To save our <strong>RDML</strong> object as file we can use <code>$AsXML()</code> method with file name as argument:</p>
 <p><code>video.scan$AsXML("filename.RDML")</code></p>
 <p><em>Note that currently due to limits of <code>XML</code> package it is rather slow operation!!!</em></p>
-<p>A XML files can be compressed to save space. The <strong>RMDL</strong> package uses the <code><a href="https://www.rdocumentation.org/packages/utils/topics/zip">zip()</a></code> function from the <strong>utils</strong> package with default values to compress the RDML file. Therefore, the compression mode depends on the operating system. The <strong>RDML</strong> function <code>AsXML()</code> without an argument returns one string, which contains the XML data. This can be used to compress it with any other compression algorithm.</p>
+<p>A XML files can be compressed to save space. The <strong>RMDL</strong> package uses the <code><a href="https://rdrr.io/r/utils/zip.html">zip()</a></code> function from the <strong>utils</strong> package with default values to compress the RDML file. Therefore, the compression mode depends on the operating system. The <strong>RDML</strong> function <code>AsXML()</code> without an argument returns one string, which contains the XML data. This can be used to compress it with any other compression algorithm.</p>
 </div>
 <div id="benchmark-of-the-rdml-generation" class="section level2">
 <h2 class="hasAnchor">
@@ -419,14 +419,30 @@ dat &lt;-<span class="st"> </span>video.scan<span class="op">$</span><span class
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
+
         <div id="tocnav">
       <h2 class="hasAnchor">
 <a href="#tocnav" class="anchor"></a>Contents</h2>
-      true
-    </div>
+      <ul class="nav nav-pills nav-stacked">
+<li>
+<a href="#creating-rdml-file-from-raw-data">Creating RDML file from raw data</a><ul class="nav nav-pills nav-stacked">
+<li><a href="#initialization">Initialization</a></li>
+      <li><a href="#creating-custom-method-for-rdml-class">Creating custom method for <strong>RDML</strong> class</a></li>
+      <li><a href="#rdml-object-creation"><strong>RDML</strong> object creation</a></li>
+      <li><a href="#setting-additional-information">Setting additional information</a></li>
+      <li><a href="#processing-data">Processing data</a></li>
+      <li><a href="#export-to-file">Export to file</a></li>
+      <li><a href="#benchmark-of-the-rdml-generation">Benchmark of the RDML generation</a></li>
+      <li><a href="#dealing-with-other-data-formats">Dealing with other data formats</a></li>
+      <li><a href="#conclusion">Conclusion</a></li>
+      </ul>
+</li>
+      </ul>
+</div>
       </div>
 
 </div>
+
 
 
       <footer><div class="copyright">
@@ -434,12 +450,14 @@ dat &lt;-<span class="st"> </span>video.scan<span class="op">$</span><span class
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.3.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.</p>
 </div>
+
       </footer>
 </div>
 
   
+
 
   </body>
 </html>

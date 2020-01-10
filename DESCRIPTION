@@ -21,7 +21,7 @@ Authors@R: c(
     person("Andrej-Nikolai", "Spiess",
     email = "a.spiess@uke.de", role = "aut"))
 License: MIT + file LICENSE
-URL: https://github.com/kablag/RDML
+URL: https://github.com/PCRuniversum/RDML
 Depends:
     R (>= 3.2.0)
 Imports:

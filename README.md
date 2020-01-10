@@ -1,10 +1,10 @@
 [![published in: Bioinformatics](https://img.shields.io/badge/published%20in-Bioinformatics-ff69b4.svg?style=flat)](https://doi.org/10.1093/bioinformatics/btx528)
 [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/RDML)](https://CRAN.R-project.org/package=RDML)
 [![Downloads](https://cranlogs.r-pkg.org/badges/RDML)]( https://CRAN.R-project.org/package=RDML)
-[![Travis-CI Build Status](https://travis-ci.org/kablag/RDML.svg?branch=master)](https://travis-ci.org/kablag/RDML)
+[![Travis-CI Build Status](https://travis-ci.org/pcruniversum/RDML.svg?branch=master)](https://travis-ci.org/pcruniversum/RDML)
 [![Rdoc](http://www.rdocumentation.org/badges/version/RDML)](http://www.rdocumentation.org/packages/RDML) 
 
-<img src="https://raw.githubusercontent.com/kablag/RDML/master/vignettes/RDML_logo.png" alt="RDML" width="100%">
+<img src="https://raw.githubusercontent.com/pcruniversum/RDML/master/vignettes/RDML_logo.png" alt="RDML" width="100%">
 
 The RDML package is published in Oxford Bioinformatics: 
 Stefan Rödiger, Michał Burdukiewicz, Andrej-Nikolai Spiess, Konstantin Blagodatskikh; Enabling reproducible real-time quantitative PCR research: the RDML package, Bioinformatics, [https://doi.org/10.1093/bioinformatics/btx528](https://doi.org/10.1093/bioinformatics/btx528) (see also `citation()`).
@@ -32,7 +32,7 @@ install_github("PCRuniversum/RDML")
 
 # Manual
 
-The manual is available [online](https://kablag.github.io/RDML/).
+The manual is available [online](https://pcruniversum.github.io/RDML/).
 
 # Examples
 
@@ -42,10 +42,10 @@ done by a few clicks. The example below shows the import of amplification curve
 data, which were stored in a CSV file. The function `rdmlEdit()` was used in the 
 [RKWard IDE/GUI](https://rkward.kde.org/) for further processing. rdmlEdit may be also accessed as a web server (http://shtest.evrogen.net/rdmlEdit/). 
 
-<img src="https://raw.githubusercontent.com/kablag/RDML/master/vignettes/File_import.png" alt="Data Import" width="100%">
+<img src="https://raw.githubusercontent.com/pcruniversum/RDML/master/vignettes/File_import.png" alt="Data Import" width="100%">
 
 Once imported enables `rdmlEdit()` and other functions from the `RDML` package complex 
 data visualization and processing in the R statistical computing environment.
 
-<img src="https://raw.githubusercontent.com/kablag/RDML/master/vignettes/data_view.png" alt="Data View" width="100%">
+<img src="https://raw.githubusercontent.com/pcruniversum/RDML/master/vignettes/data_view.png" alt="Data View" width="100%">
 
