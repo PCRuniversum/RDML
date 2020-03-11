@@ -271,7 +271,7 @@ RDML$set("public", "initialize", function(filename,
     #   filter(!is.na(WELL))
     data.file <- paste0(uniq.folder, "/apldbio/sds/multicomponent_data.txt")
     multicomponent.data <- readChar(data.file, file.info(data.file)$size) %>>%
-      str_match_all("([0-9]+)\\t([0-9]+)\\t([A-Z]+)\\t[0-9E\\-]+\\.?[0-9E\\-]*\\t([0-9E\\-]+\\.?[0-9E\\-]*)")
+      str_match_all("([0-9]+)\\t([0-9]+)\\t([A-Z]+)\\t(?:Infinity)?(?:NaN)?[0-9E\\-]*\\.?[0-9E\\-]*\\t([0-9E\\-]+\\.?[0-9E\\-]*)")
     multicomponent.data <- as.data.frame(multicomponent.data[[1]], stringsAsFactors = FALSE)
     names(multicomponent.data) <- c("_", "well", "cyc", "dye", "fluor")
     multicomponent.data <- multicomponent.data %>>%
@@ -330,7 +330,7 @@ RDML$set("public", "initialize", function(filename,
     description <- data.table(description)
     omitted.i <- getIntegerVector(plate.setup,
                                   "/Plate/Wells/Well[IsOmit='true']/Index") + 1
-    description[react.id == omitted.i, IsOmit := TRUE]
+    description[react.id %in% omitted.i, IsOmit := TRUE]
     description <- description[IsOmit == FALSE]
     fdata <- cbind(data.frame(multicomponent.data$cyc %>>% unique() + 1),
                    apply(description, 1,
