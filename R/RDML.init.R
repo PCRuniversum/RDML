@@ -415,6 +415,9 @@ RDML$set("public", "initialize", function(filename,
   fromExcel <- function() {
     descr <- read_excel(filename,
                         sheet = "description")
+    # BioRad export correction Unkn => unkn, etc
+    descr$sample.type <- tolower(descr$sample.type)
+    
     adp_data <- tryCatch({
       read_excel(filename,
                  sheet = "adp") %>>%
