@@ -4,9 +4,8 @@
 \name{measureType}
 \alias{measureType}
 \title{measureType R6 class.}
-\format{An \code{\link{R6Class}} generator object.}
-\usage{
-measureType
+\format{
+An \code{\link{R6Class}} generator object.
 }
 \description{
 Can take values:
@@ -24,4 +23,40 @@ Inherits: \link{enumType}.
 }
 }
 
-\keyword{datasets}
+\section{Super classes}{
+\code{\link[RDML:rdmlBaseType]{RDML::rdmlBaseType}} -> \code{\link[RDML:enumType]{RDML::enumType}} -> \code{measureType}
+}
+\section{Methods}{
+\subsection{Public methods}{
+\itemize{
+\item \href{#method-clone}{\code{measureType$clone()}}
+}
+}
+\if{html}{
+\out{<details open ><summary>Inherited methods</summary>}
+\itemize{
+\item \out{<span class="pkg-link" data-pkg="RDML" data-topic="rdmlBaseType" data-id="copy">}\href{../../RDML/html/rdmlBaseType.html#method-copy}{\code{RDML::rdmlBaseType$copy()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="RDML" data-topic="enumType" data-id=".asXMLnodes">}\href{../../RDML/html/enumType.html#method-.asXMLnodes}{\code{RDML::enumType$.asXMLnodes()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="RDML" data-topic="enumType" data-id="initialize">}\href{../../RDML/html/enumType.html#method-initialize}{\code{RDML::enumType$initialize()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="RDML" data-topic="enumType" data-id="print">}\href{../../RDML/html/enumType.html#method-print}{\code{RDML::enumType$print()}}\out{</span>}
+}
+\out{</details>}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-clone"></a>}}
+\if{latex}{\out{\hypertarget{method-clone}{}}}
+\subsection{Method \code{clone()}}{
+The objects of this class are cloneable with this method.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{measureType$clone(deep = FALSE)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{deep}}{Whether to make a deep clone.}
+}
+\if{html}{\out{</div>}}
+}
+}
+}

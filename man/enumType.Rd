@@ -4,9 +4,8 @@
 \name{enumType}
 \alias{enumType}
 \title{enumType R6 class.}
-\format{An \code{\link{R6Class}} generator object.}
-\usage{
-enumType
+\format{
+An \code{\link{R6Class}} generator object.
 }
 \description{
 Generic class for creating objects thet can take limited list of values. \cr
@@ -19,4 +18,67 @@ Inherits: \link{rdmlBaseType}.
   }
 }
 
-\keyword{datasets}
+\section{Super class}{
+\code{\link[RDML:rdmlBaseType]{RDML::rdmlBaseType}} -> \code{enumType}
+}
+\section{Methods}{
+\subsection{Public methods}{
+\itemize{
+\item \href{#method-new}{\code{enumType$new()}}
+\item \href{#method-print}{\code{enumType$print()}}
+\item \href{#method-.asXMLnodes}{\code{enumType$.asXMLnodes()}}
+\item \href{#method-clone}{\code{enumType$clone()}}
+}
+}
+\if{html}{
+\out{<details open ><summary>Inherited methods</summary>}
+\itemize{
+\item \out{<span class="pkg-link" data-pkg="RDML" data-topic="rdmlBaseType" data-id="copy">}\href{../../RDML/html/rdmlBaseType.html#method-copy}{\code{RDML::rdmlBaseType$copy()}}\out{</span>}
+}
+\out{</details>}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-new"></a>}}
+\if{latex}{\out{\hypertarget{method-new}{}}}
+\subsection{Method \code{new()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{enumType$new(value)}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-print"></a>}}
+\if{latex}{\out{\hypertarget{method-print}{}}}
+\subsection{Method \code{print()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{enumType$print(...)}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-.asXMLnodes"></a>}}
+\if{latex}{\out{\hypertarget{method-.asXMLnodes}{}}}
+\subsection{Method \code{.asXMLnodes()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{enumType$.asXMLnodes(node.name)}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-clone"></a>}}
+\if{latex}{\out{\hypertarget{method-clone}{}}}
+\subsection{Method \code{clone()}}{
+The objects of this class are cloneable with this method.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{enumType$clone(deep = FALSE)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{deep}}{Whether to make a deep clone.}
+}
+\if{html}{\out{</div>}}
+}
+}
+}

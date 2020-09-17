@@ -448,6 +448,11 @@ xslx <- RDML$new(filename = filename)
 xslx$AsDendrogram()
 ```
 
+Also *.xlsx* import can be used with *BioRad* *Custom Export - xlsx*. Only main 
+sheet have to be renamed as *description* and *adp*/*mdp* sheets added 
+(from *Quantification Data* tab, then select *RFU* at dropdown list). See
+*extdata/from_tables/BioRad.xlsx* for example.
+
 ### Functional style
 
 To provide a functional programming style that is more convenient in **R**, the **RDML** class methods have function wrappers:

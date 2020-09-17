@@ -1,9 +1,9 @@
 Package: RDML
 Type: Package
 Title: Importing Real-Time Thermo Cycler (qPCR) Data from RDML Format Files
-Version: 1.1
+Version: 1.2
 LazyData: true
-Date: 2019-09-17
+Date: 2020-09-17
 Description: Imports real-time thermo cycler (qPCR) data from Real-time PCR
     Data Markup Language (RDML) and transforms to the appropriate formats of
     the 'qpcR' and 'chipPCR' packages. Contains a dendrogram visualization 
@@ -62,4 +62,4 @@ Suggests:
     shinyMolBio,
     V8,
     testthat
-RoxygenNote: 6.1.1
+RoxygenNote: 7.1.1

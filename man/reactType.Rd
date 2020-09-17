@@ -4,9 +4,8 @@
 \name{reactType}
 \alias{reactType}
 \title{reactType R6 class.}
-\format{An \code{\link{R6Class}} generator object.}
-\usage{
-reactType
+\format{
+An \code{\link{R6Class}} generator object.
 }
 \description{
 A reaction is an independent chemical reaction corresponding for example to a
@@ -60,4 +59,75 @@ is not currently supported. Note that 'ABC' will result in loss of
 information if the experiment contains more than 26 rows!}}
 }
 
-\keyword{datasets}
+\section{Super class}{
+\code{\link[RDML:rdmlBaseType]{RDML::rdmlBaseType}} -> \code{reactType}
+}
+\section{Methods}{
+\subsection{Public methods}{
+\itemize{
+\item \href{#method-new}{\code{reactType$new()}}
+\item \href{#method-GetFData}{\code{reactType$GetFData()}}
+\item \href{#method-.recalcPosition}{\code{reactType$.recalcPosition()}}
+\item \href{#method-clone}{\code{reactType$clone()}}
+}
+}
+\if{html}{
+\out{<details open ><summary>Inherited methods</summary>}
+\itemize{
+\item \out{<span class="pkg-link" data-pkg="RDML" data-topic="rdmlBaseType" data-id=".asXMLnodes">}\href{../../RDML/html/rdmlBaseType.html#method-.asXMLnodes}{\code{RDML::rdmlBaseType$.asXMLnodes()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="RDML" data-topic="rdmlBaseType" data-id="copy">}\href{../../RDML/html/rdmlBaseType.html#method-copy}{\code{RDML::rdmlBaseType$copy()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="RDML" data-topic="rdmlBaseType" data-id="print">}\href{../../RDML/html/rdmlBaseType.html#method-print}{\code{RDML::rdmlBaseType$print()}}\out{</span>}
+}
+\out{</details>}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-new"></a>}}
+\if{latex}{\out{\hypertarget{method-new}{}}}
+\subsection{Method \code{new()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{reactType$new(
+  id,
+  sample,
+  data = NULL,
+  pcrFormat = pcrFormatType$new(8, 12, labelFormatType$new("ABC"),
+    labelFormatType$new("123"))
+)}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-GetFData"></a>}}
+\if{latex}{\out{\hypertarget{method-GetFData}{}}}
+\subsection{Method \code{GetFData()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{reactType$GetFData(dp.type = "adp", long.table = FALSE)}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-.recalcPosition"></a>}}
+\if{latex}{\out{\hypertarget{method-.recalcPosition}{}}}
+\subsection{Method \code{.recalcPosition()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{reactType$.recalcPosition(pcrFormat)}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-clone"></a>}}
+\if{latex}{\out{\hypertarget{method-clone}{}}}
+\subsection{Method \code{clone()}}{
+The objects of this class are cloneable with this method.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{reactType$clone(deep = FALSE)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{deep}}{Whether to make a deep clone.}
+}
+\if{html}{\out{</div>}}
+}
+}
+}

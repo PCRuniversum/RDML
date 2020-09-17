@@ -6,27 +6,31 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Represents fields of <code>RDML</code> object as <code>data.frame</code> — RDML.AsTable • RDML</title>
+<title>Represents fields of RDML object as data.frame — RDML.AsTable • RDML</title>
 
 
 <!-- jquery -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha256-916EbMg70RQy9LHiGkXzG8hSg9EdNy97GazNG/aiY1w=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous" />
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script>
+
+<!-- bootstrap-toc -->
+<link rel="stylesheet" href="../bootstrap-toc.css">
+<script src="../bootstrap-toc.js"></script>
 
 <!-- Font Awesome icons -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous" />
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous" />
 
 <!-- clipboard.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script>
 
 <!-- headroom.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
@@ -35,11 +39,10 @@
 
 
 
-<meta property="og:title" content="Represents fields of <code>RDML</code> object as <code>data.frame</code> — RDML.AsTable" />
+<meta property="og:title" content="Represents fields of RDML object as data.frame — RDML.AsTable" />
 <meta property="og:description" content="Formats particular fields of RDML object as data.frames,
 filters or passes them to RDML.GetFData and RDML.SetFData
 functions." />
-<meta name="twitter:card" content="summary" />
 
 
 
@@ -57,7 +60,7 @@ functions." />
 
   </head>
 
-  <body>
+  <body data-spy="scroll" data-target="#toc">
     <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -71,7 +74,7 @@ functions." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">RDML</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2</span>
       </span>
     </div>
 
@@ -107,7 +110,7 @@ functions." />
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="https://github.com/PCRuniversum/RDML">
+  <a href="https://github.com/PCRuniversum/RDML/">
     <span class="fab fa fab fa-github fa-lg"></span>
      
   </a>
@@ -132,7 +135,7 @@ functions." />
 
     <div class="ref-description">
     <p>Formats particular fields of <code>RDML</code> object as <code>data.frame</code>s,
-filters or passes them to <code><a href='getfdata-method.html'>RDML.GetFData</a></code> and <code>RDML.SetFData</code>
+filters or passes them to <code><a href='RDML.GetFData.html'>RDML.GetFData</a></code> and <code>RDML.SetFData</code>
 functions.</p>
     </div>
 
@@ -164,7 +167,7 @@ functions.</p>
 
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>By default input this function forms <code>data.frame</code> with following columns:</p><dl class='dl-horizontal'>
+    <p>By default input this function forms <code>data.frame</code> with following columns:</p><dl>
 <dt>exp.id</dt><dd><p>experiment$id</p></dd> <dt>run.id</dt><dd><p>run$id</p></dd>
 <dt>react.id</dt><dd><p>react$id</p></dd>
 <dt>position</dt><dd><p>react$position</p></dd>
@@ -180,53 +183,51 @@ All default and additional columns accession expressions must be named.</p>
 <p>Experiment, run, react and data to which belongs each fluorescence data vector
 can be accessed by <code>experiment, run, react, data</code> (see Examples).</p>
 <p>Result table does not contain data from experiments with ids starting with '.'!</p>
+    <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
+
+    <p>Konstantin A. Blagodatskikh &lt;k.blag@yandex.ru&gt;, Stefan Roediger
+  &lt;stefan.roediger@b-tu.de&gt;, Michal Burdukiewicz
+  &lt;michalburdukiewicz@gmail.com&gt;</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
+    <pre class="examples"><div class='input'><span class='co'>if</span> (<span class='fl'>FALSE</span>) {
 <span class='co'>## internal dataset stepone_std.rdml (in 'data' directory)</span>
 <span class='co'>## generated by Applied Biosystems Step-One. Contains qPCR data.</span>
-<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>chipPCR</span>)
-<span class='no'>PATH</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/find.package.html'>path.package</a></span>(<span class='st'>"RDML"</span>)
-<span class='no'>filename</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste</a></span>(<span class='no'>PATH</span>, <span class='st'>"/extdata/"</span>, <span class='st'>"stepone_std.rdml"</span>, <span class='kw'>sep</span> <span class='kw'>=</span><span class='st'>""</span>)
-<span class='no'>stepone</span> <span class='kw'>&lt;-</span> <span class='no'>RDML</span>$<span class='fu'><a href='new-method.html'>new</a></span>(<span class='no'>filename</span>)
+<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='kw'><a href='https://github.com/michbur/chipPCR'>chipPCR</a></span>)
+<span class='kw'>PATH</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/find.package.html'>path.package</a></span>(<span class='st'>"RDML"</span>)
+<span class='kw'>filename</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste</a></span>(<span class='kw'>PATH</span>, <span class='st'>"/extdata/"</span>, <span class='st'>"stepone_std.rdml"</span>, sep =<span class='st'>""</span>)
+<span class='kw'>stepone</span> <span class='op'>&lt;-</span> <span class='kw'>RDML</span><span class='op'>$</span><span class='fu'><a href='new.html'>new</a></span>(<span class='kw'>filename</span>)
 <span class='co'>## Mark fluorescense data which Cq &gt; 30 and add quantities to</span>
 <span class='co'>## AsTable output.</span>
 <span class='co'>## Names for fluorescense data will contain sample name and react</span>
 <span class='co'>## positions</span>
-<span class='no'>tab</span> <span class='kw'>&lt;-</span> <span class='no'>stepone</span>$<span class='fu'><a href='astable-function.html'>AsTable</a></span>(
-         <span class='kw'>name.pattern</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste</a></span>(<span class='no'>react</span>$<span class='no'>sample</span>$<span class='no'>id</span>, <span class='no'>react</span>$<span class='no'>position</span>),
-         <span class='kw'>add.columns</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='kw'>cq30</span> <span class='kw'>=</span> <span class='kw'>if</span>(<span class='no'>data</span>$<span class='no'>cq</span> <span class='kw'>&gt;=</span> <span class='fl'>30</span>) <span class='st'>"&gt;=30"</span> <span class='kw'>else</span> <span class='st'>"&lt;30"</span>,
-         <span class='kw'>quantity</span> <span class='kw'>=</span> <span class='no'>sample</span><span class='kw'>[[</span><span class='no'>react</span>$<span class='no'>sample</span>$<span class='no'>id</span>]]$<span class='no'>quantity</span>$<span class='no'>value</span>)
+<span class='kw'>tab</span> <span class='op'>&lt;-</span> <span class='kw'>stepone</span><span class='op'>$</span><span class='fu'><a href='AsTable.html'>AsTable</a></span>(
+         name.pattern = <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste</a></span>(<span class='kw'>react</span><span class='op'>$</span><span class='kw'>sample</span><span class='op'>$</span><span class='kw'>id</span>, <span class='kw'>react</span><span class='op'>$</span><span class='kw'>position</span>),
+         add.columns = <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(cq30 = <span class='co'>if</span>(<span class='kw'>data</span><span class='op'>$</span><span class='kw'>cq</span> <span class='op'>&gt;=</span> <span class='fl'>30</span>) <span class='st'>"&gt;=30"</span> <span class='co'>else</span> <span class='st'>"&lt;30"</span>,
+         quantity = <span class='kw'>sample</span>[[<span class='kw'>react</span><span class='op'>$</span><span class='kw'>sample</span><span class='op'>$</span><span class='kw'>id</span>]]<span class='op'>$</span><span class='kw'>quantity</span><span class='op'>$</span><span class='kw'>value</span>)
          )
 <span class='co'>## Show cq30 and quantities</span>
-<span class='no'>tab</span>[, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"cq30"</span>, <span class='st'>"quantity"</span>)]
+<span class='kw'>tab</span>[, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"cq30"</span>, <span class='st'>"quantity"</span>)]
 <span class='co'>## Get fluorescence values for 'std' type samples</span>
 <span class='co'>## in format ready for ggplot function</span>
-<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>dplyr</span>)
-<span class='no'>fdata</span> <span class='kw'>&lt;-</span> <span class='no'>stepone</span>$<span class='fu'><a href='GetFData-function.html'>GetFData</a></span>(
-           <span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span>(<span class='no'>tab</span>, <span class='no'>sample.type</span> <span class='kw'>==</span> <span class='st'>"std"</span>),
-           <span class='kw'>long.table</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='kw'><a href='https://dplyr.tidyverse.org'>dplyr</a></span>)
+<span class='kw'>fdata</span> <span class='op'>&lt;-</span> <span class='kw'>stepone</span><span class='op'>$</span><span class='fu'><a href='GetFData.html'>GetFData</a></span>(
+           <span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span>(<span class='kw'>tab</span>, <span class='kw'>sample.type</span> <span class='op'>==</span> <span class='st'>"std"</span>),
+           long.table = <span class='fl'>TRUE</span>)
 <span class='co'>## Plot fdata with colour by cq30 and shape by quantity</span>
-<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>ggplot2</span>)
-<span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span>(<span class='no'>fdata</span>, <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>cyc</span>, <span class='kw'>y</span> <span class='kw'>=</span> <span class='no'>fluor</span>,
-                  <span class='kw'>group</span> <span class='kw'>=</span> <span class='no'>fdata.name</span>,
-                  <span class='kw'>colour</span> <span class='kw'>=</span> <span class='no'>cq30</span>,
-                  <span class='kw'>shape</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/factor.html'>as.factor</a></span>(<span class='no'>quantity</span>))) +
-                  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_path.html'>geom_line</a></span>() + <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_point.html'>geom_point</a></span>()
-}</div></pre>
+<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='kw'><a href='http://ggplot2.tidyverse.org'>ggplot2</a></span>)
+<span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span>(<span class='kw'>fdata</span>, <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span>(x = <span class='kw'>cyc</span>, y = <span class='kw'>fluor</span>,
+                  group = <span class='kw'>fdata.name</span>,
+                  colour = <span class='kw'>cq30</span>,
+                  shape = <span class='fu'><a href='https://rdrr.io/r/base/factor.html'>as.factor</a></span>(<span class='kw'>quantity</span>))) <span class='op'>+</span>
+                  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_path.html'>geom_line</a></span>() <span class='op'>+</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_point.html'>geom_point</a></span>()
+}
+</div></pre>
   </div>
-  <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
-    <h2>Contents</h2>
-    <ul class="nav nav-pills nav-stacked">
-      <li><a href="#arguments">Arguments</a></li>
-      <li><a href="#details">Details</a></li>
-      <li><a href="#examples">Examples</a></li>
-    </ul>
-
-    <h2>Author</h2>
-    <p>Konstantin A. Blagodatskikh &lt;k.blag@yandex.ru&gt;, Stefan Roediger
-  &lt;stefan.roediger@b-tu.de&gt;, Michal Burdukiewicz
-  &lt;michalburdukiewicz@gmail.com&gt;</p>
+  <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
+    <nav id="toc" data-toggle="toc" class="sticky-top">
+      <h2 data-toc-skip>Contents</h2>
+    </nav>
   </div>
 </div>
 
@@ -237,7 +238,7 @@ can be accessed by <code>experiment, run, react, data</code> (see Examples).</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

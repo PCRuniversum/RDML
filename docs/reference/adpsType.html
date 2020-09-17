@@ -10,23 +10,27 @@
 
 
 <!-- jquery -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha256-916EbMg70RQy9LHiGkXzG8hSg9EdNy97GazNG/aiY1w=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous" />
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script>
+
+<!-- bootstrap-toc -->
+<link rel="stylesheet" href="../bootstrap-toc.css">
+<script src="../bootstrap-toc.js"></script>
 
 <!-- Font Awesome icons -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous" />
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous" />
 
 <!-- clipboard.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script>
 
 <!-- headroom.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
@@ -36,8 +40,8 @@
 
 
 <meta property="og:title" content="adpsType R6 class. — adpsType" />
-<meta property="og:description" content="adpsType R6 class." />
-<meta name="twitter:card" content="summary" />
+<meta property="og:description" content="adpsType R6 class.
+adpsType R6 class." />
 
 
 
@@ -55,7 +59,7 @@
 
   </head>
 
-  <body>
+  <body data-spy="scroll" data-target="#toc">
     <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -69,7 +73,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">RDML</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2</span>
       </span>
     </div>
 
@@ -105,7 +109,7 @@
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="https://github.com/PCRuniversum/RDML">
+  <a href="https://github.com/PCRuniversum/RDML/">
     <span class="fab fa fab fa-github fa-lg"></span>
      
   </a>
@@ -130,9 +134,9 @@
 
     <div class="ref-description">
     <p>adpsType R6 class.</p>
+<p>adpsType R6 class.</p>
     </div>
 
-    <pre class="usage"><span class='no'>adpsType</span></pre>
 
 
     <h2 class="hasAnchor" id="format"><a class="anchor" href="#format"></a>Format</h2>
@@ -140,7 +144,7 @@
     <p>An <code>R6Class</code> generator object.</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>Contains <code>matrix</code> of amplification data. Must have three columns:</p><dl class='dl-horizontal'>
+    <p>Contains <code>matrix</code> of amplification data. Must have three columns:</p><dl>
 <dt>cyc</dt><dd><p>PCR cycle at which data
 point was collected (every cycle must have unique number).</p></dd>
 <dt>tmp</dt><dd><p>temperature in degrees Celsius at the time of measurement (optional).</p></dd>
@@ -149,52 +153,92 @@ point was collected (every cycle must have unique number).</p></dd>
 <a href='rdmlBaseType.html'>rdmlBaseType</a>.</p>
     <h2 class="hasAnchor" id="initialization"><a class="anchor" href="#initialization"></a>Initialization</h2>
 
-    <p></p><pre>adpsType$new(fpoints)</pre>
+    <p></p><pre><span class='kw'>adpsType</span><span class='op'>$</span><span class='fu'><a href='new.html'>new</a></span>(<span class='kw'>fpoints</span>)</pre>
 
     <h2 class="hasAnchor" id="fields"><a class="anchor" href="#fields"></a>Fields</h2>
 
-    <p></p><dl class='dl-horizontal'>
+    <p></p><dl>
   <dt><code>fpoints</code></dt><dd><p><a href='https://rdrr.io/pkg/checkmate/man/checkMatrix.html'>assertMatrix</a>. Matrix with amplification data
   points.</p></dd>
   
 </dl>
 
+    <h2 class="hasAnchor" id="super-class"><a class="anchor" href="#super-class"></a>Super class</h2>
+
+    <p><code><a href='rdmlBaseType.html'>RDML::rdmlBaseType</a></code> -&gt; <code>adpsType</code></p>
+    <h2 class="hasAnchor" id="methods"><a class="anchor" href="#methods"></a>Methods</h2>
+
+    
+<h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Public methods</h3>
+
+<ul>
+<li><p><a href='#method-new'><code>adpsType$new()</code></a></p></li>
+<li><p><a href='#method-.asXMLnodes'><code>adpsType$.asXMLnodes()</code></a></p></li>
+<li><p><a href='#method-clone'><code>adpsType$clone()</code></a></p></li>
+</ul>
+<p><details open ><summary>Inherited methods</summary>
+<ul>
+<li><p><span class="pkg-link" data-pkg="RDML" data-topic="rdmlBaseType" data-id="copy"><a href='../../RDML/html/rdmlBaseType.html#method-copy'><code>RDML::rdmlBaseType$copy()</code></a></span></p></li>
+<li><p><span class="pkg-link" data-pkg="RDML" data-topic="rdmlBaseType" data-id="print"><a href='../../RDML/html/rdmlBaseType.html#method-print'><code>RDML::rdmlBaseType$print()</code></a></span></p></li>
+</ul>
+</details>
+
+<hr>
+<a id="method-new"></a></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code><a href='new.html'>new()</a></code></h3>
+
+<h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
+<p><div class="r"></p><pre><span class='kw'>adpsType</span><span class='op'>$</span><span class='fu'><a href='new.html'>new</a></span>(<span class='kw'>fpoints</span>)</pre><p></div></p>
+
+<p><hr>
+<a id="method-.asXMLnodes"></a></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>.asXMLnodes()</code></h3>
+
+<h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
+<p><div class="r"></p><pre><span class='kw'>adpsType</span><span class='op'>$</span><span class='fu'>.asXMLnodes</span>(<span class='kw'>node.name</span>)</pre><p></div></p>
+
+<p><hr>
+<a id="method-clone"></a></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>clone()</code></h3>
+<p>The objects of this class are cloneable with this method.</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
+<p><div class="r"></p><pre><span class='kw'>adpsType</span><span class='op'>$</span><span class='fu'>clone</span>(deep = <span class='fl'>FALSE</span>)</pre><p></div></p>
+
+<h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Arguments</h4>
+<p><div class="arguments"></p><dl>
+<dt><code>deep</code></dt><dd><p>Whether to make a deep clone.</p></dd>
+
+</dl><p></div></p>
+
+
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'>#cycles</span>
-<span class='no'>cyc</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>1</span>, <span class='fl'>2</span>, <span class='fl'>3</span>, <span class='fl'>4</span>, <span class='fl'>5</span>, <span class='fl'>6</span>, <span class='fl'>7</span>, <span class='fl'>8</span>, <span class='fl'>9</span>, <span class='fl'>10</span>, <span class='fl'>11</span>, <span class='fl'>12</span>, <span class='fl'>13</span>, <span class='fl'>14</span>, <span class='fl'>15</span>, <span class='fl'>16</span>, <span class='fl'>17</span>,
+<span class='kw'>cyc</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>1</span>, <span class='fl'>2</span>, <span class='fl'>3</span>, <span class='fl'>4</span>, <span class='fl'>5</span>, <span class='fl'>6</span>, <span class='fl'>7</span>, <span class='fl'>8</span>, <span class='fl'>9</span>, <span class='fl'>10</span>, <span class='fl'>11</span>, <span class='fl'>12</span>, <span class='fl'>13</span>, <span class='fl'>14</span>, <span class='fl'>15</span>, <span class='fl'>16</span>, <span class='fl'>17</span>,
 <span class='fl'>18</span>, <span class='fl'>19</span>, <span class='fl'>20</span>, <span class='fl'>21</span>, <span class='fl'>22</span>, <span class='fl'>23</span>, <span class='fl'>24</span>, <span class='fl'>25</span>, <span class='fl'>26</span>, <span class='fl'>27</span>, <span class='fl'>28</span>, <span class='fl'>29</span>, <span class='fl'>30</span>, <span class='fl'>31</span>, <span class='fl'>32</span>, <span class='fl'>33</span>,
 <span class='fl'>34</span>, <span class='fl'>35</span>, <span class='fl'>36</span>, <span class='fl'>37</span>, <span class='fl'>38</span>, <span class='fl'>39</span>, <span class='fl'>40</span>)
 <span class='co'>#fluorescence</span>
-<span class='no'>fluo</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>2.0172</span>, <span class='fl'>2.0131</span>, <span class='fl'>2.0035</span>, <span class='fl'>2</span>, <span class='fl'>2.0024</span>, <span class='fl'>2.0056</span>, <span class='fl'>2.0105</span>, <span class='fl'>2.0179</span>,
+<span class='kw'>fluo</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>2.0172</span>, <span class='fl'>2.0131</span>, <span class='fl'>2.0035</span>, <span class='fl'>2</span>, <span class='fl'>2.0024</span>, <span class='fl'>2.0056</span>, <span class='fl'>2.0105</span>, <span class='fl'>2.0179</span>,
 <span class='fl'>2.0272</span>, <span class='fl'>2.0488</span>, <span class='fl'>2.0922</span>, <span class='fl'>2.1925</span>, <span class='fl'>2.3937</span>, <span class='fl'>2.7499</span>, <span class='fl'>3.3072</span>, <span class='fl'>4.0966</span>,
 <span class='fl'>5.0637</span>, <span class='fl'>6.0621</span>, <span class='fl'>7.0239</span>, <span class='fl'>7.8457</span>, <span class='fl'>8.5449</span>, <span class='fl'>9.1282</span>, <span class='fl'>9.6022</span>, <span class='fl'>9.9995</span>,
 <span class='fl'>10.2657</span>, <span class='fl'>10.4989</span>, <span class='fl'>10.6813</span>, <span class='fl'>10.8209</span>, <span class='fl'>10.9158</span>, <span class='fl'>10.9668</span>, <span class='fl'>11.0053</span>,
 <span class='fl'>11.0318</span>, <span class='fl'>11.0446</span>, <span class='fl'>11.044</span>, <span class='fl'>11.0052</span>, <span class='fl'>10.9671</span>, <span class='fl'>10.9365</span>, <span class='fl'>10.9199</span>,
 <span class='fl'>10.897</span>, <span class='fl'>10.8316</span>)
 <span class='co'>#temperature</span>
-<span class='no'>temp</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>55</span>, <span class='fl'>55</span>, <span class='fl'>55</span>, <span class='fl'>55</span>, <span class='fl'>54</span>, <span class='fl'>54</span>, <span class='fl'>55</span>, <span class='fl'>55</span>, <span class='fl'>55</span>, <span class='fl'>55</span>, <span class='fl'>55</span>, <span class='fl'>55</span>, <span class='fl'>55</span>, <span class='fl'>55</span>, <span class='fl'>55</span>,
+<span class='kw'>temp</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>55</span>, <span class='fl'>55</span>, <span class='fl'>55</span>, <span class='fl'>55</span>, <span class='fl'>54</span>, <span class='fl'>54</span>, <span class='fl'>55</span>, <span class='fl'>55</span>, <span class='fl'>55</span>, <span class='fl'>55</span>, <span class='fl'>55</span>, <span class='fl'>55</span>, <span class='fl'>55</span>, <span class='fl'>55</span>, <span class='fl'>55</span>,
 <span class='fl'>55</span>, <span class='fl'>55</span>, <span class='fl'>55</span>, <span class='fl'>55</span>, <span class='fl'>55</span>, <span class='fl'>55</span>, <span class='fl'>55</span>, <span class='fl'>55</span>, <span class='fl'>56</span>, <span class='fl'>55</span>, <span class='fl'>55</span>, <span class='fl'>55</span>, <span class='fl'>55</span>, <span class='fl'>55</span>, <span class='fl'>55</span>, <span class='fl'>55</span>,
 <span class='fl'>55</span>, <span class='fl'>55</span>, <span class='fl'>55</span>, <span class='fl'>55</span>, <span class='fl'>55</span>, <span class='fl'>55</span>, <span class='fl'>55</span>, <span class='fl'>55</span>, <span class='fl'>55</span>)
 
 <span class='co'>#combine all variables into a proper object</span>
-<span class='no'>data</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span>(<span class='kw'>cyc</span> <span class='kw'>=</span> <span class='no'>cyc</span>, <span class='kw'>tmp</span> <span class='kw'>=</span> <span class='no'>temp</span>, <span class='kw'>fluor</span> <span class='kw'>=</span> <span class='no'>fluo</span>)
+<span class='kw'>data</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span>(cyc = <span class='kw'>cyc</span>, tmp = <span class='kw'>temp</span>, fluor = <span class='kw'>fluo</span>)
 
 <span class='co'>#create adps object</span>
-<span class='no'>adpsType</span>$<span class='fu'><a href='new-method.html'>new</a></span>(<span class='no'>data</span>)</div><div class='output co'>#&gt; 	fpoints: [cyc, tmp, fluor]</div><div class='input'>
+<span class='kw'>adpsType</span><span class='op'>$</span><span class='fu'><a href='new.html'>new</a></span>(<span class='kw'>data</span>)
+</div><div class='output co'>#&gt; fpoints: [cyc, tmp, fluor]</div><div class='input'>
 <span class='co'>#create adps object without temperature data</span>
-<span class='no'>adpsType</span>$<span class='fu'><a href='new-method.html'>new</a></span>(<span class='no'>data</span>[, -<span class='fl'>2</span>])</div><div class='output co'>#&gt; 	fpoints: [cyc, fluor]</div></pre>
+<span class='kw'>adpsType</span><span class='op'>$</span><span class='fu'><a href='new.html'>new</a></span>(<span class='kw'>data</span>[, <span class='op'>-</span><span class='fl'>2</span>])
+</div><div class='output co'>#&gt; fpoints: [cyc, fluor]</div></pre>
   </div>
-  <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
-    <h2>Contents</h2>
-    <ul class="nav nav-pills nav-stacked">
-      <li><a href="#format">Format</a></li>
-      <li><a href="#details">Details</a></li>
-      <li><a href="#initialization">Initialization</a></li>
-      <li><a href="#fields">Fields</a></li>
-      <li><a href="#examples">Examples</a></li>
-    </ul>
-
+  <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
+    <nav id="toc" data-toggle="toc" class="sticky-top">
+      <h2 data-toc-skip>Contents</h2>
+    </nav>
   </div>
 </div>
 
@@ -205,7 +249,7 @@ point was collected (every cycle must have unique number).</p></dd>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

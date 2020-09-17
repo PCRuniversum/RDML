@@ -4,9 +4,8 @@
 \name{runType}
 \alias{runType}
 \title{runType R6 class.}
-\format{An \code{\link{R6Class}} generator object.}
-\usage{
-runType
+\format{
+An \code{\link{R6Class}} generator object.
 }
 \description{
 A run is a set of reactions performed in one "run", for example one plate,
@@ -48,4 +47,82 @@ one rotor, one array, one chip. Inherits: \link{rdmlBaseType}.
  points as \code{data.frame}}}
 }
 
-\keyword{datasets}
+\section{Super class}{
+\code{\link[RDML:rdmlBaseType]{RDML::rdmlBaseType}} -> \code{runType}
+}
+\section{Methods}{
+\subsection{Public methods}{
+\itemize{
+\item \href{#method-new}{\code{runType$new()}}
+\item \href{#method-GetFData}{\code{runType$GetFData()}}
+\item \href{#method-UpdateReactsPosition}{\code{runType$UpdateReactsPosition()}}
+\item \href{#method-clone}{\code{runType$clone()}}
+}
+}
+\if{html}{
+\out{<details open ><summary>Inherited methods</summary>}
+\itemize{
+\item \out{<span class="pkg-link" data-pkg="RDML" data-topic="rdmlBaseType" data-id=".asXMLnodes">}\href{../../RDML/html/rdmlBaseType.html#method-.asXMLnodes}{\code{RDML::rdmlBaseType$.asXMLnodes()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="RDML" data-topic="rdmlBaseType" data-id="copy">}\href{../../RDML/html/rdmlBaseType.html#method-copy}{\code{RDML::rdmlBaseType$copy()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="RDML" data-topic="rdmlBaseType" data-id="print">}\href{../../RDML/html/rdmlBaseType.html#method-print}{\code{RDML::rdmlBaseType$print()}}\out{</span>}
+}
+\out{</details>}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-new"></a>}}
+\if{latex}{\out{\hypertarget{method-new}{}}}
+\subsection{Method \code{new()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{runType$new(
+  id,
+  description = NULL,
+  documentation = NULL,
+  experimenter = NULL,
+  instrument = NULL,
+  dataCollectionSoftware = NULL,
+  backgroundDeterminationMethod = NULL,
+  cqDetectionMethod = NULL,
+  thermalCyclingConditions = NULL,
+  pcrFormat,
+  runDate = NULL,
+  react = NULL
+)}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-GetFData"></a>}}
+\if{latex}{\out{\hypertarget{method-GetFData}{}}}
+\subsection{Method \code{GetFData()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{runType$GetFData(dp.type = "adp", long.table = FALSE)}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-UpdateReactsPosition"></a>}}
+\if{latex}{\out{\hypertarget{method-UpdateReactsPosition}{}}}
+\subsection{Method \code{UpdateReactsPosition()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{runType$UpdateReactsPosition()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-clone"></a>}}
+\if{latex}{\out{\hypertarget{method-clone}{}}}
+\subsection{Method \code{clone()}}{
+The objects of this class are cloneable with this method.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{runType$clone(deep = FALSE)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{deep}}{Whether to make a deep clone.}
+}
+\if{html}{\out{</div>}}
+}
+}
+}

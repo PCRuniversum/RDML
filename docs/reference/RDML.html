@@ -6,28 +6,32 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>R6 class <code>RDML</code> -- contains methods to read and overview fluorescence 
+<title>R6 class RDML -- contains methods to read and overview fluorescence 
 data from RDML v1.1 and v1.2 format files — RDML • RDML</title>
 
 
 <!-- jquery -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha256-916EbMg70RQy9LHiGkXzG8hSg9EdNy97GazNG/aiY1w=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous" />
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script>
+
+<!-- bootstrap-toc -->
+<link rel="stylesheet" href="../bootstrap-toc.css">
+<script src="../bootstrap-toc.js"></script>
 
 <!-- Font Awesome icons -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous" />
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous" />
 
 <!-- clipboard.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script>
 
 <!-- headroom.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
@@ -36,7 +40,7 @@ data from RDML v1.1 and v1.2 format files — RDML • RDML</title>
 
 
 
-<meta property="og:title" content="R6 class <code>RDML</code> -- contains methods to read and overview fluorescence 
+<meta property="og:title" content="R6 class RDML -- contains methods to read and overview fluorescence 
 data from RDML v1.1 and v1.2 format files — RDML" />
 <meta property="og:description" content="This class is a container for RDML format data (Lefever et al. 
 2009). The data may be further transformed to the appropriate format of the 
@@ -50,7 +54,6 @@ the exception for fluorescence values can be represented as data.frame by
 method AsTable. Such possibility of data representation streamlines 
 sample filtering (by targets, types, etc.) and serves as request for GetFData
 method, which extracts fluorescence data for specified samples." />
-<meta name="twitter:card" content="summary" />
 
 
 
@@ -68,7 +71,7 @@ method, which extracts fluorescence data for specified samples." />
 
   </head>
 
-  <body>
+  <body data-spy="scroll" data-target="#toc">
     <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -82,7 +85,7 @@ method, which extracts fluorescence data for specified samples." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">RDML</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.2</span>
       </span>
     </div>
 
@@ -118,7 +121,7 @@ method, which extracts fluorescence data for specified samples." />
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="https://github.com/PCRuniversum/RDML">
+  <a href="https://github.com/PCRuniversum/RDML/">
     <span class="fab fa fab fa-github fa-lg"></span>
      
   </a>
@@ -146,7 +149,7 @@ data from RDML v1.1 and v1.2 format files</h1>
     <p>This class is a container for RDML format data (Lefever et al. 
 2009). The data may be further transformed to the appropriate format of the 
 <code>qpcR</code> (Ritz et al. 2008, Spiess et al. 2008) and <code>chipPCR</code> 
-(Roediger et al. 2015) packages (see <a href='new-method.html'>RDML.new</a> for import details). 
+(Roediger et al. 2015) packages (see <a href='new.html'>RDML.new</a> for import details). 
 Real-time PCR Data Markup Language (RDML) is the recommended file format 
 element in the Minimum Information for Publication of Quantitative Real-Time 
 PCR Experiments (MIQE) guidelines (Bustin et al. 2009). The inner structure of 
@@ -157,7 +160,6 @@ sample filtering (by targets, types, etc.) and serves as request for <code>GetFD
 method, which extracts fluorescence data for specified samples.</p>
     </div>
 
-    <pre class="usage"><span class='no'>RDML</span></pre>
 
 
     <h2 class="hasAnchor" id="format"><a class="anchor" href="#format"></a>Format</h2>
@@ -170,14 +172,14 @@ method, which extracts fluorescence data for specified samples.</p>
   XML tree.</p>
     <h2 class="hasAnchor" id="methods"><a class="anchor" href="#methods"></a>Methods</h2>
 
-    <p></p><dl class='dl-horizontal'>
-<dt>new</dt><dd><p>creates a new instance of <code>RDML</code> class object (see <a href='new-method.html'>RDML.new</a>)</p></dd> 
-<dt>AsTable</dt><dd><p>represent RDML data as <code>data.frame</code> (see <a href='astable-method.html'>RDML.AsTable</a>)</p></dd>
-<dt>GetFData</dt><dd><p>gets fluorescence data (see <a href='getfdata-method.html'>RDML.GetFData</a>)</p></dd>
-<dt>SetFData</dt><dd><p>sets fluorescence data (see <a href='setfdata-method.html'>RDML.SetFData</a>)</p></dd>
+    <p></p><dl>
+<dt>new</dt><dd><p>creates a new instance of <code>RDML</code> class object (see <a href='new.html'>RDML.new</a>)</p></dd> 
+<dt>AsTable</dt><dd><p>represent RDML data as <code>data.frame</code> (see <a href='RDML.AsTable.html'>RDML.AsTable</a>)</p></dd>
+<dt>GetFData</dt><dd><p>gets fluorescence data (see <a href='RDML.GetFData.html'>RDML.GetFData</a>)</p></dd>
+<dt>SetFData</dt><dd><p>sets fluorescence data (see <a href='RDML.SetFData.html'>RDML.SetFData</a>)</p></dd>
 <dt>Merge</dt><dd><p>merges two <code>RDML</code> to one (see <a href='MergeRDMLs.html'>MergeRDMLs</a>)</p></dd>
 <dt>AsDendrogram</dt><dd><p>represents structure of <code>RDML</code> object as dendrogram(see 
-  <a href='asdendrogram-method.html'>RDML.AsDendrogram</a>)</p></dd>
+  <a href='RDML.AsDendrogram.html'>RDML.AsDendrogram</a>)</p></dd>
  
 </dl>
 
@@ -207,6 +209,101 @@ method, which extracts fluorescence data for specified samples.</p>
   Geurts, R., Untergasser, A., Vandesompele, J., RDML consortium, 2009. RDML:
   structured language and reporting guidelines for real-time quantitative PCR
   data.  <em>Nucleic Acids Res.</em> 37, 2065--2069. doi:10.1093/nar/gkp056</p>
+    <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
+
+    <p>Konstantin A. Blagodatskikh &lt;k.blag@yandex.ru&gt;, Stefan Roediger 
+  &lt;stefan.roediger@b-tu.de&gt;, Michal Burdukiewicz 
+  &lt;michalburdukiewicz@gmail.com&gt;</p>
+    <h2 class="hasAnchor" id="super-class"><a class="anchor" href="#super-class"></a>Super class</h2>
+
+    <p><code><a href='rdmlBaseType.html'>RDML::rdmlBaseType</a></code> -&gt; <code>RDML</code></p>
+    <h2 class="hasAnchor" id="methods"><a class="anchor" href="#methods"></a>Methods</h2>
+
+    
+<h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Public methods</h3>
+
+<ul>
+<li><p><a href='#method-AsDendrogram'><code>RDML$AsDendrogram()</code></a></p></li>
+<li><p><a href='#method-AsTable'><code>RDML$AsTable()</code></a></p></li>
+<li><p><a href='#method-GetFData'><code>RDML$GetFData()</code></a></p></li>
+<li><p><a href='#method-AsXML'><code>RDML$AsXML()</code></a></p></li>
+<li><p><a href='#method-SetFData'><code>RDML$SetFData()</code></a></p></li>
+<li><p><a href='#method-new'><code>RDML$new()</code></a></p></li>
+<li><p><a href='#method-clone'><code>RDML$clone()</code></a></p></li>
+</ul>
+<p><details open ><summary>Inherited methods</summary>
+<ul>
+<li><p><span class="pkg-link" data-pkg="RDML" data-topic="rdmlBaseType" data-id=".asXMLnodes"><a href='../../RDML/html/rdmlBaseType.html#method-.asXMLnodes'><code>RDML::rdmlBaseType$.asXMLnodes()</code></a></span></p></li>
+<li><p><span class="pkg-link" data-pkg="RDML" data-topic="rdmlBaseType" data-id="copy"><a href='../../RDML/html/rdmlBaseType.html#method-copy'><code>RDML::rdmlBaseType$copy()</code></a></span></p></li>
+<li><p><span class="pkg-link" data-pkg="RDML" data-topic="rdmlBaseType" data-id="print"><a href='../../RDML/html/rdmlBaseType.html#method-print'><code>RDML::rdmlBaseType$print()</code></a></span></p></li>
+</ul>
+</details>
+
+<hr>
+<a id="method-AsDendrogram"></a></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code><a href='AsDendrogram.html'>AsDendrogram()</a></code></h3>
+
+<h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
+<p><div class="r"></p><pre><span class='kw'>RDML</span><span class='op'>$</span><span class='fu'><a href='AsDendrogram.html'>AsDendrogram</a></span>(plot.dendrogram = <span class='fl'>TRUE</span>)</pre><p></div></p>
+
+<p><hr>
+<a id="method-AsTable"></a></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code><a href='AsTable.html'>AsTable()</a></code></h3>
+
+<h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
+<p><div class="r"></p><pre><span class='kw'>RDML</span><span class='op'>$</span><span class='fu'><a href='AsTable.html'>AsTable</a></span>(
+  .default = <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(exp.id = <span class='kw'>experiment</span><span class='op'>$</span><span class='kw'>id</span><span class='op'>$</span><span class='kw'>id</span>, run.id = <span class='kw'>run</span><span class='op'>$</span><span class='kw'>id</span><span class='op'>$</span><span class='kw'>id</span>, react.id =
+    <span class='kw'>react</span><span class='op'>$</span><span class='kw'>id</span><span class='op'>$</span><span class='kw'>id</span>, position = <span class='kw'>react</span><span class='op'>$</span><span class='kw'>position</span>, sample = <span class='kw'>react</span><span class='op'>$</span><span class='kw'>sample</span><span class='op'>$</span><span class='kw'>id</span>, target =
+    <span class='kw'>data</span><span class='op'>$</span><span class='kw'>tar</span><span class='op'>$</span><span class='kw'>id</span>, target.dyeId = <span class='kw'>target</span>[[<span class='kw'>data</span><span class='op'>$</span><span class='kw'>tar</span><span class='op'>$</span><span class='kw'>id</span>]]<span class='op'>$</span><span class='kw'>dyeId</span><span class='op'>$</span><span class='kw'>id</span>, sample.type =
+    <span class='kw'>sample</span>[[<span class='kw'>react</span><span class='op'>$</span><span class='kw'>sample</span><span class='op'>$</span><span class='kw'>id</span>]]<span class='op'>$</span><span class='kw'>type</span><span class='op'>$</span><span class='kw'>value</span>, adp = <span class='op'>!</span><span class='fu'><a href='https://rdrr.io/r/base/NULL.html'>is.null</a></span>(<span class='kw'>data</span><span class='op'>$</span><span class='kw'>adp</span>), mdp =
+    <span class='op'>!</span><span class='fu'><a href='https://rdrr.io/r/base/NULL.html'>is.null</a></span>(<span class='kw'>data</span><span class='op'>$</span><span class='kw'>mdp</span>)),
+  name.pattern = <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste</a></span>(<span class='kw'>react</span><span class='op'>$</span><span class='kw'>position</span>, <span class='kw'>react</span><span class='op'>$</span><span class='kw'>sample</span><span class='op'>$</span><span class='kw'>id</span>,
+    <span class='kw'>private</span><span class='op'>$</span><span class='kw'>.sample</span>[[<span class='kw'>react</span><span class='op'>$</span><span class='kw'>sample</span><span class='op'>$</span><span class='kw'>id</span>]]<span class='op'>$</span><span class='kw'>type</span><span class='op'>$</span><span class='kw'>value</span>, <span class='kw'>data</span><span class='op'>$</span><span class='kw'>tar</span><span class='op'>$</span><span class='kw'>id</span>, sep = <span class='st'>"_"</span>),
+  add.columns = <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(),
+  treat.null.as.na = <span class='fl'>FALSE</span>,
+  <span class='kw'>...</span>
+)</pre><p></div></p>
+
+<p><hr>
+<a id="method-GetFData"></a></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code><a href='GetFData.html'>GetFData()</a></code></h3>
+
+<h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
+<p><div class="r"></p><pre><span class='kw'>RDML</span><span class='op'>$</span><span class='fu'><a href='GetFData.html'>GetFData</a></span>(<span class='kw'>request</span>, dp.type = <span class='st'>"adp"</span>, long.table = <span class='fl'>FALSE</span>)</pre><p></div></p>
+
+<p><hr>
+<a id="method-AsXML"></a></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>AsXML()</code></h3>
+
+<h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
+<p><div class="r"></p><pre><span class='kw'>RDML</span><span class='op'>$</span><span class='fu'>AsXML</span>(<span class='kw'>file.name</span>)</pre><p></div></p>
+
+<p><hr>
+<a id="method-SetFData"></a></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code><a href='SetFData.html'>SetFData()</a></code></h3>
+
+<h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
+<p><div class="r"></p><pre><span class='kw'>RDML</span><span class='op'>$</span><span class='fu'><a href='SetFData.html'>SetFData</a></span>(<span class='kw'>fdata</span>, <span class='kw'>description</span>, fdata.type = <span class='st'>"adp"</span>)</pre><p></div></p>
+
+<p><hr>
+<a id="method-new"></a></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code><a href='new.html'>new()</a></code></h3>
+
+<h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
+<p><div class="r"></p><pre><span class='kw'>RDML</span><span class='op'>$</span><span class='fu'><a href='new.html'>new</a></span>(
+  <span class='kw'>filename</span>,
+  show.progress = <span class='fl'>TRUE</span>,
+  conditions.sep = <span class='kw'>NULL</span>,
+  cluster = <span class='kw'>NULL</span>,
+  format = <span class='st'>"auto"</span>
+)</pre><p></div></p>
+
+<p><hr>
+<a id="method-clone"></a></p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Method <code>clone()</code></h3>
+<p>The objects of this class are cloneable with this method.</p><h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Usage</h4>
+<p><div class="r"></p><pre><span class='kw'>RDML</span><span class='op'>$</span><span class='fu'>clone</span>(deep = <span class='fl'>FALSE</span>)</pre><p></div></p>
+
+<h4 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Arguments</h4>
+<p><div class="arguments"></p><dl>
+<dt><code>deep</code></dt><dd><p>Whether to make a deep clone.</p></dd>
+
+</dl><p></div></p>
+
+
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'>## EXAMPLE 1:</span>
@@ -214,122 +311,118 @@ method, which extracts fluorescence data for specified samples.</p>
 <span class='co'>## generated by Roche LightCycler 96. Contains qPCR data</span>
 <span class='co'>## with four targets and two types.</span>
 <span class='co'>## Import with default settings.</span>
-<span class='no'>PATH</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/find.package.html'>path.package</a></span>(<span class='st'>"RDML"</span>)
-<span class='no'>filename</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste</a></span>(<span class='no'>PATH</span>, <span class='st'>"/extdata/"</span>, <span class='st'>"lc96_bACTXY.rdml"</span>, <span class='kw'>sep</span> <span class='kw'>=</span><span class='st'>""</span>)
-<span class='no'>lc96</span> <span class='kw'>&lt;-</span> <span class='no'>RDML</span>$<span class='fu'><a href='new-method.html'>new</a></span>(<span class='no'>filename</span>)</div><div class='output co'>#&gt; 
+<span class='kw'>PATH</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/find.package.html'>path.package</a></span>(<span class='st'>"RDML"</span>)
+<span class='kw'>filename</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste</a></span>(<span class='kw'>PATH</span>, <span class='st'>"/extdata/"</span>, <span class='st'>"lc96_bACTXY.rdml"</span>, sep =<span class='st'>""</span>)
+<span class='kw'>lc96</span> <span class='op'>&lt;-</span> <span class='kw'>RDML</span><span class='op'>$</span><span class='fu'><a href='new.html'>new</a></span>(<span class='kw'>filename</span>)
+</div><div class='output co'>#&gt; 
 #&gt; Loading experiment: ca1eb225-ecea-4793-9804-87bfbb45f81d
 #&gt; 	run: 65aeb1ec-b377-4ef6-b03f-92898d47488b</div><div class='input'>
-<span class='no'>tab</span> <span class='kw'>&lt;-</span> <span class='no'>lc96</span>$<span class='fu'><a href='astable-function.html'>AsTable</a></span>(<span class='kw'>name.pattern</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste</a></span>(<span class='no'>sample</span><span class='kw'>[[</span><span class='no'>react</span>$<span class='no'>sample</span>$<span class='no'>id</span>]]$<span class='no'>description</span>,
-                                         <span class='no'>react</span>$<span class='no'>id</span>$<span class='no'>id</span>),
-                    <span class='kw'>quantity</span> <span class='kw'>=</span> <span class='no'>sample</span><span class='kw'>[[</span><span class='no'>react</span>$<span class='no'>sample</span>$<span class='no'>id</span>]]$<span class='no'>quantity</span>$<span class='no'>value</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: fdata.name column has duplicates! Try another 'name.pattern'.</span></div><div class='input'><span class='co'>## Show dyes names</span>
-<span class='fu'><a href='https://rdrr.io/r/base/unique.html'>unique</a></span>(<span class='no'>tab</span>$<span class='no'>target.dyeId</span>)</div><div class='output co'>#&gt; [1] "FAM"       "Hex"       "Texas Red" "Cy5"      </div><div class='input'><span class='co'>## Show types of the samples for dye 'FAM'</span>
-<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>dplyr</span>)</div><div class='output co'>#&gt; <span class='message'></span>
+<span class='kw'>tab</span> <span class='op'>&lt;-</span> <span class='kw'>lc96</span><span class='op'>$</span><span class='fu'><a href='AsTable.html'>AsTable</a></span>(name.pattern = <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste</a></span>(<span class='kw'>sample</span>[[<span class='kw'>react</span><span class='op'>$</span><span class='kw'>sample</span><span class='op'>$</span><span class='kw'>id</span>]]<span class='op'>$</span><span class='kw'>description</span>,
+                                         <span class='kw'>react</span><span class='op'>$</span><span class='kw'>id</span><span class='op'>$</span><span class='kw'>id</span>), 
+                    quantity = <span class='kw'>sample</span>[[<span class='kw'>react</span><span class='op'>$</span><span class='kw'>sample</span><span class='op'>$</span><span class='kw'>id</span>]]<span class='op'>$</span><span class='kw'>quantity</span><span class='op'>$</span><span class='kw'>value</span>)
+</div><div class='output co'>#&gt; <span class='warning'>Warning: fdata.name column has duplicates! Try another 'name.pattern'.</span></div><div class='input'><span class='co'>## Show dyes names</span>
+<span class='fu'><a href='https://rdrr.io/r/base/unique.html'>unique</a></span>(<span class='kw'>tab</span><span class='op'>$</span><span class='kw'>target.dyeId</span>)
+</div><div class='output co'>#&gt; [1] "FAM"       "Hex"       "Texas Red" "Cy5"      </div><div class='input'><span class='co'>## Show types of the samples for dye 'FAM'</span>
+<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='kw'><a href='https://dplyr.tidyverse.org'>dplyr</a></span>)
+</div><div class='output co'>#&gt; <span class='message'></span>
 #&gt; <span class='message'>Attaching package: ‘dplyr’</span></div><div class='output co'>#&gt; <span class='message'>The following objects are masked from ‘package:stats’:</span>
 #&gt; <span class='message'></span>
 #&gt; <span class='message'>    filter, lag</span></div><div class='output co'>#&gt; <span class='message'>The following objects are masked from ‘package:base’:</span>
 #&gt; <span class='message'></span>
-#&gt; <span class='message'>    intersect, setdiff, setequal, union</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/unique.html'>unique</a></span>(<span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span>(<span class='no'>tab</span>, <span class='no'>target.dyeId</span> <span class='kw'>==</span> <span class='st'>"FAM"</span>)$<span class='no'>sample.type</span>)</div><div class='output co'>#&gt; [1] "std"  "unkn"</div><div class='input'>
+#&gt; <span class='message'>    intersect, setdiff, setequal, union</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/unique.html'>unique</a></span>(<span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span>(<span class='kw'>tab</span>, <span class='kw'>target.dyeId</span> <span class='op'>==</span> <span class='st'>"FAM"</span>)<span class='op'>$</span><span class='kw'>sample.type</span>)
+</div><div class='output co'>#&gt; [1] "std"  "unkn"</div><div class='input'>
 <span class='co'>## Show template quantities for dye 'FAM' type 'std'#' </span>
-<span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
-<span class='no'>COPIES</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span>(<span class='no'>tab</span>, <span class='no'>target.dyeId</span> <span class='kw'>==</span> <span class='st'>"FAM"</span>, <span class='no'>sample.type</span> <span class='kw'>==</span> <span class='st'>"std"</span>)$<span class='no'>quantity</span>
+<span class='co'>if</span> (<span class='fl'>FALSE</span>) {
+<span class='kw'>COPIES</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span>(<span class='kw'>tab</span>, <span class='kw'>target.dyeId</span> <span class='op'>==</span> <span class='st'>"FAM"</span>, <span class='kw'>sample.type</span> <span class='op'>==</span> <span class='st'>"std"</span>)<span class='op'>$</span><span class='kw'>quantity</span>
 <span class='co'>## Define calibration curves (type of the samples - 'std').</span>
 <span class='co'>## No replicates.</span>
-<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>qpcR</span>)
-<span class='no'>CAL</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/qpcR/man/modlist.html'>modlist</a></span>(<span class='no'>lc96</span>$<span class='fu'><a href='GetFData-function.html'>GetFData</a></span>(<span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span>(<span class='no'>tab</span>,
-                                    <span class='no'>target.dyeId</span> <span class='kw'>==</span> <span class='st'>"FAM"</span>,
-                                    <span class='no'>sample.type</span> <span class='kw'>==</span> <span class='st'>"std"</span>)),
-               <span class='kw'>baseline</span><span class='kw'>=</span><span class='st'>"lin"</span>, <span class='kw'>basecyc</span><span class='kw'>=</span><span class='fl'>8</span>:<span class='fl'>15</span>)
+<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='kw'>qpcR</span>)
+<span class='kw'>CAL</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/qpcR/man/modlist.html'>modlist</a></span>(<span class='kw'>lc96</span><span class='op'>$</span><span class='fu'><a href='GetFData.html'>GetFData</a></span>(<span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span>(<span class='kw'>tab</span>,
+                                    <span class='kw'>target.dyeId</span> <span class='op'>==</span> <span class='st'>"FAM"</span>, 
+                                    <span class='kw'>sample.type</span> <span class='op'>==</span> <span class='st'>"std"</span>)),
+               baseline=<span class='st'>"lin"</span>, basecyc=<span class='fl'>8</span><span class='op'>:</span><span class='fl'>15</span>)
 <span class='co'>## Define samples to predict (first two samples with the type - 'unkn').</span>
-<span class='no'>PRED</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/qpcR/man/modlist.html'>modlist</a></span>(<span class='no'>lc96</span>$<span class='fu'><a href='GetFData-function.html'>GetFData</a></span>(<span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span>(<span class='no'>tab</span>,
-                                    <span class='no'>target.dyeId</span> <span class='kw'>==</span> <span class='st'>"FAM"</span>,
-                                    <span class='no'>sample.type</span> <span class='kw'>==</span> <span class='st'>"unkn"</span>)),
-               <span class='kw'>baseline</span><span class='kw'>=</span><span class='st'>"lin"</span>, <span class='kw'>basecyc</span><span class='kw'>=</span><span class='fl'>8</span>:<span class='fl'>15</span>)
+<span class='kw'>PRED</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/qpcR/man/modlist.html'>modlist</a></span>(<span class='kw'>lc96</span><span class='op'>$</span><span class='fu'><a href='GetFData.html'>GetFData</a></span>(<span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span>(<span class='kw'>tab</span>, 
+                                    <span class='kw'>target.dyeId</span> <span class='op'>==</span> <span class='st'>"FAM"</span>, 
+                                    <span class='kw'>sample.type</span> <span class='op'>==</span> <span class='st'>"unkn"</span>)),
+               baseline=<span class='st'>"lin"</span>, basecyc=<span class='fl'>8</span><span class='op'>:</span><span class='fl'>15</span>)
 <span class='co'>## Conduct quantification.</span>
-<span class='fu'><a href='https://rdrr.io/pkg/qpcR/man/calib.html'>calib</a></span>(<span class='kw'>refcurve</span> <span class='kw'>=</span> <span class='no'>CAL</span>, <span class='kw'>predcurve</span> <span class='kw'>=</span> <span class='no'>PRED</span>, <span class='kw'>thresh</span> <span class='kw'>=</span> <span class='st'>"cpD2"</span>,
-      <span class='kw'>dil</span> <span class='kw'>=</span> <span class='no'>COPIES</span>)
+<span class='fu'><a href='https://rdrr.io/pkg/qpcR/man/calib.html'>calib</a></span>(refcurve = <span class='kw'>CAL</span>, predcurve = <span class='kw'>PRED</span>, thresh = <span class='st'>"cpD2"</span>,
+      dil = <span class='kw'>COPIES</span>)
 }
-<span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
+<span class='co'>if</span> (<span class='fl'>FALSE</span>) {
 <span class='co'>## EXAMPLE 2:</span>
 <span class='co'>## internal dataset lc96_bACTXY.rdml (in 'data' directory)</span>
 <span class='co'>## generated by Roche LightCycler 96. Contains qPCR data</span>
 <span class='co'>## with four targets and two types.</span>
 <span class='co'>## Import with default settings.</span>
-<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>chipPCR</span>)
-<span class='no'>PATH</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/find.package.html'>path.package</a></span>(<span class='st'>"RDML"</span>)
-<span class='no'>filename</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste</a></span>(<span class='no'>PATH</span>, <span class='st'>"/extdata/"</span>, <span class='st'>"lc96_bACTXY.rdml"</span>, <span class='kw'>sep</span> <span class='kw'>=</span><span class='st'>""</span>)
-<span class='no'>lc96</span> <span class='kw'>&lt;-</span> <span class='no'>RDML</span>$<span class='fu'><a href='new-method.html'>new</a></span>(<span class='no'>filename</span>)
+<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='kw'><a href='https://github.com/michbur/chipPCR'>chipPCR</a></span>)                        
+<span class='kw'>PATH</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/find.package.html'>path.package</a></span>(<span class='st'>"RDML"</span>)
+<span class='kw'>filename</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste</a></span>(<span class='kw'>PATH</span>, <span class='st'>"/extdata/"</span>, <span class='st'>"lc96_bACTXY.rdml"</span>, sep =<span class='st'>""</span>)
+<span class='kw'>lc96</span> <span class='op'>&lt;-</span> <span class='kw'>RDML</span><span class='op'>$</span><span class='fu'><a href='new.html'>new</a></span>(<span class='kw'>filename</span>)
 
-<span class='no'>tab</span> <span class='kw'>&lt;-</span> <span class='no'>lc96</span>$<span class='fu'><a href='astable-function.html'>AsTable</a></span>(<span class='kw'>name.pattern</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste</a></span>(<span class='no'>sample</span><span class='kw'>[[</span><span class='no'>react</span>$<span class='no'>sample</span>$<span class='no'>id</span>]]$<span class='no'>description</span>,
-                                         <span class='no'>react</span>$<span class='no'>id</span>$<span class='no'>id</span>),
-                    <span class='kw'>quantity</span> <span class='kw'>=</span> <span class='no'>sample</span><span class='kw'>[[</span><span class='no'>react</span>$<span class='no'>sample</span>$<span class='no'>id</span>]]$<span class='no'>quantity</span>$<span class='no'>value</span>)
+<span class='kw'>tab</span> <span class='op'>&lt;-</span> <span class='kw'>lc96</span><span class='op'>$</span><span class='fu'><a href='AsTable.html'>AsTable</a></span>(name.pattern = <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste</a></span>(<span class='kw'>sample</span>[[<span class='kw'>react</span><span class='op'>$</span><span class='kw'>sample</span><span class='op'>$</span><span class='kw'>id</span>]]<span class='op'>$</span><span class='kw'>description</span>,
+                                         <span class='kw'>react</span><span class='op'>$</span><span class='kw'>id</span><span class='op'>$</span><span class='kw'>id</span>), 
+                    quantity = <span class='kw'>sample</span>[[<span class='kw'>react</span><span class='op'>$</span><span class='kw'>sample</span><span class='op'>$</span><span class='kw'>id</span>]]<span class='op'>$</span><span class='kw'>quantity</span><span class='op'>$</span><span class='kw'>value</span>)
 <span class='co'>## Show targets names</span>
-<span class='fu'><a href='https://rdrr.io/r/base/unique.html'>unique</a></span>(<span class='no'>tab</span>$<span class='no'>target</span>)
+<span class='fu'><a href='https://rdrr.io/r/base/unique.html'>unique</a></span>(<span class='kw'>tab</span><span class='op'>$</span><span class='kw'>target</span>)
 <span class='co'>## Fetch cycle dependent fluorescence for HEX chanel</span>
-<span class='no'>tmp</span> <span class='kw'>&lt;-</span> <span class='no'>lc96</span>$<span class='fu'><a href='GetFData-function.html'>GetFData</a></span>(<span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span>(<span class='no'>tab</span>, <span class='no'>target</span> <span class='kw'>==</span> <span class='st'>"bACT"</span>, <span class='no'>sample.type</span> <span class='kw'>==</span> <span class='st'>"std"</span>))
+<span class='kw'>tmp</span> <span class='op'>&lt;-</span> <span class='kw'>lc96</span><span class='op'>$</span><span class='fu'><a href='GetFData.html'>GetFData</a></span>(<span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span>(<span class='kw'>tab</span>, <span class='kw'>target</span> <span class='op'>==</span> <span class='st'>"bACT"</span>, <span class='kw'>sample.type</span> <span class='op'>==</span> <span class='st'>"std"</span>))
 <span class='co'>## Fetch vector of dillutions </span>
-<span class='no'>dilution</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span>(<span class='no'>tab</span>, <span class='no'>target.dyeId</span> <span class='kw'>==</span> <span class='st'>"FAM"</span>, <span class='no'>sample.type</span> <span class='kw'>==</span> <span class='st'>"std"</span>)$<span class='no'>quantity</span>
+<span class='kw'>dilution</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span>(<span class='kw'>tab</span>, <span class='kw'>target.dyeId</span> <span class='op'>==</span> <span class='st'>"FAM"</span>, <span class='kw'>sample.type</span> <span class='op'>==</span> <span class='st'>"std"</span>)<span class='op'>$</span><span class='kw'>quantity</span>
 
 <span class='co'>## Use plotCurves function from the chipPCR package to </span>
 <span class='co'>## get an overview of the amplification curves</span>
-<span class='no'>tmp</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/as.data.frame.html'>as.data.frame</a></span>(<span class='no'>tmp</span>)
-<span class='fu'><a href='https://rdrr.io/pkg/chipPCR/man/plotCurves.html'>plotCurves</a></span>(<span class='no'>tmp</span>[,<span class='fl'>1</span>], <span class='no'>tmp</span>[,-<span class='fl'>1</span>])
-<span class='fu'><a href='https://rdrr.io/r/graphics/par.html'>par</a></span>(<span class='kw'>mfrow</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>1</span>,<span class='fl'>1</span>))
+<span class='kw'>tmp</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/as.data.frame.html'>as.data.frame</a></span>(<span class='kw'>tmp</span>)
+<span class='fu'><a href='https://rdrr.io/pkg/chipPCR/man/plotCurves.html'>plotCurves</a></span>(<span class='kw'>tmp</span>[,<span class='fl'>1</span>], <span class='kw'>tmp</span>[,<span class='op'>-</span><span class='fl'>1</span>])
+<span class='fu'><a href='https://rdrr.io/r/graphics/par.html'>par</a></span>(mfrow = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>1</span>,<span class='fl'>1</span>))
 <span class='co'>## Use inder function from the chipPCR package to </span>
 <span class='co'>## calculate the Cq (second derivative maximum, SDM)</span>
-<span class='no'>SDMout</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/lapply.html'>sapply</a></span>(<span class='fl'>2L</span>:<span class='fu'><a href='https://rdrr.io/r/base/nrow.html'>ncol</a></span>(<span class='no'>tmp</span>), <span class='kw'>function</span>(<span class='no'>i</span>) {
-  <span class='no'>SDM</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span>(<span class='fu'><a href='https://rdrr.io/pkg/chipPCR/man/inder.html'>inder</a></span>(<span class='no'>tmp</span>[, <span class='fl'>1</span>], <span class='no'>tmp</span>[, <span class='no'>i</span>]), <span class='kw'>print</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)[<span class='fl'>2</span>]
+<span class='kw'>SDMout</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/lapply.html'>sapply</a></span>(<span class='fl'>2L</span><span class='op'>:</span><span class='fu'><a href='https://rdrr.io/r/base/nrow.html'>ncol</a></span>(<span class='kw'>tmp</span>), <span class='fu'>function</span>(<span class='kw'>i</span>) {
+  <span class='kw'>SDM</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span>(<span class='fu'><a href='https://rdrr.io/pkg/chipPCR/man/inder.html'>inder</a></span>(<span class='kw'>tmp</span>[, <span class='fl'>1</span>], <span class='kw'>tmp</span>[, <span class='kw'>i</span>]), print = <span class='fl'>FALSE</span>)[<span class='fl'>2</span>]
 })
 
 <span class='co'>## Use the effcalc function from the chipPCR package and </span>
 <span class='co'>## plot the results for the calculation of the amplification</span>
 <span class='co'>## efficiency analysis.</span>
-<span class='fu'><a href='https://rdrr.io/r/graphics/plot.html'>plot</a></span>(<span class='fu'><a href='https://rdrr.io/pkg/chipPCR/man/effcalc.html'>effcalc</a></span>(<span class='no'>dilution</span>, <span class='no'>SDMout</span>), <span class='kw'>CI</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)
+<span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span>(<span class='fu'><a href='https://rdrr.io/pkg/chipPCR/man/effcalc.html'>effcalc</a></span>(<span class='kw'>dilution</span>, <span class='kw'>SDMout</span>), CI = <span class='fl'>TRUE</span>)
 }
-<span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
+<span class='co'>if</span> (<span class='fl'>FALSE</span>) {
 <span class='co'>## EXAMPLE 3:</span>
 <span class='co'>## internal dataset BioRad_qPCR_melt.rdml (in 'data' directory)</span>
 <span class='co'>## generated by Bio-Rad CFX96. Contains qPCR and melting data.</span>
 <span class='co'>## Import with custom name pattern.</span>
-<span class='no'>PATH</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/find.package.html'>path.package</a></span>(<span class='st'>"RDML"</span>)
-<span class='no'>filename</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste</a></span>(<span class='no'>PATH</span>, <span class='st'>"/extdata/"</span>, <span class='st'>"BioRad_qPCR_melt.rdml"</span>, <span class='kw'>sep</span> <span class='kw'>=</span><span class='st'>""</span>)
-<span class='no'>cfx96</span> <span class='kw'>&lt;-</span> <span class='no'>RDML</span>$<span class='fu'><a href='new-method.html'>new</a></span>(<span class='no'>filename</span>)
+<span class='kw'>PATH</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/find.package.html'>path.package</a></span>(<span class='st'>"RDML"</span>)
+<span class='kw'>filename</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste</a></span>(<span class='kw'>PATH</span>, <span class='st'>"/extdata/"</span>, <span class='st'>"BioRad_qPCR_melt.rdml"</span>, sep =<span class='st'>""</span>)
+<span class='kw'>cfx96</span> <span class='op'>&lt;-</span> <span class='kw'>RDML</span><span class='op'>$</span><span class='fu'><a href='new.html'>new</a></span>(<span class='kw'>filename</span>)
 <span class='co'>## Use plotCurves function from the chipPCR package to </span>
 <span class='co'>## get an overview of the amplification curves</span>
-<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>chipPCR</span>)
+<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='kw'><a href='https://github.com/michbur/chipPCR'>chipPCR</a></span>)
 <span class='co'>## Extract all qPCR data </span>
-<span class='no'>tab</span> <span class='kw'>&lt;-</span> <span class='no'>cfx96</span>$<span class='fu'><a href='astable-function.html'>AsTable</a></span>()
-<span class='no'>cfx96.qPCR</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/as.data.frame.html'>as.data.frame</a></span>(<span class='no'>cfx96</span>$<span class='fu'><a href='GetFData-function.html'>GetFData</a></span>(<span class='no'>tab</span>))
-<span class='fu'><a href='https://rdrr.io/pkg/chipPCR/man/plotCurves.html'>plotCurves</a></span>(<span class='no'>cfx96.qPCR</span>[,<span class='fl'>1</span>], <span class='no'>cfx96.qPCR</span>[,-<span class='fl'>1</span>], <span class='kw'>type</span> <span class='kw'>=</span> <span class='st'>"l"</span>)
+<span class='kw'>tab</span> <span class='op'>&lt;-</span> <span class='kw'>cfx96</span><span class='op'>$</span><span class='fu'><a href='AsTable.html'>AsTable</a></span>()
+<span class='kw'>cfx96.qPCR</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/as.data.frame.html'>as.data.frame</a></span>(<span class='kw'>cfx96</span><span class='op'>$</span><span class='fu'><a href='GetFData.html'>GetFData</a></span>(<span class='kw'>tab</span>))
+<span class='fu'><a href='https://rdrr.io/pkg/chipPCR/man/plotCurves.html'>plotCurves</a></span>(<span class='kw'>cfx96.qPCR</span>[,<span class='fl'>1</span>], <span class='kw'>cfx96.qPCR</span>[,<span class='op'>-</span><span class='fl'>1</span>], type = <span class='st'>"l"</span>)
 
 <span class='co'>## Extract all melting data </span>
-<span class='no'>cfx96.melt</span> <span class='kw'>&lt;-</span> <span class='no'>cfx96</span>$<span class='fu'><a href='GetFData-function.html'>GetFData</a></span>(<span class='no'>tab</span>, <span class='kw'>dp.type</span> <span class='kw'>=</span> <span class='st'>"mdp"</span>)
+<span class='kw'>cfx96.melt</span> <span class='op'>&lt;-</span> <span class='kw'>cfx96</span><span class='op'>$</span><span class='fu'><a href='GetFData.html'>GetFData</a></span>(<span class='kw'>tab</span>, dp.type = <span class='st'>"mdp"</span>)
 <span class='co'>## Show some generated names for samples.</span>
-<span class='fu'><a href='https://rdrr.io/r/base/colnames.html'>colnames</a></span>(<span class='no'>cfx96.melt</span>)[<span class='fl'>2L</span>:<span class='fl'>5</span>]
+<span class='fu'><a href='https://rdrr.io/r/base/colnames.html'>colnames</a></span>(<span class='kw'>cfx96.melt</span>)[<span class='fl'>2L</span><span class='op'>:</span><span class='fl'>5</span>]
 <span class='co'>## Select columns that contain</span>
 <span class='co'>## samples with dye 'EvaGreen' and have type 'pos'</span>
 <span class='co'>## using filtering by names.</span>
-<span class='no'>cols</span> <span class='kw'>&lt;-</span> <span class='no'>cfx96</span>$<span class='fu'><a href='GetFData-function.html'>GetFData</a></span>(<span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span>(<span class='no'>tab</span>, <span class='fu'><a href='https://rdrr.io/r/base/grep.html'>grepl</a></span>(<span class='st'>"pos_EvaGreen$"</span>, <span class='no'>fdata.name</span>)),
-                       <span class='kw'>dp.type</span> <span class='kw'>=</span> <span class='st'>"mdp"</span>)
+<span class='kw'>cols</span> <span class='op'>&lt;-</span> <span class='kw'>cfx96</span><span class='op'>$</span><span class='fu'><a href='GetFData.html'>GetFData</a></span>(<span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span>(<span class='kw'>tab</span>, <span class='fu'><a href='https://rdrr.io/r/base/grep.html'>grepl</a></span>(<span class='st'>"pos_EvaGreen$"</span>, <span class='kw'>fdata.name</span>)),
+                       dp.type = <span class='st'>"mdp"</span>)
 <span class='co'>## Conduct melting curve analysis.</span>
-<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>qpcR</span>)
-<span class='fu'><a href='https://rdrr.io/r/base/invisible.html'>invisible</a></span>(<span class='fu'><a href='https://rdrr.io/pkg/qpcR/man/meltcurve.html'>meltcurve</a></span>(<span class='no'>cols</span>, <span class='kw'>fluos</span> <span class='kw'>=</span> <span class='fl'>2</span>:<span class='fu'><a href='https://rdrr.io/r/base/nrow.html'>ncol</a></span>(<span class='no'>cols</span>),
-          <span class='kw'>temps</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/rep.html'>rep</a></span>(<span class='fl'>1</span>, <span class='fu'><a href='https://rdrr.io/r/base/nrow.html'>ncol</a></span>(<span class='no'>cols</span>) - <span class='fl'>1</span>)))
-}</div></pre>
+<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='kw'>qpcR</span>)
+<span class='fu'><a href='https://rdrr.io/r/base/invisible.html'>invisible</a></span>(<span class='fu'><a href='https://rdrr.io/pkg/qpcR/man/meltcurve.html'>meltcurve</a></span>(<span class='kw'>cols</span>, fluos = <span class='fl'>2</span><span class='op'>:</span><span class='fu'><a href='https://rdrr.io/r/base/nrow.html'>ncol</a></span>(<span class='kw'>cols</span>),
+          temps = <span class='fu'><a href='https://rdrr.io/r/base/rep.html'>rep</a></span>(<span class='fl'>1</span>, <span class='fu'><a href='https://rdrr.io/r/base/nrow.html'>ncol</a></span>(<span class='kw'>cols</span>) <span class='op'>-</span> <span class='fl'>1</span>)))
+}
+</div></pre>
   </div>
-  <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
-    <h2>Contents</h2>
-    <ul class="nav nav-pills nav-stacked">
-      <li><a href="#format">Format</a></li>
-      <li><a href="#fields">Fields</a></li>
-      <li><a href="#methods">Methods</a></li>
-      <li><a href="#references">References</a></li>
-      <li><a href="#examples">Examples</a></li>
-    </ul>
-
-    <h2>Author</h2>
-    <p>Konstantin A. Blagodatskikh &lt;k.blag@yandex.ru&gt;, Stefan Roediger 
-  &lt;stefan.roediger@b-tu.de&gt;, Michal Burdukiewicz 
-  &lt;michalburdukiewicz@gmail.com&gt;</p>
+  <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
+    <nav id="toc" data-toggle="toc" class="sticky-top">
+      <h2 data-toc-skip>Contents</h2>
+    </nav>
   </div>
 </div>
 
@@ -340,7 +433,7 @@ method, which extracts fluorescence data for specified samples.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

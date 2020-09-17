@@ -5,9 +5,8 @@
 \alias{RDML}
 \title{R6 class \code{RDML} -- contains methods to read and overview fluorescence 
 data from RDML v1.1 and v1.2 format files}
-\format{An \code{\link{R6Class}} generator object.}
-\usage{
-RDML
+\format{
+An \code{\link{R6Class}} generator object.
 }
 \description{
 This class is a container for RDML format data (Lefever et al. 
@@ -193,3 +192,116 @@ Konstantin A. Blagodatskikh <k.blag@yandex.ru>, Stefan Roediger
 \keyword{StepOne}
 \keyword{file}
 \keyword{qPCR}
+\section{Super class}{
+\code{\link[RDML:rdmlBaseType]{RDML::rdmlBaseType}} -> \code{RDML}
+}
+\section{Methods}{
+\subsection{Public methods}{
+\itemize{
+\item \href{#method-AsDendrogram}{\code{RDML$AsDendrogram()}}
+\item \href{#method-AsTable}{\code{RDML$AsTable()}}
+\item \href{#method-GetFData}{\code{RDML$GetFData()}}
+\item \href{#method-AsXML}{\code{RDML$AsXML()}}
+\item \href{#method-SetFData}{\code{RDML$SetFData()}}
+\item \href{#method-new}{\code{RDML$new()}}
+\item \href{#method-clone}{\code{RDML$clone()}}
+}
+}
+\if{html}{
+\out{<details open ><summary>Inherited methods</summary>}
+\itemize{
+\item \out{<span class="pkg-link" data-pkg="RDML" data-topic="rdmlBaseType" data-id=".asXMLnodes">}\href{../../RDML/html/rdmlBaseType.html#method-.asXMLnodes}{\code{RDML::rdmlBaseType$.asXMLnodes()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="RDML" data-topic="rdmlBaseType" data-id="copy">}\href{../../RDML/html/rdmlBaseType.html#method-copy}{\code{RDML::rdmlBaseType$copy()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="RDML" data-topic="rdmlBaseType" data-id="print">}\href{../../RDML/html/rdmlBaseType.html#method-print}{\code{RDML::rdmlBaseType$print()}}\out{</span>}
+}
+\out{</details>}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-AsDendrogram"></a>}}
+\if{latex}{\out{\hypertarget{method-AsDendrogram}{}}}
+\subsection{Method \code{AsDendrogram()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{RDML$AsDendrogram(plot.dendrogram = TRUE)}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-AsTable"></a>}}
+\if{latex}{\out{\hypertarget{method-AsTable}{}}}
+\subsection{Method \code{AsTable()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{RDML$AsTable(
+  .default = list(exp.id = experiment$id$id, run.id = run$id$id, react.id =
+    react$id$id, position = react$position, sample = react$sample$id, target =
+    data$tar$id, target.dyeId = target[[data$tar$id]]$dyeId$id, sample.type =
+    sample[[react$sample$id]]$type$value, adp = !is.null(data$adp), mdp =
+    !is.null(data$mdp)),
+  name.pattern = paste(react$position, react$sample$id,
+    private$.sample[[react$sample$id]]$type$value, data$tar$id, sep = "_"),
+  add.columns = list(),
+  treat.null.as.na = FALSE,
+  ...
+)}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-GetFData"></a>}}
+\if{latex}{\out{\hypertarget{method-GetFData}{}}}
+\subsection{Method \code{GetFData()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{RDML$GetFData(request, dp.type = "adp", long.table = FALSE)}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-AsXML"></a>}}
+\if{latex}{\out{\hypertarget{method-AsXML}{}}}
+\subsection{Method \code{AsXML()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{RDML$AsXML(file.name)}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-SetFData"></a>}}
+\if{latex}{\out{\hypertarget{method-SetFData}{}}}
+\subsection{Method \code{SetFData()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{RDML$SetFData(fdata, description, fdata.type = "adp")}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-new"></a>}}
+\if{latex}{\out{\hypertarget{method-new}{}}}
+\subsection{Method \code{new()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{RDML$new(
+  filename,
+  show.progress = TRUE,
+  conditions.sep = NULL,
+  cluster = NULL,
+  format = "auto"
+)}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-clone"></a>}}
+\if{latex}{\out{\hypertarget{method-clone}{}}}
+\subsection{Method \code{clone()}}{
+The objects of this class are cloneable with this method.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{RDML$clone(deep = FALSE)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{deep}}{Whether to make a deep clone.}
+}
+\if{html}{\out{</div>}}
+}
+}
+}

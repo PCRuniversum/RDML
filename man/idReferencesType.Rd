@@ -4,9 +4,8 @@
 \name{idReferencesType}
 \alias{idReferencesType}
 \title{idReferencesType R6 class.}
-\format{An \code{\link{R6Class}} generator object.}
-\usage{
-idReferencesType
+\format{
+An \code{\link{R6Class}} generator object.
 }
 \description{
 Contains id of another RDML object. Inherits: \link{idType}.
@@ -21,4 +20,40 @@ Contains id of another RDML object. Inherits: \link{idType}.
 }
 }
 
-\keyword{datasets}
+\section{Super classes}{
+\code{\link[RDML:rdmlBaseType]{RDML::rdmlBaseType}} -> \code{\link[RDML:idType]{RDML::idType}} -> \code{idReferencesType}
+}
+\section{Methods}{
+\subsection{Public methods}{
+\itemize{
+\item \href{#method-clone}{\code{idReferencesType$clone()}}
+}
+}
+\if{html}{
+\out{<details open ><summary>Inherited methods</summary>}
+\itemize{
+\item \out{<span class="pkg-link" data-pkg="RDML" data-topic="rdmlBaseType" data-id="copy">}\href{../../RDML/html/rdmlBaseType.html#method-copy}{\code{RDML::rdmlBaseType$copy()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="RDML" data-topic="rdmlBaseType" data-id="print">}\href{../../RDML/html/rdmlBaseType.html#method-print}{\code{RDML::rdmlBaseType$print()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="RDML" data-topic="idType" data-id=".asXMLnodes">}\href{../../RDML/html/idType.html#method-.asXMLnodes}{\code{RDML::idType$.asXMLnodes()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="RDML" data-topic="idType" data-id="initialize">}\href{../../RDML/html/idType.html#method-initialize}{\code{RDML::idType$initialize()}}\out{</span>}
+}
+\out{</details>}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-clone"></a>}}
+\if{latex}{\out{\hypertarget{method-clone}{}}}
+\subsection{Method \code{clone()}}{
+The objects of this class are cloneable with this method.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{idReferencesType$clone(deep = FALSE)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{deep}}{Whether to make a deep clone.}
+}
+\if{html}{\out{</div>}}
+}
+}
+}

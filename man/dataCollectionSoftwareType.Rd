@@ -4,9 +4,8 @@
 \name{dataCollectionSoftwareType}
 \alias{dataCollectionSoftwareType}
 \title{dataCollectionSoftwareType R6 class.}
-\format{An \code{\link{R6Class}} generator object.}
-\usage{
-dataCollectionSoftwareType
+\format{
+An \code{\link{R6Class}} generator object.
 }
 \description{
 Software name and version used to collect and analyze the data. Inherits:
@@ -25,4 +24,49 @@ Software name and version used to collect and analyze the data. Inherits:
 dataCollectionSoftwareType$new(name = "ExampleSoft",
                                version = "1.0")
 }
-\keyword{datasets}
+\section{Super class}{
+\code{\link[RDML:rdmlBaseType]{RDML::rdmlBaseType}} -> \code{dataCollectionSoftwareType}
+}
+\section{Methods}{
+\subsection{Public methods}{
+\itemize{
+\item \href{#method-new}{\code{dataCollectionSoftwareType$new()}}
+\item \href{#method-clone}{\code{dataCollectionSoftwareType$clone()}}
+}
+}
+\if{html}{
+\out{<details open ><summary>Inherited methods</summary>}
+\itemize{
+\item \out{<span class="pkg-link" data-pkg="RDML" data-topic="rdmlBaseType" data-id=".asXMLnodes">}\href{../../RDML/html/rdmlBaseType.html#method-.asXMLnodes}{\code{RDML::rdmlBaseType$.asXMLnodes()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="RDML" data-topic="rdmlBaseType" data-id="copy">}\href{../../RDML/html/rdmlBaseType.html#method-copy}{\code{RDML::rdmlBaseType$copy()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="RDML" data-topic="rdmlBaseType" data-id="print">}\href{../../RDML/html/rdmlBaseType.html#method-print}{\code{RDML::rdmlBaseType$print()}}\out{</span>}
+}
+\out{</details>}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-new"></a>}}
+\if{latex}{\out{\hypertarget{method-new}{}}}
+\subsection{Method \code{new()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{dataCollectionSoftwareType$new(name, version)}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-clone"></a>}}
+\if{latex}{\out{\hypertarget{method-clone}{}}}
+\subsection{Method \code{clone()}}{
+The objects of this class are cloneable with this method.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{dataCollectionSoftwareType$clone(deep = FALSE)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{deep}}{Whether to make a deep clone.}
+}
+\if{html}{\out{</div>}}
+}
+}
+}

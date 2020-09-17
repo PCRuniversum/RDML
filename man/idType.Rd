@@ -4,9 +4,8 @@
 \name{idType}
 \alias{idType}
 \title{idType R6 class.}
-\format{An \code{\link{R6Class}} generator object.}
-\usage{
-idType
+\format{
+An \code{\link{R6Class}} generator object.
 }
 \description{
 Contains identificator for varius RDML types. Inherits: \link{rdmlBaseType}.
@@ -19,4 +18,58 @@ Contains identificator for varius RDML types. Inherits: \link{rdmlBaseType}.
 }
 }
 
-\keyword{datasets}
+\section{Super class}{
+\code{\link[RDML:rdmlBaseType]{RDML::rdmlBaseType}} -> \code{idType}
+}
+\section{Methods}{
+\subsection{Public methods}{
+\itemize{
+\item \href{#method-new}{\code{idType$new()}}
+\item \href{#method-.asXMLnodes}{\code{idType$.asXMLnodes()}}
+\item \href{#method-clone}{\code{idType$clone()}}
+}
+}
+\if{html}{
+\out{<details open ><summary>Inherited methods</summary>}
+\itemize{
+\item \out{<span class="pkg-link" data-pkg="RDML" data-topic="rdmlBaseType" data-id="copy">}\href{../../RDML/html/rdmlBaseType.html#method-copy}{\code{RDML::rdmlBaseType$copy()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="RDML" data-topic="rdmlBaseType" data-id="print">}\href{../../RDML/html/rdmlBaseType.html#method-print}{\code{RDML::rdmlBaseType$print()}}\out{</span>}
+}
+\out{</details>}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-new"></a>}}
+\if{latex}{\out{\hypertarget{method-new}{}}}
+\subsection{Method \code{new()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{idType$new(id)}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-.asXMLnodes"></a>}}
+\if{latex}{\out{\hypertarget{method-.asXMLnodes}{}}}
+\subsection{Method \code{.asXMLnodes()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{idType$.asXMLnodes(node.name)}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-clone"></a>}}
+\if{latex}{\out{\hypertarget{method-clone}{}}}
+\subsection{Method \code{clone()}}{
+The objects of this class are cloneable with this method.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{idType$clone(deep = FALSE)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{deep}}{Whether to make a deep clone.}
+}
+\if{html}{\out{</div>}}
+}
+}
+}

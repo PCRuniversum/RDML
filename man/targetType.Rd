@@ -4,9 +4,8 @@
 \name{targetType}
 \alias{targetType}
 \title{targetType R6 class.}
-\format{An \code{\link{R6Class}} generator object.}
-\usage{
-targetType
+\format{
+An \code{\link{R6Class}} generator object.
 }
 \description{
 A target is a PCR reaction with defined set of primers. PCR reactions
@@ -36,4 +35,62 @@ targets. Inherits:
   \item{\code{commercialAssay}}{\link{commercialAssayType}.} }
 }
 
-\keyword{datasets}
+\section{Super class}{
+\code{\link[RDML:rdmlBaseType]{RDML::rdmlBaseType}} -> \code{targetType}
+}
+\section{Methods}{
+\subsection{Public methods}{
+\itemize{
+\item \href{#method-new}{\code{targetType$new()}}
+\item \href{#method-clone}{\code{targetType$clone()}}
+}
+}
+\if{html}{
+\out{<details open ><summary>Inherited methods</summary>}
+\itemize{
+\item \out{<span class="pkg-link" data-pkg="RDML" data-topic="rdmlBaseType" data-id=".asXMLnodes">}\href{../../RDML/html/rdmlBaseType.html#method-.asXMLnodes}{\code{RDML::rdmlBaseType$.asXMLnodes()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="RDML" data-topic="rdmlBaseType" data-id="copy">}\href{../../RDML/html/rdmlBaseType.html#method-copy}{\code{RDML::rdmlBaseType$copy()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="RDML" data-topic="rdmlBaseType" data-id="print">}\href{../../RDML/html/rdmlBaseType.html#method-print}{\code{RDML::rdmlBaseType$print()}}\out{</span>}
+}
+\out{</details>}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-new"></a>}}
+\if{latex}{\out{\hypertarget{method-new}{}}}
+\subsection{Method \code{new()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{targetType$new(
+  id,
+  description = NULL,
+  documentation = NULL,
+  xRef = NULL,
+  type,
+  amplificationEfficiencyMethod = NULL,
+  amplificationEfficiency = NULL,
+  amplificationEfficiencySE = NULL,
+  detectionLimit = NULL,
+  dyeId,
+  sequences = NULL,
+  commercialAssay = NULL
+)}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-clone"></a>}}
+\if{latex}{\out{\hypertarget{method-clone}{}}}
+\subsection{Method \code{clone()}}{
+The objects of this class are cloneable with this method.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{targetType$clone(deep = FALSE)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{deep}}{Whether to make a deep clone.}
+}
+\if{html}{\out{</div>}}
+}
+}
+}
