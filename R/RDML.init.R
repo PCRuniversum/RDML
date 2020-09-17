@@ -435,8 +435,10 @@ RDML$set("public", "initialize", function(filename,
                "target" = "Target",
                "target.dyeId" = "Fluor",
                "quantity" = "Starting Quantity (SQ)")
-      # BioRad export correction Unkn => unkn, etc
+      # Export correction Unkn => unkn, etc
       descr$sample.type <- tolower(descr$sample.type)
+      # Remove replicates markers unkn-1 => unkn
+      descr$sample.type <- gsub("([A-Z]*)(-.*)", "\\1", descr$sample.type)
       # Remove zeros from fdata.name to conformity with colnames in adp and mdp
       # A01 => A1
       descr$fdata.name <- gsub("([A-Z]*)(0*)([1-9].*)", "\\1\\3", descr$fdata.name)
