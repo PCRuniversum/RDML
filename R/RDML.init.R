@@ -415,8 +415,32 @@ RDML$set("public", "initialize", function(filename,
   fromExcel <- function() {
     descr <- read_excel(filename,
                         sheet = "description")
-    # BioRad export correction Unkn => unkn, etc
-    descr$sample.type <- tolower(descr$sample.type)
+    
+    # Try BioRad export format
+    if ("Well" %in% colnames(descr)) {
+      
+      # Adding necessary columns
+      if (!("Starting Quantity (SQ)" %in% colnames(descr)))
+        descr[["Starting Quantity (SQ)"]] <- NA
+      descr$exp.id <- "Exp1"
+      descr$run.id <- "Run1"
+      descr$react.id <- 1:nrow(descr)
+      descr <- descr %>>% 
+        select("fdata.name" = "Well",
+               "exp.id",
+               "run.id",
+               "react.id",
+               "sample" = "Sample",
+               "sample.type" = "Content",
+               "target" = "Target",
+               "target.dyeId" = "Fluor",
+               "quantity" = "Starting Quantity (SQ)")
+      # BioRad export correction Unkn => unkn, etc
+      descr$sample.type <- tolower(descr$sample.type)
+      # Remove zeros from fdata.name to conformity with colnames in adp and mdp
+      # A01 => A1
+      descr$fdata.name <- gsub("([A-Z]*)(0*)([1-9].*)", "\\1\\3", descr$fdata.name)
+    }
     
     adp_data <- tryCatch({
       read_excel(filename,
