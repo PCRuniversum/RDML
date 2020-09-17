@@ -118,7 +118,7 @@ rdmlBaseType <-
               sapply(elements,
                      function(name) {
                        sprintf(
-                         "\t%s: %s",
+                         "%s: %s",
                          gsub("^\\.(.*)$",
                               "\\1", name),
                          switch(
