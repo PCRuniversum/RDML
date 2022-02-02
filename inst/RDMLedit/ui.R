@@ -25,7 +25,8 @@ shinyUI(
       else
       {
         #Not WinXp
-        extendShinyjs(script = "www/js/my_shinyjs_scripts.js")
+        extendShinyjs(script = "www/js/my_shinyjs_scripts.js",
+                      functions = c("winprint"))
       }#,
       # includeScript("www/js/single_double_click.js"),
       # includeScript("www/js/scripts.js"),
