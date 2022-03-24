@@ -23,7 +23,7 @@ matrix:
     - tlmgr install xcolor
     
   - os: linux
-    dist: trusty
+    dist: bionic
     r: devel
     addons:
       apt:
