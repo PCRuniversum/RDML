@@ -12,7 +12,7 @@ matrix:
   include:
 
   - os: linux
-    dist: trusty
+    dist: bionic
     r: release
     cran: https://cran.rstudio.com/
     addons:
