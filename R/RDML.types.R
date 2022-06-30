@@ -1689,7 +1689,8 @@ mdpsType <-
 #'   TargetID - A reference to a target.}
 #'   \item{\code{cq}}{\link[checkmate]{checkNumber}.
 #'   Calculated fractional PCR cycle used for downstream quantification.
-#'   Negative values express following condition: Not Available: -1.0 }
+#'   Negative values express following condition: Not Available: -1.0 .
+#'   (can be NaN for BioRad Maestro compatibility)}
 #'   \item{\code{excl}}{\link[checkmate]{checkString}. Excluded. If \code{excl}
 #'   is present, this entry should not be evaluated. Do not set this element
 #'   to \code{FALSE} if the entry is valid. Instead, leave the entire \code{excl}
@@ -1774,7 +1775,7 @@ dataType <-
             cq = function(cq) {
               if (missing(cq))
                 return(private$.cq)
-              assertNumber(cq, null.ok = TRUE)
+              assertNumber(cq, null.ok = TRUE, na.ok = TRUE)
               private$.cq <- cq
             },
             excl = function(excl) {
