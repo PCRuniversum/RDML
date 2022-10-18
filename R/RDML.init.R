@@ -119,6 +119,8 @@ GetDilutionsRoche <- function(uniq.folder)
     concs.guids <-
       getTextVector(rdml.doc, "//quant:absQuantDataSource/quant:standard/../quant:graphId")
   }
+  if (is.null(concs))
+    return(NULL)
   names(concs) <- concs.guids
   concs <- sort(concs, decreasing = TRUE)
   positions <-
