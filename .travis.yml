@@ -4,31 +4,27 @@
 # see the wiki:
 #   https://github.com/craigcitro/r-travis/wiki
 
-sudo: required
-
 language: r
+os: linux
+dist: bionic
 
-matrix:
+jobs:
   include:
 
-  - os: linux
-    dist: trusty
-    r: release
+  - r: release
     cran: https://cran.rstudio.com/
     addons:
       apt:
         packages:
-          - libgdal1-dev
+          - libgdal-dev
     before_install:
     - tlmgr install xcolor
     
-  - os: linux
-    dist: trusty
-    r: devel
+  - r: devel
     addons:
       apt:
         packages:
-          - libgdal1-dev
+          - libgdal-dev
     before_install:
     - tlmgr install xcolor
     
