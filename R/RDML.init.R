@@ -1428,6 +1428,10 @@ RDML$set("public", "initialize", function(filename,
     #   fromCobas()
     #   return()
     # },
+    txt = {
+      fromFQDexport()
+      return()
+    },
     {
       fromRDML()
       return()
