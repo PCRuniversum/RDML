@@ -65,24 +65,24 @@ information if the experiment contains more than 26 rows!}}
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
-\item \href{#method-new}{\code{reactType$new()}}
-\item \href{#method-GetFData}{\code{reactType$GetFData()}}
-\item \href{#method-.recalcPosition}{\code{reactType$.recalcPosition()}}
-\item \href{#method-clone}{\code{reactType$clone()}}
+\item \href{#method-reactType-new}{\code{reactType$new()}}
+\item \href{#method-reactType-GetFData}{\code{reactType$GetFData()}}
+\item \href{#method-reactType-.recalcPosition}{\code{reactType$.recalcPosition()}}
+\item \href{#method-reactType-clone}{\code{reactType$clone()}}
 }
 }
-\if{html}{
-\out{<details open ><summary>Inherited methods</summary>}
-\itemize{
-\item \out{<span class="pkg-link" data-pkg="RDML" data-topic="rdmlBaseType" data-id=".asXMLnodes">}\href{../../RDML/html/rdmlBaseType.html#method-.asXMLnodes}{\code{RDML::rdmlBaseType$.asXMLnodes()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="RDML" data-topic="rdmlBaseType" data-id="copy">}\href{../../RDML/html/rdmlBaseType.html#method-copy}{\code{RDML::rdmlBaseType$copy()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="RDML" data-topic="rdmlBaseType" data-id="print">}\href{../../RDML/html/rdmlBaseType.html#method-print}{\code{RDML::rdmlBaseType$print()}}\out{</span>}
-}
-\out{</details>}
-}
+\if{html}{\out{
+<details open><summary>Inherited methods</summary>
+<ul>
+<li><span class="pkg-link" data-pkg="RDML" data-topic="rdmlBaseType" data-id=".asXMLnodes"><a href='../../RDML/html/rdmlBaseType.html#method-rdmlBaseType-.asXMLnodes'><code>RDML::rdmlBaseType$.asXMLnodes()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="RDML" data-topic="rdmlBaseType" data-id="copy"><a href='../../RDML/html/rdmlBaseType.html#method-rdmlBaseType-copy'><code>RDML::rdmlBaseType$copy()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="RDML" data-topic="rdmlBaseType" data-id="print"><a href='../../RDML/html/rdmlBaseType.html#method-rdmlBaseType-print'><code>RDML::rdmlBaseType$print()</code></a></span></li>
+</ul>
+</details>
+}}
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-new"></a>}}
-\if{latex}{\out{\hypertarget{method-new}{}}}
+\if{html}{\out{<a id="method-reactType-new"></a>}}
+\if{latex}{\out{\hypertarget{method-reactType-new}{}}}
 \subsection{Method \code{new()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{reactType$new(
@@ -96,8 +96,8 @@ information if the experiment contains more than 26 rows!}}
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-GetFData"></a>}}
-\if{latex}{\out{\hypertarget{method-GetFData}{}}}
+\if{html}{\out{<a id="method-reactType-GetFData"></a>}}
+\if{latex}{\out{\hypertarget{method-reactType-GetFData}{}}}
 \subsection{Method \code{GetFData()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{reactType$GetFData(dp.type = "adp", long.table = FALSE)}\if{html}{\out{</div>}}
@@ -105,8 +105,8 @@ information if the experiment contains more than 26 rows!}}
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-.recalcPosition"></a>}}
-\if{latex}{\out{\hypertarget{method-.recalcPosition}{}}}
+\if{html}{\out{<a id="method-reactType-.recalcPosition"></a>}}
+\if{latex}{\out{\hypertarget{method-reactType-.recalcPosition}{}}}
 \subsection{Method \code{.recalcPosition()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{reactType$.recalcPosition(pcrFormat)}\if{html}{\out{</div>}}
@@ -114,8 +114,8 @@ information if the experiment contains more than 26 rows!}}
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-clone"></a>}}
-\if{latex}{\out{\hypertarget{method-clone}{}}}
+\if{html}{\out{<a id="method-reactType-clone"></a>}}
+\if{latex}{\out{\hypertarget{method-reactType-clone}{}}}
 \subsection{Method \code{clone()}}{
 The objects of this class are cloneable with this method.
 \subsection{Usage}{

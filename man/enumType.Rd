@@ -24,22 +24,22 @@ Inherits: \link{rdmlBaseType}.
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
-\item \href{#method-new}{\code{enumType$new()}}
-\item \href{#method-print}{\code{enumType$print()}}
-\item \href{#method-.asXMLnodes}{\code{enumType$.asXMLnodes()}}
-\item \href{#method-clone}{\code{enumType$clone()}}
+\item \href{#method-enumType-new}{\code{enumType$new()}}
+\item \href{#method-enumType-print}{\code{enumType$print()}}
+\item \href{#method-enumType-.asXMLnodes}{\code{enumType$.asXMLnodes()}}
+\item \href{#method-enumType-clone}{\code{enumType$clone()}}
 }
 }
-\if{html}{
-\out{<details open ><summary>Inherited methods</summary>}
-\itemize{
-\item \out{<span class="pkg-link" data-pkg="RDML" data-topic="rdmlBaseType" data-id="copy">}\href{../../RDML/html/rdmlBaseType.html#method-copy}{\code{RDML::rdmlBaseType$copy()}}\out{</span>}
-}
-\out{</details>}
-}
+\if{html}{\out{
+<details open><summary>Inherited methods</summary>
+<ul>
+<li><span class="pkg-link" data-pkg="RDML" data-topic="rdmlBaseType" data-id="copy"><a href='../../RDML/html/rdmlBaseType.html#method-rdmlBaseType-copy'><code>RDML::rdmlBaseType$copy()</code></a></span></li>
+</ul>
+</details>
+}}
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-new"></a>}}
-\if{latex}{\out{\hypertarget{method-new}{}}}
+\if{html}{\out{<a id="method-enumType-new"></a>}}
+\if{latex}{\out{\hypertarget{method-enumType-new}{}}}
 \subsection{Method \code{new()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{enumType$new(value)}\if{html}{\out{</div>}}
@@ -47,8 +47,8 @@ Inherits: \link{rdmlBaseType}.
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-print"></a>}}
-\if{latex}{\out{\hypertarget{method-print}{}}}
+\if{html}{\out{<a id="method-enumType-print"></a>}}
+\if{latex}{\out{\hypertarget{method-enumType-print}{}}}
 \subsection{Method \code{print()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{enumType$print(...)}\if{html}{\out{</div>}}
@@ -56,8 +56,8 @@ Inherits: \link{rdmlBaseType}.
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-.asXMLnodes"></a>}}
-\if{latex}{\out{\hypertarget{method-.asXMLnodes}{}}}
+\if{html}{\out{<a id="method-enumType-.asXMLnodes"></a>}}
+\if{latex}{\out{\hypertarget{method-enumType-.asXMLnodes}{}}}
 \subsection{Method \code{.asXMLnodes()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{enumType$.asXMLnodes(node.name)}\if{html}{\out{</div>}}
@@ -65,8 +65,8 @@ Inherits: \link{rdmlBaseType}.
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-clone"></a>}}
-\if{latex}{\out{\hypertarget{method-clone}{}}}
+\if{html}{\out{<a id="method-enumType-clone"></a>}}
+\if{latex}{\out{\hypertarget{method-enumType-clone}{}}}
 \subsection{Method \code{clone()}}{
 The objects of this class are cloneable with this method.
 \subsection{Usage}{

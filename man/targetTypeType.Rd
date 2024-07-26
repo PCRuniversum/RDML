@@ -29,22 +29,22 @@ Inherits: \link{enumType}.
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
-\item \href{#method-clone}{\code{targetTypeType$clone()}}
+\item \href{#method-targetTypeType-clone}{\code{targetTypeType$clone()}}
 }
 }
-\if{html}{
-\out{<details open ><summary>Inherited methods</summary>}
-\itemize{
-\item \out{<span class="pkg-link" data-pkg="RDML" data-topic="rdmlBaseType" data-id="copy">}\href{../../RDML/html/rdmlBaseType.html#method-copy}{\code{RDML::rdmlBaseType$copy()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="RDML" data-topic="enumType" data-id=".asXMLnodes">}\href{../../RDML/html/enumType.html#method-.asXMLnodes}{\code{RDML::enumType$.asXMLnodes()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="RDML" data-topic="enumType" data-id="initialize">}\href{../../RDML/html/enumType.html#method-initialize}{\code{RDML::enumType$initialize()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="RDML" data-topic="enumType" data-id="print">}\href{../../RDML/html/enumType.html#method-print}{\code{RDML::enumType$print()}}\out{</span>}
-}
-\out{</details>}
-}
+\if{html}{\out{
+<details open><summary>Inherited methods</summary>
+<ul>
+<li><span class="pkg-link" data-pkg="RDML" data-topic="rdmlBaseType" data-id="copy"><a href='../../RDML/html/rdmlBaseType.html#method-rdmlBaseType-copy'><code>RDML::rdmlBaseType$copy()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="RDML" data-topic="enumType" data-id=".asXMLnodes"><a href='../../RDML/html/enumType.html#method-enumType-.asXMLnodes'><code>RDML::enumType$.asXMLnodes()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="RDML" data-topic="enumType" data-id="initialize"><a href='../../RDML/html/enumType.html#method-enumType-initialize'><code>RDML::enumType$initialize()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="RDML" data-topic="enumType" data-id="print"><a href='../../RDML/html/enumType.html#method-enumType-print'><code>RDML::enumType$print()</code></a></span></li>
+</ul>
+</details>
+}}
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-clone"></a>}}
-\if{latex}{\out{\hypertarget{method-clone}{}}}
+\if{html}{\out{<a id="method-targetTypeType-clone"></a>}}
+\if{latex}{\out{\hypertarget{method-targetTypeType-clone}{}}}
 \subsection{Method \code{clone()}}{
 The objects of this class are cloneable with this method.
 \subsection{Usage}{

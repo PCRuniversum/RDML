@@ -59,23 +59,23 @@ points as \code{data.frame}}
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
-\item \href{#method-new}{\code{dataType$new()}}
-\item \href{#method-GetFData}{\code{dataType$GetFData()}}
-\item \href{#method-clone}{\code{dataType$clone()}}
+\item \href{#method-dataType-new}{\code{dataType$new()}}
+\item \href{#method-dataType-GetFData}{\code{dataType$GetFData()}}
+\item \href{#method-dataType-clone}{\code{dataType$clone()}}
 }
 }
-\if{html}{
-\out{<details open ><summary>Inherited methods</summary>}
-\itemize{
-\item \out{<span class="pkg-link" data-pkg="RDML" data-topic="rdmlBaseType" data-id=".asXMLnodes">}\href{../../RDML/html/rdmlBaseType.html#method-.asXMLnodes}{\code{RDML::rdmlBaseType$.asXMLnodes()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="RDML" data-topic="rdmlBaseType" data-id="copy">}\href{../../RDML/html/rdmlBaseType.html#method-copy}{\code{RDML::rdmlBaseType$copy()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="RDML" data-topic="rdmlBaseType" data-id="print">}\href{../../RDML/html/rdmlBaseType.html#method-print}{\code{RDML::rdmlBaseType$print()}}\out{</span>}
-}
-\out{</details>}
-}
+\if{html}{\out{
+<details open><summary>Inherited methods</summary>
+<ul>
+<li><span class="pkg-link" data-pkg="RDML" data-topic="rdmlBaseType" data-id=".asXMLnodes"><a href='../../RDML/html/rdmlBaseType.html#method-rdmlBaseType-.asXMLnodes'><code>RDML::rdmlBaseType$.asXMLnodes()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="RDML" data-topic="rdmlBaseType" data-id="copy"><a href='../../RDML/html/rdmlBaseType.html#method-rdmlBaseType-copy'><code>RDML::rdmlBaseType$copy()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="RDML" data-topic="rdmlBaseType" data-id="print"><a href='../../RDML/html/rdmlBaseType.html#method-rdmlBaseType-print'><code>RDML::rdmlBaseType$print()</code></a></span></li>
+</ul>
+</details>
+}}
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-new"></a>}}
-\if{latex}{\out{\hypertarget{method-new}{}}}
+\if{html}{\out{<a id="method-dataType-new"></a>}}
+\if{latex}{\out{\hypertarget{method-dataType-new}{}}}
 \subsection{Method \code{new()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{dataType$new(
@@ -93,8 +93,8 @@ points as \code{data.frame}}
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-GetFData"></a>}}
-\if{latex}{\out{\hypertarget{method-GetFData}{}}}
+\if{html}{\out{<a id="method-dataType-GetFData"></a>}}
+\if{latex}{\out{\hypertarget{method-dataType-GetFData}{}}}
 \subsection{Method \code{GetFData()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{dataType$GetFData(dp.type = "adp")}\if{html}{\out{</div>}}
@@ -102,8 +102,8 @@ points as \code{data.frame}}
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-clone"></a>}}
-\if{latex}{\out{\hypertarget{method-clone}{}}}
+\if{html}{\out{<a id="method-dataType-clone"></a>}}
+\if{latex}{\out{\hypertarget{method-dataType-clone}{}}}
 \subsection{Method \code{clone()}}{
 The objects of this class are cloneable with this method.
 \subsection{Usage}{

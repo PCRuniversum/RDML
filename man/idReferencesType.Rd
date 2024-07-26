@@ -26,22 +26,22 @@ Contains id of another RDML object. Inherits: \link{idType}.
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
-\item \href{#method-clone}{\code{idReferencesType$clone()}}
+\item \href{#method-idReferencesType-clone}{\code{idReferencesType$clone()}}
 }
 }
-\if{html}{
-\out{<details open ><summary>Inherited methods</summary>}
-\itemize{
-\item \out{<span class="pkg-link" data-pkg="RDML" data-topic="rdmlBaseType" data-id="copy">}\href{../../RDML/html/rdmlBaseType.html#method-copy}{\code{RDML::rdmlBaseType$copy()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="RDML" data-topic="rdmlBaseType" data-id="print">}\href{../../RDML/html/rdmlBaseType.html#method-print}{\code{RDML::rdmlBaseType$print()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="RDML" data-topic="idType" data-id=".asXMLnodes">}\href{../../RDML/html/idType.html#method-.asXMLnodes}{\code{RDML::idType$.asXMLnodes()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="RDML" data-topic="idType" data-id="initialize">}\href{../../RDML/html/idType.html#method-initialize}{\code{RDML::idType$initialize()}}\out{</span>}
-}
-\out{</details>}
-}
+\if{html}{\out{
+<details open><summary>Inherited methods</summary>
+<ul>
+<li><span class="pkg-link" data-pkg="RDML" data-topic="rdmlBaseType" data-id="copy"><a href='../../RDML/html/rdmlBaseType.html#method-rdmlBaseType-copy'><code>RDML::rdmlBaseType$copy()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="RDML" data-topic="rdmlBaseType" data-id="print"><a href='../../RDML/html/rdmlBaseType.html#method-rdmlBaseType-print'><code>RDML::rdmlBaseType$print()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="RDML" data-topic="idType" data-id=".asXMLnodes"><a href='../../RDML/html/idType.html#method-idType-.asXMLnodes'><code>RDML::idType$.asXMLnodes()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="RDML" data-topic="idType" data-id="initialize"><a href='../../RDML/html/idType.html#method-idType-initialize'><code>RDML::idType$initialize()</code></a></span></li>
+</ul>
+</details>
+}}
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-clone"></a>}}
-\if{latex}{\out{\hypertarget{method-clone}{}}}
+\if{html}{\out{<a id="method-idReferencesType-clone"></a>}}
+\if{latex}{\out{\hypertarget{method-idReferencesType-clone}{}}}
 \subsection{Method \code{clone()}}{
 The objects of this class are cloneable with this method.
 \subsection{Usage}{

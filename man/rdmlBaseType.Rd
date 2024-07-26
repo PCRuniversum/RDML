@@ -27,15 +27,15 @@ usage and should not be directly accessed.
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
-\item \href{#method-.asXMLnodes}{\code{rdmlBaseType$.asXMLnodes()}}
-\item \href{#method-copy}{\code{rdmlBaseType$copy()}}
-\item \href{#method-print}{\code{rdmlBaseType$print()}}
-\item \href{#method-clone}{\code{rdmlBaseType$clone()}}
+\item \href{#method-rdmlBaseType-.asXMLnodes}{\code{rdmlBaseType$.asXMLnodes()}}
+\item \href{#method-rdmlBaseType-copy}{\code{rdmlBaseType$copy()}}
+\item \href{#method-rdmlBaseType-print}{\code{rdmlBaseType$print()}}
+\item \href{#method-rdmlBaseType-clone}{\code{rdmlBaseType$clone()}}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-.asXMLnodes"></a>}}
-\if{latex}{\out{\hypertarget{method-.asXMLnodes}{}}}
+\if{html}{\out{<a id="method-rdmlBaseType-.asXMLnodes"></a>}}
+\if{latex}{\out{\hypertarget{method-rdmlBaseType-.asXMLnodes}{}}}
 \subsection{Method \code{.asXMLnodes()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{rdmlBaseType$.asXMLnodes(node.name)}\if{html}{\out{</div>}}
@@ -43,8 +43,8 @@ usage and should not be directly accessed.
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-copy"></a>}}
-\if{latex}{\out{\hypertarget{method-copy}{}}}
+\if{html}{\out{<a id="method-rdmlBaseType-copy"></a>}}
+\if{latex}{\out{\hypertarget{method-rdmlBaseType-copy}{}}}
 \subsection{Method \code{copy()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{rdmlBaseType$copy()}\if{html}{\out{</div>}}
@@ -52,8 +52,8 @@ usage and should not be directly accessed.
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-print"></a>}}
-\if{latex}{\out{\hypertarget{method-print}{}}}
+\if{html}{\out{<a id="method-rdmlBaseType-print"></a>}}
+\if{latex}{\out{\hypertarget{method-rdmlBaseType-print}{}}}
 \subsection{Method \code{print()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{rdmlBaseType$print(...)}\if{html}{\out{</div>}}
@@ -61,8 +61,8 @@ usage and should not be directly accessed.
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-clone"></a>}}
-\if{latex}{\out{\hypertarget{method-clone}{}}}
+\if{html}{\out{<a id="method-rdmlBaseType-clone"></a>}}
+\if{latex}{\out{\hypertarget{method-rdmlBaseType-clone}{}}}
 \subsection{Method \code{clone()}}{
 The objects of this class are cloneable with this method.
 \subsection{Usage}{

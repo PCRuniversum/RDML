@@ -53,24 +53,24 @@ one rotor, one array, one chip. Inherits: \link{rdmlBaseType}.
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
-\item \href{#method-new}{\code{runType$new()}}
-\item \href{#method-GetFData}{\code{runType$GetFData()}}
-\item \href{#method-UpdateReactsPosition}{\code{runType$UpdateReactsPosition()}}
-\item \href{#method-clone}{\code{runType$clone()}}
+\item \href{#method-runType-new}{\code{runType$new()}}
+\item \href{#method-runType-GetFData}{\code{runType$GetFData()}}
+\item \href{#method-runType-UpdateReactsPosition}{\code{runType$UpdateReactsPosition()}}
+\item \href{#method-runType-clone}{\code{runType$clone()}}
 }
 }
-\if{html}{
-\out{<details open ><summary>Inherited methods</summary>}
-\itemize{
-\item \out{<span class="pkg-link" data-pkg="RDML" data-topic="rdmlBaseType" data-id=".asXMLnodes">}\href{../../RDML/html/rdmlBaseType.html#method-.asXMLnodes}{\code{RDML::rdmlBaseType$.asXMLnodes()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="RDML" data-topic="rdmlBaseType" data-id="copy">}\href{../../RDML/html/rdmlBaseType.html#method-copy}{\code{RDML::rdmlBaseType$copy()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="RDML" data-topic="rdmlBaseType" data-id="print">}\href{../../RDML/html/rdmlBaseType.html#method-print}{\code{RDML::rdmlBaseType$print()}}\out{</span>}
-}
-\out{</details>}
-}
+\if{html}{\out{
+<details open><summary>Inherited methods</summary>
+<ul>
+<li><span class="pkg-link" data-pkg="RDML" data-topic="rdmlBaseType" data-id=".asXMLnodes"><a href='../../RDML/html/rdmlBaseType.html#method-rdmlBaseType-.asXMLnodes'><code>RDML::rdmlBaseType$.asXMLnodes()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="RDML" data-topic="rdmlBaseType" data-id="copy"><a href='../../RDML/html/rdmlBaseType.html#method-rdmlBaseType-copy'><code>RDML::rdmlBaseType$copy()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="RDML" data-topic="rdmlBaseType" data-id="print"><a href='../../RDML/html/rdmlBaseType.html#method-rdmlBaseType-print'><code>RDML::rdmlBaseType$print()</code></a></span></li>
+</ul>
+</details>
+}}
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-new"></a>}}
-\if{latex}{\out{\hypertarget{method-new}{}}}
+\if{html}{\out{<a id="method-runType-new"></a>}}
+\if{latex}{\out{\hypertarget{method-runType-new}{}}}
 \subsection{Method \code{new()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{runType$new(
@@ -91,8 +91,8 @@ one rotor, one array, one chip. Inherits: \link{rdmlBaseType}.
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-GetFData"></a>}}
-\if{latex}{\out{\hypertarget{method-GetFData}{}}}
+\if{html}{\out{<a id="method-runType-GetFData"></a>}}
+\if{latex}{\out{\hypertarget{method-runType-GetFData}{}}}
 \subsection{Method \code{GetFData()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{runType$GetFData(dp.type = "adp", long.table = FALSE)}\if{html}{\out{</div>}}
@@ -100,8 +100,8 @@ one rotor, one array, one chip. Inherits: \link{rdmlBaseType}.
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-UpdateReactsPosition"></a>}}
-\if{latex}{\out{\hypertarget{method-UpdateReactsPosition}{}}}
+\if{html}{\out{<a id="method-runType-UpdateReactsPosition"></a>}}
+\if{latex}{\out{\hypertarget{method-runType-UpdateReactsPosition}{}}}
 \subsection{Method \code{UpdateReactsPosition()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{runType$UpdateReactsPosition()}\if{html}{\out{</div>}}
@@ -109,8 +109,8 @@ one rotor, one array, one chip. Inherits: \link{rdmlBaseType}.
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-clone"></a>}}
-\if{latex}{\out{\hypertarget{method-clone}{}}}
+\if{html}{\out{<a id="method-runType-clone"></a>}}
+\if{latex}{\out{\hypertarget{method-runType-clone}{}}}
 \subsection{Method \code{clone()}}{
 The objects of this class are cloneable with this method.
 \subsection{Usage}{

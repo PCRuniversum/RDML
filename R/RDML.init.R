@@ -618,6 +618,10 @@ RDML$set("public", "initialize", function(filename,
     self$SetFData(pcrdata, descr, fdata.type = data.type)
   }
   
+  fromFQDexport <- function() {
+    
+  }
+  
   # COBAS -----------------------------------------------------------------
   # fromCobas <- function() {
   #   dat <- filename %>>%

@@ -198,27 +198,27 @@ Konstantin A. Blagodatskikh <k.blag@yandex.ru>, Stefan Roediger
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
-\item \href{#method-AsDendrogram}{\code{RDML$AsDendrogram()}}
-\item \href{#method-AsTable}{\code{RDML$AsTable()}}
-\item \href{#method-GetFData}{\code{RDML$GetFData()}}
-\item \href{#method-AsXML}{\code{RDML$AsXML()}}
-\item \href{#method-SetFData}{\code{RDML$SetFData()}}
-\item \href{#method-new}{\code{RDML$new()}}
-\item \href{#method-clone}{\code{RDML$clone()}}
+\item \href{#method-RDML-AsDendrogram}{\code{RDML$AsDendrogram()}}
+\item \href{#method-RDML-AsTable}{\code{RDML$AsTable()}}
+\item \href{#method-RDML-GetFData}{\code{RDML$GetFData()}}
+\item \href{#method-RDML-AsXML}{\code{RDML$AsXML()}}
+\item \href{#method-RDML-SetFData}{\code{RDML$SetFData()}}
+\item \href{#method-RDML-new}{\code{RDML$new()}}
+\item \href{#method-RDML-clone}{\code{RDML$clone()}}
 }
 }
-\if{html}{
-\out{<details open ><summary>Inherited methods</summary>}
-\itemize{
-\item \out{<span class="pkg-link" data-pkg="RDML" data-topic="rdmlBaseType" data-id=".asXMLnodes">}\href{../../RDML/html/rdmlBaseType.html#method-.asXMLnodes}{\code{RDML::rdmlBaseType$.asXMLnodes()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="RDML" data-topic="rdmlBaseType" data-id="copy">}\href{../../RDML/html/rdmlBaseType.html#method-copy}{\code{RDML::rdmlBaseType$copy()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="RDML" data-topic="rdmlBaseType" data-id="print">}\href{../../RDML/html/rdmlBaseType.html#method-print}{\code{RDML::rdmlBaseType$print()}}\out{</span>}
-}
-\out{</details>}
-}
+\if{html}{\out{
+<details open><summary>Inherited methods</summary>
+<ul>
+<li><span class="pkg-link" data-pkg="RDML" data-topic="rdmlBaseType" data-id=".asXMLnodes"><a href='../../RDML/html/rdmlBaseType.html#method-rdmlBaseType-.asXMLnodes'><code>RDML::rdmlBaseType$.asXMLnodes()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="RDML" data-topic="rdmlBaseType" data-id="copy"><a href='../../RDML/html/rdmlBaseType.html#method-rdmlBaseType-copy'><code>RDML::rdmlBaseType$copy()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="RDML" data-topic="rdmlBaseType" data-id="print"><a href='../../RDML/html/rdmlBaseType.html#method-rdmlBaseType-print'><code>RDML::rdmlBaseType$print()</code></a></span></li>
+</ul>
+</details>
+}}
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-AsDendrogram"></a>}}
-\if{latex}{\out{\hypertarget{method-AsDendrogram}{}}}
+\if{html}{\out{<a id="method-RDML-AsDendrogram"></a>}}
+\if{latex}{\out{\hypertarget{method-RDML-AsDendrogram}{}}}
 \subsection{Method \code{AsDendrogram()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{RDML$AsDendrogram(plot.dendrogram = TRUE)}\if{html}{\out{</div>}}
@@ -226,14 +226,14 @@ Konstantin A. Blagodatskikh <k.blag@yandex.ru>, Stefan Roediger
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-AsTable"></a>}}
-\if{latex}{\out{\hypertarget{method-AsTable}{}}}
+\if{html}{\out{<a id="method-RDML-AsTable"></a>}}
+\if{latex}{\out{\hypertarget{method-RDML-AsTable}{}}}
 \subsection{Method \code{AsTable()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{RDML$AsTable(
-  .default = list(exp.id = experiment$id$id, run.id = run$id$id, react.id =
-    react$id$id, position = react$position, sample = react$sample$id, target =
-    data$tar$id, target.dyeId = target[[data$tar$id]]$dyeId$id, sample.type =
+  .default = list(exp.id = experiment$id$id, run.id = run$id$id, react.id = react$id$id,
+    position = react$position, sample = react$sample$id, target = data$tar$id,
+    target.dyeId = target[[data$tar$id]]$dyeId$id, sample.type =
     sample[[react$sample$id]]$type$value, adp = !is.null(data$adp), mdp =
     !is.null(data$mdp)),
   name.pattern = paste(react$position, react$sample$id,
@@ -246,8 +246,8 @@ Konstantin A. Blagodatskikh <k.blag@yandex.ru>, Stefan Roediger
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-GetFData"></a>}}
-\if{latex}{\out{\hypertarget{method-GetFData}{}}}
+\if{html}{\out{<a id="method-RDML-GetFData"></a>}}
+\if{latex}{\out{\hypertarget{method-RDML-GetFData}{}}}
 \subsection{Method \code{GetFData()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{RDML$GetFData(request, dp.type = "adp", long.table = FALSE)}\if{html}{\out{</div>}}
@@ -255,8 +255,8 @@ Konstantin A. Blagodatskikh <k.blag@yandex.ru>, Stefan Roediger
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-AsXML"></a>}}
-\if{latex}{\out{\hypertarget{method-AsXML}{}}}
+\if{html}{\out{<a id="method-RDML-AsXML"></a>}}
+\if{latex}{\out{\hypertarget{method-RDML-AsXML}{}}}
 \subsection{Method \code{AsXML()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{RDML$AsXML(file.name)}\if{html}{\out{</div>}}
@@ -264,8 +264,8 @@ Konstantin A. Blagodatskikh <k.blag@yandex.ru>, Stefan Roediger
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-SetFData"></a>}}
-\if{latex}{\out{\hypertarget{method-SetFData}{}}}
+\if{html}{\out{<a id="method-RDML-SetFData"></a>}}
+\if{latex}{\out{\hypertarget{method-RDML-SetFData}{}}}
 \subsection{Method \code{SetFData()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{RDML$SetFData(fdata, description, fdata.type = "adp")}\if{html}{\out{</div>}}
@@ -273,8 +273,8 @@ Konstantin A. Blagodatskikh <k.blag@yandex.ru>, Stefan Roediger
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-new"></a>}}
-\if{latex}{\out{\hypertarget{method-new}{}}}
+\if{html}{\out{<a id="method-RDML-new"></a>}}
+\if{latex}{\out{\hypertarget{method-RDML-new}{}}}
 \subsection{Method \code{new()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{RDML$new(
@@ -288,8 +288,8 @@ Konstantin A. Blagodatskikh <k.blag@yandex.ru>, Stefan Roediger
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-clone"></a>}}
-\if{latex}{\out{\hypertarget{method-clone}{}}}
+\if{html}{\out{<a id="method-RDML-clone"></a>}}
+\if{latex}{\out{\hypertarget{method-RDML-clone}{}}}
 \subsection{Method \code{clone()}}{
 The objects of this class are cloneable with this method.
 \subsection{Usage}{
