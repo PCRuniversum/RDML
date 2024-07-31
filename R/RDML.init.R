@@ -618,8 +618,35 @@ RDML$set("public", "initialize", function(filename,
     self$SetFData(pcrdata, descr, fdata.type = data.type)
   }
   
+  # From FQD-96a
   fromFQDexport <- function() {
+    dat <- as.data.table(read.delim(filename, skip = 2))[
+      Well != "Well",
+    ]
     
+    description <- dat[, .(Well, Property, Std..Con., Target, Dye)][
+      , fdata.name := paste(Well, Target, sep = "_")
+    ]
+    setnames(description, c("position", "sample.type",
+                            "conc", "target", "target.dyeId",
+                            "fdata.name"))
+    description[, c("exp.id", "run.id", "sample", "sample.type",
+                    "react.id") 
+                := list("exp1", 
+                        "run1",
+                        "unkn_s",
+                        switch("sample.type",
+                               "unknown" = "unkn",
+                               "unkn"
+                        ),
+                        unlist(Map(FromPositionToId, position)))]
+    
+    fdata <- t(dat[, !c("Well", "Property", "Std..Con.", "Target", "Dye")])
+    fdata <- as.data.table(fdata)
+    setnames(fdata, description[, fdata.name])
+    fdata <- data.table(cyc = seq(nrow(fdata)), fdata)
+    
+    self$SetFData(fdata, description)
   }
   
   # COBAS -----------------------------------------------------------------
