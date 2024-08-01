@@ -624,28 +624,60 @@ RDML$set("public", "initialize", function(filename,
     ampDataFile <- str_replace(filename, "Quan\\..+\\.txt", "Quan. AmpData.txt")
     resultwDataFile <- str_replace(filename, "Quan\\..+\\.txt", "Quan. Result.txt")
     
+   
+    
+    description <- fread(resultwDataFile, fill = TRUE, sep = "\t", 
+                         skip = 2, blank.lines.skip = TRUE, header = TRUE)[
+                           Well != "Well"][,
+                                           fdata.name := paste(Well, Target, sep = "_")]
+    
+    
+   
+    setnames(description, c("position",
+                            "sample.id",
+                            "sample",
+                            "sample.type",
+                            "target", "target.dyeId",
+                            "cq",
+                            "cq.mean",
+                            "cq.sd",
+                            "quantity",
+                            "quantity.avg", 
+                            "quantity.sd",
+                            "V13",
+                            "fdata.name"))
+    cols <- c("cq",
+              "cq.mean",
+              "cq.sd",
+              "quantity",
+              "quantity.avg", 
+              "quantity.sd")
+    description[, (cols) := lapply(.SD, as.numeric), 
+                .SDcols = cols]
+    description[, c("exp.id", "run.id", "sample",
+                    "react.id") 
+                := list("exp1", 
+                        "raw_data",
+                        ifelse(sample == "",
+                               "unkn_s",
+                               sample),
+                        unlist(Map(FromPositionToId, position)))][
+                          .(sample.type = c("Unknown", 
+                            "Standard",
+                            "Negative",
+                            "Positive"), to = c(
+                              "unkn",
+                              "std",
+                              "ntc",
+                              "pos"
+                            )), on = "sample.type",
+                          sample.type := i.to
+                        ]
+    
     # getting raw data
     rawdat <- as.data.table(read.delim(rawDataFile, skip = 2))[
       Well != "Well",
     ]
-    
-    description <- rawdat[, .(Well, Property, Std..Con., Target, Dye)][
-      , fdata.name := paste(Well, Target, sep = "_")
-    ]
-    setnames(description, c("position", "sample.type",
-                            "conc", "target", "target.dyeId",
-                            "fdata.name"))
-    description[, c("exp.id", "run.id", "sample", "sample.type",
-                    "react.id") 
-                := list("exp1", 
-                        "raw_data",
-                        "unkn_s",
-                        switch("sample.type",
-                               "unknown" = "unkn",
-                               "unkn"
-                        ),
-                        unlist(Map(FromPositionToId, position)))]
-    
     rawfdata <- t(rawdat[, !c("Well", "Property", "Std..Con.", "Target", "Dye")])
     rawfdata <- as.data.table(rawfdata)
     setnames(rawfdata, description[, fdata.name])
@@ -664,7 +696,8 @@ RDML$set("public", "initialize", function(filename,
     
     
     self$SetFData(rawfdata, description)
-    self$SetFData(processedfdata, description[, run.id := "processed_data"])
+    self$SetFData(processedfdata, 
+                  description[, run.id := "processed_data"])
   }
   
   # COBAS -----------------------------------------------------------------

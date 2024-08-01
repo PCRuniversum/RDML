@@ -142,6 +142,11 @@ RDML$set("public", "SetFData",
                      dataType$new(idReferencesType$new(
                        descr.row[, target])
                      ))
+                 if ("cq" %in% names(descr.row))
+                   private$.experiment[[descr.row[, exp.id]]]$
+                   run[[descr.row[, run.id]]]$
+                   react[[as.character(descr.row[, react.id])]]$
+                   data[[descr.row[, target]]]$cq <- descr.row[, cq]
                  if (private$.target[[descr.row[, target]]] %>>% 
                      is.null()) {
                    self$target <- c(
