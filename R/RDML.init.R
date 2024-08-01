@@ -620,11 +620,16 @@ RDML$set("public", "initialize", function(filename,
   
   # From FQD-96a
   fromFQDexport <- function() {
-    dat <- as.data.table(read.delim(filename, skip = 2))[
+    rawDataFile <- str_replace(filename, "Quan\\..+\\.txt", "Quan. Raw Data.txt")
+    ampDataFile <- str_replace(filename, "Quan\\..+\\.txt", "Quan. AmpData.txt")
+    resultwDataFile <- str_replace(filename, "Quan\\..+\\.txt", "Quan. Result.txt")
+    
+    # getting raw data
+    rawdat <- as.data.table(read.delim(rawDataFile, skip = 2))[
       Well != "Well",
     ]
     
-    description <- dat[, .(Well, Property, Std..Con., Target, Dye)][
+    description <- rawdat[, .(Well, Property, Std..Con., Target, Dye)][
       , fdata.name := paste(Well, Target, sep = "_")
     ]
     setnames(description, c("position", "sample.type",
@@ -633,7 +638,7 @@ RDML$set("public", "initialize", function(filename,
     description[, c("exp.id", "run.id", "sample", "sample.type",
                     "react.id") 
                 := list("exp1", 
-                        "run1",
+                        "raw_data",
                         "unkn_s",
                         switch("sample.type",
                                "unknown" = "unkn",
@@ -641,12 +646,25 @@ RDML$set("public", "initialize", function(filename,
                         ),
                         unlist(Map(FromPositionToId, position)))]
     
-    fdata <- t(dat[, !c("Well", "Property", "Std..Con.", "Target", "Dye")])
-    fdata <- as.data.table(fdata)
-    setnames(fdata, description[, fdata.name])
-    fdata <- data.table(cyc = seq(nrow(fdata)), fdata)
+    rawfdata <- t(rawdat[, !c("Well", "Property", "Std..Con.", "Target", "Dye")])
+    rawfdata <- as.data.table(rawfdata)
+    setnames(rawfdata, description[, fdata.name])
+    rawfdata <- data.table(cyc = seq(nrow(rawfdata)), rawfdata)
     
-    self$SetFData(fdata, description)
+    # getting processed data
+    processeddat <- as.data.table(read.delim(ampDataFile, skip = 2))[
+      Well != "Well",
+    ]
+    
+    processedfdata <- t(processeddat[, !c("Well", "Property", "Std..Con.", "Target", "Dye")])
+    processedfdata <- as.data.table(processedfdata)
+    setnames(processedfdata, description[, fdata.name])
+    processedfdata <- data.table(cyc = seq(nrow(processedfdata)),
+                                 processedfdata)
+    
+    
+    self$SetFData(rawfdata, description)
+    self$SetFData(processedfdata, description[, run.id := "processed_data"])
   }
   
   # COBAS -----------------------------------------------------------------
