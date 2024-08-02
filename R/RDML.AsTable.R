@@ -154,10 +154,12 @@ RDML$set("public", "AsTable",
                }
              }
            }
-           setkey(out, "fdata.name")
            if (length(unique(out$fdata.name)) != length(out$fdata.name)) {
-             warning("fdata.name column has duplicates! Try another 'name.pattern'.")
+             out[, fdata.name := paste(fdata.name, seq(.N), sep = "_"),
+                 by = fdata.name]
+             warning("fdata.name column has duplicates! Unique nums added. Better try another 'name.pattern'.")
            }
+           setkey(out, "fdata.name")
            out
          },
          overwrite = TRUE)

@@ -10,10 +10,10 @@ shinyUI(
   tags$html(
     tags$head(
       useShinyjs(),
-      if (grepl("XP",Sys.info()['release']))
-      {
-        #this was added for compatibility with call to V8 library in WinXp
-        #all functions from my_shinyjs_scripts.js should be added here!
+      # if (grepl("XP",Sys.info()['release']))
+      # {
+      #   #this was added for compatibility with call to V8 library in WinXp
+      #   #all functions from my_shinyjs_scripts.js should be added here!
         extendShinyjs(script = "www/js/my_shinyjs_scripts.js",
                       functions = c("pageCol",
                                     "selectRows",
@@ -21,13 +21,13 @@ shinyUI(
                                     "changeConfirmedStatus",
                                     "toggleCatModal",
                                     "changeActiveTab"))
-      }
-      else
-      {
-        #Not WinXp
-        extendShinyjs(script = "www/js/my_shinyjs_scripts.js",
-                      functions = c("winprint"))
-      }#,
+      # }
+      # else
+      # {
+      #   #Not WinXp
+      #   extendShinyjs(script = "www/js/my_shinyjs_scripts.js",
+      #                 functions = c("winprint"))
+      # }#,
       # includeScript("www/js/single_double_click.js"),
       # includeScript("www/js/scripts.js"),
       # includeCSS("www/css/styles.css")
