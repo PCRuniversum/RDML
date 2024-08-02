@@ -1,3 +1,6 @@
+Changes from Version 1.2 to 1.3 [August 02 2024]
+* FQD-96a txt import added. Auto name.pattern to make unique.
+
 Changes from Version 1.1 to 1.2 [September 17 2020]
 * BioRad xlsx export can be used to import data
 
