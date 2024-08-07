@@ -2347,27 +2347,28 @@ shinyServer(function(input, output, session) {
                                   dp.type = input$mainNavbar,
                                   long.table = TRUE)
     if (input$mainNavbar == "mdp"){
+      
       fdata[
         , fluor.deriv := {
-          diff <- diffQ(data.frame(tmp, fluor), verbose = TRUE, warn = FALSE)$xy
-          c(head(diff, 1)[1, 2], diff[, 2], tail(diff, 1)[1, 2])
+          meltdiff <- diff(fluor)
+          c(meltdiff[1], meltdiff)
         }, by = fdata.name]
     }
     fdata
   })
   
-  # fdata.filtered <- reactive({
-  #   req(fdata())
-  #   # if (values$lockReplot != 0)
-  #     # return(NULL)
-  #   
-  #   fd <- fdata()[target %in% input[[paste0("showTargets", input$mainNavbar)]]]
-  #   fd <- fd[position %in% values$selectedTubes$position[values$selectedTubes$selected == TRUE]]
-  #   if (nrow(fd) == 0)
-  #     return(NULL)
-  #   fd
-  # })
-  
+  fdata.filtered <- reactive({
+    req(fdata())
+    # if (values$lockReplot != 0)
+      # return(NULL)
+
+    fd <- fdata()[target %in% input[[paste0("showTargets", input$mainNavbar)]]]
+    fd <- fd[position %in% values$selectedTubes$position[values$selectedTubes$selected == TRUE]]
+    if (nrow(fd) == 0)
+      return(NULL)
+    fd
+  })
+
   observeEvent(
     c(input$mainPcrPlate, input[[paste0("showTargets", input$mainNavbar)]]),
     {
