@@ -7,7 +7,8 @@ dataType$set("public", "rawAdp",
              overwrite = TRUE)
 
 dataType$set("public", "PreprocessAdp",
-             function(smooth, smooth.method, normqPCR.method) {
+             function(smooth, smooth.method, normqPCR.method,
+                      bg.range = NULL) {
                if (!is.environment(self$rawAdp)) {
                  self$rawAdp <- private$.adp$copy()
                }
@@ -16,7 +17,8 @@ dataType$set("public", "PreprocessAdp",
                      self$rawAdp$fpoints$fluor,
                      smoother = smooth,
                      method = smooth.method,
-                     method.norm = normqPCR.method)[[1]]
+                     method.norm = normqPCR.method,
+                     bg.range = bg.range)[[1]]
              },
              overwrite = TRUE)
 

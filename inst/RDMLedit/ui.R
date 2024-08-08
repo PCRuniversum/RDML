@@ -545,10 +545,21 @@ shinyUI(
                    #        numericInput("removeFirstRows",
                    #                     "Remove First N Rows",
                    #                     0, 0, step = 1)),
-                   column(4,
+                   column(2,
                           checkboxInput("preprocessqPCR",
                                         "Preprocess")),
                    column(4,
+                          wellPanel(
+                            fluidRow(
+                              column(6,
+                          checkboxInput("bgAuto",
+                                        "Background Auto", value = TRUE)),
+                          column(6,
+                          sliderInput("bgRange",
+                                      "Background Range", 
+                                      min = 1, max = 40, value = c(10, 20), step = 1))
+                          ))),
+                   column(3,
                           selectInput("smoothqPCRmethod",
                                       "Smoothing method",
                                       c("None" = "none",
@@ -562,7 +573,7 @@ shinyUI(
                                         "Whittaker 2" = "whit2"
                                         # ,"All" = "all"
                                       ))),
-                   column(4,
+                   column(3,
                           selectInput("normqPCRmethod",
                                       "Normalization method",
                                       c("None" = "none",

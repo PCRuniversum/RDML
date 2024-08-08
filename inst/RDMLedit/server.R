@@ -2075,7 +2075,8 @@ shinyServer(function(input, output, session) {
               react[[as.character(react.id)]]$
               data[[target]]$PreprocessAdp(smooth,
                                            smooth.method,
-                                           input$normqPCRmethod)
+                                           input$normqPCRmethod,
+                                           bg.range = if(!input$bgAuto) input$bgRange)
           }, by = fdata.name]
     } else {
       tbl[adp == TRUE,
