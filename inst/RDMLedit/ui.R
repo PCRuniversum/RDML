@@ -34,10 +34,11 @@ shinyUI(
     ),
     tags$div(
       navbarPage(
-        # here add code for google analytics
-        #header = includeScript("ga.js"),
         title = "rdmlEdit",
         theme = shinytheme("cerulean"),
+
+# Files Tab ---------------------------------------------------------------
+        
         tabPanel("Files",
                  fluidRow(
                    column(3,
@@ -72,6 +73,9 @@ shinyUI(
                                              ""))),
                           plotOutput("dendroRDMLplot"))
                  )),
+
+# Metadata Tab ---------------------------------------------------------------
+
         navbarMenu("Metadata",
                    tabPanel("ID",
                             selectizeInput("idSlct",
@@ -539,6 +543,9 @@ shinyUI(
                    )
                    
         ),
+
+# qPCR Tab ---------------------------------------------------------------
+
         tabPanel("qPCR",
                  fluidRow(
                    # column(2,
@@ -671,6 +678,17 @@ shinyUI(
                        htmlOutput("plateTbl"))))),
                  dataTableOutput("qPCRDt"),
                  value = "adp"),
+
+
+
+# Expression Tab ---------------------------------------------------------------
+tabPanel("Store",
+         wellPanel(
+           downloadButton("downloadRDML",
+                          "Store RDML")))
+
+# Melting Curves Tab ---------------------------------------------------------------
+
         tabPanel("Melting Curves",
                  fluidRow(
                    column(2,
@@ -739,11 +757,17 @@ shinyUI(
                    plotlyOutput("meltingPlot")),
                  dataTableOutput("meltingDt"),
                  value = "mdp"),
+
+# Store Tab ---------------------------------------------------------------
+
         tabPanel("Store",
                  wellPanel(
                    downloadButton("downloadRDML",
                                   "Store RDML"),
                    tags$p("Note that if you made any preprocession all fluorescence points will be overwritten with the new calculated values!!!"))),
+
+# Help Tab ---------------------------------------------------------------
+
         tabPanel("Help",
                  includeMarkdown("md/help.md")),
         id = "mainNavbar"

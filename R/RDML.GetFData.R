@@ -55,12 +55,17 @@ RDML$set("public", "GetFData",
              request[, self$experiment[[exp.id]]$run[[run.id]]$react[[as.character(
                react.id)]]$data[[target]]$GetFData(dp.type = dp.type), by = .(fdata.name)]
            ifelse(long.table == FALSE,
-             return(dcast(out,
+                  {
+                    out <- dcast(out,
                           as.formula(sprintf("%s ~ fdata.name",
                                              ifelse(dp.type == "adp",
                                                     "cyc", "tmp"))),
-                          value.var = "fluor")),
-             return(merge(request, out, by = "fdata.name"))
+                          value.var = "fluor")
+                    setcolorder(out, c(ifelse(dp.type == "adp","cyc", "tmp"),
+                                  request$fdata.name))
+                    return(out)
+                  },
+             return(merge(request, out, by = "fdata.name", sort = FALSE))
            )
          }, 
          overwrite = TRUE)
