@@ -14,13 +14,13 @@ shinyUI(
       # {
       #   #this was added for compatibility with call to V8 library in WinXp
       #   #all functions from my_shinyjs_scripts.js should be added here!
-        extendShinyjs(script = "www/js/my_shinyjs_scripts.js",
-                      functions = c("pageCol",
-                                    "selectRows",
-                                    "filterTblByPositions",
-                                    "changeConfirmedStatus",
-                                    "toggleCatModal",
-                                    "changeActiveTab"))
+      extendShinyjs(script = "www/js/my_shinyjs_scripts.js",
+                    functions = c("pageCol",
+                                  "selectRows",
+                                  "filterTblByPositions",
+                                  "changeConfirmedStatus",
+                                  "toggleCatModal",
+                                  "changeActiveTab"))
       # }
       # else
       # {
@@ -36,8 +36,8 @@ shinyUI(
       navbarPage(
         title = "rdmlEdit",
         theme = shinytheme("cerulean"),
-
-# Files Tab ---------------------------------------------------------------
+        
+        # Files Tab ---------------------------------------------------------------
         
         tabPanel("Files",
                  fluidRow(
@@ -72,10 +72,11 @@ shinyUI(
                                    textInput("dateUpdatedText", "Date Updated",
                                              ""))),
                           plotOutput("dendroRDMLplot"))
-                 )),
-
-# Metadata Tab ---------------------------------------------------------------
-
+                 )
+        ),
+        
+        # Metadata Tab ---------------------------------------------------------------
+        
         navbarMenu("Metadata",
                    tabPanel("ID",
                             selectizeInput("idSlct",
@@ -153,7 +154,7 @@ shinyUI(
                                            )),
                             textInput("sampleIdText", "ID",
                                       ""),
-                            textInput("sampleDescriptionText", 
+                            textInput("sampleDescriptionText",
                                       "Description",
                                       ""),
                             selectInput("sampleDocumentationSlct",
@@ -166,10 +167,10 @@ shinyUI(
                                                      options= list(
                                                        create =TRUE
                                                      )),
-                                      textInput("samplexRefNameText", 
+                                      textInput("samplexRefNameText",
                                                 "xRef Name",
                                                 ""),
-                                      textInput("samplexRefIdText", 
+                                      textInput("samplexRefIdText",
                                                 "xRef ID",
                                                 ""),
                                       actionButton("removeSamplexRefBtn",
@@ -180,10 +181,10 @@ shinyUI(
                                                      options= list(
                                                        create =TRUE
                                                      )),
-                                      textInput("sampleAnnotationPropertyText", 
+                                      textInput("sampleAnnotationPropertyText",
                                                 "Annotation Property",
                                                 ""),
-                                      textInput("sampleAnnotationValueText", 
+                                      textInput("sampleAnnotationValueText",
                                                 "Annotation Value",
                                                 ""),
                                       actionButton("removeSampleAnnotationBtn",
@@ -199,7 +200,7 @@ shinyUI(
                                           "Inter Run Calibrator",
                                           FALSE),
                             wellPanel("Quantity",
-                                      textInput("sampleQuantityValueText", 
+                                      textInput("sampleQuantityValueText",
                                                 "Value",
                                                 ""),
                                       selectInput("sampleQuantityUnitSlct",
@@ -213,7 +214,7 @@ shinyUI(
                                           "Calibartor Sample",
                                           FALSE),
                             wellPanel("cDNA Synthesis Method",
-                                      textInput("sampleCsmEnzymeText", 
+                                      textInput("sampleCsmEnzymeText",
                                                 "Enzyme",
                                                 ""),
                                       selectInput("sampleCsmPrimingMethodSlct",
@@ -231,7 +232,7 @@ shinyUI(
                                                   choices = "")
                             ),
                             wellPanel("Template Quantity",
-                                      textInput("sampleTemplateQuantityConcText", 
+                                      textInput("sampleTemplateQuantityConcText",
                                                 "Concentration",
                                                 ""),
                                       selectInput("sampleTemplateQuantityNucleotideSlct",
@@ -253,7 +254,7 @@ shinyUI(
                                            )),
                             textInput("targetIdText", "ID",
                                       ""),
-                            textInput("targetDescriptionText", 
+                            textInput("targetDescriptionText",
                                       "Description",
                                       ""),
                             selectInput("targetDocumentationSlct",
@@ -266,10 +267,10 @@ shinyUI(
                                                      options= list(
                                                        create =TRUE
                                                      )),
-                                      textInput("targetxRefNameText", 
+                                      textInput("targetxRefNameText",
                                                 "xRef Name",
                                                 ""),
-                                      textInput("targetxRefIdText", 
+                                      textInput("targetxRefIdText",
                                                 "xRef ID",
                                                 ""),
                                       actionButton("removetargetxRefBtn",
@@ -278,16 +279,16 @@ shinyUI(
                                         "Type",
                                         choices = c("toi",
                                                     "ref")),
-                            textInput("targetAemText", 
+                            textInput("targetAemText",
                                       "Amplification Efficiency Method",
                                       ""),
-                            textInput("targetAeText", 
+                            textInput("targetAeText",
                                       "Amplification Efficiency",
                                       ""),
-                            textInput("targetAeSeText", 
+                            textInput("targetAeSeText",
                                       "Amplification Efficiency SE",
                                       ""),
-                            textInput("targetDetectionLimitText", 
+                            textInput("targetDetectionLimitText",
                                       "Detection Limit",
                                       ""),
                             selectInput("targetDyeIdSlct",
@@ -301,20 +302,20 @@ shinyUI(
                                                               "probe1",
                                                               "probe2",
                                                               "amplicon")),
-                                      textInput("targetSequences3PrimeTagText", 
+                                      textInput("targetSequences3PrimeTagText",
                                                 "Tree Prime Tag",
                                                 ""),
-                                      textInput("targetSequences5PrimeTagText", 
+                                      textInput("targetSequences5PrimeTagText",
                                                 "Five Prime Tag",
                                                 ""),
-                                      textInput("targetSequencesSequenceText", 
+                                      textInput("targetSequencesSequenceText",
                                                 "Sequence",
                                                 "")),
                             wellPanel("Commercial Assay",
-                                      textInput("targetCaCompanyText", 
+                                      textInput("targetCaCompanyText",
                                                 "Company",
                                                 ""),
-                                      textInput("targetCaOrderNumberText", 
+                                      textInput("targetCaOrderNumberText",
                                                 "Order Number",
                                                 "")),
                             actionButton("removeTargetBtn",
@@ -328,14 +329,14 @@ shinyUI(
                                            )),
                             textInput("tccIdText", "ID",
                                       ""),
-                            textInput("tccDescriptionText", 
+                            textInput("tccDescriptionText",
                                       "Description",
                                       ""),
                             selectInput("tccDocumentationSlct",
                                         "Documentation",
                                         multiple = TRUE,
                                         choices = ""),
-                            textInput("tccLidTemperatureText", 
+                            textInput("tccLidTemperatureText",
                                       "Lid Temperature",
                                       ""),
                             selectInput("tccExperimenterSlct",
@@ -350,7 +351,7 @@ shinyUI(
                                                      )),
                                       textInput("tccStepNrText", "Step Number",
                                                 ""),
-                                      textInput("tccStepDescriptionText", 
+                                      textInput("tccStepDescriptionText",
                                                 "Description",
                                                 ""),
                                       wellPanel(
@@ -363,46 +364,46 @@ shinyUI(
                                                                 "lidOpen")),
                                         conditionalPanel(
                                           "input.tccStepTypeSlct == 'gradient'",
-                                          textInput("tccStepHighTemperatureText", 
+                                          textInput("tccStepHighTemperatureText",
                                                     "High Temperature",
                                                     ""),
-                                          textInput("tccStepLowTemperatureText", 
+                                          textInput("tccStepLowTemperatureText",
                                                     "Low Temperature",
                                                     "")),
                                         conditionalPanel(
                                           "input.tccStepTypeSlct == 'temperature' || input.tccStepTypeSlct == 'pause'",
-                                          textInput("tccStepTemperatureText", 
+                                          textInput("tccStepTemperatureText",
                                                     "Temperature",
                                                     "")),
                                         conditionalPanel(
                                           "input.tccStepTypeSlct == 'temperature' || input.tccStepTypeSlct == 'gradient'",
-                                          textInput("tccStepDurationText", 
+                                          textInput("tccStepDurationText",
                                                     "Duration",
                                                     ""),
-                                          textInput("tccStepTemperatureChangeText", 
+                                          textInput("tccStepTemperatureChangeText",
                                                     "Temperature Change",
                                                     ""),
-                                          textInput("tccStepDurationChangeText", 
+                                          textInput("tccStepDurationChangeText",
                                                     "Duration Change",
                                                     ""),
-                                          selectInput("tccStepMeasureText", 
+                                          selectInput("tccStepMeasureText",
                                                       "Measure",
                                                       choices = c("real time",
                                                                   "meltcurve")),
-                                          textInput("tccStepRampText", 
+                                          textInput("tccStepRampText",
                                                     "Ramp",
                                                     "")),
                                         conditionalPanel(
                                           "input.tccStepTypeSlct == 'loop'",
-                                          textInput("tccStepGotoText", 
+                                          textInput("tccStepGotoText",
                                                     "Go To",
                                                     ""),
-                                          textInput("tccStepRepeatText", 
+                                          textInput("tccStepRepeatText",
                                                     "Repeat",
                                                     "")),
                                         conditionalPanel(
                                           "input.tccStepTypeSlct == 'lidOpen'",
-                                          checkboxInput("tccStepLidOpenChk", 
+                                          checkboxInput("tccStepLidOpenChk",
                                                         "Lid Open",
                                                         FALSE)
                                         ),
@@ -411,7 +412,7 @@ shinyUI(
                                       )),
                             actionButton("removeTccBtn",
                                          "Remove Thermal Cycling Conditions")),
-                   tabPanel("Experiment", 
+                   tabPanel("Experiment",
                             selectizeInput("experimentSlct",
                                            "Select Experiment",
                                            choices = "",
@@ -420,7 +421,7 @@ shinyUI(
                                            )),
                             textInput("experimentIdText", "ID",
                                       ""),
-                            textInput("experimentDescriptionText", 
+                            textInput("experimentDescriptionText",
                                       "Description",
                                       ""),
                             selectInput("experimentDocumentationSlct",
@@ -437,7 +438,7 @@ shinyUI(
                                              )),
                               textInput("runIdText", "ID",
                                         ""),
-                              textInput("runDescriptionText", 
+                              textInput("runDescriptionText",
                                         "Description",
                                         ""),
                               selectInput("runDocumentationSlct",
@@ -520,13 +521,13 @@ shinyUI(
                                             ""),
                                   textInput("dataEndPtText", "End Point",
                                             ""),
-                                  textInput("dataBgFluorText", 
+                                  textInput("dataBgFluorText",
                                             "Background Fluorescence",
                                             ""),
-                                  textInput("dataBgFluorSlpText", 
+                                  textInput("dataBgFluorSlpText",
                                             "Background Fluorescence Slope",
                                             ""),
-                                  textInput("dataQuantFluorText", 
+                                  textInput("dataQuantFluorText",
                                             "Quantification Fluorescence",
                                             ""),
                                   actionButton("removeDataBtn",
@@ -543,9 +544,9 @@ shinyUI(
                    )
                    
         ),
-
-# qPCR Tab ---------------------------------------------------------------
-
+        
+        # qPCR Tab ---------------------------------------------------------------
+        
         tabPanel("qPCR",
                  fluidRow(
                    # column(2,
@@ -559,13 +560,13 @@ shinyUI(
                           wellPanel(
                             fluidRow(
                               column(6,
-                          checkboxInput("bgAuto",
-                                        "Background Auto", value = TRUE)),
-                          column(6,
-                          sliderInput("bgRange",
-                                      "Background Range", 
-                                      min = 1, max = 40, value = c(10, 20), step = 1))
-                          ))),
+                                     checkboxInput("bgAuto",
+                                                   "Background Auto", value = TRUE)),
+                              column(6,
+                                     sliderInput("bgRange",
+                                                 "Background Range",
+                                                 min = 1, max = 40, value = c(10, 20), step = 1))
+                            ))),
                    column(3,
                           selectInput("smoothqPCRmethod",
                                       "Smoothing method",
@@ -677,18 +678,16 @@ shinyUI(
                                                       "Run", c()))),
                        htmlOutput("plateTbl"))))),
                  dataTableOutput("qPCRDt"),
-                 value = "adp"),
-
-
-
-# Expression Tab ---------------------------------------------------------------
-tabPanel("Store",
-         wellPanel(
-           downloadButton("downloadRDML",
-                          "Store RDML")))
-
-# Melting Curves Tab ---------------------------------------------------------------
-
+                 value = "adp"
+        ),
+        
+        # Expression Tab ---------------------------------------------------------------
+        tabPanel("Expression",
+                 wellPanel(
+                   downloadButton("downloadRDMLa",
+                                  "Store RDML"))),
+        
+        # Melting Curves Tab ---------------------------------------------------------------
         tabPanel("Melting Curves",
                  fluidRow(
                    column(2,
@@ -703,16 +702,16 @@ tabPanel("Store",
                      conditionalPanel(
                        condition = "input.bgAdjMelting == true",
                        column(2,
-                              sliderInput("bgRangeMelting", 
-                                          label = "Temperature Background Range (°C)", min = 0, 
+                              sliderInput("bgRangeMelting",
+                                          label = "Temperature Background Range (°C)", min = 0,
                                           max = 100, value = c(50, 55), step = 1))),
                      column(2,
                             checkboxInput("minMaxMelting",
                                           "Min-Max Normalization",
                                           FALSE)),
                      column(2,
-                            sliderInput("dfFactMelting", 
-                                        label = "Factor to Smooth the Curve", min = 0.6, 
+                            sliderInput("dfFactMelting",
+                                        label = "Factor to Smooth the Curve", min = 0.6,
                                         max = 1.1, value = 0.95, step = 0.05))
                    )
                  ),
@@ -757,17 +756,17 @@ tabPanel("Store",
                    plotlyOutput("meltingPlot")),
                  dataTableOutput("meltingDt"),
                  value = "mdp"),
-
-# Store Tab ---------------------------------------------------------------
-
+        
+        # Store Tab ---------------------------------------------------------------
+        
         tabPanel("Store",
                  wellPanel(
                    downloadButton("downloadRDML",
                                   "Store RDML"),
                    tags$p("Note that if you made any preprocession all fluorescence points will be overwritten with the new calculated values!!!"))),
-
-# Help Tab ---------------------------------------------------------------
-
+        
+        # Help Tab ---------------------------------------------------------------
+        
         tabPanel("Help",
                  includeMarkdown("md/help.md")),
         id = "mainNavbar"

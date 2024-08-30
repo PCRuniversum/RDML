@@ -30,14 +30,14 @@ testNull <- function(val) {
   unname(val)
 }
 
-
 shinyServer(function(input, output, session) {
-  # session$onSessionEnded(function() {
-  #   stopApp()
-  # })
+  session$onSessionEnded(function() {
+    stopApp()
+  })
   
   values <- reactiveValues(RDMLs = list(),
                            log = NULL)
+  
   updLog <- function(error.message) {
     isolate({
       error.message <- sprintf("[%s] %s",
